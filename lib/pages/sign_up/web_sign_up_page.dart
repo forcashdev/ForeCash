@@ -226,15 +226,11 @@ class WebSignUpPageState extends State<WebSignUpPage> {
             ),
           ),
           Center(
-            child: Container(
-              height: 35,
-              width: 630,
-              child: CommonTextField(
-                hintText: 'Name',
-                inputType: TextInputType.emailAddress,
-                onChanged: (val) {},
-                onTap: () {},
-              ),
+            child: CommonTextField(
+              hintText: 'Name',
+              inputType: TextInputType.emailAddress,
+              onChanged: (val) {},
+              onTap: () {},
             ),
           ),
         ],
@@ -261,15 +257,11 @@ class WebSignUpPageState extends State<WebSignUpPage> {
             ),
           ),
           Center(
-            child: Container(
-              height: 35,
-              width: 630,
-              child: CommonTextField(
-                hintText: 'Email address',
-                inputType: TextInputType.emailAddress,
-                onChanged: (val) {},
-                onTap: () {},
-              ),
+            child: CommonTextField(
+              hintText: 'Email address',
+              inputType: TextInputType.emailAddress,
+              onChanged: (val) {},
+              onTap: () {},
             ),
           ),
         ],
@@ -284,28 +276,24 @@ class WebSignUpPageState extends State<WebSignUpPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Container(
-              height: 35,
-              width: 630,
-              child: CommonTextField(
-                hintText: 'Password',
-                inputType: TextInputType.emailAddress,
-                onChanged: (val) {},
-                maxLine: 1,
-                obscureText: _obscureText,
-                iconSuffix: Image.asset(
-                  // Based on passwordVisible state choose the icon
-                  _obscureText ? Constants.ic_pass_hide : Constants.ic_show_password,
-                  height: 22.0,
-                  width: 22.0,
-                ),
-                onSuffixTap: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                },
-                onTap: () {},
+            child: CommonTextField(
+              hintText: 'Password',
+              inputType: TextInputType.emailAddress,
+              onChanged: (val) {},
+              maxLine: 1,
+              obscureText: _obscureText,
+              iconSuffix: Image.asset(
+                // Based on passwordVisible state choose the icon
+                _obscureText ? Constants.ic_pass_hide : Constants.ic_show_password,
+                height: 22.0,
+                width: 22.0,
               ),
+              onSuffixTap: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+              onTap: () {},
             ),
           ),
           SizedBox(

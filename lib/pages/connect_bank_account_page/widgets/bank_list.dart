@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:for_cash/app/constants/constants.dart';
 import 'package:for_cash/pages/connect_bank_account_page/widgets/bank_image.dart';
@@ -20,16 +21,17 @@ class BankList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
         shrinkWrap: true,
-        crossAxisCount: 2,
-        childAspectRatio: 2.0,
-        mainAxisSpacing: 20.0,
-        crossAxisSpacing: 20.0,
+        crossAxisCount: kIsWeb ? 3 : 2,
+        childAspectRatio: kIsWeb ? 2.5 : 2,
+        mainAxisSpacing: kIsWeb ? 30.0 : 20.0,
+        crossAxisSpacing: kIsWeb ? 30.0 : 20.0,
         children: imageList.map((String url) {
           return InkWell(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (builder) => MobileSelectMonthlyIncomePage())),
+            onTap: () {
+              kIsWeb
+                  ? stepIndexController.sink.add(2)
+                  : Navigator.push(context, MaterialPageRoute(builder: (builder) => MobileSelectMonthlyIncomePage()));
+            },
             child: GridTile(child: BankImage(url)),
           );
         }).toList());

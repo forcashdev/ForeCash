@@ -15,8 +15,8 @@ class BankSearchField extends StatelessWidget {
       isFill: true,
       iconPrefix: CommonImageAsset(
         image: Constants.ic_search,
-        height: 20,
-        width: 20,
+        height: 20.0,
+        width: 20.0,
       ),
     );
   }

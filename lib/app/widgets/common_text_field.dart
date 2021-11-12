@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 // ignore: must_be_immutable
 class CommonTextField extends StatelessWidget {
@@ -25,42 +25,40 @@ class CommonTextField extends StatelessWidget {
   bool isFill = false;
   final colorBackground;
 
-  CommonTextField({
-    Key key,
-    @required this.text,
-    this.controller,
-    @required this.inputType,
-    this.obscureText = false,
-    this.maxLine,
-    this.inputLength = 100,
-    this.focusNode,
-    this.onFieldSubmitted,
-    this.validation,
-    this.iconSuffix,
-    this.hintText,
-    this.onSuffixTap,
-    this.onChanged,
-    this.onTap,
-    this.isEnabled,
-    this.isFill = false,
-    this.textInputAction,
-    this.iconPrefix,
-    this.onPrefixTap,
-    this.colorBackground =AppTheme.colorBackground
-  }) : super(key: key);
+  CommonTextField(
+      {Key key,
+      @required this.text,
+      this.controller,
+      @required this.inputType,
+      this.obscureText = false,
+      this.maxLine,
+      this.inputLength = 100,
+      this.focusNode,
+      this.onFieldSubmitted,
+      this.validation,
+      this.iconSuffix,
+      this.hintText,
+      this.onSuffixTap,
+      this.onChanged,
+      this.onTap,
+      this.isEnabled,
+      this.isFill = false,
+      this.textInputAction,
+      this.iconPrefix,
+      this.onPrefixTap,
+      this.colorBackground = AppTheme.colorBackground})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: kIsWeb ? MediaQuery.of(context).size.height * 0.090 : 50.0,
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: colorBackground),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0), color: colorBackground),
       child: TextFormField(
+        textAlignVertical: TextAlignVertical.center,
         cursorColor: AppTheme.colorPrimary,
         onChanged: onChanged,
         enabled: isEnabled,
@@ -79,31 +77,24 @@ class CommonTextField extends StatelessWidget {
         onFieldSubmitted: onFieldSubmitted,
         maxLines: maxLine != null ? maxLine : 1,
         focusNode: focusNode,
+        textAlign: TextAlign.start,
         decoration: InputDecoration(
           alignLabelWithHint: false,
           isDense: true,
-          suffixIcon: IconButton(
-              icon: iconSuffix != null ? iconSuffix : SizedBox(),
-              onPressed: onSuffixTap),
-          suffixIconConstraints: BoxConstraints(
-            maxWidth: iconSuffix != null ? 40 : 10
-          ),
-          prefixIcon: IconButton(
-              icon: iconPrefix != null ? iconPrefix : SizedBox(),
-              onPressed: onPrefixTap),
-          prefixIconConstraints: BoxConstraints(
-            maxWidth: iconPrefix != null ? 40 :10
-          ),
-          contentPadding: EdgeInsets.zero,
+          suffixIcon: IconButton(icon: iconSuffix != null ? iconSuffix : SizedBox(), onPressed: onSuffixTap),
+          suffixIconConstraints: BoxConstraints(maxWidth: iconSuffix != null ? 40 : 10),
+          prefixIcon: IconButton(icon: iconPrefix != null ? iconPrefix : SizedBox(), onPressed: onPrefixTap),
+          prefixIconConstraints: BoxConstraints(maxWidth: iconPrefix != null ? 40 : 10),
+          contentPadding: EdgeInsets.only(bottom: 5.0),
           labelStyle: TextStyle(
               color: Colors.grey,
-              fontSize: 12.0,
+              fontSize: kIsWeb ? 12.0 : 10.0,
               fontWeight: FontWeight.w400,
               fontFamily: AppTheme.fontName),
           border: InputBorder.none,
           hintStyle: TextStyle(
               color: Colors.grey,
-              fontSize: 12.0,
+              fontSize: kIsWeb ? 14.0 : 12.0,
               fontWeight: FontWeight.w400,
               fontFamily: AppTheme.fontName),
           hintText: hintText,

@@ -4,7 +4,12 @@ import 'package:for_cash/app/theme/app_theme.dart';
 import 'package:for_cash/app/widgets/common_image_asset.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
 import 'package:for_cash/pages/connect_bank_account_page/web_bank_account_page.dart';
+import 'package:for_cash/pages/select_calendar_page/web_select_calender_page.dart';
+import 'package:for_cash/pages/select_monthly_expense/web_select_monthly_expense_page.dart';
+import 'package:for_cash/pages/select_monthly_income/web_select_monthly_income.dart';
+import 'package:for_cash/pages/select_weekly_income/web_select_weekly_income_page.dart';
 import 'package:for_cash/pages/setup_step/setup_step_view_model.dart';
+import 'package:for_cash/pages/setup_weekly_budget/web_setup_weekly_budget_page.dart';
 import 'package:for_cash/pages/sign_up/web_sign_up_page.dart';
 
 class SetupStepPage extends StatefulWidget {
@@ -19,10 +24,11 @@ class SetupStepPageState extends State<SetupStepPage> {
   List<Widget> stepScreenList = [
     WebSignUpPage(),
     WebBankAccountPage(),
-    WebBankAccountPage(),
-    WebBankAccountPage(),
-    WebBankAccountPage(),
-    WebBankAccountPage(),
+    WebSelectMonthlyIncomePage(),
+    WebSelectWeeklyIncomePage(),
+    WebSelectMonthlyExpensePage(),
+    WebSelectWeeklyBudgetPage(),
+    WebSelectCalanderPage(),
   ];
 
   List<String> stepList = [
@@ -39,6 +45,7 @@ class SetupStepPageState extends State<SetupStepPage> {
   Widget build(BuildContext context) {
     model ?? (model = SetupStepViewModel(this));
     var size = MediaQuery.of(context).size;
+    var width1 = size.width * 0.114;
     return Scaffold(
       body: Container(
         height: size.height,
@@ -77,7 +84,6 @@ class SetupStepPageState extends State<SetupStepPage> {
                         children: [
                           Container(
                             height: 30.0,
-                            width: 1320,
                             alignment: Alignment.center,
                             child: ListView.separated(
                               separatorBuilder: (context, index) {
@@ -106,9 +112,8 @@ class SetupStepPageState extends State<SetupStepPage> {
                           Stack(
                             children: [
                               Container(
-                                width: 1400,
                                 height: 25.0,
-                                decoration: BoxDecoration(
+                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -118,7 +123,7 @@ class SetupStepPageState extends State<SetupStepPage> {
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData && snapshot.data != null) {
                                       return Container(
-                                          width: (size.width * 0.13) * (snapshot.data + 1),
+                                          width: width1 * (snapshot.data + 1),
                                           height: 25.0,
                                           decoration: BoxDecoration(
                                             color: AppTheme.colorPrimary,
@@ -156,25 +161,16 @@ class SetupStepPageState extends State<SetupStepPage> {
                     SizedBox(
                       height: 30.0,
                     ),
-                    Container(
-                      width: 750,
-                      margin: EdgeInsets.symmetric(horizontal: 50.0),
-                      padding: EdgeInsets.symmetric(horizontal: 30.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: StreamBuilder<int>(
-                        stream: stepIndexStream,
-                        builder: (context, snapshot) {
-                          print("Step Index Stream-> ${snapshot.data}");
-                          if (snapshot.hasData && snapshot.data != null) {
-                            return stepScreenList[snapshot.data];
-                          } else {
-                            return stepScreenList[0];
-                          }
-                        },
-                      ),
+                    StreamBuilder<int>(
+                      stream: stepIndexStream,
+                      builder: (context, snapshot) {
+                        print("Step Index Stream-> ${snapshot.data}");
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return stepScreenList[snapshot.data];
+                        } else {
+                          return stepScreenList[0];
+                        }
+                      },
                     ),
                     SizedBox(
                       height: 50.0,
