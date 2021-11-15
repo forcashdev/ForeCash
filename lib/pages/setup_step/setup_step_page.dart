@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:for_cash/app/constants/constants.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
+import 'package:for_cash/app/utils/responsive.dart';
 import 'package:for_cash/app/widgets/common_image_asset.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
 import 'package:for_cash/pages/connect_bank_account_page/web_bank_account_page.dart';
@@ -45,7 +46,7 @@ class SetupStepPageState extends State<SetupStepPage> {
   Widget build(BuildContext context) {
     model ?? (model = SetupStepViewModel(this));
     var size = MediaQuery.of(context).size;
-    var width1 = size.width * 0.114;
+    var width1 = size.width / 7;
     return Scaffold(
       body: Container(
         height: size.height,
@@ -70,6 +71,7 @@ class SetupStepPageState extends State<SetupStepPage> {
               //It takes 5/6 part of the screen
               flex: 7,
               child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 50),
                 alignment: Alignment.center,
                 color: AppTheme.colorBackground,
                 child: Column(
@@ -77,100 +79,141 @@ class SetupStepPageState extends State<SetupStepPage> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Container(
-                      width: size.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 30.0,
-                            alignment: Alignment.center,
-                            child: ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  width: size.width * 0.052,
-                                );
-                              },
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: stepList.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                String steps = stepList[index];
-                                return CommonText(
-                                  "$steps",
-                                  color: AppTheme.colorPrimary,
-                                  fontSize: 14.0,
-                                  maxline: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontWeight: FontWeight.w500,
-                                );
-                              },
-                            ),
-                          ),
-                          Stack(
-                            children: [
-                              Container(
-                                height: 25.0,
-                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                    if (!Responsive.isMobile(context))
+                      Container(
+                        width: size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 30.0,
+                              // alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: stepList
+                                    .map(
+                                      (item) => Flexible(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          constraints: BoxConstraints(
+                                              minWidth: width1,
+                                              maxWidth: width1),
+                                          child: CommonText(
+                                            "$item",
+                                            color: AppTheme.colorPrimary,
+                                            fontSize: 14.0,
+                                            maxline: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
                               ),
-                              StreamBuilder<int>(
-                                  stream: stepIndexStream,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData && snapshot.data != null) {
-                                      return Container(
-                                          width: width1 * (snapshot.data + 1),
-                                          height: 25.0,
-                                          decoration: BoxDecoration(
-                                            color: AppTheme.colorPrimary,
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                          child: Align(
-                                              alignment: Alignment.center,
-                                              child: CommonText(
-                                                "Step ${snapshot.data + 1} of 7",
-                                                color: Colors.white,
-                                                fontSize: 12.0,
-                                              )));
-                                    } else {
-                                      return Container(
-                                          width: size.width * 0.13,
-                                          height: 25.0,
-                                          decoration: BoxDecoration(
-                                            color: AppTheme.colorPrimary,
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                          child: Align(
-                                              alignment: Alignment.center,
-                                              child: CommonText(
-                                                "Step 1 of 7",
-                                                color: Colors.white,
-                                                fontSize: 12.0,
-                                              )));
-                                    }
-                                  }),
-                            ],
-                          ),
-                        ],
+                              // child: ListView.separated(
+                              //   separatorBuilder: (context, index) {
+                              //     return SizedBox(
+                              //         // width: size.width * 0.052,
+                              //         );
+                              //   },
+                              //   padding: EdgeInsets.zero,
+                              //   shrinkWrap: true,
+                              //   physics: NeverScrollableScrollPhysics(),
+                              //   itemCount: stepList.length,
+                              //   scrollDirection: Axis.horizontal,
+                              //   itemBuilder: (context, index) {
+                              //     String steps = stepList[index];
+                              //     return Container(
+                              //       width: width1,
+                              //       constraints: BoxConstraints(
+                              //           minWidth: width1, maxWidth: width1),
+                              //       child: CommonText(
+                              //         "$steps",
+                              //         color: AppTheme.colorPrimary,
+                              //         fontSize: 14.0,
+                              //         maxline: 2,
+                              //         overflow: TextOverflow.ellipsis,
+                              //         fontWeight: FontWeight.w500,
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
+                            ),
+                            Stack(
+                              children: [
+                                Container(
+                                  height: 25.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                StreamBuilder<int>(
+                                    stream: stepIndexStream,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData &&
+                                          snapshot.data != null) {
+                                        return Container(
+                                            width: width1 * (snapshot.data + 1),
+                                            height: 25.0,
+                                            decoration: BoxDecoration(
+                                              color: AppTheme.colorPrimary,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Align(
+                                                alignment: Alignment.center,
+                                                child: CommonText(
+                                                  "Step ${snapshot.data + 1} of 7",
+                                                  color: Colors.white,
+                                                  fontSize: 12.0,
+                                                )));
+                                      } else {
+                                        return Container(
+                                            width: size.width * 0.13,
+                                            height: 25.0,
+                                            decoration: BoxDecoration(
+                                              color: AppTheme.colorPrimary,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Align(
+                                                alignment: Alignment.center,
+                                                child: CommonText(
+                                                  "Step 1 of 7",
+                                                  color: Colors.white,
+                                                  fontSize: 12.0,
+                                                )));
+                                      }
+                                    }),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     SizedBox(
                       height: 30.0,
                     ),
-                    StreamBuilder<int>(
-                      stream: stepIndexStream,
-                      builder: (context, snapshot) {
-                        print("Step Index Stream-> ${snapshot.data}");
-                        if (snapshot.hasData && snapshot.data != null) {
-                          return stepScreenList[snapshot.data];
-                        } else {
-                          return stepScreenList[0];
-                        }
-                      },
+                    Expanded(
+                      child: ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context)
+                            .copyWith(scrollbars: false),
+                        child: SingleChildScrollView(
+                          child: StreamBuilder<int>(
+                            stream: stepIndexStream,
+                            builder: (context, snapshot) {
+                              print("Step Index Stream-> ${snapshot.data}");
+                              if (snapshot.hasData && snapshot.data != null) {
+                                return stepScreenList[snapshot.data];
+                              } else {
+                                return stepScreenList[0];
+                              }
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                     SizedBox(
                       height: 50.0,

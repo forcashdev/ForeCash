@@ -8,11 +8,13 @@ class AlreadyHaveAccountText extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CommonText(
-            'Already have an account?',
-            fontSize: 16,
-            color: AppTheme.colorGrey,
-            fontWeight: FontWeight.w400,
+          Flexible(
+            child: CommonText(
+              'Already have an account?',
+              fontSize: 16,
+              color: AppTheme.colorGrey,
+              fontWeight: FontWeight.w400,
+            ),
           ),
           const SizedBox(
             width: 10,

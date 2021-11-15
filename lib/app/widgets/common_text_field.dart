@@ -24,6 +24,7 @@ class CommonTextField extends StatelessWidget {
   bool isEnabled;
   bool isFill = false;
   final colorBackground;
+  EdgeInsetsGeometry contentPadding;
 
   CommonTextField(
       {Key key,
@@ -46,7 +47,8 @@ class CommonTextField extends StatelessWidget {
       this.textInputAction,
       this.iconPrefix,
       this.onPrefixTap,
-      this.colorBackground = AppTheme.colorBackground})
+      this.colorBackground = AppTheme.colorBackground,
+      this.contentPadding = const EdgeInsets.only(bottom: 5.0)})
       : super(key: key);
 
   @override
@@ -56,7 +58,8 @@ class CommonTextField extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0), color: colorBackground),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0), color: colorBackground),
       child: TextFormField(
         textAlignVertical: TextAlignVertical.center,
         cursorColor: AppTheme.colorPrimary,
@@ -79,28 +82,33 @@ class CommonTextField extends StatelessWidget {
         focusNode: focusNode,
         textAlign: TextAlign.start,
         decoration: InputDecoration(
-          alignLabelWithHint: false,
-          isDense: true,
-          suffixIcon: IconButton(icon: iconSuffix != null ? iconSuffix : SizedBox(), onPressed: onSuffixTap),
-          suffixIconConstraints: BoxConstraints(maxWidth: iconSuffix != null ? 40 : 10),
-          prefixIcon: IconButton(icon: iconPrefix != null ? iconPrefix : SizedBox(), onPressed: onPrefixTap),
-          prefixIconConstraints: BoxConstraints(maxWidth: iconPrefix != null ? 40 : 10),
-          contentPadding: EdgeInsets.only(bottom: 5.0),
-          labelStyle: TextStyle(
-              color: Colors.grey,
-              fontSize: kIsWeb ? 12.0 : 10.0,
-              fontWeight: FontWeight.w400,
-              fontFamily: AppTheme.fontName),
-          border: InputBorder.none,
-          hintStyle: TextStyle(
-              color: Colors.grey,
-              fontSize: kIsWeb ? 14.0 : 12.0,
-              fontWeight: FontWeight.w400,
-              fontFamily: AppTheme.fontName),
-          hintText: hintText,
-          labelText: text,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-        ),
+            alignLabelWithHint: false,
+            isDense: true,
+            suffixIcon: IconButton(
+                icon: iconSuffix != null ? iconSuffix : SizedBox(),
+                onPressed: onSuffixTap),
+            suffixIconConstraints:
+                BoxConstraints(maxWidth: iconSuffix != null ? 40 : 10),
+            prefixIcon: IconButton(
+                icon: iconPrefix != null ? iconPrefix : SizedBox(),
+                onPressed: onPrefixTap),
+            prefixIconConstraints:
+                BoxConstraints(maxWidth: iconPrefix != null ? 40 : 10),
+            labelStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: kIsWeb ? 12.0 : 10.0,
+                fontWeight: FontWeight.w400,
+                fontFamily: AppTheme.fontName),
+            border: InputBorder.none,
+            hintStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: kIsWeb ? 14.0 : 12.0,
+                fontWeight: FontWeight.w400,
+                fontFamily: AppTheme.fontName),
+            hintText: hintText,
+            labelText: text,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            contentPadding: contentPadding),
       ),
     );
   }

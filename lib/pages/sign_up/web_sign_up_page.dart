@@ -32,7 +32,8 @@ class WebSignUpPageState extends State<WebSignUpPage> {
     var size = MediaQuery.of(context).size;
     return Container(
       width: 750,
-      margin: EdgeInsets.symmetric(horizontal: 50.0),
+      constraints: BoxConstraints(minWidth: 500, maxWidth: 750),
+      // margin: EdgeInsets.symmetric(horizontal: 50.0),
       padding: EdgeInsets.symmetric(horizontal: 30.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -52,26 +53,6 @@ class WebSignUpPageState extends State<WebSignUpPage> {
           emailField(size),
           SizedBox(
             height: 25.0,
-          ),
-          Container(
-            width: 630,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CommonText(
-                  "Password",
-                  fontSize: 11.0,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: AppTheme.fontName,
-                ),
-                CommonText(
-                  "Forgot Password?",
-                  fontSize: 11.0,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: AppTheme.fontName,
-                ),
-              ],
-            ),
           ),
           SizedBox(
             height: 5.0,
@@ -209,32 +190,27 @@ class WebSignUpPageState extends State<WebSignUpPage> {
   }
 
   fullNameField(size) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              height: 20,
-              width: 630,
-              child: CommonText(
-                "Full Name",
-                fontSize: 11.0,
-                fontWeight: FontWeight.w500,
-                fontFamily: AppTheme.fontName,
-              ),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 20,
+          // width: 630,
+          child: CommonText(
+            "Full Name",
+            fontSize: 11.0,
+            fontWeight: FontWeight.w500,
+            fontFamily: AppTheme.fontName,
           ),
-          Center(
-            child: CommonTextField(
-              hintText: 'Name',
-              inputType: TextInputType.emailAddress,
-              onChanged: (val) {},
-              onTap: () {},
-            ),
-          ),
-        ],
-      ),
+        ),
+        CommonTextField(
+          hintText: 'Name',
+          inputType: TextInputType.emailAddress,
+          contentPadding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+          onChanged: (val) {},
+          onTap: () {},
+        ),
+      ],
     );
   }
 
@@ -244,25 +220,22 @@ class WebSignUpPageState extends State<WebSignUpPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Container(
-              height: 20,
-              width: 630,
-              child: CommonText(
-                "Email",
-                fontSize: 11.0,
-                fontWeight: FontWeight.w500,
-                fontFamily: AppTheme.fontName,
-              ),
+          Container(
+            height: 20,
+            // width: 630,
+            child: CommonText(
+              "Email",
+              fontSize: 11.0,
+              fontWeight: FontWeight.w500,
+              fontFamily: AppTheme.fontName,
             ),
           ),
-          Center(
-            child: CommonTextField(
-              hintText: 'Email address',
-              inputType: TextInputType.emailAddress,
-              onChanged: (val) {},
-              onTap: () {},
-            ),
+          CommonTextField(
+            hintText: 'Email address',
+            inputType: TextInputType.emailAddress,
+            contentPadding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+            onChanged: (val) {},
+            onTap: () {},
           ),
         ],
       ),
@@ -271,44 +244,65 @@ class WebSignUpPageState extends State<WebSignUpPage> {
 
   passwordField(size) {
     return Container(
-      alignment: Alignment.centerLeft,
+      // alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: CommonTextField(
-              hintText: 'Password',
-              inputType: TextInputType.emailAddress,
-              onChanged: (val) {},
-              maxLine: 1,
-              obscureText: _obscureText,
-              iconSuffix: Image.asset(
-                // Based on passwordVisible state choose the icon
-                _obscureText ? Constants.ic_pass_hide : Constants.ic_show_password,
-                height: 22.0,
-                width: 22.0,
-              ),
-              onSuffixTap: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
-              onTap: () {},
+          Container(
+            // width: 630,
+            height: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CommonText(
+                  "Password",
+                  fontSize: 11.0,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: AppTheme.fontName,
+                ),
+                CommonText(
+                  "Forgot Password?",
+                  fontSize: 11.0,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: AppTheme.fontName,
+                ),
+              ],
             ),
+          ),
+          CommonTextField(
+            hintText: 'Password',
+            inputType: TextInputType.emailAddress,
+            onChanged: (val) {},
+            maxLine: 1,
+            obscureText: _obscureText,
+            contentPadding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+            iconSuffix: Image.asset(
+              // Based on passwordVisible state choose the icon
+              _obscureText
+                  ? Constants.ic_pass_hide
+                  : Constants.ic_show_password,
+              height: 22.0,
+              width: 22.0,
+            ),
+            onSuffixTap: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+            onTap: () {},
           ),
           SizedBox(
             height: 5.0,
           ),
-          Center(
-            child: Container(
-              height: 20,
-              width: 630,
-              child: CommonText(
-                "Minimum 6 Character required*",
-                fontSize: 9.0,
-                color: AppTheme.colorGrey,
-                fontFamily: AppTheme.fontName,
-              ),
+          Container(
+            height: 20,
+            // width: 630,
+            child: CommonText(
+              "Minimum 6 Character required*",
+              fontSize: 9.0,
+              fontWeight: FontWeight.w400,
+              color: AppTheme.colorGrey,
+              fontFamily: AppTheme.fontName,
             ),
           ),
         ],

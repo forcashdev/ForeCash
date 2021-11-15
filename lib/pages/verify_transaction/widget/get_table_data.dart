@@ -239,8 +239,7 @@ class _GetTableDataWidgetState extends State<GetTableDataWidget> {
                       Expanded(
                         child: Container(
                           height: 40.0,
-                          margin:
-                          EdgeInsets.symmetric(vertical: 5.0),
+                          margin: EdgeInsets.symmetric(vertical: 5.0),
                           child: CommonVerticalContainer(
                             containerColor: AppTheme.colorAccent,
                           ),

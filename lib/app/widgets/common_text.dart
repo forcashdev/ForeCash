@@ -10,17 +10,19 @@ class CommonText extends StatelessWidget {
   final TextDecoration decoration;
   final String fontFamily;
   final TextOverflow overflow;
-  double height;
+  final double height;
 
-  CommonText(
-      this.text ,
+  CommonText(this.text,
       {Key key,
       this.fontSize,
       this.fontWeight,
       this.color,
       this.textAlign,
-        this.height,
-      this.maxline, this.decoration, this.fontFamily, this.overflow})
+      this.height,
+      this.maxline,
+      this.decoration,
+      this.fontFamily,
+      this.overflow})
       : super(key: key);
 
   @override
@@ -29,13 +31,12 @@ class CommonText extends StatelessWidget {
       text,
       overflow: overflow,
       style: TextStyle(
-        fontFamily: fontFamily,
-        fontSize: fontSize,
-        height: height,
-        fontWeight: fontWeight,
-        color: color,
-        decoration: decoration
-      ),
+          fontFamily: fontFamily,
+          fontSize: fontSize,
+          height: height,
+          fontWeight: fontWeight,
+          color: color,
+          decoration: decoration),
       textAlign: textAlign,
       maxLines: maxline,
     );

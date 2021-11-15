@@ -1,9 +1,7 @@
-
 import 'package:rxdart/rxdart.dart';
 
 var stepIndexController = BehaviorSubject<int>();
 Stream<int> stepIndexStream = stepIndexController.stream;
-
 
 class Constants {
   static const appName = 'ForCash';
@@ -22,7 +20,7 @@ class Constants {
   static const ic_logo = '$root_icon' + 'ic_logo.png';
   static const ic_calendar = '$root_icon' + 'ic_calendar.svg';
   static const ic_logo_primary = '$root_icon' + 'ic_logo_primary.svg';
-  static const ic_pass_hide = '$root_icon' + 'ic_pass_hide.svg';
+  static const ic_pass_hide = '$root_icon' + 'ic_pass_hide.png';
   static const ic_show_password = '$root_icon' + 'ic_show_password.png';
   static const ic_search = '$root_icon' + 'ic_search.svg';
   static const ic_notification = '$root_icon' + 'ic_notification.svg';
@@ -47,13 +45,12 @@ class Constants {
 
   static const ic_arrow_left_full = '$root_icon' + 'ic_arrow_left_full.svg';
   static const ic_arrow_right_full = '$root_icon' + 'ic_arrow_right_full.svg';
-
+  static const ic_checked = '$root_icon' + 'ic_checked.svg';
+  static const ic_unchecked = '$root_icon' + 'ic_unchecked.svg';
 
   //images
   static const dummy_image = '$root_image' + 'dummy_image.png';
 
-
   static const root_icon = 'assets/icon/';
   static const root_image = 'assets/images/';
-
 }

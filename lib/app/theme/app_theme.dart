@@ -6,7 +6,6 @@ class AppTheme {
   static MaterialColor colorPrimaryMaterial =
       const MaterialColor(0xFFAAD400, const {900: const Color(0xFF174261)});
 
-
   static const Color colorPrimary = Color(0xFF174261);
   static const Color colorPrimaryLight = Color(0xFF097EA2);
   static const Color colorPrimaryLight1 = Color(0xFF047BA0);
@@ -20,7 +19,8 @@ class AppTheme {
   static const Color colorOrange = Color(0xFFFEA800);
   static const Color colorLightRed = Color(0xFFFFEBEB);
   static const Color colorRed = Color(0xFFEE4242);
-  static const Color colorTextGrey= Color(0xFF969CB2);
+  static const Color colorTextGrey = Color(0xFF969CB2);
+  static const Color white = Color(0xFFFFFFFF);
 
   static const String fontName = 'Montserrat';
 }
