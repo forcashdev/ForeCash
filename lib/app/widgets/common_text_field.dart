@@ -24,6 +24,7 @@ class CommonTextField extends StatelessWidget {
   bool isEnabled;
   bool isFill = false;
   final colorBackground;
+  final double radius;
   EdgeInsetsGeometry contentPadding;
 
   CommonTextField(
@@ -48,6 +49,7 @@ class CommonTextField extends StatelessWidget {
       this.iconPrefix,
       this.onPrefixTap,
       this.colorBackground = AppTheme.colorBackground,
+        this.radius = 10.0,
       this.contentPadding = const EdgeInsets.only(bottom: 5.0)})
       : super(key: key);
 
@@ -59,7 +61,7 @@ class CommonTextField extends StatelessWidget {
       margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0), color: colorBackground),
+          borderRadius: BorderRadius.circular(radius), color: colorBackground),
       child: TextFormField(
         textAlignVertical: TextAlignVertical.center,
         cursorColor: AppTheme.colorPrimary,

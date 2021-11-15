@@ -71,7 +71,7 @@ class SetupStepPageState extends State<SetupStepPage> {
               //It takes 5/6 part of the screen
               flex: 7,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal:Responsive.isMobile(context) ? 10 : 50),
                 alignment: Alignment.center,
                 color: AppTheme.colorBackground,
                 child: Column(

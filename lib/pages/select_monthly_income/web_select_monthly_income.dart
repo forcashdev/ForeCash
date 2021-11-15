@@ -1,10 +1,11 @@
-import 'package:editable/editable.dart';
 import 'package:flutter/material.dart';
 import 'package:for_cash/app/constants/constants.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
+import 'package:for_cash/app/widgets/common_dropdown.dart';
 import 'package:for_cash/app/widgets/common_image_asset.dart';
 import 'package:for_cash/app/widgets/common_insert_table.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
+import 'package:for_cash/app/widgets/common_text_field.dart';
 import 'package:for_cash/pages/select_monthly_income/widgets/select_monthly_income_text.dart';
 
 class WebSelectMonthlyIncomePage extends StatefulWidget {
@@ -19,17 +20,27 @@ class _WebSelectMonthlyIncomePageState
     extends State<WebSelectMonthlyIncomePage> {
   bool isCheckboxChecked = false;
 
+  List<int> datalist = [0, 1, 2];
+  List incomeTextList = [];
+  List amountTextList = [];
+  List apiEveryList = ["15th", "16th", "17th", "18th"];
+  List apiPaidList = ["1 Month", "2 Month", "3 Month", "4 Month"];
+
+  List selectedPaid = [];
+  List selectedEvery = [];
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
-      width: size.width * 0.8,
+      width: 750,
+      constraints: BoxConstraints(minWidth: 500, maxWidth: 750),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 50.0),
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+      // margin: EdgeInsets.symmetric(horizontal: 15.0),
+      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 30.0),
       child: Column(
         children: [
           SelectMonthlyIncomeText(),
@@ -39,92 +50,147 @@ class _WebSelectMonthlyIncomePageState
 
 //  Table
           Container(
-            height: 300,
+            constraints: BoxConstraints(minWidth: 500, maxWidth: 750),
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: .5,
+                color: AppTheme.colorGrey,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
             child: Table(
-              border: TableBorder.symmetric(
-                  outside: BorderSide(
-                      color: AppTheme.colorGrey.withOpacity(.5), width: 1)),
+              columnWidths: const <int, TableColumnWidth>{
+                0: FlexColumnWidth(3),
+                1: FlexColumnWidth(2),
+                2: FlexColumnWidth(2),
+                3: FlexColumnWidth(2),
+              },
+              // border: TableBorder.symmetric(
+              //     outside: BorderSide(
+              //         color: AppTheme.colorGrey.withOpacity(.5), width: 1)),
               children: [
+                //Header
                 TableRow(
-                    children: [
-                      Expanded(child: SizedBox.shrink()),
-                      Expanded(child: SizedBox.shrink()),
-                      Expanded(child: SizedBox.shrink()),
-                      Expanded(child: SizedBox.shrink()),
-                    ],
                     decoration: BoxDecoration(
-                        color: AppTheme.colorGrey.withOpacity(.5))),
-                TableRow(
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(5.0)),
-                    children: [
-                      Text('Income Name',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('Paid On',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('Every',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('Amount',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ]),
-                TableRow(
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            isCheckboxChecked = !isCheckboxChecked;
-                            setState(() {});
-                          },
-                          child: CommonImageAsset(
-                            image: isCheckboxChecked
-                                ? Constants.ic_checked
-                                : Constants.ic_unchecked,
-                            height: 14.0,
-                            width: 14.0,
-                          ),
-                        ),
-                        Text('Amount'),
-                      ],
+                      border: Border(
+                          bottom: BorderSide(
+                              color: AppTheme.colorGrey, width: 0.5)),
                     ),
-                    TableCell(child: Text('Amount')),
-                    Text('Amount'),
-                    Text('Amount'),
-                  ],
-                ),
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(width: 14),
+                          Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: CommonText('Income Name',
+                                  fontWeight: FontWeight.w500,
+                                  color: AppTheme.colorGrey)),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CommonText('Paid On',
+                            fontWeight: FontWeight.w500,
+                            color: AppTheme.colorGrey),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CommonText('Every',
+                            fontWeight: FontWeight.w500,
+                            color: AppTheme.colorGrey),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CommonText('Income Name',
+                            fontWeight: FontWeight.w500,
+                            color: AppTheme.colorGrey),
+                      ),
+                    ]),
+
+                //Rows
+                ...datalist.map((item) {
+                  incomeTextList.add(TextEditingController());
+                  amountTextList.add(TextEditingController());
+                  selectedPaid.add('1 Month');
+                  selectedEvery.add('15th');
+                  return TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                isCheckboxChecked = !isCheckboxChecked;
+                                setState(() {});
+                              },
+                              child: CommonImageAsset(
+                                image: isCheckboxChecked
+                                    ? Constants.ic_checked
+                                    : Constants.ic_unchecked,
+                                height: 14.0,
+                                width: 14.0,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(10.0),
+                                child: CommonTextField(
+                                  text: item.toString(),
+                                  radius: 5.0,
+                                  controller: incomeTextList[item],
+                                  inputType: TextInputType.emailAddress,
+                                  isFill: true,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: CommonDropDown(
+                              height: 40.0,
+                              width: MediaQuery.of(context).size.width,
+                              errorText: '',
+                              value: selectedEvery[item],
+                              items: apiEveryList,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedEvery[item] = value;
+                                });
+                                print('changed to $value');
+                              })),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CommonDropDown(
+                            height: 40.0,
+                            width: MediaQuery.of(context).size.width,
+                            errorText: '',
+                            value: selectedPaid[item],
+                            items: apiPaidList,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedPaid[item] = value;
+                              });
+                              print('changed to $value');
+                            }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CommonTextField(
+                          text: 'Email address',
+                          controller: amountTextList[item],
+                          inputType: TextInputType.emailAddress,
+                          isFill: true,
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList()
               ],
             ),
-          )
-
-          // Container(
-          //   width: double.infinity,
-          //   height: 200,
-          //   decoration: BoxDecoration(
-          //       border: Border.all(
-          //           color: AppTheme.colorGrey.withOpacity(0.5), width: 1)),
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.stretch,
-          //     children: [
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //         children: [
-          //           CommonText('Income Name', textAlign: TextAlign.start),
-          //           CommonText('Paid On', textAlign: TextAlign.start),
-          //           CommonText('Every', textAlign: TextAlign.start),
-          //           CommonText('Amount', textAlign: TextAlign.start),
-          //         ],
-          //       ),
-          //       Container(
-          //         margin: EdgeInsets.only(top: 10),
-          //         height: 1,
-          //         color: Colors.grey.withOpacity(.5),
-          //       ),
-          //       Row(
-          //         children: [],
-          //       )
-          //     ],
-          //   ),
-          // )
+          ),
 
           //--------------------------original code
           // Table(
