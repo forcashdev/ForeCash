@@ -19,14 +19,29 @@ class SetupWeeklyBudgetText extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        CommonText(
-          'We’ve identified reoccuring Weekly Budgets. Select which weekly Budgets, such as bills, childcare, or even weekly savings contributions. ',
-          textAlign: TextAlign.center,
-          fontWeight: FontWeight.w400,
-          fontSize: 14,
-          maxline: 4,
-          color: AppTheme.colorGrey,
-        )
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 4,
+            text: TextSpan(
+                text: 'We’ve identified reoccuring Monthly Incomes. Select which monthly incomes, such as ',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: AppTheme.colorGrey,
+                  fontFamily: AppTheme.fontName,
+                ),
+                children: [
+                  TextSpan(
+                    text: 'bills, childcare, or even weekly savings contributions. ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      fontFamily: AppTheme.fontName,
+                      color: AppTheme.colorGrey,
+                    ),
+                  )
+                ])),
+
       ],
     );
   }
