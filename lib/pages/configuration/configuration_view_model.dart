@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:for_cash/pages/verify_transaction/mobile_verify_transaction_page.dart';
+
 class ConfigurationModel{
   dynamic state;
   ConfigurationModel(dynamic state){
@@ -5,7 +8,7 @@ class ConfigurationModel{
   }
 
   void onTapSave(){
-
+    Navigator.push(state.context, MaterialPageRoute(builder: (context) => MobileVerifyTransactionPage()));
   }
 
 }

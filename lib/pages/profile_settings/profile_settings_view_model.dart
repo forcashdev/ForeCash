@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:for_cash/pages/forget_password/mobile_forget_password_page.dart';
 
 class ProfileSettingsViewModel{
   dynamic state;
@@ -16,8 +17,6 @@ class ProfileSettingsViewModel{
   }
 
   void onTapSave(){
-
-
-
+    Navigator.push(state.context, MaterialPageRoute(builder: (context) => MobileForgetPasswordPage()));
   }
 }

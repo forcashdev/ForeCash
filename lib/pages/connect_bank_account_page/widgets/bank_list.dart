@@ -21,6 +21,8 @@ class BankList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
         shrinkWrap: true,
+        primary: true,
+        physics: NeverScrollableScrollPhysics(),
         crossAxisCount: kIsWeb ? 3 : 2,
         childAspectRatio: kIsWeb ? 2.5 : 2,
         mainAxisSpacing: kIsWeb ? 30.0 : 20.0,

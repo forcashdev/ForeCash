@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:for_cash/app/constants/constants.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
+import 'package:for_cash/pages/forget_password/mobile_forget_password_page.dart';
 
 import 'common_divider_line.dart';
 import 'common_image_asset.dart';
@@ -9,8 +10,9 @@ import 'common_image_asset.dart';
 class CommonDashboardAppbar extends StatelessWidget {
 
   final Function onTapNotification;
+  final Function onTapProfile;
 
-  CommonDashboardAppbar({Key key, this.onTapNotification}) : super(key: key);
+  CommonDashboardAppbar({Key key, this.onTapNotification, this.onTapProfile}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +136,7 @@ class CommonDashboardAppbar extends StatelessWidget {
     ];
 
     return InkWell(
+      onTap: onTapProfile,
       child: Container(
           height: size.size.width * 0.11,
           width: size.size.width * 0.20,
@@ -167,60 +170,60 @@ class CommonDashboardAppbar extends StatelessWidget {
                   ),*/
                 ],
               ),
-              Positioned(
-                top: 0,
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  width: 30.0,
-                  child: PopupMenuButton<String>(
-                    icon: CommonImageAsset(
-                      image: Constants.ic_down_arrow,
-                      height: 10.0,
-                      width: 10.0,
-                    ),
-                    onSelected: choiceAction,
-                    itemBuilder: (BuildContext context) {
-                      int index = 0;
-                      return choices.map((String choice) {
-                        return PopupMenuItem<String>(
-                          value: choice,
-                          height: 30,
-                          padding: EdgeInsets.zero,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    CommonImageAsset(
-                                      image: iconList[index++],
-                                    ),
-                                    SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    CommonText(
-                                      choice,
-                                      color: AppTheme.colorGrey,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                                CommonDividerLine(
-                                  height: 1.0,
-                                  color: AppTheme.colorWhite,
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ),
-              )
+              // Positioned(
+              //   top: 0,
+              //   bottom: 0,
+              //   right: 0,
+              //   child: Container(
+              //     width: 30.0,
+              //     child: PopupMenuButton<String>(
+              //       icon: CommonImageAsset(
+              //         image: Constants.ic_down_arrow,
+              //         height: 10.0,
+              //         width: 10.0,
+              //       ),
+              //       onSelected: choiceAction,
+              //       itemBuilder: (BuildContext context) {
+              //         int index = 0;
+              //         return choices.map((String choice) {
+              //           return PopupMenuItem<String>(
+              //             value: choice,
+              //             height: 30,
+              //             padding: EdgeInsets.zero,
+              //             child: Container(
+              //               alignment: Alignment.center,
+              //               child: Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.center,
+              //                 children: [
+              //                   Row(
+              //                     children: [
+              //                       CommonImageAsset(
+              //                         image: iconList[index++],
+              //                       ),
+              //                       SizedBox(
+              //                         width: 10.0,
+              //                       ),
+              //                       CommonText(
+              //                         choice,
+              //                         color: AppTheme.colorGrey,
+              //                         fontSize: 12.0,
+              //                         fontWeight: FontWeight.w500,
+              //                       )
+              //                     ],
+              //                   ),
+              //                   CommonDividerLine(
+              //                     height: 1.0,
+              //                     color: AppTheme.colorWhite,
+              //                   )
+              //                 ],
+              //               ),
+              //             ),
+              //           );
+              //         }).toList();
+              //       },
+              //     ),
+              //   ),
+              // )
             ],
           )),
     );

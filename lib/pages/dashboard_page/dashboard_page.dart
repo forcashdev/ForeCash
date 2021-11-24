@@ -8,7 +8,9 @@ import 'package:for_cash/app/widgets/common_switch.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
 import 'package:for_cash/pages/dashboard_page/widgets/common_one_time_income_row.dart';
 import 'package:for_cash/pages/dashboard_page/widgets/common_week_box.dart';
+import 'package:for_cash/pages/forget_password/mobile_forget_password_page.dart';
 import 'package:for_cash/pages/notification/mobile_notification_page.dart';
+import 'package:for_cash/pages/profile_settings/mobile_profile_settings_page.dart';
 
 import 'dashboard_page_view_model.dart';
 
@@ -38,10 +40,10 @@ class DashboardPageState extends State<DashboardPage> {
               children: [
                 CommonDashboardAppbar(
                   onTapNotification: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MobileNotificationPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MobileNotificationPage()));
+                  },
+                  onTapProfile: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MobileProfileSettingsPage()));
                   },
                 ),
                 Stack(
@@ -80,24 +82,21 @@ class DashboardPageState extends State<DashboardPage> {
                           height: 1.0,
                           color: AppTheme.colorWhite,
                         ),
-                        monthlyIncomeBox(size, "Weekly Income",
-                            topPadding: 25.0),
+                        monthlyIncomeBox(size, "Weekly Income", topPadding: 25.0),
                         itemAndIncomeList(size),
                         CommonDividerLine(
                           width: size.width,
                           height: 1.0,
                           color: AppTheme.colorWhite,
                         ),
-                        monthlyIncomeBox(size, "Monthly Expense",
-                            topPadding: 25.0),
+                        monthlyIncomeBox(size, "Monthly Expense", topPadding: 25.0),
                         itemAndIncomeList(size),
                         CommonDividerLine(
                           width: size.width,
                           height: 1.0,
                           color: AppTheme.colorWhite,
                         ),
-                        monthlyIncomeBox(size, "Weekly Expense",
-                            topPadding: 25.0),
+                        monthlyIncomeBox(size, "Weekly Expense", topPadding: 25.0),
                         itemAndIncomeList(size),
                         CommonDividerLine(
                           width: size.width,
@@ -141,8 +140,7 @@ class DashboardPageState extends State<DashboardPage> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50.0),
                               color: AppTheme.colorBGWhite,
-                              border: Border.all(
-                                  width: 1.5, color: AppTheme.colorBGWhite)),
+                              border: Border.all(width: 1.5, color: AppTheme.colorBGWhite)),
                           child: Stack(
                             children: [
                               Center(
@@ -517,8 +515,7 @@ class DashboardPageState extends State<DashboardPage> {
                     scrollDirection: Axis.vertical,
                     physics: NeverScrollableScrollPhysics(),
                     childAspectRatio: 1.5,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                     crossAxisCount: 3,
                     children: List.generate(18, (index) {
                       return Center(
@@ -540,9 +537,7 @@ class DashboardPageState extends State<DashboardPage> {
           height: 25.0,
           width: 25.0,
           margin: EdgeInsets.only(left: size.width * 0.365),
-          decoration: BoxDecoration(
-              color: AppTheme.colorWhite,
-              borderRadius: BorderRadius.circular(50.0)),
+          decoration: BoxDecoration(color: AppTheme.colorWhite, borderRadius: BorderRadius.circular(50.0)),
           child: Center(
             child: CommonImageAsset(
               image: Constants.ic_arrow_right,
@@ -562,9 +557,7 @@ class DashboardPageState extends State<DashboardPage> {
       child: Container(
         width: size.width,
         height: size.height * 0.065,
-        decoration: BoxDecoration(
-            color: AppTheme.colorPrimaryLight1,
-            borderRadius: BorderRadius.circular(10.0)),
+        decoration: BoxDecoration(color: AppTheme.colorPrimaryLight1, borderRadius: BorderRadius.circular(10.0)),
         margin: EdgeInsets.symmetric(horizontal: 20.0),
         child: Center(
           child: CommonText(
@@ -599,9 +592,7 @@ class DashboardPageState extends State<DashboardPage> {
                 onTap: () {
                   setState(() {
                     isAddTimeIncome = false;
-                    _animatedHeight != 0.0
-                        ? _animatedHeight = 0.0
-                        : _animatedHeight = 100.0;
+                    _animatedHeight != 0.0 ? _animatedHeight = 0.0 : _animatedHeight = 100.0;
                   });
                 },
                 child: AnimatedContainer(
@@ -751,8 +742,7 @@ class DashboardPageState extends State<DashboardPage> {
                         scrollDirection: Axis.vertical,
                         physics: NeverScrollableScrollPhysics(),
                         childAspectRatio: 1.5,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                         crossAxisCount: 3,
                         children: List.generate(3, (index) {
                           return Center(
@@ -834,8 +824,7 @@ class DashboardPageState extends State<DashboardPage> {
                         scrollDirection: Axis.vertical,
                         physics: NeverScrollableScrollPhysics(),
                         childAspectRatio: 1.5,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                         crossAxisCount: 3,
                         children: List.generate(3, (index) {
                           return Center(
@@ -917,8 +906,7 @@ class DashboardPageState extends State<DashboardPage> {
                         scrollDirection: Axis.vertical,
                         physics: NeverScrollableScrollPhysics(),
                         childAspectRatio: 1.5,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                         crossAxisCount: 3,
                         children: List.generate(3, (index) {
                           return Center(
@@ -993,8 +981,7 @@ class DashboardPageState extends State<DashboardPage> {
                       scrollDirection: Axis.vertical,
                       physics: NeverScrollableScrollPhysics(),
                       childAspectRatio: 1.5,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                       crossAxisCount: 3,
                       children: List.generate(totalList.length, (index) {
                         return Center(
@@ -1003,9 +990,7 @@ class DashboardPageState extends State<DashboardPage> {
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
                             maxline: 1,
-                            color: index != 2
-                                ? AppTheme.colorAccent
-                                : AppTheme.colorOrange,
+                            color: index != 2 ? AppTheme.colorAccent : AppTheme.colorOrange,
                             overflow: TextOverflow.ellipsis,
                           ),
                         );

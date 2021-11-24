@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:for_cash/app/constants/constants.dart';
+import 'package:for_cash/app/dialog/common_delete_dialog.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
+import 'package:for_cash/app/widgets/common_image_asset.dart';
 
 import 'common_dropdown.dart';
 import 'common_text.dart';
@@ -70,94 +74,113 @@ class _CommonInsertTableState extends State<CommonInsertTable> {
         itemCount: widget.totalRowLength,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return Row(
-            children: [
-              SizedBox(
-                width: 10,
-              ),
-              CommonVerticalContainer(
-                containerColor: AppTheme.colorAccent,
-              ),
-
-              ///expense text field
-              Expanded(
-                flex: 6,
+          return Slidable(
+            actionPane: SlidableDrawerActionPane(),
+            actionExtentRatio: 0.13,
+            secondaryActions: [
+              InkWell(
+                onTap: () {
+                  showDialog(context: context, builder: (context) => DeleteConfirmationDialog());
+                },
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(6, 10, 0, 6),
-                  child: CommonTextField(
-                    text: 'Apple Inc.',
-                    // controller: expenseControllerList[index],
-                    inputType: TextInputType.name,
-                    isFill: true,
-                  ),
-                ),
-              ),
-
-              ///paid on
-              Flexible(
-                flex: 5,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(8, 10, 0, 6),
-                  child: CommonDropDown(
-                    height: 50,
-                    items: widget.paidOnList,
-                    value: widget.paidOnSelectedValue,
-                    onChanged: (item) {
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ),
-
-              ///paid on
-              Flexible(
-                flex: 5,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(8, 10, 0, 6),
-                  child: CommonDropDown(
-                    height: 50,
-                    items: widget.everyList,
-                    value: widget.paidOnSelectedValue,
-                    onChanged: (item) {
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ),
-
-             /* ///every list
-              Flexible(
-                flex: 5,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(8, 10, 0, 6),
-                  child: CommonDropDown(
-                    colorBackground: widget.isShowColor
-                        ? AppTheme.colorBackground
-                        : Colors.transparent,
-                    height: 50,
-                    items: widget.everyList,
-                    value: widget.everySelectedValue,
-                    onChanged: (item) {
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ),
-*/
-              ///amount
-              Expanded(
-                flex: 6,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(8, 10, 10, 6),
-                  child: CommonTextField(
-                    // controller: amountControllerList[index],
-                    text: '\$500',
-                    inputType: TextInputType.name,
-                    isFill: true,
-                  ),
-                ),
+                    margin: EdgeInsets.all(5.0),
+                    child: CommonImageAsset(
+                      image: Constants.ic_delete_red,
+                      height: 34.0,
+                      width: 34.0,
+                    )),
               ),
             ],
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 10,
+                ),
+                CommonVerticalContainer(
+                  containerColor: AppTheme.colorAccent,
+                ),
+
+                ///expense text field
+                Expanded(
+                  flex: 6,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(6, 10, 0, 6),
+                    child: CommonTextField(
+                      text: 'Apple Inc.',
+                      // controller: expenseControllerList[index],
+                      inputType: TextInputType.name,
+                      isFill: true,
+                    ),
+                  ),
+                ),
+
+                ///paid on
+                Flexible(
+                  flex: 5,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(8, 10, 0, 6),
+                    child: CommonDropDown(
+                      height: 50,
+                      items: widget.paidOnList,
+                      value: widget.paidOnSelectedValue,
+                      onChanged: (item) {
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ),
+
+                ///paid on
+                Flexible(
+                  flex: 5,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(8, 10, 0, 6),
+                    child: CommonDropDown(
+                      height: 50,
+                      items: widget.everyList,
+                      value: widget.everySelectedValue,
+                      onChanged: (item) {
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ),
+
+                /* ///every list
+                Flexible(
+                  flex: 5,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(8, 10, 0, 6),
+                    child: CommonDropDown(
+                      colorBackground: widget.isShowColor
+                          ? AppTheme.colorBackground
+                          : Colors.transparent,
+                      height: 50,
+                      items: widget.everyList,
+                      value: widget.everySelectedValue,
+                      onChanged: (item) {
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ),
+*/
+
+                ///amount
+                Expanded(
+                  flex: 6,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(8, 10, 10, 6),
+                    child: CommonTextField(
+                      // controller: amountControllerList[index],
+                      text: '\$500',
+                      inputType: TextInputType.name,
+                      isFill: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         });
   }

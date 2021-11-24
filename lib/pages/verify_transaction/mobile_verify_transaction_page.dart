@@ -86,6 +86,8 @@ class _MobileVerifyTransactionPageState
               maxline: 1,
               overflow: TextOverflow.ellipsis,
             ),
+            onPressed: (){
+            },
           ),
         ),
       ],

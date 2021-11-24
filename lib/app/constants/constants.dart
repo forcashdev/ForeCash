@@ -47,6 +47,7 @@ class Constants {
   static const ic_arrow_right_full = '$root_icon' + 'ic_arrow_right_full.svg';
   static const ic_checked = '$root_icon' + 'ic_checked.svg';
   static const ic_unchecked = '$root_icon' + 'ic_unchecked.svg';
+  static const ic_delete_red = '$root_icon' + 'ic_delete_red.svg';
 
   //images
   static const dummy_image = '$root_image' + 'dummy_image.png';

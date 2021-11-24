@@ -37,7 +37,8 @@ class _MobileBankAccountPageState extends State<MobileBankAccountPage> {
               SizedBox(
                 height: 40,
               ),
-              BankList()
+              BankList(),
+              SizedBox(height: 50.0,)
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:for_cash/pages/configuration/mobile_configuration_page.dart';
 
 class ResetPasswordViewModel{
   dynamic state;
@@ -13,6 +14,7 @@ class ResetPasswordViewModel{
   }
 
   void onTapSave(){
+    Navigator.push(state.context, MaterialPageRoute(builder: (context) => MobileConfigurationPage()));
 
   }
 
