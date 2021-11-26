@@ -164,10 +164,10 @@ class CommonDashboardAppbar extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  /* Icon(
+                   Icon(
                     Icons.keyboard_arrow_down,
                     color: AppTheme.colorGrey,
-                  ),*/
+                  ),
                 ],
               ),
               // Positioned(
