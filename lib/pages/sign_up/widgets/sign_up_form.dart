@@ -66,9 +66,9 @@ class SignUpForm extends StatelessWidget {
         CommonTextField(
           text: 'Password',
           controller: passwordController,
-          inputType: TextInputType.name,
+          inputType: TextInputType.emailAddress,
           isFill: true,
-          iconSuffix: CommonImageAsset(
+          suffixIcon: CommonImageAsset(
             image: Constants.ic_pass_hide,
           ),
         ),

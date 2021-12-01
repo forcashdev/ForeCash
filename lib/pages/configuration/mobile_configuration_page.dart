@@ -16,8 +16,7 @@ class MobileConfigurationPage extends StatefulWidget {
 class _MobileConfigurationPageState extends State<MobileConfigurationPage> {
 
   ConfigurationModel model;
-  List<String> weekList = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  String selectedWeek = 'Sunday';
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,65 +32,14 @@ class _MobileConfigurationPageState extends State<MobileConfigurationPage> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 25,
-              ),
-              textWithDropDown(),
-              SizedBox(
-                height: 20.0,
-              ),
-              LowPricingForm(),
-            ],
-          ),
+          child: LowPricingForm(),
         ),
       ),
       bottomNavigationBar: saveButton(),
     );
   }
 
-  Widget textWithDropDown() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CommonText(
-          "I want to reset my weeks on",
-          color: AppTheme.colorGrey,
-          fontSize: 14.0,
-          fontWeight: FontWeight.w700,
-          maxline: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        SizedBox(
-          height: 5.0,
-        ),
-        CommonDropDown(
-            height: 50.0,
-            width: MediaQuery.of(context).size.width,
-            errorText: '',
-            value: selectedWeek,
-            items: weekList,
-            onChanged: (value) {
-              setState(() {
-                selectedWeek = value;
-              });
-              print('changed to $value');
-            }),
-        SizedBox(
-          height: 3.0,
-        ),
-        CommonText(
-          "We recommend whatever day you normally get paid*",
-          color: AppTheme.colorGrey,
-          fontSize: 12.0,
-          maxline: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    );
-  }
+
 
   Widget saveButton() => Container(
     padding: EdgeInsets.symmetric(horizontal: 30,vertical: 30),

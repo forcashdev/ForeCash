@@ -13,7 +13,7 @@ class BankSearchField extends StatelessWidget {
       controller: searchController,
       inputType: TextInputType.name,
       isFill: true,
-      iconPrefix: CommonImageAsset(
+      prefixIcon: CommonImageAsset(
         image: Constants.ic_search,
         height: 20.0,
         width: 20.0,

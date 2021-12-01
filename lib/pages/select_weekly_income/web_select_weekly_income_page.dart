@@ -139,7 +139,7 @@ class _WebSelectWeeklyIncomePageState extends State<WebSelectWeeklyIncomePage> {
                                 padding: const EdgeInsets.all(10.0),
                                 child: CommonTextField(
                                   text: item.toString(),
-                                  radius: 5.0,
+
                                   controller: incomeTextList[item],
                                   inputType: TextInputType.emailAddress,
                                   isFill: true,
@@ -199,32 +199,32 @@ class _WebSelectWeeklyIncomePageState extends State<WebSelectWeeklyIncomePage> {
     );
   }
 
-  Widget nextButton() => Container(
-        padding: EdgeInsets.only(left: 30, right: 30, top: 30),
-        margin: EdgeInsets.only(left: 300, right: 300, top: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 45,
-              child: CommonButton(
-                buttonType: ButtonType.ElevatedButton,
-                onPressed: () {
-                  stepIndexController.sink.add(4);
-                },
-                color: AppTheme.colorAccent,
-                elevation: 0,
-                child: CommonText(
-                  'Next',
-                  color: AppTheme.colorWhite,
-                  fontSize: 14.0,
-                  maxline: 1,
-                  overflow: TextOverflow.ellipsis,
+    Widget nextButton() => Container(
+          padding: EdgeInsets.only(left: 30, right: 30, top: 30),
+          margin: EdgeInsets.only(left: 300, right: 300, top: 30),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 45,
+                child: CommonButton(
+                  buttonType: ButtonType.ElevatedButton,
+                  onPressed: () {
+                    stepIndexController.sink.add(4);
+                  },
+                  color: AppTheme.colorAccent,
+                  elevation: 0,
+                  child: CommonText(
+                    'Next',
+                    color: AppTheme.colorWhite,
+                    fontSize: 14.0,
+                    maxline: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
+            ],
+          ),
+        );
 }

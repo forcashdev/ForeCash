@@ -5,7 +5,7 @@ import 'package:for_cash/app/widgets/common_text_field.dart';
 
 // ignore: must_be_immutable
 class LowPricingForm extends StatelessWidget {
-  TextEditingController lowPriceController = TextEditingController();
+  TextEditingController lowPriceController = TextEditingController(text: "\$1000");
 
   @override
   Widget build(BuildContext context) {

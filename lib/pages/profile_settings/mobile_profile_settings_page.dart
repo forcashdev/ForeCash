@@ -8,7 +8,7 @@ import 'package:for_cash/app/widgets/common_text.dart';
 import 'package:for_cash/pages/profile_settings/profile_settings_view_model.dart';
 import 'package:for_cash/pages/profile_settings/widgets/profile_form.dart';
 
-class MobileProfileSettingsPage extends StatefulWidget {
+  class MobileProfileSettingsPage extends StatefulWidget {
   @override
   _MobileProfileSettingsPageState createState() => _MobileProfileSettingsPageState();
 }

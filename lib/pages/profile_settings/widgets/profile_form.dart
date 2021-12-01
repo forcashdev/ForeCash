@@ -86,7 +86,7 @@ class ProfileForm extends StatelessWidget {
           controller: passwordController,
           inputType: TextInputType.name,
           isFill: true,
-          iconSuffix: CommonImageAsset(
+          suffixIcon: CommonImageAsset(
             image: Constants.ic_pass_hide,
           ),
         ),
@@ -107,7 +107,7 @@ class ProfileForm extends StatelessWidget {
           controller: passwordController,
           inputType: TextInputType.name,
           isFill: true,
-          iconSuffix: CommonImageAsset(
+          suffixIcon: CommonImageAsset(
             image: Constants.ic_pass_hide,
           ),
         ),
@@ -137,7 +137,7 @@ class ProfileForm extends StatelessWidget {
           controller: passwordController,
           inputType: TextInputType.name,
           isFill: true,
-          iconSuffix: CommonImageAsset(
+          suffixIcon: CommonImageAsset(
             image: Constants.ic_pass_hide,
           ),
         ),

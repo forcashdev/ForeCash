@@ -1,121 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:for_cash/app/constants/constants.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
-import 'package:for_cash/app/utils/utils.dart';
-import 'package:for_cash/app/widgets/common_text.dart';
 
 import 'common_image_asset.dart';
+import 'common_text.dart';
 
-class CommonDashboardAppbar extends StatefulWidget {
-  final Function onTapNotification;
+class CommonWebAppBar extends StatelessWidget {
+  CommonWebAppBar({Key key}) : super(key: key);
 
-  CommonDashboardAppbar({Key key, this.onTapNotification}) : super(key: key);
-
-  @override
-  _CommonDashboardAppbarState createState() => _CommonDashboardAppbarState();
-}
-
-class _CommonDashboardAppbarState extends State<CommonDashboardAppbar> {
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context);
-    return Container(
-        padding: EdgeInsets.only(left: 15.0, right: 10.0, top: size.viewPadding.top + 20.0, bottom: 10.0),
+    return Expanded(
+      flex: 1,
+      // and it take 1/6 part of the screen
+      child: Container(
+        width: double.infinity,
         color: Colors.white,
-        child: Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CommonText(
-                "Dashboard",
-                fontSize: 18.0,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.colorBlack,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  notificationIcon(),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  profileWidget(size),
-                ],
-              )
-            ],
-          ),
-        ));
-  }
-
-  Widget notificationIcon() {
-    return Stack(
-      children: [
-        InkWell(
-          onTap: widget.onTapNotification,
-          child: Container(
-            height: 40.0,
-            width: 40.0,
-            margin: EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-                color: AppTheme.colorWhite,
-                borderRadius: BorderRadius.circular(50.0),
-                border: Border.all(color: AppTheme.colorGrey.withOpacity(0.2), width: 1)),
-            child: Stack(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CommonImageAsset(
+              image: Constants.ic_logo_primary,
+              height: 45.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Center(
-                  child: CommonImageAsset(
-                    image: Constants.ic_notification,
-                    color: Colors.black,
-                    height: 16.0,
-                    width: 16.0,
-                  ),
+                notificationIcon(),
+                SizedBox(
+                  width: 10.0,
                 ),
+                profileWidget(),
               ],
-            ),
-          ),
+            )
+          ],
         ),
-        Container(
-          width: 47,
-          height: 30,
-          alignment: Alignment.topRight,
-          child: Container(
-            width: 15,
-            height: 15,
-            margin: EdgeInsets.only(top: 5.0),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppTheme.colorAccent,
-            ),
-            child: Center(
-                child: CommonText(
-              "1",
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            )),
-          ),
-        ),
-      ],
+      ),
     );
-  }
-
-  void choiceAction(String choice) {
-    String FirstItem = 'First Item';
-    String SecondItem = 'Second Item';
-    String ThirdItem = 'Third Item';
-
-    if (choice == FirstItem) {
-      print('I First Item');
-    } else if (choice == SecondItem) {
-      print('I Second Item');
-    } else if (choice == ThirdItem) {
-      print('I Third Item');
-    }
   }
 
   bool isOpen = false;
 
-  Widget profileWidget(size) {
+  Widget profileWidget() {
     List<String> choices = <String>[
       "Profile",
       "Chase Bank #2345",
@@ -133,9 +61,9 @@ class _CommonDashboardAppbarState extends State<CommonDashboardAppbar> {
       Constants.ic_logout,
     ];
     return Container(
-        height: size.size.width * 0.11,
-        width: size.size.width * 0.20,
-        padding: EdgeInsets.all(3.0),
+        height: 50,
+        width: 240,
+        padding: EdgeInsets.fromLTRB(3.0, 3.0, 8.0, 3.0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50.0),
             border: Border.all(color: AppTheme.colorGrey.withOpacity(0.2), width: 1),
@@ -145,27 +73,32 @@ class _CommonDashboardAppbarState extends State<CommonDashboardAppbar> {
             InkWell(
               onTap: () {
                 isOpen = !isOpen;
-                setState(() {});
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(
-                    child: Container(
-                      height: 34.0,
-                      width: 34.0,
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage(Constants.img_profile),
-                        radius: 50.0,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Flexible(
+                      child: Container(
+                        height: 42.0,
+                        width: 42.0,
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(Constants.img_profile),
+                          radius: 50.0,
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
+                  CommonText(
+                    "John - #7048",
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.colorGrey,
                   ),
                   Icon(
                     isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: AppTheme.colorGrey,
+                    color: AppTheme.colorBlack,
                   ),
                 ],
               ),
@@ -228,4 +161,55 @@ class _CommonDashboardAppbarState extends State<CommonDashboardAppbar> {
         ));
   }
 
+  Widget notificationIcon() {
+    return Stack(
+      children: [
+        InkWell(
+          onTap: () {},
+          child: Container(
+            height: 50.0,
+            width: 50.0,
+            margin: EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+                color: AppTheme.colorWhite,
+                borderRadius: BorderRadius.circular(50.0),
+                border: Border.all(color: AppTheme.colorGrey.withOpacity(0.2), width: 1)),
+            child: Stack(
+              children: [
+                Center(
+                  child: CommonImageAsset(
+                    image: Constants.ic_notification,
+                    color: Colors.black,
+                    height: 20.0,
+                    width: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: 47,
+          height: 30,
+          alignment: Alignment.topRight,
+          child: Container(
+            width: 15,
+            height: 15,
+            margin: EdgeInsets.only(top: 10.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppTheme.colorAccent,
+            ),
+            child: Center(
+                child: CommonText(
+              "1",
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            )),
+          ),
+        ),
+      ],
+    );
+  }
 }

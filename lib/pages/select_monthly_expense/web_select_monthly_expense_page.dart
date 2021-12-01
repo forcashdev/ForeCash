@@ -141,7 +141,7 @@ class _WebSelectMonthlyExpensePageState extends State<WebSelectMonthlyExpensePag
                                 child: CommonTextField(
                                   text: expenseNameList[item],
 
-                                  radius: 5.0,
+
                                   controller: incomeTextList[item],
                                   inputType: TextInputType.emailAddress,
                                   isFill: true,

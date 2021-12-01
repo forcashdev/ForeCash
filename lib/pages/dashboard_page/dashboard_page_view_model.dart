@@ -1,7 +1,7 @@
-import 'dashboard_page.dart';
+import 'mobile_dashboard_page.dart';
 
 class DashboardPageViewModel {
-  DashboardPageState state;
+  MobileDashboardPageState state;
 
   DashboardPageViewModel(this.state) {
     this.state = state;

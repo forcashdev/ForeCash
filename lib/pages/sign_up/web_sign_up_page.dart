@@ -206,7 +206,6 @@ class WebSignUpPageState extends State<WebSignUpPage> {
         CommonTextField(
           hintText: 'Name',
           inputType: TextInputType.emailAddress,
-          contentPadding: EdgeInsets.only(top: 15.0, bottom: 10.0),
           onChanged: (val) {},
           onTap: () {},
         ),
@@ -233,7 +232,6 @@ class WebSignUpPageState extends State<WebSignUpPage> {
           CommonTextField(
             hintText: 'Email address',
             inputType: TextInputType.emailAddress,
-            contentPadding: EdgeInsets.only(top: 15.0, bottom: 10.0),
             onChanged: (val) {},
             onTap: () {},
           ),
@@ -275,8 +273,7 @@ class WebSignUpPageState extends State<WebSignUpPage> {
             onChanged: (val) {},
             maxLine: 1,
             obscureText: _obscureText,
-            contentPadding: EdgeInsets.only(top: 15.0, bottom: 10.0),
-            iconSuffix: Image.asset(
+            suffixIcon: Image.asset(
               // Based on passwordVisible state choose the icon
               _obscureText
                   ? Constants.ic_pass_hide
@@ -284,7 +281,7 @@ class WebSignUpPageState extends State<WebSignUpPage> {
               height: 22.0,
               width: 22.0,
             ),
-            onSuffixTap: () {
+            suffixFunction: () {
               setState(() {
                 _obscureText = !_obscureText;
               });

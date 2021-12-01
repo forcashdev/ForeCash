@@ -23,7 +23,8 @@ class ForgetPasswordForm extends StatelessWidget {
           height: 10,
         ),
         CommonTextField(
-          text: 'Email address',
+          text:"Email address",
+          hintText: 'Email address',
           controller: emailController,
           inputType: TextInputType.emailAddress,
           isFill: true,

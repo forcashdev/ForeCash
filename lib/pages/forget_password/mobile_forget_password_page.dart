@@ -3,7 +3,7 @@ import 'package:for_cash/app/theme/app_theme.dart';
 import 'package:for_cash/app/widgets/common_button.dart';
 import 'package:for_cash/app/widgets/common_name_app_bar.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
-import 'package:for_cash/pages/forget_password/forget_password_form.dart';
+import 'package:for_cash/pages/forget_password/widgets/forget_password_form.dart';
 import 'package:for_cash/pages/forget_password/forget_password_view_model.dart';
 
 class MobileForgetPasswordPage extends StatefulWidget {
@@ -69,7 +69,7 @@ class _MobileForgetPasswordPageState extends State<MobileForgetPasswordPage> {
           child: CommonButton(
             buttonType: ButtonType.ElevatedButton,
             onPressed: model.onTapSave,
-            color: AppTheme.colorAccent,
+              color: AppTheme.colorAccent,
             elevation: 0,
             child: CommonText(
               'Save',

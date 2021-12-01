@@ -19,7 +19,37 @@ class _MobileVerifyTransactionPageState
 
   VerifyTransactionViewModel model;
 
-  List<String> paidOnList = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
+  List<String> paidOnList = [ '1st',
+    '2nd',
+    '3rd',
+    '4th',
+    '5th',
+    '6th',
+    "7th",
+    "8th",
+    "9th",
+    "10th",
+    '11st',
+    '12nd',
+    '13rd',
+    '14th',
+    '15th',
+    '16th',
+    "17th",
+    "18th",
+    "19th",
+    "20th",
+    '21st',
+    '22nd',
+    '23rd',
+    '24th',
+    '25th',
+    '26th',
+    "27th",
+    "28th",
+    "29th",
+    "30th",
+    "31st"];
   List<String> everyList = ['1 Mon', '2 Mon', '3 Mon', '4 Mon'];
   String paidOnSelectedValue = '1st';
   String everySelectedValue = '1 Mon';

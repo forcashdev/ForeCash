@@ -12,7 +12,7 @@ import 'common_vertical_container.dart';
 
 class CommonInsertTable extends StatefulWidget {
   List<String> columnNameList = [];
-  int totalRowLength = 8;
+  int totalRowLength =   8;
   List<String> paidOnList = [];
   List<String> everyList = [];
   String paidOnSelectedValue = '';
@@ -35,6 +35,8 @@ class CommonInsertTable extends StatefulWidget {
 class _CommonInsertTableState extends State<CommonInsertTable> {
   List<TextEditingController> expenseControllerList = [];
   List<TextEditingController> amountControllerList = [];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +108,9 @@ class _CommonInsertTableState extends State<CommonInsertTable> {
                   child: Container(
                     padding: EdgeInsets.fromLTRB(6, 10, 0, 6),
                     child: CommonTextField(
-                      text: 'Apple Inc.',
+                      hintText: 'Apple Inc.',
                       // controller: expenseControllerList[index],
                       inputType: TextInputType.name,
-                      isFill: true,
                     ),
                   ),
                 ),
@@ -173,6 +174,7 @@ class _CommonInsertTableState extends State<CommonInsertTable> {
                     padding: EdgeInsets.fromLTRB(8, 10, 10, 6),
                     child: CommonTextField(
                       // controller: amountControllerList[index],
+                      controller: TextEditingController(text:"\$500"),
                       text: '\$500',
                       inputType: TextInputType.name,
                       isFill: true,

@@ -123,7 +123,7 @@ class _WebSelectMonthlyIncomePageState extends State<WebSelectMonthlyIncomePage>
                                 padding: const EdgeInsets.all(10.0),
                                 child: CommonTextField(
                                   text: item.toString(),
-                                  radius: 5.0,
+
                                   controller: incomeTextList[item],
                                   inputType: TextInputType.emailAddress,
                                   isFill: true,

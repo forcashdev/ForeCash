@@ -30,7 +30,7 @@ class ResetPasswordForm extends StatelessWidget {
           controller: passwordController,
           inputType: TextInputType.visiblePassword,
           isFill: true,
-          iconSuffix: CommonImageAsset(
+          suffixIcon: CommonImageAsset(
             image: Constants.ic_pass_hide,
           ),
         ),
@@ -51,7 +51,7 @@ class ResetPasswordForm extends StatelessWidget {
           controller: confirmPasswordController,
           inputType: TextInputType.visiblePassword,
           isFill: true,
-          iconSuffix: CommonImageAsset(
+          suffixIcon: CommonImageAsset(
             image: Constants.ic_pass_hide,
           ),
         ),

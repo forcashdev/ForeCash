@@ -8,22 +8,21 @@ import 'package:for_cash/app/widgets/common_switch.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
 import 'package:for_cash/pages/dashboard_page/widgets/common_one_time_income_row.dart';
 import 'package:for_cash/pages/dashboard_page/widgets/common_week_box.dart';
-import 'package:for_cash/pages/forget_password/mobile_forget_password_page.dart';
 import 'package:for_cash/pages/notification/mobile_notification_page.dart';
 import 'package:for_cash/pages/profile_settings/mobile_profile_settings_page.dart';
 
 import 'dashboard_page_view_model.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({Key key}) : super(key: key);
+class MobileDashboardPage extends StatefulWidget {
+  const MobileDashboardPage({Key key}) : super(key: key);
 
   @override
-  DashboardPageState createState() => DashboardPageState();
+  MobileDashboardPageState createState() => MobileDashboardPageState();
 }
 
-class DashboardPageState extends State<DashboardPage> {
+class MobileDashboardPageState extends State<MobileDashboardPage> {
   DashboardPageViewModel model;
-
+bool isOpen = false;
   @override
   Widget build(BuildContext context) {
     model ?? (model = DashboardPageViewModel(this));
@@ -41,9 +40,6 @@ class DashboardPageState extends State<DashboardPage> {
                 CommonDashboardAppbar(
                   onTapNotification: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => MobileNotificationPage()));
-                  },
-                  onTapProfile: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MobileProfileSettingsPage()));
                   },
                 ),
                 Stack(
@@ -404,7 +400,7 @@ class DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget monthlyIncomeBox(Size size, title, {topPadding}) {
+  Widget  monthlyIncomeBox(Size size, title, {topPadding}) {
     return Container(
       width: size.width,
       color: Colors.white,
@@ -422,6 +418,7 @@ class DashboardPageState extends State<DashboardPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  SizedBox(height: 10.0,),
                   CommonText(
                     title,
                     fontSize: 16.0,
@@ -575,7 +572,39 @@ class DashboardPageState extends State<DashboardPage> {
 
   bool isAddTimeIncome = false;
   List<String> columnNameList = ['Income name', 'Due on', 'Every', 'Amount'];
-  List<String> dueOnList = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
+  List<String> dueOnList = [
+    '1st',
+    '2nd',
+    '3rd',
+    '4th',
+    '5th',
+    '6th',
+    "7th",
+    "8th",
+    "9th",
+    "10th",
+    '11st',
+    '12nd',
+    '13rd',
+    '14th',
+    '15th',
+    '16th',
+    "17th",
+    "18th",
+    "19th",
+    "20th",
+    '21st',
+    '22nd',
+    '23rd',
+    '24th',
+    '25th',
+    '26th',
+    "27th",
+    "28th",
+    "29th",
+    "30th",
+    "31st"
+  ];
   List<String> everyList = ['1 Mon', '2 Mon', '3 Mon', '4 Mon'];
   String dueOnSelectedValue = '1st';
   String everySelectedValue = '1 Mon';
