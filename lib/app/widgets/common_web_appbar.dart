@@ -79,14 +79,12 @@ class CommonWebAppBar extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Flexible(
-                      child: Container(
-                        height: 42.0,
-                        width: 42.0,
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(Constants.img_profile),
-                          radius: 50.0,
-                        ),
+                    child: Container(
+                      height: 42.0,
+                      width: 42.0,
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(Constants.img_profile),
+                        radius: 50.0,
                       ),
                     ),
                   ),

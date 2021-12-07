@@ -23,21 +23,30 @@ class _WebSelectWeeklyBudgetPageState extends State<WebSelectWeeklyBudgetPage> {
     "Grocery",
     "Gas",
     "Free Spend / Entertainment",
-    "Savings Contribution",
+    "AMEX",
+    "Auto Insurance",
+    "Cell Phone",
+    "Internet",
   ];
   List incomeTextList = [];
   List amountTextList = [];
   List apiEveryList = [
-    "Fri",
-    "Sat",
-    "Sun",
-    "Mon",
+    "15th",
+    "16th",
+    "17th",
+    "18th",
+    "17th",
+    "18th",
+    "17th",
   ];
   List apiPaidList = [
     "1 Month",
     "2 Month",
     "3 Month",
     "4 Month",
+    "3 Month",
+    "4 Month",
+    "3 Month",
   ];
 
   List selectedPaid = [];
@@ -133,11 +142,11 @@ class _WebSelectWeeklyBudgetPageState extends State<WebSelectWeeklyBudgetPage> {
                   incomeTextList.add(TextEditingController());
                   amountTextList.add(TextEditingController());
                   selectedPaid.add('1 Month');
-                  selectedEvery.add('Fri');
+                  selectedEvery.add('15th');
                   return TableRow(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 15, top: 10),
+                        padding: const EdgeInsets.only(left: 15),
                         child: Row(
                           children: [
                             GestureDetector(
@@ -202,6 +211,7 @@ class _WebSelectWeeklyBudgetPageState extends State<WebSelectWeeklyBudgetPage> {
                         child: Expanded(
                           child: Container(
                             padding: const EdgeInsets.all(10.0),
+                            // color: Colors.yellow,
                             child: CommonText(
                               "\$500",
                               color: AppTheme.colorGrey,

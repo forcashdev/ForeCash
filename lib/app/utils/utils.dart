@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
 
-showToast(
-  msg,
-) {
+showToast(msg,) {
   BotToast.showCustomText(
     duration: Duration(seconds: 3),
     toastBuilder: (cancelFunc) {
@@ -47,4 +45,29 @@ showToast(
       );
     },
   );
+}
+
+class MenuItems {
+  static const itemSettings = MenuItem(text: 'Settings', icon: Icons.settings);
+  static const itemShare = MenuItem(text: 'Settings', icon: Icons.share);
+  static const itemLogout = MenuItem(text: 'Settings', icon: Icons.logout);
+
+  static const List<MenuItem> itemsFirst = [
+    itemSettings,
+    itemShare,
+  ];
+
+  static const List<MenuItem> itemSecond = [
+    itemLogout,
+  ];
+}
+
+class MenuItem {
+  final String text;
+  final IconData icon;
+
+  const MenuItem({
+    @required this.text,
+    @required this.icon
+  });
 }

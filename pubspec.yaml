@@ -26,14 +26,14 @@ dependencies:
 
   provider:
   flutter_svg: 0.22.0
-  fl_chart:
   percent_indicator: ^3.4.0
   syncfusion_flutter_datagrid: ^19.3.46
-  flutter_slidable:
+  flutter_slidable: 0.6.0
   configurable_expansion_tile:
-  intl:
-  rxdart:
-  bot_toast:
+  intl: 0.17.0
+  rxdart: 0.27.0
+  bot_toast: 4.0.1
+
 
 
   # The following adds the Cupertino Icons font to your application.

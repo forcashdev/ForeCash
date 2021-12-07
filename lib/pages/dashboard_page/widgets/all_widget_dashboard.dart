@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:for_cash/app/constants/constants.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
+import 'package:for_cash/app/widgets/add_new_row_text.dart';
 import 'package:for_cash/app/widgets/common_divider_line.dart';
 import 'package:for_cash/app/widgets/common_image_asset.dart';
 import 'package:for_cash/app/widgets/common_switch.dart';
 import 'package:for_cash/app/widgets/common_text.dart';
 import 'package:for_cash/app/widgets/common_text_field.dart';
 import 'package:for_cash/app/widgets/common_vertical_container.dart';
+import 'package:for_cash/pages/select_monthly_expense/widgets/web_monthly_expense_none_border.dart';
+import 'package:for_cash/pages/select_monthly_income/widgets/web_monthly_income_none_border_table.dart';
+import 'package:for_cash/pages/setup_weekly_budget/widgets/web_weekly_budget_none_border.dart';
 
 Widget weeklyBalanceBox() {
   return Container(
@@ -256,12 +260,7 @@ Widget calenderListWidget(List<String> dateList) {
   );
 }
 
-Widget monthlyIncomeBox(
-  columnList,
-  item,
-  everyList,
-  paidOnList,
-) {
+Widget  monthlyIncomeBox(context, columnList, item, everyList, paidOnList, List<String> dateList) {
   return Container(
     width: double.infinity,
     height: 290,
@@ -269,17 +268,17 @@ Widget monthlyIncomeBox(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10.0),
     ),
-    padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 10.0),
-    child: Column(
+    padding: EdgeInsets.only(right: 20.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                margin: EdgeInsets.only(right: 20.0),
-                child: Row(
+        Expanded(
+          flex: 2,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0, right: 30.0, top: 20.0),
+            child: Column(
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
@@ -310,30 +309,325 @@ Widget monthlyIncomeBox(
                       image: Constants.ic_minimize,
                       height: 20.0,
                       width: 20.0,
-                    )
+                    ),
                   ],
                 ),
-              ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                WebMonthlyIncomeNoneBorderTable(),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Align(alignment: Alignment.centerLeft,child: CommonAddRowText(text: "Add New Monthly Income")),
+              ],
             ),
-            Container(
-              color: AppTheme.colorBackground,
-              width: 2.0,
-            ),
-            Container(
-              width: 1050,
-            ),
-          ],
+          ),
         ),
-        SizedBox(
-          height: 20.0,
+        Container(
+          color: AppTheme.colorBackground,
+          width: 2.0,
         ),
-          // Column(
-          //   children: [
-          //     buildTableColumn(columnList),
-          //     buildTableRow(paidOnList),
-          //   ],
-          // ),
-          // itemAndIncomeList(item)
+        Container(
+          width: 1050,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0),
+            child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                      SizedBox(
+                        width: 15.0,
+                      ),
+                      Container(
+                        width: 900.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 7,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                CommonText(
+                                  dateList[index],
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                  maxline: 1,
+                                  color: AppTheme.colorGreyDark,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Container(
+                                  width: 90.0,
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                    ],
+                  );
+                }),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget  monthlyExpenseBox(context, columnList, item, everyList, paidOnList, List<String> dateList) {
+  return Container(
+    width: double.infinity,
+    height: 550,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    padding: EdgeInsets.only(right: 20.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0, right: 30.0, top: 20.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        CommonText(
+                          "Monthly Expense",
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                          maxline: 1,
+                          color: AppTheme.colorBlack,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        CommonImageAsset(
+                          image: Constants.ic_edit,
+                          height: 20.0,
+                          width: 20.0,
+                        )
+                      ],
+                    ),
+                    CommonImageAsset(
+                      image: Constants.ic_minimize,
+                      height: 20.0,
+                      width: 20.0,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                WebMonthlyExpenseNoneBorder(),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Align(alignment: Alignment.centerLeft,child: CommonAddRowText(text: "Add New Monthly Income")),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          color: AppTheme.colorBackground,
+          width: 2.0,
+        ),
+        Container(
+          width: 1050,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0),
+            child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                      SizedBox(
+                        width: 15.0,
+                      ),
+                      Container(
+                        width: 900.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 7,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                CommonText(
+                                  dateList[index],
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                  maxline: 1,
+                                  color: AppTheme.colorGreyDark,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Container(
+                                  width: 90.0,
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                    ],
+                  );
+                }),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget  weeklyBudgetBox(context,  List<String> dateList) {
+  return Container(
+    width: double.infinity,
+    height: 500,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    padding: EdgeInsets.only(right: 20.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0, right: 30.0, top: 20.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        CommonText(
+                          "Weekly Budgets",
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                          maxline: 1,
+                          color: AppTheme .colorBlack,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        CommonImageAsset(
+                          image: Constants.ic_edit,
+                          height: 20.0,
+                          width: 20.0,
+                        )
+                      ],
+                    ),
+                    CommonImageAsset(
+                      image: Constants.ic_minimize,
+                      height: 20.0,
+                      width: 20.0,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                WebWeeklyBudgetNoneBorder(),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Align(alignment: Alignment.centerLeft,child: CommonAddRowText(text: "Add New Monthly Income")),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          color: AppTheme.colorBackground,
+          width: 2.0,
+        ),
+        Container(
+          width: 1050,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0),
+            child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                      SizedBox(
+                        width: 15.0,
+                      ),
+                      Container(
+                        width: 900.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 7,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                CommonText(
+                                  dateList[index],
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                  maxline: 1,
+                                  color: AppTheme.colorGreyDark,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Container(
+                                  width: 90.0,
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                    ],
+                  );
+                }),
+          ),
+        ),
       ],
     ),
   );

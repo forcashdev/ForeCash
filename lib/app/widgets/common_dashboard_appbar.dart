@@ -167,6 +167,12 @@ class _CommonDashboardAppbarState extends State<CommonDashboardAppbar> {
                     isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                     color: AppTheme.colorGrey,
                   ),
+                  PopupMenuButton<MenuItem>(
+                    onSelected: (item) => onSelected(context, item),
+                    itemBuilder: (context) => [
+                      ...MenuItems.itemsFirst.map(buildItem).toList(),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -228,4 +234,33 @@ class _CommonDashboardAppbarState extends State<CommonDashboardAppbar> {
         ));
   }
 
+  PopupMenuItem<MenuItem> buildItem(MenuItem item) => PopupMenuItem(
+        child: Row(
+          children: [
+            Icon(
+              item.icon,
+              color: Colors.black,
+              size: 20.0,
+            ),
+            SizedBox(
+              width: 12.0,
+            ),
+            CommonText(item.text)
+          ],
+        ),
+      );
+
+  onSelected(BuildContext context, MenuItem item) {
+    switch (item) {
+      case MenuItems.itemSettings:
+        showToast("setting");
+        break;
+      case MenuItems.itemShare:
+        showToast("share");
+        break;
+      case MenuItems.itemLogout:
+        showToast("logout");
+        break;
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
+import 'package:for_cash/app/widgets/add_new_row_text.dart';
 import 'package:for_cash/app/widgets/common_app_bar.dart';
 import 'package:for_cash/app/widgets/common_button.dart';
 import 'package:for_cash/app/widgets/common_insert_table.dart';
@@ -11,15 +12,14 @@ class MobileSetupWeeklyBudgetPage extends StatefulWidget {
   const MobileSetupWeeklyBudgetPage({Key key}) : super(key: key);
 
   @override
-  MobileSetupWeeklyBudgetPageState createState() =>
-      MobileSetupWeeklyBudgetPageState();
+  MobileSetupWeeklyBudgetPageState createState() => MobileSetupWeeklyBudgetPageState();
 }
 
-class MobileSetupWeeklyBudgetPageState
-    extends State<MobileSetupWeeklyBudgetPage> {
+class MobileSetupWeeklyBudgetPageState extends State<MobileSetupWeeklyBudgetPage> {
   SetupWeeklyBudgetViewModel model;
 
-  List<String> paidOnList = [ '1st',
+  List<String> paidOnList = [
+    '1st',
     '2nd',
     '3rd',
     '4th',
@@ -49,7 +49,8 @@ class MobileSetupWeeklyBudgetPageState
     "28th",
     "29th",
     "30th",
-    "31st"];
+    "31st"
+  ];
 
   /*
   List<String> everyList = ['1', '2 Mon', '3 Mon', '4 Mon'];*/
@@ -74,10 +75,7 @@ class MobileSetupWeeklyBudgetPageState
             SizedBox(
               height: 25,
             ),
-            Center(
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: SetupWeeklyBudgetText())),
+            Center(child: Container(padding: EdgeInsets.symmetric(horizontal: 30), child: SetupWeeklyBudgetText())),
             SizedBox(
               height: 40,
             ),
@@ -93,17 +91,7 @@ class MobileSetupWeeklyBudgetPageState
             SizedBox(
               height: 10.0,
             ),
-            Container(
-                margin: EdgeInsets.only(left: 3.0),
-                child: CommonText(
-                  "+ Add New Weekly Budgets",
-                  color: AppTheme.colorPrimary,
-                  fontSize: 14.0,
-                  decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.w500,
-                  maxline: 1,
-                  overflow: TextOverflow.ellipsis,
-                )),
+            CommonAddRowText(text: "Add New Weekly Budgets")
             // customTable(size),
           ],
         ),

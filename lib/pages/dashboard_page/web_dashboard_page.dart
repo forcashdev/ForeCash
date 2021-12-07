@@ -20,7 +20,17 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
     "15 Oct",
     "18 Oct",
   ];
+  List<String> date1List = [
+    "-",
+    "-",
+    "-",
+    "-",
+    "-",
+    "-",
+    "-",
+  ];
   List<String> columnNameList = ['Income name', 'Paid on', 'Every', 'Amount'];
+  List<String> column1NameList = ['Expense name', 'Due on', 'Every', 'Amount'];
   List<String> item = [
     "Item A",
     "Item B",
@@ -29,8 +39,13 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
     "1st",
     "15th",
   ];
+  List<String> dueOnList = [
+    "1st",
+    "15th",
+  ];
 
   List<String> everyList = ['1 Month', '1 Month'];
+  List<String> every1List = ['1 Month', '1 Month'];
 
   @override
   Widget build(BuildContext context) {
@@ -53,21 +68,31 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.center,
             color: AppTheme.colorBackground,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20.0,
-                ),
-                balanceSimulateWidget(),
-                SizedBox(
-                  height: 20.0,
-                ),
-                calenderListWidget(dateList),
-                SizedBox(
-                  height: 20.0,
-                ),
-                monthlyIncomeBox(columnNameList, item, everyList, paidOnList)
-              ],
+            child: SingleChildScrollView(
+              physics:AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  balanceSimulateWidget(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  calenderListWidget(dateList),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  monthlyIncomeBox(context, columnNameList, item, everyList, paidOnList, date1List),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  monthlyExpenseBox(context, column1NameList, item, every1List, dueOnList, date1List), SizedBox(
+                    height: 20.0,
+                  ),
+                  weeklyBudgetBox(context,date1List),
+                ],
+              ),
             ),
           ),
         )
