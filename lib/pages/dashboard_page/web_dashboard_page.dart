@@ -11,6 +11,9 @@ class WebDashboardPage extends StatefulWidget {
 }
 
 class _WebDashboardPageState extends State<WebDashboardPage> {
+
+
+  List<String> priceList=['1200','-','-','-''1200','-','1200'];
   List<String> dateList = [
     "Sep,11",
     "Sep 17",
@@ -69,7 +72,7 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
             alignment: Alignment.center,
             color: AppTheme.colorBackground,
             child: SingleChildScrollView(
-              physics:AlwaysScrollableScrollPhysics(),
+              physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   SizedBox(
@@ -83,14 +86,21 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  monthlyIncomeBox(context, columnNameList, item, everyList, paidOnList, date1List),
+                  monthlyIncomeBox(context, columnNameList, item, everyList, paidOnList, date1List,priceList),
                   SizedBox(
                     height: 20.0,
                   ),
-                  monthlyExpenseBox(context, column1NameList, item, every1List, dueOnList, date1List), SizedBox(
+                  monthlyExpenseBox(context, column1NameList, item, every1List, dueOnList, date1List),
+                  SizedBox(
                     height: 20.0,
                   ),
-                  weeklyBudgetBox(context,date1List),
+                  weeklyBudgetBox(context, date1List),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  addIncomeExpenseButton(),SizedBox(
+                    height: 20.0,
+                  ),checkTotal(),SizedBox(height: 20.0,),endOfWeekBalance()
                 ],
               ),
             ),
@@ -118,6 +128,8 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
       simulateTextSwitch(onChanged: simulateSwitch, switchControl: switchControl),
     ]);
   }
+
+
 
   bool switchControl = false;
 

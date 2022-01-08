@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:for_cash/app/constants/constants.dart';
 import 'package:for_cash/app/theme/app_theme.dart';
 import 'package:for_cash/app/widgets/add_new_row_text.dart';
@@ -260,7 +262,7 @@ Widget calenderListWidget(List<String> dateList) {
   );
 }
 
-Widget  monthlyIncomeBox(context, columnList, item, everyList, paidOnList, List<String> dateList) {
+Widget  monthlyIncomeBox(context, columnList, item, everyList, paidOnList, List<String> dateList,List<String> priceList) {
   return Container(
     width: double.infinity,
     height: 290,
@@ -333,7 +335,7 @@ Widget  monthlyIncomeBox(context, columnList, item, everyList, paidOnList, List<
           child: Container(
             margin: EdgeInsets.only(left: 20.0),
             child: ListView.builder(
-                itemCount: 2,
+                itemCount: priceList.length,
                 itemBuilder: (context, index) {
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -378,6 +380,7 @@ Widget  monthlyIncomeBox(context, columnList, item, everyList, paidOnList, List<
                     ],
                   );
                 }),
+
           ),
         ),
       ],
@@ -817,3 +820,181 @@ itemAndIncomeList(item) {
     ],
   );
 }
+
+Row addIncomeExpenseButton() {
+  return Row(
+    children: [
+      MaterialButton(
+        onPressed: () {},shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 10),
+          child: CommonText(
+            "Add One Time Income",
+            fontSize: 16.5,
+            color: AppTheme .white,
+          ),
+        ),
+        color: AppTheme.materialButtonColor,
+      ),SizedBox(width: 10,),
+      MaterialButton(
+        onPressed: () {},shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 10),
+          child: CommonText(
+            "Add One Time Expense",
+            fontSize: 16.5,
+            color: AppTheme .white,
+          ),
+        ),
+        color: AppTheme.materialButtonColor,
+      )
+    ],
+  );
+}
+
+
+Widget  checkTotal()
+{
+  return Container(
+    width: double.infinity,
+    height: 200,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    padding: EdgeInsets.only(right: 20.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0,top: 20.0),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                CommonText(
+                  "Previous Week Balance",
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme .colorBlack,
+
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  color: AppTheme.colorBackground,
+                  height: 2.0,width: double.infinity,
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                CommonText(
+                  "Total Weekly Income",
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme .colorBlack,
+
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  color: AppTheme.colorBackground,
+                  height: 2.0,width: double.infinity,
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                CommonText(
+                  "Total Weekly Expense",
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme .colorBlack,
+
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  color: AppTheme.colorBackground,
+                  height: 2.0,width: double.infinity,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          color: AppTheme.colorBackground,
+          width: 2.0,
+        ),
+        Container(
+          width: 1050,
+          child: Container(
+            margin: EdgeInsets.only(left: 20.0),
+            child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                      SizedBox(
+                        width: 15.0,
+                      ),
+                      Container(
+                        width: 900.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 7,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                // CommonText(
+                                //   dateList[index],
+                                //   fontSize: 14.0,
+                                //   fontWeight: FontWeight.w500,
+                                //   maxline: 1,
+                                //   color: AppTheme.colorGreyDark,
+                                //   overflow: TextOverflow.ellipsis,
+                                // ),
+                                Container(
+                                  width: 90.0,
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 15.0,
+                        height: 15.0,
+                      ),
+                    ],
+                  );
+                }),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+Container endOfWeekBalance(){
+  return Container(height: 80,width: double.infinity,decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(10.0),
+  ),
+      padding: EdgeInsets.only(left: 20.0), child: Row(children: [CommonText('End of Week Balance',color: AppTheme.materialButtonColor,fontWeight: FontWeight.w500,)],));
+}
+
+
+
+

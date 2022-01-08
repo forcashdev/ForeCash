@@ -21,6 +21,7 @@ class AppTheme {
   static const Color colorRed = Color(0xFFEE4242);
   static const Color colorTextGrey = Color(0xFF969CB2);
   static const Color white = Color(0xFFFFFFFF);
+  static const Color materialButtonColor = Color(0xFF097EA2);
 
   static const String fontName = 'Montserrat';
 }
