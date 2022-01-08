@@ -1,49 +1,38 @@
-import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:for_cash/pages/configuration/web_configuration_page.dart';
-import 'package:for_cash/pages/dashboard_page/mobile_dashboard_page.dart';
-import 'package:for_cash/pages/dashboard_page/web_dashboard_page.dart';
-import 'package:for_cash/pages/forget_password/web_forget_password_page.dart';
-import 'package:for_cash/pages/profile_settings/web_profile_settings_page.dart';
-import 'package:for_cash/pages/reset_password/web_reset_password_page.dart';
-import 'package:for_cash/pages/select_calendar_page/mobile_select_calender_page.dart';
-import 'package:for_cash/pages/select_calendar_page/widgets/select_calender_text.dart';
-import 'package:for_cash/pages/select_monthly_expense/web_select_monthly_expense_page.dart';
-import 'package:for_cash/pages/select_monthly_income/mobile_select_monthly_income_page.dart';
-import 'package:for_cash/pages/select_weekly_income/mobile_select_weekly_income_page.dart';
-import 'package:for_cash/pages/setup_step/setup_step_page.dart';
-import 'package:for_cash/pages/setup_weekly_budget/web_setup_weekly_budget_page.dart';
-import 'package:for_cash/pages/sign_up/mobile_sign_up_page.dart';
-import 'package:for_cash/pages/sign_up/web_sign_up_page.dart';
+import 'package:fore_cash/utility/colors.dart';
+import 'package:fore_cash/view/authentication/signup_screen.dart';
+import 'package:get/get.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
-import 'app/theme/app_theme.dart';
+import 'app_theme/app_theme.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-  ));
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fore Cash',
+    return GetMaterialApp(
+      builder: (context, widget) {
+        return ResponsiveWrapper.builder(widget, maxWidth: 4000, minWidth: 480, defaultScale: false, breakpoints: [
+          const ResponsiveBreakpoint.resize(480, name: MOBILE),
+          const ResponsiveBreakpoint.resize(1000, name: TABLET),
+          const ResponsiveBreakpoint.resize(4000, name: DESKTOP),
+        ]);
+      },
       debugShowCheckedModeBanner: false,
+      home: const SignUpScreen(),
       theme: ThemeData(
-          primaryColor: AppTheme.colorPrimary,
+          primaryColor: colorPrimary,
           fontFamily: AppTheme.fontName,
           textSelectionTheme: TextSelectionThemeData(
-            selectionColor: AppTheme.colorPrimary.withOpacity(0.2),
-            selectionHandleColor: AppTheme.colorPrimary,
+            selectionColor: colorPrimary.withOpacity(0.2),
+            selectionHandleColor: colorPrimary,
           )),
-      home: kIsWeb ? WebDashboardPage() : MobileSelectWeeklyIncomePage(),
-      builder: BotToastInit(), //1. call BotToastInit
-      navigatorObservers: [BotToastNavigatorObserver()],
     );
   }
 }

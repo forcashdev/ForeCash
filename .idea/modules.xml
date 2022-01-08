@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/for_cash.iml" filepath="$PROJECT_DIR$/for_cash.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/for_cash_android.iml" filepath="$PROJECT_DIR$/android/for_cash_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fore_cash.iml" filepath="$PROJECT_DIR$/fore_cash.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/fore_cash_android.iml" filepath="$PROJECT_DIR$/android/fore_cash_android.iml" />
     </modules>
   </component>
 </project>
