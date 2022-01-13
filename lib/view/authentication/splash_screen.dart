@@ -1,9 +1,33 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/images.dart';
+import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    final screenIndexController = Get.put(ScreenIndexController());
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      screenIndexController.updateIndex(index: 0);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ScreenProgressIndicator(),
+          ));
+      // Get.off(ScreenProgressIndicator());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

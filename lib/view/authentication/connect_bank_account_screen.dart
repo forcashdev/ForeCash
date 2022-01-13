@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_cash/app_theme/app_theme.dart';
-import 'package:fore_cash/common_widget/common_web_appbar.dart';
+import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_bank_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
 
 class ConnectBankAccountScreen extends StatelessWidget {
@@ -14,19 +14,17 @@ class ConnectBankAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SelectedBank());
+    final screenIndexController = Get.put(ScreenIndexController());
     // final sequenceSize = MediaQuery.of(context).size;
     return SafeArea(
       child: LayoutBuilder(
         builder: (BuildContext layOutContext, BoxConstraints constraints) {
           return Scaffold(
-            appBar: constraints.maxWidth > 785 ? CommonWebAppbar.commonWebAppbar(scale: Get.size.aspectRatio * 150) : null,
-            backgroundColor: backGroundColor,
-            resizeToAvoidBottomInset: false,
             body: Center(
               child: Container(
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                width: constraints.maxWidth > 785 ? 700 : null,
-                height: constraints.maxWidth > 785 ? 700 : null,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
+                width: constraints.maxWidth > 1000 ? 700 : null,
+                height: constraints.maxWidth > 1000 ? 700 : null,
                 child: Padding(
                   padding: EdgeInsets.only(left: Get.width * 0.04, right: Get.width * 0.04, bottom: constraints.maxWidth < 1000 ? Get.width * 0.02 : 0.1),
                   child: Column(
@@ -36,7 +34,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
                       ),
                       Align(
                         alignment: FractionalOffset(0.5, 0.0),
-                        child: constraints.maxWidth < 800
+                        child: constraints.maxWidth < 1000
                             ? Image.asset(
                                 foreCashLogo2,
                                 scale: 3,
@@ -58,7 +56,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
                           filled: true,
                           prefixIcon: Icon(Icons.search),
                           hintText: searchBank,
-                          hintStyle: TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400),
+                          hintStyle: searchBankStyle,
                           fillColor: commonTextFieldColor,
                           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
                           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
@@ -83,6 +81,15 @@ class ConnectBankAccountScreen extends StatelessWidget {
                                         onTap: () {
                                           controller.changeBank(bankIndex: index);
                                           print(controller.selectedIndex);
+                                          screenIndex = 2;
+                                          print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+                                          screenIndexController.updateIndex(index: 2);
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //       builder: (context) => MonthlyIncomeScreen(),
+                                          //     ));
+                                          // Get.to(MonthlyIncomeScreen());
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(10),

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:fore_cash/utility/colors.dart';
+import 'package:fore_cash/utility/const.dart';
+import 'package:get/get.dart';
 
 class CommonTextField {
-  static commonTextField({TextStyle? errorTextStyle, FormFieldValidator? validator, String? hint, BuildContext? context, var obscureText, IconButton? suffixIcon, TextEditingController? controller}) {
-    final sequenceSize = MediaQuery.of(context!).size;
-
+  static commonTextField(
+      {EdgeInsets? contentPadding, TextStyle? errorTextStyle, FormFieldValidator? validator, String? hint, var obscureText, IconButton? suffixIcon, TextEditingController? controller}) {
     return TextFormField(
+      style: textFieldStyle,
       validator: validator,
       controller: controller,
       obscureText: obscureText ?? false as bool,
       decoration: InputDecoration(
-        hintStyle: TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500),
+        contentPadding: contentPadding,
+        hintStyle: textFieldHintStyle,
         errorStyle: errorTextStyle,
         suffixIcon: suffixIcon ?? null,
         filled: true,
@@ -20,7 +22,7 @@ class CommonTextField {
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(sequenceSize.aspectRatio * 20),
+          borderRadius: BorderRadius.circular(Get.size.aspectRatio * 20),
         ),
         border: InputBorder.none,
       ),

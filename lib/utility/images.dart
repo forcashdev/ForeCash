@@ -19,3 +19,5 @@ List<String> bankListImage = [
   'assets/image/png/USBank.png',
   'assets/image/png/wellsBank.png',
 ];
+
+String deleteImage = 'assets/image/png/deleteImg.png';

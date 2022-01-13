@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/utility/colors.dart';
-import 'package:fore_cash/view/authentication/signup_screen.dart';
+import 'package:fore_cash/view/dashboard/dashboard_screen.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         ]);
       },
       debugShowCheckedModeBanner: false,
-      home: const SignUpScreen(),
+      home: const DashBoardScreen(),
       theme: ThemeData(
           primaryColor: colorPrimary,
           fontFamily: AppTheme.fontName,

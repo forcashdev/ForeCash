@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textfield.dart';
-import 'package:fore_cash/common_widget/common_web_appbar.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -32,11 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context, constraints) {
           return Scaffold(
               backgroundColor: backGroundColor,
-              appBar: constraints.maxWidth > 1000 ? CommonWebAppbar.commonWebAppbar(scale: Get.size.aspectRatio * 150) : null,
-              resizeToAvoidBottomInset: false,
               body: Center(
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
                   width: constraints.maxWidth > 1000 ? 600 : null,
                   height: constraints.maxWidth > 1000 ? 600 : null,
                   alignment: Alignment.center,
@@ -78,28 +74,21 @@ class _LoginScreenState extends State<LoginScreen> {
                             alignment: const FractionalOffset(0.5, 0.0),
                             child: Text(
                               enterPassEmail,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontFamily: AppTheme.fontName,
-                              ),
+                              style: emailStyle,
                             ),
                           ),
                           SizedBox(
                             height: Get.height * 0.025,
                           ),
                           Text(
-                            email,
-                            style: const TextStyle(
-                              color: commonTextColor2,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: AppTheme.fontName,
-                            ),
+                            emailAddress,
+                            style: fullNameHintStyle,
                           ),
                           SizedBox(
                             height: Get.height * 0.01,
                           ),
                           CommonTextField.commonTextField(
-                            hint: email,
+                            hint: emailAddress,
                             controller: _email,
                             validator: (value) {
                               if (_email.text.isValidEmail()) {
@@ -108,7 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return notValidEmail;
                               }
                             },
-                            context: context,
                           ),
                           SizedBox(
                             height: Get.height * 0.04,
@@ -118,11 +106,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 password,
-                                style: const TextStyle(fontWeight: FontWeight.w700, fontFamily: AppTheme.fontName, color: commonTextColor2),
+                                style: fullNameHintStyle,
                               ),
                               Text(
                                 forgotPass,
-                                style: const TextStyle(fontWeight: FontWeight.w700, fontFamily: AppTheme.fontName, color: commonTextColor2),
+                                style: fullNameHintStyle,
                               ),
                             ],
                           ),
@@ -132,7 +120,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           CommonTextField.commonTextField(
                             hint: password,
                             controller: _password,
-                            context: context,
                             suffixIcon: IconButton(
                               splashRadius: 0.1,
                               onPressed: () {
@@ -157,12 +144,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Spacer(),
                           CommonMaterialButton.commonButton(
-                              onPress: () {
-                                _formKey.currentState!.validate();
-                              },
-                              text: logIn,
-                              height: 50,
-                              context: context),
+                            onPress: () {
+                              _formKey.currentState!.validate();
+                            },
+                            text: logIn,
+                            height: 50,
+                          ),
                           SizedBox(
                             height: Get.height * 0.02,
                           ),
@@ -186,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 child: Text(
                                   signUp,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: commonButtonColor),
+                                  style: signupButtonStyle,
                                 ),
                               )
                             ],

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/weekly_income_model.dart';
-import 'package:fore_cash/utility/colors.dart';
+import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
@@ -53,7 +52,7 @@ class WeeklyIncomeWidget {
                   '${WeeklyIncomeModel.weeklyIncomeList[index].expenseName}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName),
+                  style: expenseNameStyle,
                 ),
                 // child: const TextField(
                 //   style: TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14),
@@ -72,27 +71,29 @@ class WeeklyIncomeWidget {
                   builder: (controller1) {
                     // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
                     // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
-                    return DropdownButton(
-                      value: controller.selectDayDropDown[index],
-                      // value: controller.selectedItem,
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, fontFamily: AppTheme.fontName),
-                      items: days.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(
-                            items,
-                            style: const TextStyle(color: Color(0xff777C90), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (item) {
-                        controller.changeDay(item: item, index: index);
-                      },
-                      isExpanded: true,
-                      underline: Container(),
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                        // color: AppTheme.colorGrey,
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        value: controller.selectDayDropDown[index],
+                        // value: controller.selectedItem,
+                        style: dropDownStyle,
+                        items: days.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(
+                              items,
+                              style: dropDownStyle2,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (item) {
+                          controller.changeDay(item: item, index: index);
+                        },
+                        isExpanded: true,
+
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                          // color: AppTheme.colorGrey,
+                        ),
                       ),
                     );
                   },
@@ -108,28 +109,30 @@ class WeeklyIncomeWidget {
                 child: GetBuilder<SelectedDropDownItem>(
                   builder: (controller1) {
                     // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
-                    return DropdownButton(
-                      value: controller.selectWeekDropDown[index],
-                      // value: controller.selectedItem,
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName),
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        value: controller.selectWeekDropDown[index],
+                        // value: controller.selectedItem,
+                        style: dropDownStyle,
 
-                      items: weeks.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(
-                            items,
-                            style: const TextStyle(color: Color(0xff777C90), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (item) {
-                        controller.changeWeek(item: item, index: index);
-                      },
-                      isExpanded: true,
-                      underline: Container(),
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                        // color: AppTheme.colorGrey,
+                        items: weeks.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(
+                              items,
+                              style: dropDownStyle2,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (item) {
+                          controller.changeWeek(item: item, index: index);
+                        },
+                        isExpanded: true,
+
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                          // color: AppTheme.colorGrey,
+                        ),
                       ),
                     );
                   },
@@ -144,7 +147,7 @@ class WeeklyIncomeWidget {
                   alignment: Alignment.center,
                   child: Text(
                     '\$${WeeklyIncomeModel.weeklyIncomeList[index].amount}',
-                    style: TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName),
+                    style: amountStyle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

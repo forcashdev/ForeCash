@@ -1,33 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
-import 'package:fore_cash/common_widget/common_web_appbar.dart';
+import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:fore_cash/view/authentication/widgets/monthly_income_widget.dart';
 import 'package:get/get.dart';
 
-class MonthlyExpensesScreen extends StatelessWidget {
-  const MonthlyExpensesScreen({Key? key}) : super(key: key);
+class MonthlyIncomeScreen extends StatelessWidget {
+  const MonthlyIncomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final screenIndexController = Get.put(ScreenIndexController());
     return SafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
           final maxWidth = constraints.maxWidth > 1000;
           return Scaffold(
-            appBar: maxWidth ? CommonWebAppbar.commonWebAppbar(scale: Get.size.aspectRatio * 150) : null,
-            backgroundColor: maxWidth ? backGroundColor : null,
             body: Center(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
-                color: Colors.white,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
                 width: maxWidth ? Get.width / 1.4 : null,
                 height: maxWidth ? 700 : null,
                 child: Column(
@@ -67,21 +66,11 @@ class MonthlyExpensesScreen extends StatelessWidget {
                         maxLines: 4,
                         text: TextSpan(
                           text: identified,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: 14,
-                            color: Color(0xFF777C90),
-                            fontFamily: AppTheme.fontName,
-                          ),
+                          style: textSpanStyle1,
                           children: [
                             TextSpan(
                               text: towards,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                                fontFamily: AppTheme.fontName,
-                                color: Color(0xFF777C90),
-                              ),
+                              style: textSpanStyle2,
                             )
                           ],
                         ),
@@ -90,39 +79,6 @@ class MonthlyExpensesScreen extends StatelessWidget {
                     SizedBox(
                       height: Get.height * 0.03,
                     ),
-                    // Row(
-                    //   // mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Expanded(
-                    //       flex: 6,
-                    //       child: Text(
-                    //         expenseName,
-                    //         style: const TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, color: Color(0xff777C90), fontSize: 13),
-                    //       ),
-                    //     ),
-                    //     Expanded(
-                    //       flex: 3,
-                    //       child: Text(
-                    //         paidOn,
-                    //         style: const TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, color: Color(0xff777C90), fontSize: 13),
-                    //       ),
-                    //     ),
-                    //     Expanded(
-                    //       flex: 3,
-                    //       child: Text(
-                    //         every,
-                    //         style: const TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, color: Color(0xff777C90), fontSize: 13),
-                    //       ),
-                    //     ),
-                    //     Expanded(
-                    //       flex: 4,
-                    //       child: Text(
-                    //         amount,
-                    //         style: const TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, color: Color(0xff777C90), fontSize: 13),
-                    //       ),
-                    //     )
-                    //   ],
-                    // ),
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.only(top: 10),
@@ -134,35 +90,24 @@ class MonthlyExpensesScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5)),
                         child: Column(
                           children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: SizedBox(
-                                width: Get.width * 11,
-                                child: Row(
-                                  children: List.generate(
-                                      columnNameList.length,
-                                      (index) => Expanded(
-                                            flex: index == 0
-                                                ? maxWidth
-                                                    ? 4
-                                                    : 5
-                                                : (index == 1 || index == 2)
-                                                    ? 3
-                                                    : 4,
-                                            child: Text(
-                                              columnNameList[index].toString(),
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                color: commonGreyColor,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                              // style: TextStyle(fontSize: 15),
-                                            ),
-                                          )),
-                                ),
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                              Text(
+                                incomeName,
+                                style: columnNameListStyle,
                               ),
-                            ),
+                              Text(
+                                paidOn,
+                                style: columnNameListStyle,
+                              ),
+                              Text(
+                                every,
+                                style: columnNameListStyle,
+                              ),
+                              Text(
+                                amount,
+                                style: columnNameListStyle,
+                              ),
+                            ]),
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
@@ -179,15 +124,24 @@ class MonthlyExpensesScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     Padding(
                       padding: EdgeInsets.only(
                           bottom: Get.height * 0.03, left: maxWidth ? Get.width * 0.15 : Get.width * 0.04, right: maxWidth ? Get.width * 0.15 : Get.width * 0.04, top: Get.width * 0.015),
                       child: CommonMaterialButton.commonButton(
                         height: 50,
                         text: next,
-                        context: context,
-                        onPress: () {},
+                        onPress: () {
+                          screenIndex = 3;
+                          print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+                          screenIndexController.updateIndex(index: 3);
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => WeeklyIncomeScreen(),
+                          //     ));
+
+                          // Get.to(WeeklyIncomeScreen());
+                        },
                       ),
                     )
                   ],
