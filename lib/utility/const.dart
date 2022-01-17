@@ -10,14 +10,11 @@ const headTitleTheme = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w700,
 );
-const mobileAppBarStyle = TextStyle(
-  fontSize: 20,
+TextStyle mobileAppBarStyle = TextStyle(
+  fontSize: 17.sp,
   color: Colors.black,
   fontWeight: FontWeight.w700,
 );
-
-
-
 const commonButtonTheme = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.white);
 const createAccountTextStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w300);
 const fullNameHintStyle = TextStyle(
@@ -25,7 +22,6 @@ const fullNameHintStyle = TextStyle(
   fontWeight: FontWeight.w700,
   fontFamily: AppTheme.fontName,
 );
-
 const forgotPassStyle = TextStyle(
   color: commonTextColor2,
   fontWeight: FontWeight.w500,
@@ -62,7 +58,7 @@ const textFieldHintStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: 
 const signupButtonStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: commonButtonColor);
 const searchBankStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
 const expenseNameStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
-const dropDownStyle = TextStyle(color: Color(0xff777C90), fontSize: 13, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle dropDownStyle = TextStyle(color: Color(0xff777C90), fontSize: 10.sp, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 const dropDownStyle2 = TextStyle(color: Color(0xff777C90), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
 const amountStyle = TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName);
 const textFieldStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14);
@@ -106,9 +102,15 @@ const userNameStyle = TextStyle(
 );
 const userNameProfileStyle = TextStyle(color: commonTextColor2, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600);
 TextStyle allSetTextStyle = TextStyle(color: Colors.white, fontSize: Get.mediaQuery.size.aspectRatio * 45, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500);
-const foreCashWeeklyBalanceTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w400);
-TextStyle foreCashWeeklyBalanceStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w600, fontSize: Get.size.aspectRatio * 30);
-TextStyle incomeExpenseTExtStyle = TextStyle(color: Colors.white, fontSize: Get.size.aspectRatio * 22, fontFamily: AppTheme.fontName);
+TextStyle foreCashWeeklyBalanceTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w400, fontSize: 12.sp);
+TextStyle foreCashWeeklyBalanceTextStyleWeb = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w400, fontSize: 10.sp);
+TextStyle currentWeekTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 11.sp);
+TextStyle currentWeekDateTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.black54, fontWeight: FontWeight.w600, fontSize: 11.sp);
+TextStyle foreCashWeeklyBalanceStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14.sp);
+TextStyle foreCashWeeklyBalanceStyleWeb = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13.sp);
+TextStyle incomeExpenseTExtStyle = TextStyle(color: Colors.white, fontSize: 11.sp, fontFamily: AppTheme.fontName);
+TextStyle blackCalendarStyle11W300 = TextStyle(fontFamily: AppTheme.fontName, fontSize: 11.sp, fontWeight: FontWeight.w300);
+TextStyle greyDateTexStyle10W300 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w300, fontSize: 10.sp);
 
 
 //Hardik

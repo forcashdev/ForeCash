@@ -114,6 +114,7 @@ class _MonthlyExpensesWidgetState extends State<MonthlyExpensesWidget> {
                               child: Text(
                                 items,
                                 style: dropDownStyle2,
+                                maxLines: 1,
                               ),
                             );
                           }).toList(),

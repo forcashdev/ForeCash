@@ -11,7 +11,7 @@ import 'package:fore_cash/view/authentication/monthly_income_screen.dart';
 import 'package:fore_cash/view/authentication/setup_calendar_screen.dart';
 import 'package:fore_cash/view/authentication/setup_weekly_budget_screen.dart';
 import 'package:fore_cash/view/authentication/signup_screen.dart';
-import 'package:fore_cash/view/authentication/weekly_income_screen/weekly_income_screen.dart';
+import 'package:fore_cash/view/authentication/weekly_income_screen.dart';
 import 'package:get/get.dart';
 
 int screenIndex = 0;
