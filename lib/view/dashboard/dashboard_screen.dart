@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
-import 'package:fore_cash/common_widget/common_web_appbar.dart';
 import 'package:fore_cash/getx/dashboard_container_visibility.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/notifications/notifications_screen.dart';
+import 'package:fore_cash/view/transactions/verify_transactions_screen.dart';
 import 'package:get/get.dart';
 
 class DashBoardScreen extends StatelessWidget {
+
   const DashBoardScreen({Key? key}) : super(key: key);
 
   @override
@@ -18,64 +20,80 @@ class DashBoardScreen extends StatelessWidget {
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth > 1000;
         return Scaffold(
-          backgroundColor: Color(0xffE5E5E5),
-          appBar: maxWidth
-              ?
-              : CommonMobileAppbar.commonMobileAppbar(
+          backgroundColor: const Color(0xffE5E5E5),
+          appBar: CommonMobileAppbar.commonMobileAppbar(
                   color: Colors.white,
-                  title: Text(
+                  title: const Text(
                     'DashBoard',
                     style: mobileAppBarStyle,
                   ),
                   actions: [
-                      Padding(
-                        padding: EdgeInsets.only(top: Get.height * 0.01),
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: 35,
-                              width: 35,
-                              padding: const EdgeInsets.all(7),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: appBarActionColor,
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const VerifyTransactionsScreen(),
+                              ));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(top: Get.height * 0.01),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 35,
+                                width: 35,
+                                padding: const EdgeInsets.all(7),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: appBarActionColor,
+                                ),
+                                child: Image.asset('assets/image/png/notificationIcon.png'),
                               ),
-                              child: Image.asset('assets/image/png/notificationIcon.png'),
-                            ),
-                            const Positioned(
-                              right: 3,
-                              top: 4,
-                              child: CircleAvatar(
-                                backgroundColor: cameraBackGroundColor,
-                                radius: 6,
-                              ),
-                            )
-                          ],
+                              const Positioned(
+                                right: 3,
+                                top: 4,
+                                child: CircleAvatar(
+                                  backgroundColor: cameraBackGroundColor,
+                                  radius: 6,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
                         width: Get.width * 0.007,
                       ),
-                      Container(
-                        width: 86,
-                        margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
-                        padding: const EdgeInsets.only(left: 4),
-                        decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
-                        child: Row(
-                          children: [
-                            const CircleAvatar(
-                              radius: 17,
-                              backgroundImage: AssetImage(
-                                'assets/image/png/profilePhoto.png',
+                      GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationsScreen(),
+                            ));
+                      },
+                        child: Container(
+                          width: 86,
+                          margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
+                          padding: const EdgeInsets.only(left: 4),
+                          decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
+                          child: Row(
+                            children: [
+                              const CircleAvatar(
+                                radius: 17,
+                                backgroundImage: AssetImage(
+                                  'assets/image/png/profilePhoto.png',
+                                ),
                               ),
-                            ),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Colors.black,
-                                ))
-                          ],
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                  ))
+                            ],
+                          ),
                         ),
                       ),
                     ]
@@ -89,7 +107,7 @@ class DashBoardScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   width: double.infinity,
                   height: Get.height * 0.06,
                   decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(7)),
@@ -128,8 +146,8 @@ class DashBoardScreen extends StatelessWidget {
                       children: [
                         Expanded(
                             child: Container(
-                          padding: EdgeInsets.only(left: 10),
-                          margin: EdgeInsets.only(left: 10, right: 5),
+                          padding: const EdgeInsets.only(left: 10),
+                          margin: const EdgeInsets.only(left: 10, right: 5),
                           height: Get.height * 0.07,
                           decoration: BoxDecoration(color: containerColor, borderRadius: BorderRadius.circular(7)),
                           child: Column(
@@ -149,9 +167,9 @@ class DashBoardScreen extends StatelessWidget {
                         )),
                         Expanded(
                             child: Container(
-                          margin: EdgeInsets.only(right: 10),
+                          margin: const EdgeInsets.only(right: 10),
                           height: Get.height * 0.07,
-                          padding: EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.only(left: 10),
                           decoration: BoxDecoration(color: containerColor, borderRadius: BorderRadius.circular(7)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -182,7 +200,7 @@ class DashBoardScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 14),
                     height: 300,
                     color: Colors.white,
-                    duration: Duration(seconds: 5),
+                    duration: const Duration(seconds: 5),
                     curve: Curves.elasticInOut,
                     child: Column(
                       children: [
@@ -214,7 +232,7 @@ class DashBoardScreen extends StatelessWidget {
                     ),
                   )
                 ],
-              )
+              ),
             ],
           ),
         );

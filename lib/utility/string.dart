@@ -153,3 +153,10 @@ String forgotPassSubTitle = 'We will Send you a Verification Link';
 String newPassword = 'New password';
 String confirmNewPass = 'Confirm New password';
 List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyIncome, weeklyIncome, monthlyExpense, weeklyExpense, setUpCalendar];
+
+
+
+//verify_transaction
+String notifications = 'Notifications';
+String verifyTransaction = 'Verify Transaction';
+String verifyTransactionDesc = 'Did these transactions happen? Mark them as recieved/paid or skip or move to next week.';
