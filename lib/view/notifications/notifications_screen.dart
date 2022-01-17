@@ -18,7 +18,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       return Scaffold(
         appBar: CommonMobileAppbar.commonMobileAppbar(
           color: Colors.white,
-          title: const Text(
+          title: Text(
             'DashBoard',
             style: mobileAppBarStyle,
           ),
@@ -158,7 +158,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           Icons.delete,
                           color: Colors.red,
                         ),
-                        SizedBox(width: 6.0,),
+                        SizedBox(
+                          width: 6.0,
+                        ),
                         Text(
                           "Delete",
                           style: greyMontserrat12w500,
