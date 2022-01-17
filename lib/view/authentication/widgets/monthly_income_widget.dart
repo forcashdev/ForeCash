@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/monthly_income_model.dart';
+import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
@@ -48,16 +50,16 @@ class MonthlyIncomeWidget {
                 height: Get.height * 0.044,
                 alignment: Alignment.centerLeft,
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                // child: Text(
-                //   '${MonthlyIncomeModel.monthlyincomeList[index].expenseName}',
-                //   maxLines: 1,
-                //   overflow: TextOverflow.ellipsis,
-                //   style: const TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName),
-                // ),
-                child: const TextField(
-                  style: textFieldStyle,
-                  decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                child: Text(
+                  '${MonthlyIncomeModel.monthlyincomeList[index].expenseName}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName),
                 ),
+                // child: const TextField(
+                //   style: textFieldStyle,
+                //   decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                // ),
                 decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
               ),
               Container(
@@ -146,16 +148,16 @@ class MonthlyIncomeWidget {
                   // width: Get.width * 0.14,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.only(left: 10),
-                  // child: const Text(
-                  //   '\$500',
-                  //   style: TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName),
-                  //   maxLines: 1,
-                  //   overflow: TextOverflow.ellipsis,
-                  // ),
-                  child: const TextField(
-                    style: textFieldStyle,
-                    decoration: InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                  child: const Text(
+                    '\$500',
+                    style: TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  // child: const TextField(
+                  //   style: textFieldStyle,
+                  //   decoration: InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                  // ),
                   margin: EdgeInsets.only(right: Get.width * 0.04),
                   decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                 ),
