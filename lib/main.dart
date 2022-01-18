@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           ]);
         },
         debugShowCheckedModeBanner: false,
-        home: DashBoardScreen(),
+        home: const DashBoardScreen(),
         theme: ThemeData(
             primaryColor: colorPrimary,
             fontFamily: AppTheme.fontName,

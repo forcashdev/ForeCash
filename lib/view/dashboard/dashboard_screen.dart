@@ -5,6 +5,7 @@ import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/getx/dashboard_container_visibility.dart';
+import 'package:fore_cash/getx/monthly_expansion_visibility_controller.dart';
 import 'package:fore_cash/getx/pageview_pageindex_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/getx/switch_controller.dart';
@@ -15,6 +16,8 @@ import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
 class DashBoardScreen extends StatefulWidget {
+  const DashBoardScreen({Key? key}) : super(key: key);
+
   @override
   State<DashBoardScreen> createState() => _DashBoardScreenState();
 }
@@ -23,7 +26,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final switchController = Get.put(SwitchController());
 
   final pageIndexController = Get.put(PageViewPageIndex());
-
+  final monthlyExpansionVisibilityController = Get.put(MonthlyExpansionVisibilityController());
+  AnimationController? _animationController;
+  bool iconValue = true;
   @override
   Widget build(BuildContext context) {
     List<String> dataDateList = [
@@ -86,36 +91,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     ];
 
     final visibilityController = Get.put(DashBoardVisibilityController());
-    final controller = Get.put(SelectedDropDownItem());
+    final dropDownController = Get.put(SelectedDropDownItem());
     ScrollController scrollController = ScrollController();
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth > 1000;
         PageController _pageController = PageController(
-            keepPage: false,
+            // keepPage: true,
             // initialPage: 5,
             // viewportFraction: 0.34,
 
             viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17);
         PageController _pageController2 = PageController(
-          keepPage: false,
-          // initialPage: 5,
-          // viewportFraction: 0.34,
-
+          // keepPage: true,
           viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
         );
-        // List<PageController> pageControllerList = <PageController>[
-        //   PageController(
-        //     viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
-        //   ),
-        //   PageController(
-        //     viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
-        //   ),
-        // ];
 
         List<PageController> pageControllerList = List.generate(
-            2,
+            MonthlyIncomeModel.monthlyincomeList.length,
             (index) => PageController(
                   viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
                 ));
@@ -199,89 +192,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     color: Colors.white,
                     child: Column(
                       children: [
-                        maxWidth
-                            ? Container()
-                            : Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        currentWeek,
-                                        style: currentWeekTextStyle,
-                                      ),
-                                      Text(
-                                        currentWeekDate,
-                                        style: currentWeekDateTextStyle,
-                                      )
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  GetBuilder<SwitchController>(
-                                    builder: (controller) {
-                                      return Row(
-                                        children: [
-                                          Text(
-                                            simulateMode,
-                                            style: TextStyle(
-                                                fontFamily: AppTheme.fontName,
-                                                color: switchController.switchValue == true ? commonButtonColor : Colors.black54,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 11.sp),
-                                          ),
-                                          Switch(
-                                            // onChanged: toggleSwitch,
-                                            // value: isSwitched,
-                                            activeColor: commonButtonColor,
-                                            activeTrackColor: Colors.grey.withOpacity(0.3),
-                                            inactiveThumbColor: commonTextColor2,
-                                            // thumbColor: commonTextColor2,
-                                            inactiveTrackColor: Colors.grey.withOpacity(0.3),
-                                            value: switchController.switchValue,
-                                            onChanged: (bool value) {
-                                              switchController.changeSwitchValue(value: value);
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  )
-                                ],
-                              ),
-                        // Expanded(
-                        //   child: Row(
-                        //     children: [
-                        //       // IconButton(
-                        //       //     onPressed: () {
-                        //       //       _pageController.previousPage(duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
-                        //       //     },
-                        //       //     icon: Icon(Icons.ten_k_rounded)),
-                        //       SizedBox(
-                        //         height: 100,
-                        //         child: PageView.builder(
-                        //           scrollDirection: Axis.horizontal,
-                        //           itemCount: dataDateList.length,
-                        //           controller: _pageController,
-                        //           itemBuilder: (context, index) {
-                        //             return Container(height: 50, width: 50, color: Colors.red, child: Text(dataDateList[index]));
-                        //           },
-                        //         ),
-                        //       ),
-                        //       // IconButton(
-                        //       //     onPressed: () {
-                        //       //       _pageController.nextPage(duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
-                        //       //     },
-                        //       //     icon: Icon(Icons.one_x_mobiledata_sharp)),
-                        //     ],
-                        //   ),
-                        // ),
-
-                        // IconButton(
-                        //     onPressed: () {
-                        //       buttonCarouselController.previousPage(duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
-                        //     },
-                        //     icon: Icon(Icons.ten_k_rounded)),
+                        maxWidth ? Container() : _mobileSimulateModeRow(),
                         Container(
                           width: double.infinity,
                           color: const Color(0xffEDF2F6),
@@ -386,222 +297,647 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                             ],
                           ),
                         ),
-                        Row(
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ExpansionTile(
+                          onExpansionChanged: (value) {
+                            print(value);
+                          },
+                          textColor: Colors.black,
+                          iconColor: containerColor,
+                          tilePadding: EdgeInsets.all(0.0),
+                          title: Row(
+                            children: [
+                              Text(
+                                monthlyIncome,
+                                style: blackMontserrat15W700,
+                              ),
+                              IconButton(onPressed: () {}, icon: Icon(Icons.ten_k_rounded))
+                            ],
+                          ),
                           children: [
-                            Expanded(
-                                flex: 2,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: MonthlyIncomeModel.monthlyincomeList.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(bottom: Get.height * 0.019),
-                                      child: Row(
+                            GetBuilder<MonthlyExpansionVisibilityController>(
+                              builder: (controller) {
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                          // color: Colors.red,
+                                          border: Border(
+                                        top: BorderSide(color: Color(0xffF2F2F2)),
+                                      )),
+                                      child: Column(
                                         children: [
-                                          Container(
-                                            padding: const EdgeInsets.only(left: 10),
-                                            width: constraints.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
-                                            height: Get.height * 0.044,
-                                            alignment: Alignment.centerLeft,
-                                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                            child: Text(
-                                              '${MonthlyIncomeModel.monthlyincomeList[index].expenseName}',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName),
-                                            ),
-                                            // child: const TextField(
-                                            //   style: textFieldStyle,
-                                            //   decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
-                                            // ),
-                                            decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                                          controller.visibilityIncome == true && maxWidth
+                                              ? Column()
+                                              : Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                                  Text(
+                                                    expenseName,
+                                                    style: columnNameListStyle,
+                                                  ),
+                                                  Text(
+                                                    dueOn,
+                                                    style: columnNameListStyle,
+                                                  ),
+                                                  Text(
+                                                    every,
+                                                    style: columnNameListStyle,
+                                                  ),
+                                                  Text(
+                                                    amount,
+                                                    style: columnNameListStyle,
+                                                  ),
+                                                ]
+                                                  // children: List.generate(
+                                                  //     monthlyExpenseNameList.length,
+                                                  //     (index) => Expanded(
+                                                  //           flex: index == 0
+                                                  //               ? maxWidth
+                                                  //                   ? 4
+                                                  //                   : 5
+                                                  //               : (index == 1)
+                                                  //                   ? 3
+                                                  //                   : index == 2
+                                                  //                       ? 6
+                                                  //                       : 4,
+                                                  //           child: Text(
+                                                  //             monthlyExpenseNameList[index].toString(),
+                                                  //             style: columnNameListStyle,
+                                                  //             textAlign: TextAlign.center,
+                                                  //             // style: TextStyle(fontSize: 15),
+                                                  //           ),
+                                                  //         )),
+                                                  ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                flex: controller.visibilityIncome == true
+                                                    ? 2
+                                                    : constraints.maxWidth > 1000
+                                                        ? 2
+                                                        : 4,
+                                                child: Column(
+                                                  children: [
+                                                    maxWidth
+                                                        ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                                            Text(
+                                                              expenseName,
+                                                              style: columnNameListStyle,
+                                                            ),
+                                                            Text(
+                                                              dueOn,
+                                                              style: columnNameListStyle,
+                                                            ),
+                                                            Text(
+                                                              every,
+                                                              style: columnNameListStyle,
+                                                            ),
+                                                            Text(
+                                                              amount,
+                                                              style: columnNameListStyle,
+                                                            ),
+                                                          ])
+                                                        : Column(),
+                                                    ListView.builder(
+                                                      physics: NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      itemCount: MonthlyIncomeModel.monthlyincomeList.length,
+                                                      itemBuilder: (context, index) {
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                padding: const EdgeInsets.only(left: 10),
+                                                                width: constraints.maxWidth < 1000 ? Get.width * 0.33 : Get.width * 0.15,
+                                                                // height: Get.height * 0.044,
+                                                                alignment: Alignment.centerLeft,
+                                                                margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                                child: Text(
+                                                                  '${MonthlyIncomeModel.monthlyincomeList[index].expenseName}',
+                                                                  maxLines: 1,
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  style: greyMontserratW400,
+                                                                ),
+                                                                // child: const TextField(
+                                                                //   style: textFieldStyle,
+                                                                //   decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                                                                // ),
+                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                                                              ),
+                                                              Expanded(
+                                                                child: Visibility(
+                                                                    visible: constraints.maxWidth < 1000 ? controller.visibility : true,
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        Container(
+                                                                          padding: const EdgeInsets.only(left: 6),
+                                                                          // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                                                                          // height: Get.height * 0.04,
+                                                                          alignment: Alignment.center,
+                                                                          // child: GetBuilder<SelectedDropDownItem>(
+                                                                          //   builder: (controller1) {
+                                                                          //     // return commonDropDown(itemList: months, value: controller.selectedItemValueList[index]);
+                                                                          //     return DropdownButtonHideUnderline(
+                                                                          //       child: DropdownButton(
+                                                                          //         value: controller1.selectedDateItemValueList[index],
+                                                                          //         // value: controller.selectedItem,
+                                                                          //         style: dropDownStyle,
+                                                                          //
+                                                                          //         items: dateList.map((String items) {
+                                                                          //           return DropdownMenuItem(
+                                                                          //             value: items,
+                                                                          //             child: Text(
+                                                                          //               items,
+                                                                          //               style: dropDownStyle2,
+                                                                          //             ),
+                                                                          //           );
+                                                                          //         }).toList(),
+                                                                          //         onChanged: (item) {
+                                                                          //           controller1.changeDate(item: item, index: index);
+                                                                          //         },
+                                                                          //         isExpanded: true,
+                                                                          //
+                                                                          //         icon: const Icon(
+                                                                          //           Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                                                                          //           // color: AppTheme.colorGrey,
+                                                                          //         ),
+                                                                          //       ),
+                                                                          //     );
+                                                                          //   },
+                                                                          // ),
+                                                                          child: Text(
+                                                                            dropDownController.selectedDateItemValueList[index],
+                                                                            style: dropDownStyle,
+                                                                          ),
+                                                                          margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                                                                        ),
+                                                                        Container(
+                                                                          padding: const EdgeInsets.only(
+                                                                            left: 6,
+                                                                          ),
+                                                                          // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                                                                          // height: Get.height * 0.04,
+                                                                          alignment: Alignment.center,
+                                                                          // child: GetBuilder<SelectedDropDownItem>(
+                                                                          //   builder: (controller1) {
+                                                                          //     // return commonDropDown(itemList: dateList, value: controller.selectedDateItemValueList[index]);
+                                                                          //     return DropdownButtonHideUnderline(
+                                                                          //       child: DropdownButton(
+                                                                          //         value: controller1.selectedItemValueList[index],
+                                                                          //         // value: controller.selectedItem,
+                                                                          //         style: dropDownStyle,
+                                                                          //         items: months.map((String items) {
+                                                                          //           return DropdownMenuItem(
+                                                                          //             value: items,
+                                                                          //             child: Text(
+                                                                          //               items,
+                                                                          //               style: dropDownStyle2,
+                                                                          //             ),
+                                                                          //           );
+                                                                          //         }).toList(),
+                                                                          //         onChanged: (item) {
+                                                                          //           controller1.changeItem(item: item, index: index);
+                                                                          //         },
+                                                                          //         isExpanded: true,
+                                                                          //
+                                                                          //         icon: const Icon(
+                                                                          //           Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                                                                          //           // color: AppTheme.colorGrey,
+                                                                          //         ),
+                                                                          //       ),
+                                                                          //     );
+                                                                          //   },
+                                                                          // ),
+                                                                          child: Text(
+                                                                            dropDownController.selectedItemValueList[index],
+                                                                            style: dropDownStyle,
+                                                                          ),
+                                                                          margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                                                                        ),
+                                                                        Container(
+                                                                          // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+
+                                                                          // width: sequenceSize.width * 0.14,
+                                                                          // height: Get.height * 0.04,
+                                                                          // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                                                                          alignment: Alignment.centerLeft,
+                                                                          padding: const EdgeInsets.only(left: 10),
+                                                                          child: Text(
+                                                                            '\$500',
+                                                                            style: dropDownStyle,
+                                                                            maxLines: 1,
+                                                                            overflow: TextOverflow.ellipsis,
+                                                                          ),
+                                                                          // child: const TextField(
+                                                                          //   style: textFieldStyle,
+                                                                          //   decoration: InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                                                                          // ),
+                                                                          // margin: EdgeInsets.only(right: Get.width * 0.04),
+                                                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                                                                        ),
+                                                                      ],
+                                                                    )),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: controller.visibilityIncome == true
+                                                    ? 2
+                                                    : constraints.maxWidth < 1000
+                                                        ? 0
+                                                        : 2,
+                                                // flex: controller.visibility == true ? 0 : 2,
+
+                                                // child: ListView.builder(
+                                                //   physics: const NeverScrollableScrollPhysics(),
+                                                //   // controller: _scrollController,
+                                                //   shrinkWrap: true,
+                                                //   itemCount: 3,
+                                                //   itemBuilder: (context, index) {
+                                                //     return SizedBox(
+                                                //       height: 50,
+                                                //       child: PageView(
+                                                //         scrollDirection: Axis.horizontal,
+                                                //         onPageChanged: (value) {
+                                                //           _pageController.animateToPage(value, duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                //         },
+                                                //         // itemCount: incomes.length,
+                                                //         controller: _pageController2,
+                                                //
+                                                //         children: List.generate(
+                                                //             incomes.length,
+                                                //             (index) => Text(
+                                                //                   incomes[index],
+                                                //                   style: greyDateTexStyle10W300,
+                                                //                   textAlign: TextAlign.center,
+                                                //                 )),
+                                                //       ),
+                                                //     );
+                                                //     // return Padding(
+                                                //     //   padding: EdgeInsets.only(left: maxWidth ? 27 : Get.width * 0.045, right: maxWidth ? 5 : Get.width * 0.06),
+                                                //     //   child: PageView.builder(
+                                                //     //     controller: _pageController2,
+                                                //     //     itemCount: incomes.length,
+                                                //     //     onPageChanged: (value) {
+                                                //     //       // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                //     //     },
+                                                //     //     itemBuilder: (BuildContext context, int index1) {
+                                                //     //       return Text(
+                                                //     //         incomes[index1],
+                                                //     //         style: greyDateTexStyle10W300,
+                                                //     //         textAlign: TextAlign.center,
+                                                //     //       );
+                                                //     //     },
+                                                //     //   ),
+                                                //     // );
+                                                //   },
+                                                // ),
+                                                child: Visibility(
+                                                  visible: constraints.maxWidth < 1000 ? controller.visibilityIncome : true,
+                                                  child: Align(
+                                                    alignment: FractionalOffset(0.0, 0.0),
+                                                    child: ListView.builder(
+                                                      // scrollDirection: Axis.horizontal,
+                                                      // physics: const NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      itemCount: pageControllerList.length,
+                                                      itemBuilder: (context, index) {
+                                                        return SizedBox(
+                                                          height: Get.height * 0.04,
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(top: Get.height * 0.01, left: maxWidth ? 0 : Get.width * 0.045, right: maxWidth ? 5 : Get.width * 0.06),
+                                                            child: PageView.builder(
+                                                              // scrollDirection: Axis.horizontal,
+                                                              onPageChanged: (value) {
+                                                                _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                              },
+                                                              controller: pageControllerList[index],
+                                                              itemCount: incomes.length,
+                                                              itemBuilder: (BuildContext context, int index1) {
+                                                                return Text(
+                                                                  incomes[index1],
+                                                                  style: greyDateTexStyle10W300,
+                                                                  textAlign: TextAlign.center,
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          // Visibility(
-                                          //     child: Row(
-                                          //   children: [
-                                          //     Container(
-                                          //       padding: const EdgeInsets.only(left: 6),
-                                          //       width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                                          //       height: Get.height * 0.044,
-                                          //       alignment: Alignment.center,
-                                          //       child: GetBuilder<SelectedDropDownItem>(
-                                          //         builder: (controller1) {
-                                          //           // return commonDropDown(itemList: months, value: controller.selectedItemValueList[index]);
-                                          //           return DropdownButtonHideUnderline(
-                                          //             child: DropdownButton(
-                                          //               value: controller.selectedDateItemValueList[index],
-                                          //               // value: controller.selectedItem,
-                                          //               style: dropDownStyle,
-                                          //
-                                          //               items: dateList.map((String items) {
-                                          //                 return DropdownMenuItem(
-                                          //                   value: items,
-                                          //                   child: Text(
-                                          //                     items,
-                                          //                     style: dropDownStyle2,
-                                          //                   ),
-                                          //                 );
-                                          //               }).toList(),
-                                          //               onChanged: (item) {
-                                          //                 controller.changeDate(item: item, index: index);
-                                          //               },
-                                          //               isExpanded: true,
-                                          //
-                                          //               icon: const Icon(
-                                          //                 Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                                          //                 // color: AppTheme.colorGrey,
-                                          //               ),
-                                          //             ),
-                                          //           );
-                                          //         },
-                                          //       ),
-                                          //       margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                          //       decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
-                                          //     ),
-                                          //     Container(
-                                          //       padding: const EdgeInsets.only(
-                                          //         left: 6,
-                                          //       ),
-                                          //       width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                                          //       height: Get.height * 0.044,
-                                          //       alignment: Alignment.center,
-                                          //       child: GetBuilder<SelectedDropDownItem>(
-                                          //         builder: (controller1) {
-                                          //           // return commonDropDown(itemList: dateList, value: controller.selectedDateItemValueList[index]);
-                                          //           return DropdownButtonHideUnderline(
-                                          //             child: DropdownButton(
-                                          //               value: controller.selectedItemValueList[index],
-                                          //               // value: controller.selectedItem,
-                                          //               style: dropDownStyle,
-                                          //               items: months.map((String items) {
-                                          //                 return DropdownMenuItem(
-                                          //                   value: items,
-                                          //                   child: Text(
-                                          //                     items,
-                                          //                     style: dropDownStyle2,
-                                          //                   ),
-                                          //                 );
-                                          //               }).toList(),
-                                          //               onChanged: (item) {
-                                          //                 controller.changeItem(item: item, index: index);
-                                          //               },
-                                          //               isExpanded: true,
-                                          //
-                                          //               icon: const Icon(
-                                          //                 Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                                          //                 // color: AppTheme.colorGrey,
-                                          //               ),
-                                          //             ),
-                                          //           );
-                                          //         },
-                                          //       ),
-                                          //       margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                          //       decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
-                                          //     ),
-                                          //     Expanded(
-                                          //       child: Container(
-                                          //         // width: sequenceSize.width * 0.14,
-                                          //         height: Get.height * 0.044,
-                                          //         // width: Get.width * 0.14,
-                                          //         alignment: Alignment.center,
-                                          //         padding: const EdgeInsets.only(left: 10),
-                                          //         child: const Text(
-                                          //           '\$500',
-                                          //           style: TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName),
-                                          //           maxLines: 1,
-                                          //           overflow: TextOverflow.ellipsis,
-                                          //         ),
-                                          //         // child: const TextField(
-                                          //         //   style: textFieldStyle,
-                                          //         //   decoration: InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
-                                          //         // ),
-                                          //         margin: EdgeInsets.only(right: Get.width * 0.04),
-                                          //         decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
-                                          //       ),
-                                          //     ),
-                                          //   ],
-                                          // ))
                                         ],
                                       ),
-                                    );
-                                  },
-                                )),
-                            Expanded(
-                              flex: 2,
-
-                              // child: ListView.builder(
-                              //   physics: const NeverScrollableScrollPhysics(),
-                              //   // controller: _scrollController,
-                              //   shrinkWrap: true,
-                              //   itemCount: 3,
-                              //   itemBuilder: (context, index) {
-                              //     return SizedBox(
-                              //       height: 50,
-                              //       child: PageView(
-                              //         scrollDirection: Axis.horizontal,
-                              //         onPageChanged: (value) {
-                              //           _pageController.animateToPage(value, duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
-                              //         },
-                              //         // itemCount: incomes.length,
-                              //         controller: _pageController2,
-                              //
-                              //         children: List.generate(
-                              //             incomes.length,
-                              //             (index) => Text(
-                              //                   incomes[index],
-                              //                   style: greyDateTexStyle10W300,
-                              //                   textAlign: TextAlign.center,
-                              //                 )),
-                              //       ),
-                              //     );
-                              //     // return Padding(
-                              //     //   padding: EdgeInsets.only(left: maxWidth ? 27 : Get.width * 0.045, right: maxWidth ? 5 : Get.width * 0.06),
-                              //     //   child: PageView.builder(
-                              //     //     controller: _pageController2,
-                              //     //     itemCount: incomes.length,
-                              //     //     onPageChanged: (value) {
-                              //     //       // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                              //     //     },
-                              //     //     itemBuilder: (BuildContext context, int index1) {
-                              //     //       return Text(
-                              //     //         incomes[index1],
-                              //     //         style: greyDateTexStyle10W300,
-                              //     //         textAlign: TextAlign.center,
-                              //     //       );
-                              //     //     },
-                              //     //   ),
-                              //     // );
-                              //   },
-                              // ),
-                              child: SizedBox(
-                                height: 150,
-                                child: ListView.builder(
-                                  itemCount: pageControllerList.length,
-                                  itemBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: 100,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: maxWidth ? 27 : Get.width * 0.045, right: maxWidth ? 5 : Get.width * 0.06),
-                                        child: PageView.builder(
-                                          onPageChanged: (value) {
-                                            _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          },
-                                          controller: pageControllerList[index],
-                                          itemCount: incomes.length,
-                                          itemBuilder: (BuildContext context, int index1) {
-                                            return Text(
-                                              incomes[index1],
-                                              style: greyDateTexStyle10W300,
-                                              textAlign: TextAlign.center,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            )
+                                    ),
+                                    maxWidth
+                                        ? Container()
+                                        : Positioned(
+                                            top: Get.height * 0.025,
+                                            right: 0,
+                                            left: 0,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                monthlyExpansionVisibilityController.changeVisibility();
+                                              },
+                                              child: CircleAvatar(
+                                                radius: 15,
+                                                backgroundColor: Colors.grey.withOpacity(0.3),
+                                                child: const Icon(
+                                                  Icons.arrow_upward_sharp,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                  ],
+                                );
+                              },
+                            ),
+                            // GetBuilder<MonthlyExpansionVisibilityController>(
+                            //   builder: (controller) {
+                            //     return Flex(
+                            //       direction: Axis.horizontal,
+                            //       children: [
+                            //         Flexible(
+                            //           // flex: controller.visibility == true ? 4 : 2,
+                            //           child: Stack(
+                            //             children: [
+                            //               Container(
+                            //                 // margin: EdgeInsets.only(right: 15),
+                            //                 decoration: const BoxDecoration(
+                            //                     // color: Colors.red,
+                            //                     border: Border(
+                            //                   top: BorderSide(color: Color(0xffF2F2F2)),
+                            //                   right: BorderSide(color: Color(0xffF2F2F2)),
+                            //                 )),
+                            //                 child: ListView.builder(
+                            //                   shrinkWrap: true,
+                            //                   itemCount: MonthlyIncomeModel.monthlyincomeList.length,
+                            //                   itemBuilder: (context, index) {
+                            //                     return Padding(
+                            //                       padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
+                            //                       child: Row(
+                            //                         children: [
+                            //                           Container(
+                            //                             padding: const EdgeInsets.only(left: 10),
+                            //                             // width: constraints.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
+                            //                             // height: Get.height * 0.044,
+                            //                             alignment: Alignment.centerLeft,
+                            //                             margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                            //                             child: Text(
+                            //                               '${MonthlyIncomeModel.monthlyincomeList[index].expenseName}',
+                            //                               maxLines: 1,
+                            //                               overflow: TextOverflow.ellipsis,
+                            //                               style: const TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName),
+                            //                             ),
+                            //                             // child: const TextField(
+                            //                             //   style: textFieldStyle,
+                            //                             //   decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                            //                             // ),
+                            //                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                            //                           ),
+                            //                           Expanded(
+                            //                             child: Visibility(
+                            //                                 visible: controller.visibility,
+                            //                                 child: Row(
+                            //                                   children: [
+                            //                                     Container(
+                            //                                       padding: const EdgeInsets.only(left: 6),
+                            //                                       width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                            //                                       height: Get.height * 0.044,
+                            //                                       alignment: Alignment.center,
+                            //                                       child: GetBuilder<SelectedDropDownItem>(
+                            //                                         builder: (controller1) {
+                            //                                           // return commonDropDown(itemList: months, value: controller.selectedItemValueList[index]);
+                            //                                           return DropdownButtonHideUnderline(
+                            //                                             child: DropdownButton(
+                            //                                               value: controller1.selectedDateItemValueList[index],
+                            //                                               // value: controller.selectedItem,
+                            //                                               style: dropDownStyle,
+                            //
+                            //                                               items: dateList.map((String items) {
+                            //                                                 return DropdownMenuItem(
+                            //                                                   value: items,
+                            //                                                   child: Text(
+                            //                                                     items,
+                            //                                                     style: dropDownStyle2,
+                            //                                                   ),
+                            //                                                 );
+                            //                                               }).toList(),
+                            //                                               onChanged: (item) {
+                            //                                                 controller1.changeDate(item: item, index: index);
+                            //                                               },
+                            //                                               isExpanded: true,
+                            //
+                            //                                               icon: const Icon(
+                            //                                                 Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                            //                                                 // color: AppTheme.colorGrey,
+                            //                                               ),
+                            //                                             ),
+                            //                                           );
+                            //                                         },
+                            //                                       ),
+                            //                                       margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                            //                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                            //                                     ),
+                            //                                     Container(
+                            //                                       padding: const EdgeInsets.only(
+                            //                                         left: 6,
+                            //                                       ),
+                            //                                       width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                            //                                       height: Get.height * 0.044,
+                            //                                       alignment: Alignment.center,
+                            //                                       child: GetBuilder<SelectedDropDownItem>(
+                            //                                         builder: (controller1) {
+                            //                                           // return commonDropDown(itemList: dateList, value: controller.selectedDateItemValueList[index]);
+                            //                                           return DropdownButtonHideUnderline(
+                            //                                             child: DropdownButton(
+                            //                                               value: controller1.selectedItemValueList[index],
+                            //                                               // value: controller.selectedItem,
+                            //                                               style: dropDownStyle,
+                            //                                               items: months.map((String items) {
+                            //                                                 return DropdownMenuItem(
+                            //                                                   value: items,
+                            //                                                   child: Text(
+                            //                                                     items,
+                            //                                                     style: dropDownStyle2,
+                            //                                                   ),
+                            //                                                 );
+                            //                                               }).toList(),
+                            //                                               onChanged: (item) {
+                            //                                                 controller1.changeItem(item: item, index: index);
+                            //                                               },
+                            //                                               isExpanded: true,
+                            //
+                            //                                               icon: const Icon(
+                            //                                                 Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                            //                                                 // color: AppTheme.colorGrey,
+                            //                                               ),
+                            //                                             ),
+                            //                                           );
+                            //                                         },
+                            //                                       ),
+                            //                                       margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                            //                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                            //                                     ),
+                            //                                     Expanded(
+                            //                                       child: Container(
+                            //                                         // width: sequenceSize.width * 0.14,
+                            //                                         height: Get.height * 0.044,
+                            //                                         // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                            //                                         alignment: Alignment.center,
+                            //                                         padding: const EdgeInsets.only(left: 10),
+                            //                                         child: const Text(
+                            //                                           '\$500',
+                            //                                           style: TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName),
+                            //                                           maxLines: 1,
+                            //                                           overflow: TextOverflow.ellipsis,
+                            //                                         ),
+                            //                                         // child: const TextField(
+                            //                                         //   style: textFieldStyle,
+                            //                                         //   decoration: InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                            //                                         // ),
+                            //                                         margin: EdgeInsets.only(right: Get.width * 0.04),
+                            //                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                            //                                       ),
+                            //                                     ),
+                            //                                   ],
+                            //                                 )),
+                            //                           )
+                            //                         ],
+                            //                       ),
+                            //                     );
+                            //                   },
+                            //                 ),
+                            //               ),
+                            //               maxWidth
+                            //                   ? Container()
+                            //                   : Positioned(
+                            //                       top: Get.height * 0.025,
+                            //                       // bottom: 0,
+                            //                       right: 0,
+                            //                       // right: controller.visibilityIncome == true ? Get.width * 0.45 : 0,
+                            //                       // left: 0,
+                            //                       child: GestureDetector(
+                            //                         onTap: () {
+                            //                           monthlyExpansionVisibilityController.changeVisibility();
+                            //                         },
+                            //                         child: CircleAvatar(
+                            //                           radius: 15,
+                            //                           backgroundColor: Colors.grey.withOpacity(0.3),
+                            //                           child: const Icon(
+                            //                             Icons.arrow_upward_sharp,
+                            //                             color: Colors.black,
+                            //                           ),
+                            //                         ),
+                            //                       ),
+                            //                     )
+                            //             ],
+                            //           ),
+                            //         ),
+                            //         Visibility(
+                            //             visible: controller.visibilityIncome,
+                            //             child: Flexible(
+                            //               // flex: controller.visibility == true ? 0 : 2,
+                            //
+                            //               // child: ListView.builder(
+                            //               //   physics: const NeverScrollableScrollPhysics(),
+                            //               //   // controller: _scrollController,
+                            //               //   shrinkWrap: true,
+                            //               //   itemCount: 3,
+                            //               //   itemBuilder: (context, index) {
+                            //               //     return SizedBox(
+                            //               //       height: 50,
+                            //               //       child: PageView(
+                            //               //         scrollDirection: Axis.horizontal,
+                            //               //         onPageChanged: (value) {
+                            //               //           _pageController.animateToPage(value, duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+                            //               //         },
+                            //               //         // itemCount: incomes.length,
+                            //               //         controller: _pageController2,
+                            //               //
+                            //               //         children: List.generate(
+                            //               //             incomes.length,
+                            //               //             (index) => Text(
+                            //               //                   incomes[index],
+                            //               //                   style: greyDateTexStyle10W300,
+                            //               //                   textAlign: TextAlign.center,
+                            //               //                 )),
+                            //               //       ),
+                            //               //     );
+                            //               //     // return Padding(
+                            //               //     //   padding: EdgeInsets.only(left: maxWidth ? 27 : Get.width * 0.045, right: maxWidth ? 5 : Get.width * 0.06),
+                            //               //     //   child: PageView.builder(
+                            //               //     //     controller: _pageController2,
+                            //               //     //     itemCount: incomes.length,
+                            //               //     //     onPageChanged: (value) {
+                            //               //     //       // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                            //               //     //     },
+                            //               //     //     itemBuilder: (BuildContext context, int index1) {
+                            //               //     //       return Text(
+                            //               //     //         incomes[index1],
+                            //               //     //         style: greyDateTexStyle10W300,
+                            //               //     //         textAlign: TextAlign.center,
+                            //               //     //       );
+                            //               //     //     },
+                            //               //     //   ),
+                            //               //     // );
+                            //               //   },
+                            //               // ),
+                            //               child: Container(
+                            //                 decoration: const BoxDecoration(
+                            //                     border: Border(
+                            //                   top: BorderSide(color: Color(0xffF2F2F2)),
+                            //                 )),
+                            //                 child: ListView.builder(
+                            //                   physics: const NeverScrollableScrollPhysics(),
+                            //                   shrinkWrap: true,
+                            //                   itemCount: pageControllerList.length,
+                            //                   itemBuilder: (context, index) {
+                            //                     return SizedBox(
+                            //                       height: Get.height * 0.044,
+                            //                       child: Padding(
+                            //                         padding: EdgeInsets.only(top: Get.height * 0.01, left: maxWidth ? 27 : Get.width * 0.045, right: maxWidth ? 5 : Get.width * 0.06),
+                            //                         child: PageView.builder(
+                            //                           onPageChanged: (value) {
+                            //                             _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                            //                           },
+                            //                           controller: pageControllerList[index],
+                            //                           itemCount: incomes.length,
+                            //                           itemBuilder: (BuildContext context, int index1) {
+                            //                             return Text(
+                            //                               incomes[index1],
+                            //                               style: greyDateTexStyle10W300,
+                            //                               textAlign: TextAlign.center,
+                            //                             );
+                            //                           },
+                            //                         ),
+                            //                       ),
+                            //                     );
+                            //                   },
+                            //                 ),
+                            //               ),
+                            //             ))
+                            //       ],
+                            //     );
+                            //   },
+                            // ),
                           ],
                         )
                       ],
@@ -625,7 +961,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               ),
                             ),
                           ),
-                        )
+                        ),
                 ],
               )
             ],
@@ -848,6 +1184,53 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             );
           },
         ),
+      ],
+    );
+  }
+
+  _mobileSimulateModeRow() {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              currentWeek,
+              style: currentWeekTextStyle,
+            ),
+            Text(
+              currentWeekDate,
+              style: currentWeekDateTextStyle,
+            )
+          ],
+        ),
+        const Spacer(),
+        GetBuilder<SwitchController>(
+          builder: (controller) {
+            return Row(
+              children: [
+                Text(
+                  simulateMode,
+                  style: TextStyle(fontFamily: AppTheme.fontName, color: switchController.switchValue == true ? commonButtonColor : Colors.black54, fontWeight: FontWeight.w400, fontSize: 11.sp),
+                ),
+                Switch(
+                  // onChanged: toggleSwitch,
+                  // value: isSwitched,
+                  activeColor: commonButtonColor,
+                  activeTrackColor: Colors.grey.withOpacity(0.3),
+                  inactiveThumbColor: commonTextColor2,
+                  // thumbColor: commonTextColor2,
+                  inactiveTrackColor: Colors.grey.withOpacity(0.3),
+                  value: switchController.switchValue,
+                  onChanged: (bool value) {
+                    switchController.changeSwitchValue(value: value);
+                  },
+                ),
+              ],
+            );
+          },
+        )
       ],
     );
   }

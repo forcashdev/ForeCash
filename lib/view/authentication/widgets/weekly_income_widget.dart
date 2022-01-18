@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/weekly_income_model.dart';
+import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
@@ -25,14 +26,14 @@ class WeeklyIncomeWidget {
                       height: Get.height * 0.044,
                       width: 8,
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: const Color(0xff12CC8E), borderRadius: BorderRadius.circular(2)),
+                      decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                     )
                   : Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: GetBuilder<CheckBoxController>(
                         builder: (controller) {
                           return Checkbox(
-                            activeColor: Color(0xff12CC8E),
+                            activeColor: cameraBackGroundColor,
                             checkColor: Colors.white,
                             value: checkBoxController.SelectedCheckBoxValueList[index],
                             onChanged: (value) {
@@ -58,7 +59,7 @@ class WeeklyIncomeWidget {
                 //   style: TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14),
                 //   decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
                 // ),
-                decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
               ),
               Container(
                 padding: const EdgeInsets.only(
@@ -99,7 +100,7 @@ class WeeklyIncomeWidget {
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
               ),
               Container(
                 padding: const EdgeInsets.only(left: 6),
@@ -138,7 +139,7 @@ class WeeklyIncomeWidget {
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
               ),
               Expanded(
                 child: Container(
@@ -160,7 +161,7 @@ class WeeklyIncomeWidget {
                   //       border: InputBorder.none),
                   // ),
                   margin: EdgeInsets.only(right: Get.width * 0.04),
-                  decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                 ),
               ),
             ],

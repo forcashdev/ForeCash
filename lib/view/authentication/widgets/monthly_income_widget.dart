@@ -27,14 +27,14 @@ class MonthlyIncomeWidget {
                       height: Get.height * 0.044,
                       width: 8,
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: const Color(0xff12CC8E), borderRadius: BorderRadius.circular(2)),
+                      decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                     )
                   : Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: GetBuilder<CheckBoxController>(
                         builder: (controller) {
                           return Checkbox(
-                            activeColor: Color(0xff12CC8E),
+                            activeColor: cameraBackGroundColor,
                             checkColor: Colors.white,
                             value: checkBoxController.SelectedCheckBoxValueList[index],
                             onChanged: (value) {
@@ -60,7 +60,7 @@ class MonthlyIncomeWidget {
                 //   style: textFieldStyle,
                 //   decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
                 // ),
-                decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
               ),
               Container(
                 padding: const EdgeInsets.only(left: 6),
@@ -99,7 +99,7 @@ class MonthlyIncomeWidget {
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
               ),
               Container(
                 padding: const EdgeInsets.only(
@@ -139,7 +139,7 @@ class MonthlyIncomeWidget {
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
               ),
               Expanded(
                 child: Container(
@@ -159,7 +159,7 @@ class MonthlyIncomeWidget {
                   //   decoration: InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
                   // ),
                   margin: EdgeInsets.only(right: Get.width * 0.04),
-                  decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                 ),
               ),
             ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/weekly_budget_model.dart';
+import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
@@ -24,14 +25,14 @@ class SetUpWeeklyBudgetWidget {
                       height: Get.height * 0.044,
                       width: 8,
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: const Color(0xff12CC8E), borderRadius: BorderRadius.circular(2)),
+                      decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                     )
                   : Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: GetBuilder<CheckBoxController>(
                         builder: (controller) {
                           return Checkbox(
-                            activeColor: Color(0xff12CC8E),
+                            activeColor: cameraBackGroundColor,
                             checkColor: Colors.white,
                             value: checkBoxController.weeklyBudgetCheckBoxValueList[index],
                             onChanged: (value) {

@@ -15,6 +15,7 @@ class MonthlyIncomeModel {
       expenseName: 'Apple inc.',
       amount: 500,
     ),
+
     // MonthlyIncomeModel(
     //   expenseName: 'Apple inc.',
     //   amount: 500,
