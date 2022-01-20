@@ -241,8 +241,8 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                 print('jjjjjjjjjj');
                                 setState(() {
                                   MonthlyExpensesModel.monthlyExpensesList.add(MonthlyExpensesModel(expenseName: _monthlyIncomeName.text, amount: _monthlyAmount.text));
-                                  controller.selectedMonthlyExpenseDate.add(controller.selectedDate2 as Object);
-                                  controller.selectedMonthlyExpenseMonth.add(controller.selectedMonth2 as Object);
+                                  controller.selectedMonthlyExpenseDate.add(controller.selectedSingleDate as Object);
+                                  controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonth as Object);
                                   checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
                                 });
                               },
@@ -310,7 +310,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               chooseDate,
               style: chooseDateStyle,
             ),
-            value: controller.selectedDate2,
+            value: controller.selectedSingleDate,
             // value: controller.selectedItem,
             style: dropDownStyle,
             items: dropDownList!.map((String items) {
@@ -349,7 +349,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               chooseMonth,
               style: chooseDateStyle,
             ),
-            value: controller.selectedMonth2,
+            value: controller.selectedSingleMonth,
             // value: controller.selectedItem,
             style: dropDownStyle,
             items: dropDownList!.map((String items) {

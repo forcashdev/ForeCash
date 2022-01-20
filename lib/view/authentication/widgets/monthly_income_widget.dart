@@ -16,7 +16,7 @@ class MonthlyIncomeWidget {
     final checkBoxController = Get.put(CheckBoxController());
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: MonthlyIncomeModel.monthlyincomeList.length,
+      itemCount: MonthlyIncomeModel.monthlyIncomeList.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
@@ -51,7 +51,7 @@ class MonthlyIncomeWidget {
                 alignment: Alignment.centerLeft,
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
                 child: Text(
-                  '${MonthlyIncomeModel.monthlyincomeList[index].expenseName}',
+                  '${MonthlyIncomeModel.monthlyIncomeList[index].expenseName}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName),
@@ -72,7 +72,7 @@ class MonthlyIncomeWidget {
                     // return commonDropDown(itemList: months, value: controller.selectedItemValueList[index]);
                     return DropdownButtonHideUnderline(
                       child: DropdownButton(
-                        value: controller.selectedDateItemValueList[index],
+                        value: controller.selectedMonthlyIncomeDateList[index],
                         // value: controller.selectedItem,
                         style: dropDownStyle,
 
@@ -113,7 +113,7 @@ class MonthlyIncomeWidget {
                     // return commonDropDown(itemList: dateList, value: controller.selectedDateItemValueList[index]);
                     return DropdownButtonHideUnderline(
                       child: DropdownButton(
-                        value: controller.selectedItemValueList[index],
+                        value: controller.selectedMonthlyIncomeMonthList[index],
                         // value: controller.selectedItem,
                         style: dropDownStyle,
                         items: months.map((String items) {

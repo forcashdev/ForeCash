@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
-
 class MonthlyIncomeModel {
   final String? expenseName;
-  final double? amount;
-  final Widget? dropDown;
-  MonthlyIncomeModel({this.expenseName, this.amount, this.dropDown});
+  final String? amount;
+  MonthlyIncomeModel({
+    this.expenseName,
+    this.amount,
+  });
 
-  static List<MonthlyIncomeModel> monthlyincomeList = [
+  static List<MonthlyIncomeModel> monthlyIncomeList = [
     MonthlyIncomeModel(
       expenseName: 'Apple inc.',
-      amount: 500,
+      amount: '500',
     ),
     MonthlyIncomeModel(
       expenseName: 'Apple inc.',
-      amount: 500,
+      amount: '500',
     ),
 
     // MonthlyIncomeModel(

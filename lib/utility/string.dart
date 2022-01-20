@@ -39,6 +39,7 @@ String every = 'Every';
 String amount = 'Amount';
 String next = 'Next';
 String addWeeklyIncome = '+ Add New Weekly Income';
+String addMonthlyIncome = '+ Add New Monthly Income';
 List<String> columnNameList = ['Expense name', 'Paid on', 'Every', 'Amount'];
 List<String> weeklyIncomeNameList = ['Income Name', 'Paid on', 'Every', 'Amount'];
 List<String> monthlyExpenseNameList = ['Expense Name', 'Due on', 'Every', 'Amount'];
@@ -158,8 +159,7 @@ String forgotPassSubTitle = 'We will Send you a Verification Link';
 String newPassword = 'New password';
 String confirmNewPass = 'Confirm New password';
 List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyIncome, weeklyIncome, monthlyExpense, weeklyExpense, setUpCalendar];
-
-
+String cancel = 'Cancel';
 
 //verify_transaction
 String notifications = 'Notifications';

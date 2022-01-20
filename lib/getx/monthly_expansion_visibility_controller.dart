@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class MonthlyExpansionVisibilityController extends GetxController {
+class MonthlyIncomeVisibilityController extends GetxController {
   bool visibility = false;
   bool visibilityIncome = true;
 

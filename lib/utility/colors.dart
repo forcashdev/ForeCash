@@ -12,7 +12,7 @@ const Color indicatorColor = Color(0xff174261);
 const Color indicatorColor2 = Color(0xff777C90);
 const Color appBarActionColor = Color(0xffF5F6F7);
 const Color containerColor = Color(0xff097EA2);
-
+const Color greyColor = Color(0xff4B506D);
 //hardik
 const Color colors252733 = Color(0xff252733);
 const Color colorsFFC700 = Color(0xffFFC700);
