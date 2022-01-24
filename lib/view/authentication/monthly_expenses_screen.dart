@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
+import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
@@ -304,35 +305,46 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
     final controller = Get.put(SelectedDropDownItem());
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
-        return DropdownButtonHideUnderline(
-          child: DropdownButton(
-            hint: Text(
-              chooseDate,
-              style: chooseDateStyle,
-            ),
+        return CommonDropDown.commonDropDown(
+            hintTextStyle: chooseDateStyle,
+            hintText: chooseDate,
+            selectedItemTextStyle: dropDownStyle2,
+            valueTextStyle: dropDownStyle,
             value: controller.selectedSingleDate,
-            // value: controller.selectedItem,
-            style: dropDownStyle,
-            items: dropDownList!.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                child: Text(
-                  items,
-                  style: dropDownStyle2,
-                ),
-              );
-            }).toList(),
+            itemList: dropDownList,
             onChanged: (item) {
               controller.changeSingleDate(item: item);
-            },
-            isExpanded: true,
-
-            icon: const Icon(
-              Icons.keyboard_arrow_down, color: Color(0xff777C90),
-              // color: AppTheme.colorGrey,
-            ),
-          ),
-        );
+              print(item);
+            });
+        //   DropdownButtonHideUnderline(
+        //   child: DropdownButton(
+        //     hint: Text(
+        //       chooseDate,
+        //       style: chooseDateStyle,
+        //     ),
+        //     value: controller.selectedSingleDate,
+        //     // value: controller.selectedItem,
+        //     style: dropDownStyle,
+        //     items: dropDownList!.map((String items) {
+        //       return DropdownMenuItem(
+        //         value: items,
+        //         child: Text(
+        //           items,
+        //           style: dropDownStyle2,
+        //         ),
+        //       );
+        //     }).toList(),
+        //     onChanged: (item) {
+        //       controller.changeSingleDate(item: item);
+        //     },
+        //     isExpanded: true,
+        //
+        //     icon: const Icon(
+        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+        //       // color: AppTheme.colorGrey,
+        //     ),
+        //   ),
+        // );
       },
     );
   }
@@ -343,35 +355,46 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
         // return commonDropDown(itemList: dropDownList, value: controller.selectedSingleWeek);
-        return DropdownButtonHideUnderline(
-          child: DropdownButton(
-            hint: Text(
-              chooseMonth,
-              style: chooseDateStyle,
-            ),
+        return CommonDropDown.commonDropDown(
+            hintTextStyle: chooseDateStyle,
+            hintText: chooseMonth,
+            selectedItemTextStyle: dropDownStyle2,
+            valueTextStyle: dropDownStyle,
             value: controller.selectedSingleMonth,
-            // value: controller.selectedItem,
-            style: dropDownStyle,
-            items: dropDownList!.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                child: Text(
-                  items,
-                  style: dropDownStyle2,
-                ),
-              );
-            }).toList(),
+            itemList: dropDownList,
             onChanged: (item) {
               controller.changeSingleMonth(item: item);
-            },
-            isExpanded: true,
-
-            icon: const Icon(
-              Icons.keyboard_arrow_down, color: Color(0xff777C90),
-              // color: AppTheme.colorGrey,
-            ),
-          ),
-        );
+              print(item);
+            });
+        //   DropdownButtonHideUnderline(
+        //   child: DropdownButton(
+        //     hint: Text(
+        //       chooseMonth,
+        //       style: chooseDateStyle,
+        //     ),
+        //     value: controller.selectedSingleMonth,
+        //     // value: controller.selectedItem,
+        //     style: dropDownStyle,
+        //     items: dropDownList!.map((String items) {
+        //       return DropdownMenuItem(
+        //         value: items,
+        //         child: Text(
+        //           items,
+        //           style: dropDownStyle2,
+        //         ),
+        //       );
+        //     }).toList(),
+        //     onChanged: (item) {
+        //       controller.changeSingleMonth(item: item);
+        //     },
+        //     isExpanded: true,
+        //
+        //     icon: const Icon(
+        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+        //       // color: AppTheme.colorGrey,
+        //     ),
+        //   ),
+        // );
       },
     );
   }

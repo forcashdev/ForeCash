@@ -44,8 +44,8 @@ const textSpanStyle2 = TextStyle(
   color: Color(0xFF777C90),
 );
 
-const columnNameListStyle = TextStyle(
-  fontSize: 14,
+TextStyle columnNameListStyle = TextStyle(
+  fontSize: 11.sp,
   fontWeight: FontWeight.w500,
   color: commonGreyColor,
 );
@@ -61,12 +61,13 @@ const searchBankStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: Fon
 const expenseNameStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle dropDownStyle = TextStyle(color: Color(0xff777C90), fontSize: 10.sp, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle greyMontserrat10W500 = TextStyle(color: Color(0xff777C90), fontSize: 10.sp, fontWeight: FontWeight.w500, fontFamily: AppTheme.fontName);
+TextStyle blackMontserrat10W500 = TextStyle(color: Color(0xff252733), fontSize: 10.sp, fontWeight: FontWeight.w500, fontFamily: AppTheme.fontName);
 const dropDownStyle2 = TextStyle(color: Color(0xff777C90), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
 const amountStyle = TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName);
 const textFieldStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14);
 const prefixTextStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 13);
 const addWeekIncomeStyle = TextStyle(color: Color(0xff087DA1), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, decoration: TextDecoration.underline);
-const expenseNameStyle2 = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14);
+TextStyle expenseNameStyle2 = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 11.sp);
 const chooseDateStyle = TextStyle(
   color: commonGreyColor,
   fontWeight: FontWeight.w500,
@@ -119,6 +120,7 @@ TextStyle incomeExpenseTExtStyle = TextStyle(color: Colors.white, fontSize: 11.s
 TextStyle blackCalendarStyle11W500 = TextStyle(fontFamily: AppTheme.fontName, fontSize: 11.sp, fontWeight: FontWeight.w500);
 TextStyle greyDateTexStyle10W400 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, fontSize: 10.sp, color: greyColor);
 TextStyle greyTexStyle10W500 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, fontSize: 10.sp, color: greyColor);
+TextStyle greyIncomeTexStyle10W500 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, fontSize: 10.sp, color: commonTextColor2);
 
 //Hardik
 
@@ -176,6 +178,6 @@ const blackMontserrat10w400 = TextStyle(
   fontWeight: FontWeight.w400,
   fontFamily: AppTheme.fontName,
 );
-TextStyle blackMontserrat15W600 = TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName);
+TextStyle blackMontserrat13W600 = TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName);
 TextStyle redMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: Colors.red, fontWeight: FontWeight.w500, fontSize: 11.sp);
 TextStyle greenMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: cameraBackGroundColor, fontWeight: FontWeight.w500, fontSize: 11.sp);

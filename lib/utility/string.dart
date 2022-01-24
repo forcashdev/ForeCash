@@ -119,7 +119,9 @@ List<String> weeks = [
   '3W',
   '4W',
 ];
-
+String endOfWeekBalance = '\$5,000';
+String thisWeekBalance = '\$4.200';
+String thisWeekExpense = '\$150';
 String incomeName = 'Income Name';
 String budget = 'Add Budget';
 String monthlyExpenseTitle1 = 'We’ve identified reoccuring Monthly Budgets. Select which monthly expenses, such as ';
@@ -145,8 +147,11 @@ String expenseThisWeek = 'Expenses This Week';
 String createAccount2 = 'Create Account';
 String monthlyIncome = 'Monthly Income';
 String weeklyIncome = 'Weekly Income';
+String weeklyBudget = 'Weekly Budgets';
 String monthlyExpense = 'Monthly Expense';
 String weeklyExpense = 'Weekly Expense';
+String effectiveDate = 'Effective';
+String action = 'Action';
 String setUpCalendar = 'Setup Calendar';
 String step = 'Step ';
 String step2 = ' of 7';
@@ -160,7 +165,65 @@ String newPassword = 'New password';
 String confirmNewPass = 'Confirm New password';
 List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyIncome, weeklyIncome, monthlyExpense, weeklyExpense, setUpCalendar];
 String cancel = 'Cancel';
-
+List<String> dataDateList = [
+  "Sep,1",
+  "Dec,1",
+  "Jun,15",
+  "May,15",
+  "Mar,6",
+  "Jul,28",
+  "Jun,7",
+  "Dec,3",
+  "Nov,20",
+  "Oct,25",
+  "Aug,18",
+  "Sep,23",
+  "Aug,29",
+  "Jul,25",
+  "Jun,11",
+  "Mar,22",
+  "Feb,12",
+  "Aug,17",
+  "Aug,21",
+  "Aug,30",
+  "Jan,25",
+  "Sep,2",
+  "Nov,15",
+  "Nov,5",
+  "Nov,12",
+  "Oct,1",
+  "Dec,1",
+];
+List<String> incomes = [
+  '\$1200',
+  '-',
+  '\$800',
+  '-',
+  '\$1000',
+  '\$1800',
+  '\$2000',
+  '-',
+  '\$200',
+  '-',
+  '\$300',
+  '-',
+  '200',
+  '\$500',
+  '-',
+  '\$8000',
+  '-',
+  '-',
+  '-',
+  '\$400',
+  '\$500',
+  '-',
+  '-',
+  '\$3000',
+  '\$5444',
+  '-',
+  '-',
+];
+String dashBoard = 'DashBoard';
 //verify_transaction
 String notifications = 'Notifications';
 String verifyTransaction = 'Verify Transaction';

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
+import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
@@ -282,35 +283,46 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
     final controller = Get.put(SelectedDropDownItem());
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
-        return DropdownButtonHideUnderline(
-          child: DropdownButton(
-            hint: Text(
-              day,
-              style: chooseDateStyle,
-            ),
+        return CommonDropDown.commonDropDown(
+            hintText: day,
+            hintTextStyle: chooseDateStyle,
+            selectedItemTextStyle: dropDownStyle2,
+            valueTextStyle: dropDownStyle,
             value: controller.weeklyBudgetDay,
-            // value: controller.selectedItem,
-            style: dropDownStyle,
-            items: dropDownList!.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                child: Text(
-                  items,
-                  style: dropDownStyle2,
-                ),
-              );
-            }).toList(),
+            itemList: dropDownList,
             onChanged: (item) {
               controller.changeWeeklyBudgetSingleDay(item: item);
-            },
-            isExpanded: true,
-
-            icon: const Icon(
-              Icons.keyboard_arrow_down, color: Color(0xff777C90),
-              // color: AppTheme.colorGrey,
-            ),
-          ),
-        );
+              print(item);
+            });
+        //   DropdownButtonHideUnderline(
+        //   child: DropdownButton(
+        //     hint: Text(
+        //       day,
+        //       style: chooseDateStyle,
+        //     ),
+        //     value: controller.weeklyBudgetDay,
+        //     // value: controller.selectedItem,
+        //     style: dropDownStyle,
+        //     items: dropDownList!.map((String items) {
+        //       return DropdownMenuItem(
+        //         value: items,
+        //         child: Text(
+        //           items,
+        //           style: dropDownStyle2,
+        //         ),
+        //       );
+        //     }).toList(),
+        //     onChanged: (item) {
+        //       controller.changeWeeklyBudgetSingleDay(item: item);
+        //     },
+        //     isExpanded: true,
+        //
+        //     icon: const Icon(
+        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+        //       // color: AppTheme.colorGrey,
+        //     ),
+        //   ),
+        // );
       },
     );
   }
@@ -320,35 +332,46 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
 
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
-        return DropdownButtonHideUnderline(
-          child: DropdownButton(
-            hint: Text(
-              every,
-              style: chooseDateStyle,
-            ),
+        return CommonDropDown.commonDropDown(
+            hintText: every,
+            hintTextStyle: chooseDateStyle,
+            selectedItemTextStyle: dropDownStyle2,
+            valueTextStyle: dropDownStyle,
             value: controller.weeklyBudgetWeek,
-            // value: controller.selectedItem,
-            style: dropDownStyle,
-            items: dropDownList!.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                child: Text(
-                  items,
-                  style: dropDownStyle2,
-                ),
-              );
-            }).toList(),
+            itemList: dropDownList,
             onChanged: (item) {
               controller.changeWeeklyBudgetSingleWeek(item: item);
-            },
-            isExpanded: true,
-
-            icon: const Icon(
-              Icons.keyboard_arrow_down, color: Color(0xff777C90),
-              // color: AppTheme.colorGrey,
-            ),
-          ),
-        );
+              print(item);
+            });
+        //   DropdownButtonHideUnderline(
+        //   child: DropdownButton(
+        //     hint: Text(
+        //       every,
+        //       style: chooseDateStyle,
+        //     ),
+        //     value: controller.weeklyBudgetWeek,
+        //     // value: controller.selectedItem,
+        //     style: dropDownStyle,
+        //     items: dropDownList!.map((String items) {
+        //       return DropdownMenuItem(
+        //         value: items,
+        //         child: Text(
+        //           items,
+        //           style: dropDownStyle2,
+        //         ),
+        //       );
+        //     }).toList(),
+        //     onChanged: (item) {
+        //       controller.changeWeeklyBudgetSingleWeek(item: item);
+        //     },
+        //     isExpanded: true,
+        //
+        //     icon: const Icon(
+        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+        //       // color: AppTheme.colorGrey,
+        //     ),
+        //   ),
+        // );
       },
     );
   }

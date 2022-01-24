@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/weekly_income_model.dart';
@@ -72,31 +73,40 @@ class WeeklyIncomeWidget {
                   builder: (controller1) {
                     // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
                     // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton(
+                    return CommonDropDown.commonDropDown(
+                        selectedItemTextStyle: dropDownStyle2,
+                        valueTextStyle: dropDownStyle,
                         value: controller.selectDayDropDown[index],
-                        // value: controller.selectedItem,
-                        style: dropDownStyle,
-                        items: days.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(
-                              items,
-                              style: dropDownStyle2,
-                            ),
-                          );
-                        }).toList(),
+                        itemList: days,
                         onChanged: (item) {
                           controller.changeDay(item: item, index: index);
-                        },
-                        isExpanded: true,
-
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                          // color: AppTheme.colorGrey,
-                        ),
-                      ),
-                    );
+                          print(item);
+                        });
+                    //   DropdownButtonHideUnderline(
+                    //   child: DropdownButton(
+                    //     value: controller.selectDayDropDown[index],
+                    //     // value: controller.selectedItem,
+                    //     style: dropDownStyle,
+                    //     items: days.map((String items) {
+                    //       return DropdownMenuItem(
+                    //         value: items,
+                    //         child: Text(
+                    //           items,
+                    //           style: dropDownStyle2,
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (item) {
+                    //       controller.changeDay(item: item, index: index);
+                    //     },
+                    //     isExpanded: true,
+                    //
+                    //     icon: const Icon(
+                    //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                    //       // color: AppTheme.colorGrey,
+                    //     ),
+                    //   ),
+                    // );
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
@@ -110,32 +120,41 @@ class WeeklyIncomeWidget {
                 child: GetBuilder<SelectedDropDownItem>(
                   builder: (controller1) {
                     // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton(
+                    return CommonDropDown.commonDropDown(
+                        selectedItemTextStyle: dropDownStyle2,
+                        valueTextStyle: dropDownStyle,
                         value: controller.selectWeekDropDown[index],
-                        // value: controller.selectedItem,
-                        style: dropDownStyle,
-
-                        items: weeks.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(
-                              items,
-                              style: dropDownStyle2,
-                            ),
-                          );
-                        }).toList(),
+                        itemList: weeks,
                         onChanged: (item) {
                           controller.changeWeek(item: item, index: index);
-                        },
-                        isExpanded: true,
-
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                          // color: AppTheme.colorGrey,
-                        ),
-                      ),
-                    );
+                          print(item);
+                        });
+                    //   DropdownButtonHideUnderline(
+                    //   child: DropdownButton(
+                    //     value: controller.selectWeekDropDown[index],
+                    //     // value: controller.selectedItem,
+                    //     style: dropDownStyle,
+                    //
+                    //     items: weeks.map((String items) {
+                    //       return DropdownMenuItem(
+                    //         value: items,
+                    //         child: Text(
+                    //           items,
+                    //           style: dropDownStyle2,
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (item) {
+                    //       controller.changeWeek(item: item, index: index);
+                    //     },
+                    //     isExpanded: true,
+                    //
+                    //     icon: const Icon(
+                    //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                    //       // color: AppTheme.colorGrey,
+                    //     ),
+                    //   ),
+                    // );
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
