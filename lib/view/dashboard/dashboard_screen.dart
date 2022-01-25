@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fore_cash/app_theme/app_theme.dart';
+import 'package:fore_cash/common_widget/common_add_data_textfield.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_income_scrollable_widget.dart';
 import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
@@ -71,9 +72,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth > 1000;
         PageController _pageController = PageController(viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1);
-        PageController _pageController2 = PageController(
-          viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
-        );
 
         List<PageController> monthlyIncomepageControllerList = List.generate(
             MonthlyIncomeModel.monthlyIncomeList.length,
@@ -329,9 +327,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     ? Column()
                                                     : GetBuilder<MonthlyIncomeEditModeController>(
                                                         builder: (monthlyIncomeEditModeController) {
-                                                          return Row(mainAxisAlignment: monthlyIncomeEditModeController.editMode ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween, children: [
+                                                          return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                                             Padding(
-                                                              padding: EdgeInsets.only(left: 5, right: monthlyIncomeEditModeController.editMode ? Get.width * 0.09 : 0),
+                                                              padding: EdgeInsets.only(
+                                                                left: 5,
+                                                                // right: monthlyIncomeEditModeController.editMode ? Get.width * 0.09 : 0
+                                                              ),
                                                               child: Text(
                                                                 expenseName,
                                                                 style: columnNameListStyle,
@@ -339,21 +340,25 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                             ),
                                                             Padding(
                                                               padding: EdgeInsets.only(
-                                                                  left: monthlyIncomeController.visibility == false ? 0 : 14, right: monthlyIncomeEditModeController.editMode ? Get.width * 0.13 : 0),
+                                                                left: monthlyIncomeController.visibility == false ? 0 : 14,
+                                                                // right: monthlyIncomeEditModeController.editMode ? Get.width * 0.13 : 0
+                                                              ),
                                                               child: Text(
                                                                 paidOn,
                                                                 style: columnNameListStyle,
                                                               ),
                                                             ),
                                                             Padding(
-                                                              padding: EdgeInsets.only(right: monthlyIncomeEditModeController.editMode ? Get.width * 0.14 : 0),
+                                                              padding: EdgeInsets.only(
+                                                                  // right: monthlyIncomeEditModeController.editMode ? Get.width * 0.14 : 0
+                                                                  ),
                                                               child: Text(
                                                                 every,
                                                                 style: columnNameListStyle,
                                                               ),
                                                             ),
                                                             Padding(
-                                                              padding: const EdgeInsets.only(right: 0.0, left: 5),
+                                                              padding: const EdgeInsets.only(left: 5),
                                                               child: Text(
                                                                 amount,
                                                                 style: columnNameListStyle,
@@ -374,46 +379,68 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                               : 2,
                                                       child: Visibility(
                                                         visible: constraints.maxWidth < 1000 ? monthlyIncomeController.visibilityIncome : true,
-                                                        child: ListView.builder(
-                                                          shrinkWrap: true,
-                                                          itemCount: monthlyIncomepageControllerList.length,
-                                                          itemBuilder: (context, index) {
-                                                            return SizedBox(
-                                                              height: Get.height * 0.04,
-                                                              child: Padding(
-                                                                padding: EdgeInsets.only(top: index == 0 && constraints.maxWidth < 1000 ? Get.height * 0.01 : 0.05),
-                                                                child: PageView.builder(
-                                                                  // scrollDirection: Axis.horizontal,
-                                                                  onPageChanged: (value) {
-                                                                    List.generate(
-                                                                        weeklyIncomePageControllerList.length,
-                                                                        (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                    List.generate(
-                                                                        monthlyExpensePageControllerList.length,
-                                                                        (index) => monthlyExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        weeklyBudgetPageControllerList.length,
-                                                                        (index) => weeklyBudgetPageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    // _pageController2.jumpToPage(value);
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                  },
-                                                                  controller: monthlyIncomepageControllerList[index],
-                                                                  itemCount: incomes.length,
-                                                                  itemBuilder: (BuildContext context, int index1) {
-                                                                    return Text(
-                                                                      incomes[index1],
-                                                                      style: greyIncomeTexStyle10W500,
-                                                                      textAlign: TextAlign.center,
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
+                                                        child: CommonIncomeScrollableWidget.scrollableWidget(
+                                                            text: incomes,
+                                                            listViewItemCount: monthlyIncomepageControllerList.length,
+                                                            constraints: constraints,
+                                                            controller: monthlyIncomepageControllerList,
+                                                            pageViewItemCount: incomes.length,
+                                                            onPageChanged: (value) {
+                                                              List.generate(
+                                                                  weeklyIncomePageControllerList.length,
+                                                                  (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                              List.generate(
+                                                                  monthlyExpensePageControllerList.length,
+                                                                  (index) => monthlyExpensePageControllerList[index]
+                                                                      .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                              List.generate(
+                                                                  weeklyBudgetPageControllerList.length,
+                                                                  (index) =>
+                                                                      weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                              // _pageController2.jumpToPage(value);
+                                                              _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            }),
+                                                        // child: ListView.builder(
+                                                        //   shrinkWrap: true,
+                                                        //   itemCount: monthlyIncomepageControllerList.length,
+                                                        //   itemBuilder: (context, index) {
+                                                        //     return SizedBox(
+                                                        //       height: Get.height * 0.04,
+                                                        //       child: Padding(
+                                                        //         padding: EdgeInsets.only(top: index == 0 && constraints.maxWidth < 1000 ? Get.height * 0.01 : 0.05),
+                                                        //         child: PageView.builder(
+                                                        //           // scrollDirection: Axis.horizontal,
+                                                        //           onPageChanged: (value) {
+                                                        //             List.generate(
+                                                        //                 weeklyIncomePageControllerList.length,
+                                                        //                 (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                        //                     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                        //             List.generate(
+                                                        //                 monthlyExpensePageControllerList.length,
+                                                        //                 (index) => monthlyExpensePageControllerList[index]
+                                                        //                     .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                        //             List.generate(
+                                                        //                 weeklyBudgetPageControllerList.length,
+                                                        //                 (index) => weeklyBudgetPageControllerList[index]
+                                                        //                     .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                        //             // _pageController2.jumpToPage(value);
+                                                        //             _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                        //           },
+                                                        //           controller: monthlyIncomepageControllerList[index],
+                                                        //           itemCount: incomes.length,
+                                                        //           itemBuilder: (BuildContext context, int index1) {
+                                                        //             return Text(
+                                                        //               incomes[index1],
+                                                        //               style: greyIncomeTexStyle10W500,
+                                                        //               textAlign: TextAlign.center,
+                                                        //             );
+                                                        //           },
+                                                        //         ),
+                                                        //       ),
+                                                        //     );
+                                                        //   },
+                                                        // ),
                                                       ),
                                                     )
                                                   ],
@@ -490,40 +517,44 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     ? Column()
                                                     : GetBuilder<WeeklyIncomeEditModeController>(
                                                         builder: (weeklyIncomeEditModeController) {
-                                                          return Row(
-                                                              mainAxisAlignment: weeklyIncomeEditModeController.weeklyIncomeEditMode ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(left: 5, right: weeklyIncomeEditModeController.weeklyIncomeEditMode ? Get.width * 0.09 : 0),
-                                                                  child: Text(
-                                                                    expenseName,
-                                                                    style: columnNameListStyle,
+                                                          return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                left: 5,
+                                                                // right: weeklyIncomeEditModeController.weeklyIncomeEditMode ? Get.width * 0.09 : 0
+                                                              ),
+                                                              child: Text(
+                                                                expenseName,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                left: weeklyIncomeDataController.weeklyDataVisibility == false ? 0 : 14,
+                                                                // right: weeklyIncomeEditModeController.weeklyIncomeEditMode ? Get.width * 0.13 : 0
+                                                              ),
+                                                              child: Text(
+                                                                paidOn,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                  // right: weeklyIncomeEditModeController.weeklyIncomeEditMode ? Get.width * 0.14 : 0
                                                                   ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(
-                                                                      left: weeklyIncomeDataController.weeklyDataVisibility == false ? 0 : 14,
-                                                                      right: weeklyIncomeEditModeController.weeklyIncomeEditMode ? Get.width * 0.13 : 0),
-                                                                  child: Text(
-                                                                    paidOn,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(right: weeklyIncomeEditModeController.weeklyIncomeEditMode ? Get.width * 0.14 : 0),
-                                                                  child: Text(
-                                                                    every,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(right: 0.0, left: 5),
-                                                                  child: Text(
-                                                                    amount,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                              ]);
+                                                              child: Text(
+                                                                every,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(left: 5),
+                                                              child: Text(
+                                                                amount,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                          ]);
                                                         },
                                                       ),
                                                 Row(
@@ -540,48 +571,71 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                               : 2,
                                                       child: Visibility(
                                                         visible: constraints.maxWidth < 1000 ? weeklyIncomeDataController.incomeListVisibility : true,
-                                                        child: ListView.builder(
-                                                          // scrollDirection: Axis.horizontal,
-                                                          // physics: const NeverScrollableScrollPhysics(),
-                                                          shrinkWrap: true,
-                                                          itemCount: weeklyIncomePageControllerList.length,
-                                                          itemBuilder: (context, index) {
-                                                            return SizedBox(
-                                                              height: Get.height * 0.04,
-                                                              child: Padding(
-                                                                padding: EdgeInsets.only(top: index == 0 ? Get.height * 0.01 : 0.0),
-                                                                child: PageView.builder(
-                                                                  // scrollDirection: Axis.horizontal,
-                                                                  onPageChanged: (value) {
-                                                                    List.generate(
-                                                                        monthlyIncomepageControllerList.length,
-                                                                        (index) => monthlyIncomepageControllerList[index].animateToPage(value,
-                                                                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                    List.generate(
-                                                                        monthlyExpensePageControllerList.length,
-                                                                        (index) => monthlyExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                        child: CommonIncomeScrollableWidget.scrollableWidget(
+                                                            text: incomes,
+                                                            listViewItemCount: weeklyIncomePageControllerList.length,
+                                                            constraints: constraints,
+                                                            controller: weeklyIncomePageControllerList,
+                                                            pageViewItemCount: incomes.length,
+                                                            onPageChanged: (value) {
+                                                              List.generate(
+                                                                  monthlyIncomepageControllerList.length,
+                                                                  (index) => monthlyIncomepageControllerList[index].animateToPage(value,
+                                                                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                              List.generate(
+                                                                  monthlyExpensePageControllerList.length,
+                                                                  (index) => monthlyExpensePageControllerList[index]
+                                                                      .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                              _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
 
-                                                                    List.generate(
-                                                                        weeklyBudgetPageControllerList.length,
-                                                                        (index) => weeklyBudgetPageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                  },
-                                                                  controller: weeklyIncomePageControllerList[index],
-                                                                  itemCount: incomes.length,
-                                                                  itemBuilder: (BuildContext context, int index1) {
-                                                                    return Text(
-                                                                      incomes[index1],
-                                                                      style: greyIncomeTexStyle10W500,
-                                                                      textAlign: TextAlign.center,
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
+                                                              List.generate(
+                                                                  weeklyBudgetPageControllerList.length,
+                                                                  (index) =>
+                                                                      weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            }),
+
+                                                        // child: ListView.builder(
+                                                        //   // scrollDirection: Axis.horizontal,
+                                                        //   // physics: const NeverScrollableScrollPhysics(),
+                                                        //   shrinkWrap: true,
+                                                        //   itemCount: weeklyIncomePageControllerList.length,
+                                                        //   itemBuilder: (context, index) {
+                                                        //     return SizedBox(
+                                                        //       height: Get.height * 0.04,
+                                                        //       child: Padding(
+                                                        //         padding: EdgeInsets.only(top: index == 0 ? Get.height * 0.01 : 0.0),
+                                                        //         child: PageView.builder(
+                                                        //           // scrollDirection: Axis.horizontal,
+                                                        //           onPageChanged: (value) {
+                                                        //             List.generate(
+                                                        //                 monthlyIncomepageControllerList.length,
+                                                        //                 (index) => monthlyIncomepageControllerList[index].animateToPage(value,
+                                                        //                     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                        //             List.generate(
+                                                        //                 monthlyExpensePageControllerList.length,
+                                                        //                 (index) => monthlyExpensePageControllerList[index]
+                                                        //                     .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                        //             _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                        //
+                                                        //             List.generate(
+                                                        //                 weeklyBudgetPageControllerList.length,
+                                                        //                 (index) => weeklyBudgetPageControllerList[index]
+                                                        //                     .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                        //           },
+                                                        //           controller: weeklyIncomePageControllerList[index],
+                                                        //           itemCount: incomes.length,
+                                                        //           itemBuilder: (BuildContext context, int index1) {
+                                                        //             return Text(
+                                                        //               incomes[index1],
+                                                        //               style: greyIncomeTexStyle10W500,
+                                                        //               textAlign: TextAlign.center,
+                                                        //             );
+                                                        //           },
+                                                        //         ),
+                                                        //       ),
+                                                        //     );
+                                                        //   },
+                                                        // ),
                                                       ),
                                                     )
                                                   ],
@@ -658,40 +712,44 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     ? Column()
                                                     : GetBuilder<MonthlyExpenseEditModeController>(
                                                         builder: (monthlyExpenseEditModeController) {
-                                                          return Row(
-                                                              mainAxisAlignment: monthlyExpenseEditModeController.monthlyExpenseEditMode ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(left: 5, right: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.width * 0.09 : 0),
-                                                                  child: Text(
-                                                                    expenseName,
-                                                                    style: columnNameListStyle,
+                                                          return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                left: 5,
+                                                                // right: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.width * 0.09 : 0
+                                                              ),
+                                                              child: Text(
+                                                                expenseName,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                left: monthlyExpenseDataController.monthlyExpenseDataVisibility == false ? 0 : 14,
+                                                                // right: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.width * 0.13 : 0
+                                                              ),
+                                                              child: Text(
+                                                                paidOn,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                  // right: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.width * 0.14 : 0
                                                                   ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(
-                                                                      left: monthlyExpenseDataController.monthlyExpenseDataVisibility == false ? 0 : 14,
-                                                                      right: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.width * 0.13 : 0),
-                                                                  child: Text(
-                                                                    paidOn,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(right: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.width * 0.14 : 0),
-                                                                  child: Text(
-                                                                    every,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(right: 0.0, left: 5),
-                                                                  child: Text(
-                                                                    amount,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                              ]);
+                                                              child: Text(
+                                                                every,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(left: 5),
+                                                              child: Text(
+                                                                amount,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                          ]);
                                                         },
                                                       ),
                                                 Row(
@@ -708,47 +766,69 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                               : 2,
                                                       child: Visibility(
                                                         visible: constraints.maxWidth < 1000 ? monthlyExpenseDataController.monthlyExpenseListVisibility : true,
-                                                        child: ListView.builder(
-                                                          // scrollDirection: Axis.horizontal,
-                                                          // physics: const NeverScrollableScrollPhysics(),
-                                                          shrinkWrap: true,
-                                                          itemCount: monthlyExpensePageControllerList.length,
-                                                          itemBuilder: (context, index) {
-                                                            return SizedBox(
-                                                              height: Get.height * 0.04,
-                                                              child: Padding(
-                                                                padding: EdgeInsets.only(top: index == 0 ? Get.height * 0.01 : 0.0),
-                                                                child: PageView.builder(
-                                                                  // scrollDirection: Axis.horizontal,
-                                                                  onPageChanged: (value) {
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    List.generate(
-                                                                        weeklyIncomePageControllerList.length,
-                                                                        (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                    List.generate(
-                                                                        monthlyIncomepageControllerList.length,
-                                                                        (index) => monthlyIncomepageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        weeklyBudgetPageControllerList.length,
-                                                                        (index) => weeklyBudgetPageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                  },
-                                                                  controller: monthlyExpensePageControllerList[index],
-                                                                  itemCount: incomes.length,
-                                                                  itemBuilder: (BuildContext context, int index1) {
-                                                                    return Text(
-                                                                      incomes[index1],
-                                                                      style: greyIncomeTexStyle10W500,
-                                                                      textAlign: TextAlign.center,
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
+                                                        child: CommonIncomeScrollableWidget.scrollableWidget(
+                                                            text: incomes,
+                                                            listViewItemCount: monthlyExpensePageControllerList.length,
+                                                            constraints: constraints,
+                                                            controller: monthlyExpensePageControllerList,
+                                                            pageViewItemCount: incomes.length,
+                                                            onPageChanged: (value) {
+                                                              _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                              List.generate(
+                                                                  weeklyIncomePageControllerList.length,
+                                                                  (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                              List.generate(
+                                                                  monthlyIncomepageControllerList.length,
+                                                                  (index) => monthlyIncomepageControllerList[index]
+                                                                      .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                              List.generate(
+                                                                  weeklyBudgetPageControllerList.length,
+                                                                  (index) =>
+                                                                      weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            }),
+
+                                                        // child: ListView.builder(
+                                                        //   // scrollDirection: Axis.horizontal,
+                                                        //   // physics: const NeverScrollableScrollPhysics(),
+                                                        //   shrinkWrap: true,
+                                                        //   itemCount: monthlyExpensePageControllerList.length,
+                                                        //   itemBuilder: (context, index) {
+                                                        //     return SizedBox(
+                                                        //       height: Get.height * 0.04,
+                                                        //       child: Padding(
+                                                        //         padding: EdgeInsets.only(top: index == 0 ? Get.height * 0.01 : 0.0),
+                                                        //         child: PageView.builder(
+                                                        //           // scrollDirection: Axis.horizontal,
+                                                        //           onPageChanged: (value) {
+                                                        //             _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                        //             List.generate(
+                                                        //                 weeklyIncomePageControllerList.length,
+                                                        //                 (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                        //                     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                        //             List.generate(
+                                                        //                 monthlyIncomepageControllerList.length,
+                                                        //                 (index) => monthlyIncomepageControllerList[index]
+                                                        //                     .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                        //             List.generate(
+                                                        //                 weeklyBudgetPageControllerList.length,
+                                                        //                 (index) => weeklyBudgetPageControllerList[index]
+                                                        //                     .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                        //           },
+                                                        //           controller: monthlyExpensePageControllerList[index],
+                                                        //           itemCount: incomes.length,
+                                                        //           itemBuilder: (BuildContext context, int index1) {
+                                                        //             return Text(
+                                                        //               incomes[index1],
+                                                        //               style: greyIncomeTexStyle10W500,
+                                                        //               textAlign: TextAlign.center,
+                                                        //             );
+                                                        //           },
+                                                        //         ),
+                                                        //       ),
+                                                        //     );
+                                                        //   },
+                                                        // ),
                                                       ),
                                                     )
                                                   ],
@@ -829,48 +909,53 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     ? Column()
                                                     : GetBuilder<WeeklyBudgetEditModeController>(
                                                         builder: (weeklyBudgetEditModeController) {
-                                                          return Row(
-                                                              mainAxisAlignment: weeklyBudgetEditModeController.weeklyBudgetEditMode ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(left: 5, right: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.width * 0.09 : 0),
-                                                                  child: Text(
-                                                                    expenseName,
-                                                                    style: columnNameListStyle,
+                                                          return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                left: 5,
+                                                                // right: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.width * 0.09 : 0
+                                                              ),
+                                                              child: Text(
+                                                                expenseName,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                left: weeklyBudgetController.weeklyBudgetVisibility == false ? 0 : 14,
+                                                                // right: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.width * 0.13 : 0
+                                                              ),
+                                                              child: Text(
+                                                                resetOn,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets.only(
+                                                                  // right: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.width * 0.14 : 0
                                                                   ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(
-                                                                      left: weeklyBudgetController.weeklyBudgetVisibility == false ? 0 : 14,
-                                                                      right: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.width * 0.13 : 0),
-                                                                  child: Text(
-                                                                    paidOn,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(right: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.width * 0.14 : 0),
-                                                                  child: Text(
-                                                                    every,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(right: 0.0, left: 5),
-                                                                  child: Text(
-                                                                    amount,
-                                                                    style: columnNameListStyle,
-                                                                  ),
-                                                                ),
-                                                              ]);
+                                                              child: Text(
+                                                                every,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(left: 5),
+                                                              child: Text(
+                                                                amount,
+                                                                style: columnNameListStyle,
+                                                              ),
+                                                            ),
+                                                          ]);
                                                         },
                                                       ),
                                                 Row(
                                                   children: [
                                                     weeklyBudgetData(
-                                                        boolValue: weeklyBudgetController.weeklyBudgetVisibilityIncome,
-                                                        constraints: constraints,
-                                                        visibilityValue: weeklyBudgetController.weeklyBudgetVisibility),
+                                                      boolValue: weeklyBudgetController.weeklyBudgetVisibilityIncome,
+                                                      constraints: constraints,
+                                                      visibilityValue: weeklyBudgetController.weeklyBudgetVisibility,
+                                                    ),
                                                     Expanded(
                                                       flex: weeklyBudgetController.weeklyBudgetVisibilityIncome == true
                                                           ? 2
@@ -986,6 +1071,34 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               ),
                             ),
                           ),
+                          Wrap(
+                            children: [
+                              MaterialButton(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                onPressed: () {},
+                                color: containerColor,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 10),
+                                  child: Text(
+                                    addOneTimeIncome,
+                                    style: whiteMontserrat11W500,
+                                  ),
+                                ),
+                              ),
+                              MaterialButton(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                onPressed: () {},
+                                color: containerColor,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 10),
+                                  child: Text(
+                                    addOneTimeIncome,
+                                    style: whiteMontserrat11W500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -1422,15 +1535,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: blackMontserrat10W500,
                                     )
-                                  : TextField(
-                                      // controller: _updateMonthlyIncomeNameControllerList[index],
-                                      style: textFieldStyle,
-                                      decoration: InputDecoration(
-                                          hintStyle: blackMontserrat10W500,
-                                          hintText: MonthlyIncomeModel.monthlyIncomeList[index].expenseName,
-                                          contentPadding: EdgeInsets.only(bottom: 19),
-                                          border: InputBorder.none),
+                                  : CommonDataTextField.commonTextField(
+                                      hintText: MonthlyIncomeModel.monthlyIncomeList[index].expenseName,
+                                      hintStyle: blackMontserrat10W500,
+                                      contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                      textStyle: blackMontserrat10W500,
                                     ),
+                              // TextField(
+                              //         // controller: _updateMonthlyIncomeNameControllerList[index],
+                              //         style: textFieldStyle,
+                              //         decoration: InputDecoration(
+                              //             hintStyle: blackMontserrat10W500,
+                              //             hintText: MonthlyIncomeModel.monthlyIncomeList[index].expenseName,
+                              //             contentPadding: EdgeInsets.only(bottom: 19),
+                              //             border: InputBorder.none),
+                              //       ),
                               decoration: BoxDecoration(color: editModeController.editMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
                             ),
                             Expanded(
@@ -1594,17 +1713,26 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   maxLines: 1,
                                                   // overflow: TextOverflow.ellipsis,
                                                 )
-                                              : TextField(
-                                                  // controller: _updateMonthlyAmountControllerList[index],
-                                                  style: textFieldStyle,
-                                                  decoration: InputDecoration(
-                                                      hintStyle: blackMontserrat10W500,
-                                                      hintText: MonthlyIncomeModel.monthlyIncomeList[index].amount,
-                                                      prefixStyle: blackMontserrat10W500,
-                                                      prefixText: '\$',
-                                                      contentPadding: const EdgeInsets.only(bottom: 17),
-                                                      border: InputBorder.none),
+                                              : CommonDataTextField.commonTextField(
+                                                  hintText: MonthlyIncomeModel.monthlyIncomeList[index].amount,
+                                                  hintStyle: blackMontserrat10W500,
+                                                  prefixStyle: blackMontserrat10W500,
+                                                  contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                                  textStyle: blackMontserrat10W500,
+                                                  prefixText: '\$',
                                                 ),
+                                          //     :
+                                          // TextField(
+                                          //         // controller: _updateMonthlyAmountControllerList[index],
+                                          //         style: textFieldStyle,
+                                          //         decoration: InputDecoration(
+                                          //             hintStyle: blackMontserrat10W500,
+                                          //             hintText: MonthlyIncomeModel.monthlyIncomeList[index].amount,
+                                          //             prefixStyle: blackMontserrat10W500,
+                                          //             prefixText: '\$',
+                                          //             contentPadding: const EdgeInsets.only(bottom: 17),
+                                          //             border: InputBorder.none),
+                                          //       ),
                                           margin: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
                                           decoration: BoxDecoration(color: editModeController.editMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
                                         ),
@@ -1619,10 +1747,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 padding: EdgeInsets.all(5.0),
                                                 width: Get.width * 0.080,
                                                 height: Get.height * 0.04,
-                                                child: Text(
-                                                  '$currentDate',
-                                                  style: TextStyle(fontSize: 10.sp),
-                                                  overflow: TextOverflow.ellipsis,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: Get.width * 0.05,
+                                                      child: Text(
+                                                        '$currentDate',
+                                                        style: TextStyle(fontSize: 10.sp),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/image/png/calendarImage2.png',
+                                                      height: Get.height * 0.02,
+                                                      width: Get.width * 0.014,
+                                                    )
+                                                  ],
                                                 )),
                                           ),
 
@@ -1710,11 +1851,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             //         : Get.width * 0.03
                                             //     : 37
                                             ),
-                                        child: TextField(
+                                        child: CommonDataTextField.commonTextField(
                                           controller: _monthlyIncomeNameController,
-                                          style: blackMontserrat10W500,
-                                          decoration: InputDecoration(hintStyle: blackMontserrat10W500, hintText: expenseName, contentPadding: EdgeInsets.only(bottom: 15), border: InputBorder.none),
+                                          hintText: expenseName,
+                                          hintStyle: blackMontserrat10W500,
+                                          contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                          textStyle: blackMontserrat10W500,
                                         ),
+                                        // TextField(
+                                        //   controller: _monthlyIncomeNameController,
+                                        //   style: blackMontserrat10W500,
+                                        //   decoration: InputDecoration(
+                                        //       hintStyle: blackMontserrat10W500, hintText: expenseName, contentPadding: EdgeInsets.only(bottom: Get.height * 0.023), border: InputBorder.none),
+                                        // ),
                                         decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                       ),
                                       Expanded(
@@ -1866,11 +2015,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             // : null,
                                             alignment: Alignment.center,
                                             padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
-                                            child: TextField(
+                                            child: CommonDataTextField.commonTextField(
                                               controller: _monthlyAmountController,
-                                              style: blackMontserrat10W500,
-                                              decoration: InputDecoration(prefixStyle: blackMontserrat10W500, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                                              prefixStyle: blackMontserrat10W500,
+                                              prefixText: '\$',
+                                              contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                              textStyle: blackMontserrat10W500,
                                             ),
+                                            // child:
+                                            // TextField(
+                                            //   controller: _monthlyAmountController,
+                                            //   style: blackMontserrat10W500,
+                                            //   decoration: InputDecoration(
+                                            //       prefixStyle: blackMontserrat10W500, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: Get.height * 0.015), border: InputBorder.none),
+                                            // ),
                                             // margin: EdgeInsets.only(right: Get.width * 0.04),
                                             decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                           ),
@@ -2074,15 +2232,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       style: blackMontserrat10W500,
                                       textAlign: TextAlign.center,
                                     )
-                                  : TextField(
-                                      // controller: _updateMonthlyIncomeNameControllerList[index],
-                                      style: textFieldStyle,
-                                      decoration: InputDecoration(
-                                          hintStyle: blackMontserrat10W500,
-                                          hintText: WeeklyIncomeModel.weeklyIncomeList[index].expenseName,
-                                          contentPadding: const EdgeInsets.only(bottom: 19),
-                                          border: InputBorder.none),
+                                  : CommonDataTextField.commonTextField(
+                                      hintText: WeeklyIncomeModel.weeklyIncomeList[index].expenseName,
+                                      hintStyle: blackMontserrat10W500,
+                                      contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                      textStyle: blackMontserrat10W500,
                                     ),
+                              // TextField(
+                              //         // controller: _updateMonthlyIncomeNameControllerList[index],
+                              //         style: textFieldStyle,
+                              //         decoration: InputDecoration(
+                              //             hintStyle: blackMontserrat10W500,
+                              //             hintText: WeeklyIncomeModel.weeklyIncomeList[index].expenseName,
+                              //             contentPadding: const EdgeInsets.only(bottom: 19),
+                              //             border: InputBorder.none),
+                              //       ),
                               decoration: BoxDecoration(color: weeklyEditModeController.weeklyIncomeEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
                             ),
                             Expanded(
@@ -2243,17 +2407,25 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   style: blackMontserrat10W500,
                                                   maxLines: 1,
                                                 )
-                                              : TextField(
-                                                  // controller: _updateMonthlyAmountControllerList[index],
-                                                  style: textFieldStyle,
-                                                  decoration: InputDecoration(
-                                                      hintStyle: blackMontserrat10W500,
-                                                      hintText: MonthlyIncomeModel.monthlyIncomeList[index].amount,
-                                                      prefixStyle: blackMontserrat10W500,
-                                                      prefixText: '\$',
-                                                      contentPadding: const EdgeInsets.only(bottom: 16),
-                                                      border: InputBorder.none),
+                                              : CommonDataTextField.commonTextField(
+                                                  prefixStyle: blackMontserrat10W500,
+                                                  prefixText: '\$',
+                                                  hintText: WeeklyIncomeModel.weeklyIncomeList[index].amount,
+                                                  hintStyle: blackMontserrat10W500,
+                                                  contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                                  textStyle: blackMontserrat10W500,
                                                 ),
+                                          // TextField(
+                                          //         // controller: _updateMonthlyAmountControllerList[index],
+                                          //         style: textFieldStyle,
+                                          //         decoration: InputDecoration(
+                                          //             hintStyle: blackMontserrat10W500,
+                                          //             hintText: MonthlyIncomeModel.monthlyIncomeList[index].amount,
+                                          //             prefixStyle: blackMontserrat10W500,
+                                          //             prefixText: '\$',
+                                          //             contentPadding: const EdgeInsets.only(bottom: 16),
+                                          //             border: InputBorder.none),
+                                          //       ),
                                           margin: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
                                           decoration: BoxDecoration(
                                               color: weeklyEditModeController.weeklyIncomeEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
@@ -2269,10 +2441,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 padding: EdgeInsets.all(5.0),
                                                 width: Get.width * 0.080,
                                                 height: Get.height * 0.04,
-                                                child: Text(
-                                                  '$currentDate',
-                                                  style: TextStyle(fontSize: 10.sp),
-                                                  overflow: TextOverflow.ellipsis,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: Get.width * 0.05,
+                                                      child: Text(
+                                                        '$currentDate',
+                                                        style: TextStyle(fontSize: 10.sp),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/image/png/calendarImage2.png',
+                                                      height: Get.height * 0.02,
+                                                      width: Get.width * 0.014,
+                                                    )
+                                                  ],
                                                 )),
                                           ),
                                         if (weeklyEditModeController.weeklyIncomeEditMode && constraints.maxWidth > 1000)
@@ -2349,12 +2534,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             //         : Get.width * 0.03
                                             //     : 37
                                             ),
-                                        child: TextField(
+                                        child: CommonDataTextField.commonTextField(
                                           controller: _weeklyIncomeNameController,
-                                          style: blackMontserrat10W500,
-                                          decoration:
-                                              InputDecoration(hintStyle: blackMontserrat10W500, hintText: expenseName, contentPadding: const EdgeInsets.only(bottom: 10), border: InputBorder.none),
+                                          hintText: expenseName,
+                                          hintStyle: blackMontserrat10W500,
+                                          contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                          textStyle: blackMontserrat10W500,
                                         ),
+                                        // TextField(
+                                        //   controller: _weeklyIncomeNameController,
+                                        //   style: blackMontserrat10W500,
+                                        //   decoration: InputDecoration(
+                                        //       hintStyle: blackMontserrat10W500, hintText: expenseName, contentPadding: EdgeInsets.only(bottom: Get.height * 0.023), border: InputBorder.none),
+                                        // ),
                                         decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                       ),
                                       Expanded(
@@ -2507,11 +2699,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             alignment: Alignment.center,
 
                                             padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
-                                            child: TextField(
+                                            child: CommonDataTextField.commonTextField(
                                               controller: _weeklyAmountController,
-                                              style: blackMontserrat10W500,
-                                              decoration: InputDecoration(prefixStyle: blackMontserrat10W500, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 15), border: InputBorder.none),
+                                              prefixStyle: blackMontserrat10W500,
+                                              prefixText: '\$',
+                                              contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                              textStyle: blackMontserrat10W500,
                                             ),
+                                            // TextField(
+                                            //   controller: _weeklyAmountController,
+                                            //   style: blackMontserrat10W500,
+                                            //   decoration: InputDecoration(
+                                            //       prefixStyle: blackMontserrat10W500, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: Get.height * 0.015), border: InputBorder.none),
+                                            // ),
                                             // margin: EdgeInsets.only(right: Get.width * 0.04),
                                             decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                           ),
@@ -2712,15 +2912,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       style: blackMontserrat10W500,
                                       textAlign: TextAlign.center,
                                     )
-                                  : TextField(
-                                      // controller: _updateMonthlyIncomeNameControllerList[index],
-                                      style: textFieldStyle,
-                                      decoration: InputDecoration(
-                                          hintStyle: blackMontserrat10W500,
-                                          hintText: MonthlyExpensesModel.monthlyExpensesList[index].expenseName,
-                                          contentPadding: const EdgeInsets.only(bottom: 19),
-                                          border: InputBorder.none),
+                                  : CommonDataTextField.commonTextField(
+                                      hintText: MonthlyExpensesModel.monthlyExpensesList[index].expenseName,
+                                      hintStyle: blackMontserrat10W500,
+                                      contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                      textStyle: blackMontserrat10W500,
                                     ),
+                              // TextField(
+                              //         // controller: _updateMonthlyIncomeNameControllerList[index],
+                              //         style: textFieldStyle,
+                              //         decoration: InputDecoration(
+                              //             hintStyle: blackMontserrat10W500,
+                              //             hintText: MonthlyExpensesModel.monthlyExpensesList[index].expenseName,
+                              //             contentPadding: const EdgeInsets.only(bottom: 19),
+                              //             border: InputBorder.none),
+                              //       ),
                               decoration:
                                   BoxDecoration(color: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
                             ),
@@ -2883,17 +3089,25 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   style: blackMontserrat10W500,
                                                   maxLines: 1,
                                                 )
-                                              : TextField(
-                                                  // controller: _updateMonthlyAmountControllerList[index],
-                                                  style: textFieldStyle,
-                                                  decoration: InputDecoration(
-                                                      hintStyle: blackMontserrat10W500,
-                                                      hintText: MonthlyExpensesModel.monthlyExpensesList[index].amount,
-                                                      prefixStyle: blackMontserrat10W500,
-                                                      prefixText: '\$',
-                                                      contentPadding: const EdgeInsets.only(bottom: 16),
-                                                      border: InputBorder.none),
+                                              : CommonDataTextField.commonTextField(
+                                                  hintText: MonthlyExpensesModel.monthlyExpensesList[index].amount,
+                                                  hintStyle: blackMontserrat10W500,
+                                                  contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                                  textStyle: blackMontserrat10W500,
+                                                  prefixStyle: blackMontserrat10W500,
+                                                  prefixText: '\$',
                                                 ),
+                                          // TextField(
+                                          //         // controller: _updateMonthlyAmountControllerList[index],
+                                          //         style: textFieldStyle,
+                                          //         decoration: InputDecoration(
+                                          //             hintStyle: blackMontserrat10W500,
+                                          //             hintText: MonthlyExpensesModel.monthlyExpensesList[index].amount,
+                                          //             prefixStyle: blackMontserrat10W500,
+                                          //             prefixText: '\$',
+                                          //             contentPadding: const EdgeInsets.only(bottom: 16),
+                                          //             border: InputBorder.none),
+                                          //       ),
                                           margin: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
                                           decoration: BoxDecoration(
                                               color: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
@@ -2909,10 +3123,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 padding: EdgeInsets.all(5.0),
                                                 width: Get.width * 0.081,
                                                 height: Get.height * 0.04,
-                                                child: Text(
-                                                  '$currentDate',
-                                                  style: TextStyle(fontSize: 10.sp),
-                                                  overflow: TextOverflow.ellipsis,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: Get.width * 0.05,
+                                                      child: Text(
+                                                        '$currentDate',
+                                                        style: TextStyle(fontSize: 10.sp),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/image/png/calendarImage2.png',
+                                                      height: Get.height * 0.02,
+                                                      width: Get.width * 0.014,
+                                                    )
+                                                  ],
                                                 )),
                                           ),
                                         if (monthlyExpenseEditModeController.monthlyExpenseEditMode && constraints.maxWidth > 1000)
@@ -2989,12 +3216,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             //         : Get.width * 0.03
                                             //     : 37
                                             ),
-                                        child: TextField(
+                                        child: CommonDataTextField.commonTextField(
+                                          hintText: expenseName,
+                                          hintStyle: blackMontserrat10W500,
                                           controller: _weeklyIncomeNameController,
-                                          style: blackMontserrat10W500,
-                                          decoration:
-                                              InputDecoration(hintStyle: blackMontserrat10W500, hintText: expenseName, contentPadding: const EdgeInsets.only(bottom: 10), border: InputBorder.none),
+                                          contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                          textStyle: blackMontserrat10W500,
                                         ),
+                                        // TextField(
+                                        //   controller: _weeklyIncomeNameController,
+                                        //   style: blackMontserrat10W500,
+                                        //   decoration: InputDecoration(
+                                        //       hintStyle: blackMontserrat10W500, hintText: expenseName, contentPadding: EdgeInsets.only(bottom: Get.height * 0.023), border: InputBorder.none),
+                                        // ),
                                         decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                       ),
                                       Expanded(
@@ -3062,7 +3296,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               },
                                             ),
                                             // child: dropDownDayGetBuilder(dropDownList: dateList),
-                                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.05 : Get.width * 0.05),
+                                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.05),
                                             decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                           ),
                                           Container(
@@ -3147,12 +3381,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             alignment: Alignment.center,
 
                                             padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
-                                            child: TextField(
+                                            child: CommonDataTextField.commonTextField(
+                                              prefixText: '\$',
+                                              prefixStyle: blackMontserrat10W500,
                                               controller: _weeklyAmountController,
-                                              style: blackMontserrat10W500,
-                                              decoration: InputDecoration(prefixStyle: blackMontserrat10W500, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 15), border: InputBorder.none),
+                                              contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                              textStyle: blackMontserrat10W500,
                                             ),
-                                            // margin: EdgeInsets.only(right: Get.width * 0.04),
+
                                             decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                           ),
                                         ],
@@ -3258,7 +3494,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         Padding(
                           padding: EdgeInsets.only(right: editModeController.weeklyBudgetEditMode == true ? Get.width * 0.009 : 15),
                           child: Text(
-                            paidOn,
+                            resetOn,
                             style: columnNameListStyle,
                           ),
                         ),
@@ -3351,15 +3587,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: blackMontserrat10W500,
                                     )
-                                  : TextField(
-                                      // controller: _updateMonthlyIncomeNameControllerList[index],
-                                      style: textFieldStyle,
-                                      decoration: InputDecoration(
-                                          hintStyle: blackMontserrat10W500,
-                                          hintText: WeeklyBudgetModel.weeklyBudgetModel[index].expenseName,
-                                          contentPadding: EdgeInsets.only(bottom: 19),
-                                          border: InputBorder.none),
+                                  : CommonDataTextField.commonTextField(
+                                      hintText: WeeklyBudgetModel.weeklyBudgetModel[index].expenseName,
+                                      hintStyle: blackMontserrat10W500,
+                                      contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                      textStyle: blackMontserrat10W500,
                                     ),
+
                               decoration: BoxDecoration(color: editModeController.weeklyBudgetEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
                             ),
                             Expanded(
@@ -3525,17 +3759,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   maxLines: 1,
                                                   // overflow: TextOverflow.ellipsis,
                                                 )
-                                              : TextField(
-                                                  // controller: _updateMonthlyAmountControllerList[index],
-                                                  style: textFieldStyle,
-                                                  decoration: InputDecoration(
-                                                      hintStyle: blackMontserrat10W500,
-                                                      hintText: WeeklyBudgetModel.weeklyBudgetModel[index].amount,
-                                                      prefixStyle: blackMontserrat10W500,
-                                                      prefixText: '\$',
-                                                      contentPadding: const EdgeInsets.only(bottom: 17),
-                                                      border: InputBorder.none),
+                                              : CommonDataTextField.commonTextField(
+                                                  hintText: WeeklyBudgetModel.weeklyBudgetModel[index].amount,
+                                                  hintStyle: blackMontserrat10W500,
+                                                  prefixText: '\$',
+                                                  prefixStyle: blackMontserrat10W500,
+                                                  contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                                  textStyle: blackMontserrat10W500,
                                                 ),
+
                                           margin: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
                                           decoration:
                                               BoxDecoration(color: editModeController.weeklyBudgetEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
@@ -3551,10 +3783,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 padding: EdgeInsets.all(5.0),
                                                 width: Get.width * 0.080,
                                                 height: Get.height * 0.04,
-                                                child: Text(
-                                                  '$currentDate',
-                                                  style: TextStyle(fontSize: 10.sp),
-                                                  overflow: TextOverflow.ellipsis,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: Get.width * 0.05,
+                                                      child: Text(
+                                                        '$currentDate',
+                                                        style: TextStyle(fontSize: 10.sp),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/image/png/calendarImage2.png',
+                                                      height: Get.height * 0.02,
+                                                      width: Get.width * 0.014,
+                                                    )
+                                                  ],
                                                 )),
                                           ),
                                         if (editModeController.weeklyBudgetEditMode && constraints.maxWidth > 1000)
@@ -3601,32 +3846,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         padding: const EdgeInsets.only(
                                           left: 10,
                                         ),
-                                        // width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.15,
-                                        // height: Get.height * 0.04,
-
-                                        width:
-                                            // editModeController.editMode == true
-                                            //     ?
-                                            constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
-                                        // : constraints.maxWidth < 1000
-                                        //     ? Get.width * 0.33
-                                        //     : Get.width * 0.15,
-                                        height:
-                                            // editModeController.editMode == true ?
-                                            Get.height * 0.04,
-                                        // : null,
-                                        // alignment: Alignment.center,
-                                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.073
-                                            // left: constraints.maxWidth < 1000
-                                            //     ? constraints.maxWidth < 800
-                                            //         ? Get.width * 0.04
-                                            //         : Get.width * 0.03
-                                            //     : 37
-                                            ),
-                                        child: TextField(
+                                        width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
+                                        height: Get.height * 0.04,
+                                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.073),
+                                        child: CommonDataTextField.commonTextField(
+                                          hintText: expenseName,
+                                          hintStyle: blackMontserrat10W500,
                                           controller: _monthlyIncomeNameController,
-                                          style: blackMontserrat10W500,
-                                          decoration: InputDecoration(hintStyle: blackMontserrat10W500, hintText: expenseName, contentPadding: EdgeInsets.only(bottom: 15), border: InputBorder.none),
+                                          contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                          textStyle: blackMontserrat10W500,
                                         ),
                                         decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                       ),
@@ -3779,11 +4007,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             // : null,
                                             alignment: Alignment.center,
                                             padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
-                                            child: TextField(
+                                            child: CommonDataTextField.commonTextField(
                                               controller: _monthlyAmountController,
-                                              style: blackMontserrat10W500,
-                                              decoration: InputDecoration(prefixStyle: blackMontserrat10W500, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                                              contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                              prefixStyle: blackMontserrat10W500,
+                                              prefixText: '\$',
+                                              textStyle: blackMontserrat10W500,
                                             ),
+
+                                            // child: TextField(
+                                            //   controller: _monthlyAmountController,
+                                            //   style: blackMontserrat10W500,
+                                            //   decoration: InputDecoration(
+                                            //       prefixStyle: blackMontserrat10W500, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: Get.height * 0.013), border: InputBorder.none),
+                                            // ),
                                             // margin: EdgeInsets.only(right: Get.width * 0.04),
                                             decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
                                           ),
@@ -3829,7 +4066,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 )
                               ],
                             ),
-                            child: constraints.maxWidth > 1000 && monthlyIncomeEditMode.editMode == true
+                            child: constraints.maxWidth > 1000 && editModeController.weeklyBudgetEditMode == true
                                 ? Container()
                                 : Padding(
                                     padding: EdgeInsets.only(bottom: Get.height * 0.01, top: Get.height * 0.01),
@@ -3840,7 +4077,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       child: Align(
                                         alignment: FractionalOffset(0.0, 0.0),
                                         child: Text(
-                                          addMonthlyIncome,
+                                          addWeeklyBudget,
                                           style: addWeekIncomeStyle,
                                         ),
                                       ),

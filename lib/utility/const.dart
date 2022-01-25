@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:get/get.dart';
@@ -206,3 +207,4 @@ TextStyle blackMontserrat15W600 = TextStyle(fontSize: 15.sp, fontWeight: FontWei
 TextStyle blackMontserrat13W600 = TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName);
 TextStyle redMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: Colors.red, fontWeight: FontWeight.w500, fontSize: 11.sp);
 TextStyle greenMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: cameraBackGroundColor, fontWeight: FontWeight.w500, fontSize: 11.sp);
+TextStyle whiteMontserrat11W500 = TextStyle(fontSize: 11.sp, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, color: backGroundColor);
