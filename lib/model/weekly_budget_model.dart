@@ -11,5 +11,9 @@ class WeeklyBudgetModel {
       expenseName: 'Apple ',
       amount: '8000',
     ),
+    WeeklyBudgetModel(
+      expenseName: 'Gas ',
+      amount: '8000',
+    ),
   ];
 }

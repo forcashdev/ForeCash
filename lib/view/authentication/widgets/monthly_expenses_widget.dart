@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/monthly_expenses_model.dart';
@@ -9,19 +10,6 @@ import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
-// actionPane: const SlidableDrawerActionPane(),
-// actionExtentRatio: 0.13,
-// secondaryActions: [
-// InkWell(
-// onTap: () {
-// setState(() {
-// MonthlyExpensesModel.monthlyExpensesList.removeAt(index);
-// });
-// // showDialog(context: context, builder: (context) => DeleteConfirmationDialog());
-// },
-// child: Container(padding: EdgeInsets.all(5.0), height: Get.height * 0.040, width: Get.width * 0.03, color: Color(0xffFFEBEB), child: Image.asset(deleteImage)),
-// ),
-// ],
 class MonthlyExpensesWidget extends StatefulWidget {
   final BoxConstraints? constraints;
 
@@ -104,32 +92,41 @@ class _MonthlyExpensesWidgetState extends State<MonthlyExpensesWidget> {
                     builder: (controller1) {
                       // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
                       // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
-                      return DropdownButtonHideUnderline(
-                        child: DropdownButton(
+                      return CommonDropDown.commonDropDown(
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
                           value: controller.selectedMonthlyExpenseDate[index],
-                          // value: controller.selectedItem,
-                          style: dropDownStyle,
-                          items: dateList.map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(
-                                items,
-                                style: dropDownStyle2,
-                                maxLines: 1,
-                              ),
-                            );
-                          }).toList(),
+                          itemList: dateList,
                           onChanged: (item) {
                             controller.changeMonthlyExpenseDate(item: item, index: index);
-                          },
-                          isExpanded: true,
-
-                          icon: const Icon(
-                            Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                            // color: AppTheme.colorGrey,
-                          ),
-                        ),
-                      );
+                            print(item);
+                          });
+                      //   DropdownButtonHideUnderline(
+                      //   child: DropdownButton(
+                      //     value: controller.selectedMonthlyExpenseDate[index],
+                      //     // value: controller.selectedItem,
+                      //     style: dropDownStyle,
+                      //     items: dateList.map((String items) {
+                      //       return DropdownMenuItem(
+                      //         value: items,
+                      //         child: Text(
+                      //           items,
+                      //           style: dropDownStyle2,
+                      //           maxLines: 1,
+                      //         ),
+                      //       );
+                      //     }).toList(),
+                      //     onChanged: (item) {
+                      //       controller.changeMonthlyExpenseDate(item: item, index: index);
+                      //     },
+                      //     isExpanded: true,
+                      //
+                      //     icon: const Icon(
+                      //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                      //       // color: AppTheme.colorGrey,
+                      //     ),
+                      //   ),
+                      // );
                     },
                   ),
                   margin: EdgeInsets.only(right: widget.constraints!.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
@@ -143,32 +140,41 @@ class _MonthlyExpensesWidgetState extends State<MonthlyExpensesWidget> {
                   child: GetBuilder<SelectedDropDownItem>(
                     builder: (controller1) {
                       // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
-                      return DropdownButtonHideUnderline(
-                        child: DropdownButton(
+                      return CommonDropDown.commonDropDown(
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
                           value: controller.selectedMonthlyExpenseMonth[index],
-                          // value: controller.selectedItem,
-                          style: dropDownStyle,
-
-                          items: months.map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(
-                                items,
-                                style: dropDownStyle2,
-                              ),
-                            );
-                          }).toList(),
+                          itemList: months,
                           onChanged: (item) {
                             controller.changeMonthlyExpenseMonth(item: item, index: index);
-                          },
-                          isExpanded: true,
-
-                          icon: const Icon(
-                            Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                            // color: AppTheme.colorGrey,
-                          ),
-                        ),
-                      );
+                            print(item);
+                          });
+                      //   DropdownButtonHideUnderline(
+                      //   child: DropdownButton(
+                      //     value: controller.selectedMonthlyExpenseMonth[index],
+                      //     // value: controller.selectedItem,
+                      //     style: dropDownStyle,
+                      //
+                      //     items: months.map((String items) {
+                      //       return DropdownMenuItem(
+                      //         value: items,
+                      //         child: Text(
+                      //           items,
+                      //           style: dropDownStyle2,
+                      //         ),
+                      //       );
+                      //     }).toList(),
+                      //     onChanged: (item) {
+                      //       controller.changeMonthlyExpenseMonth(item: item, index: index);
+                      //     },
+                      //     isExpanded: true,
+                      //
+                      //     icon: const Icon(
+                      //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                      //       // color: AppTheme.colorGrey,
+                      //     ),
+                      //   ),
+                      // );
                     },
                   ),
                   margin: EdgeInsets.only(right: widget.constraints!.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),

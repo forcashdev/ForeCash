@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fore_cash/app_theme/app_theme.dart';
+import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/monthly_income_model.dart';
@@ -70,32 +71,41 @@ class MonthlyIncomeWidget {
                 child: GetBuilder<SelectedDropDownItem>(
                   builder: (controller1) {
                     // return commonDropDown(itemList: months, value: controller.selectedItemValueList[index]);
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton(
+                    return CommonDropDown.commonDropDown(
+                        selectedItemTextStyle: dropDownStyle2,
+                        valueTextStyle: dropDownStyle,
                         value: controller.selectedMonthlyIncomeDateList[index],
-                        // value: controller.selectedItem,
-                        style: dropDownStyle,
-
-                        items: dateList.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(
-                              items,
-                              style: dropDownStyle2,
-                            ),
-                          );
-                        }).toList(),
+                        itemList: dateList,
                         onChanged: (item) {
                           controller.changeDate(item: item, index: index);
-                        },
-                        isExpanded: true,
-
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                          // color: AppTheme.colorGrey,
-                        ),
-                      ),
-                    );
+                          print(item);
+                        });
+                    //   DropdownButtonHideUnderline(
+                    //   child: DropdownButton(
+                    //     value: controller.selectedMonthlyIncomeDateList[index],
+                    //     // value: controller.selectedItem,
+                    //     style: dropDownStyle,
+                    //
+                    //     items: dateList.map((String items) {
+                    //       return DropdownMenuItem(
+                    //         value: items,
+                    //         child: Text(
+                    //           items,
+                    //           style: dropDownStyle2,
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (item) {
+                    //       controller.changeDate(item: item, index: index);
+                    //     },
+                    //     isExpanded: true,
+                    //
+                    //     icon: const Icon(
+                    //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                    //       // color: AppTheme.colorGrey,
+                    //     ),
+                    //   ),
+                    // );
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
@@ -111,31 +121,40 @@ class MonthlyIncomeWidget {
                 child: GetBuilder<SelectedDropDownItem>(
                   builder: (controller1) {
                     // return commonDropDown(itemList: dateList, value: controller.selectedDateItemValueList[index]);
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton(
+                    return CommonDropDown.commonDropDown(
+                        selectedItemTextStyle: dropDownStyle2,
+                        valueTextStyle: dropDownStyle,
                         value: controller.selectedMonthlyIncomeMonthList[index],
-                        // value: controller.selectedItem,
-                        style: dropDownStyle,
-                        items: months.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(
-                              items,
-                              style: dropDownStyle2,
-                            ),
-                          );
-                        }).toList(),
+                        itemList: months,
                         onChanged: (item) {
                           controller.changeItem(item: item, index: index);
-                        },
-                        isExpanded: true,
-
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                          // color: AppTheme.colorGrey,
-                        ),
-                      ),
-                    );
+                          print(item);
+                        });
+                    //   DropdownButtonHideUnderline(
+                    //   child: DropdownButton(
+                    //     value: controller.selectedMonthlyIncomeMonthList[index],
+                    //     // value: controller.selectedItem,
+                    //     style: dropDownStyle,
+                    //     items: months.map((String items) {
+                    //       return DropdownMenuItem(
+                    //         value: items,
+                    //         child: Text(
+                    //           items,
+                    //           style: dropDownStyle2,
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (item) {
+                    //       controller.changeItem(item: item, index: index);
+                    //     },
+                    //     isExpanded: true,
+                    //
+                    //     icon: const Icon(
+                    //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
+                    //       // color: AppTheme.colorGrey,
+                    //     ),
+                    //   ),
+                    // );
                   },
                 ),
                 margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),

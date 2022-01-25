@@ -10,6 +10,7 @@ class SelectedDropDownItem extends GetxController {
   String? selectedDate = '1st';
   String? selectedSingleDate;
   String? selectedDay = 'Sun';
+  // String? weeklyBudgetSingleDay;
   String? selectedSingleDay;
   String? selectedSingleWeek;
   String? selectedWeek = '1W';
@@ -55,9 +56,7 @@ class SelectedDropDownItem extends GetxController {
     print(selectedWeek);
   }
 
-  void changeSingleDay({
-    Object? item,
-  }) {
+  void changeSingleDay({Object? item}) {
     selectedSingleDay = item as String?;
     update();
     print(selectedSingleDay);

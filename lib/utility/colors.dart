@@ -14,6 +14,7 @@ const Color appBarActionColor = Color(0xffF5F6F7);
 const Color containerColor = Color(0xff097EA2);
 const Color greyColor = Color(0xff4B506D);
 const Color greyColor969CB2 = Color(0xff969CB2);
+const Color borderColor = Color(0xffEDEDED);
 //hardik
 const Color colors252733 = Color(0xff252733);
 const Color colorsFFC700 = Color(0xffFFC700);

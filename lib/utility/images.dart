@@ -19,5 +19,9 @@ List<String> bankListImage = [
   'assets/image/png/USBank.png',
   'assets/image/png/wellsBank.png',
 ];
-
+String notificationImage = 'assets/image/png/notificationIcon.png';
+String profileImage = 'assets/image/png/profilePhoto.png';
+String calendarImage = 'assets/image/png/calendarImage.png';
 String deleteImage = 'assets/image/png/deleteImg.png';
+String informationSvg = 'assets/image/png/Information.svg';
+String editPenImage = 'assets/image/png/edit.png';
