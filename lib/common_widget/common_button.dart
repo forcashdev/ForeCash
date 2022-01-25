@@ -7,7 +7,7 @@ class CommonMaterialButton {
     Function()? onPress,
     String? text,
     double? height,
-    Color? boaderColor = Colors.transparent,
+    Color? borderColor = Colors.transparent,
     Color? bgColor = commonButtonColor,
     TextStyle? textStyle = commonButtonTheme,
     double? width = double.infinity,
@@ -18,9 +18,11 @@ class CommonMaterialButton {
         text!,
         style: textStyle ?? commonButtonTheme,
       ),
-      shape: RoundedRectangleBorder(side: BorderSide(
-         color: boaderColor ?? Colors.transparent,
-      ), borderRadius: BorderRadius.circular(9)),
+      shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: borderColor ?? Colors.transparent,
+          ),
+          borderRadius: BorderRadius.circular(9)),
 
       //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
       color: bgColor ?? commonButtonColor,

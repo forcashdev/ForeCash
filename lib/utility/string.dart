@@ -34,14 +34,21 @@ String weeklyIncomeSubTitle2 = 'as weekly or bi-weekly paychecks, alimony, child
 String identified = 'We’ve identified reoccuring Monthly Incomes. Select which monthly incomes, such as ';
 String towards = 'paychecks, alimony, child support, etc ';
 String expenseName = 'Expense Name';
+
 String paidOn = 'Paid On';
+String date = 'Date';
 String every = 'Every';
 String amount = 'Amount';
 String next = 'Next';
 String addWeeklyIncome = '+ Add New Weekly Income';
 String addWeeklyBudget = '+ Add New Weekly Budget';
 String addMonthlyIncome = '+ Add New Monthly Income';
+String addOneTimeIncome2 = '+ Add One Time Income';
+String addOneTimeExpense2 = '+ Add One Time Expense';
 String addOneTimeIncome = 'Add One Time Income';
+String oneTimeIncome = 'One Time Income';
+String oneTimeIExpense = 'One Time Expense';
+String addOneTimeExpense = 'Add One Time Expense';
 List<String> columnNameList = ['Expense name', 'Paid on', 'Every', 'Amount'];
 List<String> weeklyIncomeNameList = ['Income Name', 'Paid on', 'Every', 'Amount'];
 List<String> monthlyExpenseNameList = ['Expense Name', 'Due on', 'Every', 'Amount'];
@@ -122,7 +129,7 @@ List<String> weeks = [
   '4W',
 ];
 String endOfWeekBalance = '\$5,000';
-String thisWeekBalance = '\$4.200';
+String thisWeekBalance = '\$4,200';
 String thisWeekExpense = '\$150';
 String incomeName = 'Income Name';
 String budget = 'Add Budget';
