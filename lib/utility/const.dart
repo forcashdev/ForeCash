@@ -17,6 +17,8 @@ TextStyle mobileAppBarStyle = TextStyle(
   fontWeight: FontWeight.w700,
 );
 const commonButtonTheme = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.white);
+const commonBackButtonTheme = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.black);
+
 const createAccountTextStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w300);
 const fullNameHintStyle = TextStyle(
   color: commonTextColor2,
@@ -143,6 +145,14 @@ const greyMontserrat14w500 = TextStyle(
   fontFamily: AppTheme.fontName,
 );
 
+const grey2Montserrat14w500 = TextStyle(
+  color: greyColor969CB2,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  fontFamily: AppTheme.fontName,
+);
+
+
 const blackMontserrat12w500 = TextStyle(
   color: colors252733,
   fontSize: 12,
@@ -153,6 +163,13 @@ const blackMontserrat14w500 = TextStyle(
   color: colors252733,
   fontSize: 14,
   fontWeight: FontWeight.w500,
+  fontFamily: AppTheme.fontName,
+);
+
+const blackMontserrat16w700 = TextStyle(
+  color: colors252733,
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
   fontFamily: AppTheme.fontName,
 );
 
@@ -174,6 +191,13 @@ const blackMontserrat10w400 = TextStyle(
   color: colors252733,
   fontSize: 10,
   fontWeight: FontWeight.w400,
+  fontFamily: AppTheme.fontName,
+);
+
+const whiteMontserrat14w500 = TextStyle(
+  color: Colors.white,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
   fontFamily: AppTheme.fontName,
 );
 TextStyle blackMontserrat15W600 = TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName);

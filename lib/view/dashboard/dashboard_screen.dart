@@ -5,7 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fore_cash/app_theme/app_theme.dart';
+import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
+import 'package:fore_cash/common_widget/common_web_appbar.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/dashboard_container_visibility.dart';
@@ -19,6 +21,7 @@ import 'package:fore_cash/model/monthly_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/notifications/notifications_screen.dart';
 import 'package:get/get.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -123,7 +126,76 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         return Scaffold(
           backgroundColor: const Color(0xffE5E5E5),
           appBar: maxWidth
-              ? AppBarWithUserName.appBarWithUserNAme()
+              ? CommonWebAppbar.commonWebAppbar(scale: Get.mediaQuery.size.aspectRatio * 150, actions: [
+            GestureDetector(
+              onTap: (){
+               showCommonDialog(context);
+                // Get.to(() => const NotificationsScreen());
+              },
+              child: Padding(
+                padding: EdgeInsets.only(top: Get.height * 0.01),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 35,
+                      width: 35,
+                      padding: const EdgeInsets.all(7),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: appBarActionColor,
+                      ),
+                      child: Image.asset('assets/image/png/notificationIcon.png'),
+                    ),
+                    const Positioned(
+                      right: 3,
+                      top: 4,
+                      child: CircleAvatar(
+                        backgroundColor: cameraBackGroundColor,
+                        radius: 6,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: Get.width * 0.007,
+            ),
+            GestureDetector(
+              onTap: (){
+                _showPopupMenu();
+              },
+              child: Container(
+                width: 160,
+                margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
+                padding: const EdgeInsets.only(left: 4),
+                decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      radius: 17,
+                      backgroundImage: AssetImage('assets/image/png/profilePhoto.png'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        userName,
+                        style: userNameProfileStyle,
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          _showPopupMenu();
+                        },
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black,
+                        ))
+                  ],
+                ),
+              ),
+            ),
+          ])
               : CommonMobileAppbar.commonMobileAppbar(
                   color: Colors.white,
                   title: Text(
@@ -131,54 +203,66 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     style: mobileAppBarStyle,
                   ),
                   actions: [
-                      Padding(
-                        padding: EdgeInsets.only(top: Get.height * 0.01),
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: 35,
-                              width: 35,
-                              padding: const EdgeInsets.all(7),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: appBarActionColor,
+                      GestureDetector(
+                        onTap: (){
+                          Get.to(() => const NotificationsScreen());
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(top: Get.height * 0.01),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 35,
+                                width: 35,
+                                padding: const EdgeInsets.all(7),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: appBarActionColor,
+                                ),
+                                child: Image.asset('assets/image/png/notificationIcon.png'),
                               ),
-                              child: Image.asset('assets/image/png/notificationIcon.png'),
-                            ),
-                            const Positioned(
-                              right: 3,
-                              top: 4,
-                              child: CircleAvatar(
-                                backgroundColor: cameraBackGroundColor,
-                                radius: 6,
-                              ),
-                            )
-                          ],
+                              const Positioned(
+                                right: 3,
+                                top: 4,
+                                child: CircleAvatar(
+                                  backgroundColor: cameraBackGroundColor,
+                                  radius: 6,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
                         width: Get.width * 0.007,
                       ),
-                      Container(
-                        width: 86,
-                        margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
-                        padding: const EdgeInsets.only(left: 4),
-                        decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
-                        child: Row(
-                          children: [
-                            const CircleAvatar(
-                              radius: 17,
-                              backgroundImage: AssetImage(
-                                'assets/image/png/profilePhoto.png',
+                      GestureDetector(
+                        onTap: (){
+                          _showPopupMenu();
+                        },
+                        child: Container(
+                          width: 86,
+                          margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
+                          padding: const EdgeInsets.only(left: 4),
+                          decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
+                          child: Row(
+                            children: [
+                              const CircleAvatar(
+                                radius: 17,
+                                backgroundImage: AssetImage(
+                                  'assets/image/png/profilePhoto.png',
+                                ),
                               ),
-                            ),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Colors.black,
-                                ))
-                          ],
+                              IconButton(
+                                  onPressed: () {
+
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                  ))
+                            ],
+                          ),
                         ),
                       ),
                     ]
@@ -1303,4 +1387,49 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       },
     );
   }
+
+
+
+  _showPopupMenu(){
+    showMenu<String>(
+      color: Colors.white,
+      context: context,
+      position: RelativeRect.fromLTRB(25.0, 0.0, 0.0, 0.0),      //position where you want to show the menu on screen
+      items: [
+        PopupMenuItem<String>(
+            child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_user.png',title: 'Profile'), value: '1',onTap: (){print("Profile====>");},),
+        PopupMenuDivider(height: 0.0),
+        PopupMenuItem<String>(
+            child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_credit_card.png',title: 'Chase Bank #2345'), value: '2',onTap: (){print("Profile====>");}),
+        PopupMenuDivider(height: 0.0),
+        PopupMenuItem<String>(
+            child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_credit_card.png',title: 'Chime Bank #1568'), value: '3',onTap: (){print("Profile====>");}),
+        PopupMenuDivider(height: 0.0),
+        PopupMenuItem<String>(child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_user_plus.png',title: 'Add Account'), value: '4',onTap: (){print("Add Account====>");}),
+        const PopupMenuDivider(height: 0.0),
+        PopupMenuItem<String>(
+            child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_setting.png',title: 'Setting'), value: '5',onTap: (){print("Setting====>");}),
+        const PopupMenuDivider(height: 0.0),
+        PopupMenuItem<String>(child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_logout.png',title: 'Logout'), value: '5',onTap: (){print("Setting====>");}),
+        //PopupMenuItem<String>(child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_logout.png',title: 'Logout',colors: Colors.red,stlyes: whiteMontserrat14w500), value: '5',onTap: (){print("Setting====>");}),
+      ],
+      elevation: 8.0,
+    );
+  }
+
+  getOptionItem({String? imagePath,String? title,colors = Colors.transparent,TextStyle? stlyes = blackMontserrat14w500}) {
+    return Container(
+      height: 40,
+      width: double.infinity,
+      color: colors,
+      child: Row(
+        children: [
+            Image.asset(imagePath ?? "",scale: 3.5,color: commonTextColor,),
+            const SizedBox(width: 14),
+            Text(title ?? "",style: stlyes)
+        ],
+      ),
+    );
+  }
+
 }

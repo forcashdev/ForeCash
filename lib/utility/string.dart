@@ -162,6 +162,10 @@ List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyI
 String cancel = 'Cancel';
 
 //verify_transaction
-String notifications = 'Notifications';
-String verifyTransaction = 'Verify Transaction';
-String verifyTransactionDesc = 'Did these transactions happen? Mark them as recieved/paid or skip or move to next week.';
+const String notifications = 'Notifications';
+const String verifyTransaction = 'Verify Transaction';
+const String verifyTransactionDesc = 'Did these transactions happen? Mark them as recieved/paid or skip or move to next week.';
+const String saveYourChanges = 'Do you want to save your Changes ?';
+const String description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ';
+const String yes = 'Yes';
+const String no = 'No';

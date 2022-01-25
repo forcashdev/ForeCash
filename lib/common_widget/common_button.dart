@@ -7,16 +7,24 @@ class CommonMaterialButton {
     Function()? onPress,
     String? text,
     double? height,
+    Color? boaderColor = Colors.transparent,
+    Color? bgColor = commonButtonColor,
+    TextStyle? textStyle = commonButtonTheme,
+    double? width = double.infinity,
   }) {
     return MaterialButton(
       onPressed: onPress,
       child: Text(
         text!,
-        style: commonButtonTheme,
+        style: textStyle ?? commonButtonTheme,
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
-      color: commonButtonColor,
-      minWidth: double.infinity,
+      shape: RoundedRectangleBorder(side: BorderSide(
+         color: boaderColor ?? Colors.transparent,
+      ), borderRadius: BorderRadius.circular(9)),
+
+      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+      color: bgColor ?? commonButtonColor,
+      minWidth: width ?? double.infinity,
       height: height,
     );
   }

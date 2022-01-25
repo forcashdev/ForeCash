@@ -148,6 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               _formKey.currentState!.validate();
                             },
                             text: logIn,
+
                             height: 50,
                           ),
                           SizedBox(
