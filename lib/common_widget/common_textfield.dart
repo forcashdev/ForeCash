@@ -5,11 +5,19 @@ import 'package:get/get.dart';
 
 class CommonTextField {
   static commonTextField(
-      {EdgeInsets? contentPadding, TextStyle? errorTextStyle, FormFieldValidator? validator, String? hint, var obscureText, IconButton? suffixIcon, TextEditingController? controller}) {
+      {EdgeInsets? contentPadding,
+      TextStyle? errorTextStyle,
+      TextInputAction? textInputAction,
+      FormFieldValidator? validator,
+      String? hint,
+      var obscureText,
+      IconButton? suffixIcon,
+      TextEditingController? controller}) {
     return TextFormField(
       style: textFieldStyle,
       validator: validator,
       controller: controller,
+      textInputAction: textInputAction,
       obscureText: obscureText ?? false as bool,
       decoration: InputDecoration(
         contentPadding: contentPadding,
@@ -19,6 +27,7 @@ class CommonTextField {
         filled: true,
         fillColor: commonTextFieldColor,
         hintText: hint,
+        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
         disabledBorder: OutlineInputBorder(

@@ -8,8 +8,8 @@ import 'package:get/get.dart';
 
 import 'colors.dart';
 
-const headTitleTheme = TextStyle(
-  fontSize: 20,
+TextStyle headTitleTheme = TextStyle(
+  fontSize: 17.sp,
   fontWeight: FontWeight.w700,
 );
 TextStyle mobileAppBarStyle = TextStyle(
@@ -20,9 +20,10 @@ TextStyle mobileAppBarStyle = TextStyle(
 const commonButtonTheme = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.white);
 const commonBackButtonTheme = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.black);
 
-const createAccountTextStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w300);
-const fullNameHintStyle = TextStyle(
+TextStyle createAccountTextStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w300, fontSize: 12.sp);
+TextStyle fullNameHintStyle = TextStyle(
   color: commonTextColor2,
+  fontSize: 11.sp,
   fontWeight: FontWeight.w700,
   fontFamily: AppTheme.fontName,
 );
@@ -31,18 +32,19 @@ const forgotPassStyle = TextStyle(
   fontWeight: FontWeight.w500,
   fontFamily: AppTheme.fontName,
 );
-const alreadyAccountStyle = TextStyle(color: commonTextColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600);
-const loginStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: commonButtonColor, fontFamily: AppTheme.fontName);
-const textSpanStyle1 = TextStyle(
+TextStyle alreadyAccountStyle = TextStyle(fontSize: 12.sp, color: commonTextColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
+TextStyle dontHaveAccountStyle = TextStyle(fontSize: 12.sp, color: commonTextColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
+TextStyle loginStyle = TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: commonButtonColor, fontFamily: AppTheme.fontName);
+TextStyle textSpanStyle1 = TextStyle(
   fontWeight: FontWeight.w200,
-  fontSize: 14,
+  fontSize: 12.sp,
   color: Color(0xFF777C90),
   fontFamily: AppTheme.fontName,
 );
 
-const textSpanStyle2 = TextStyle(
+TextStyle textSpanStyle2 = TextStyle(
   fontWeight: FontWeight.w700,
-  fontSize: 14,
+  fontSize: 12.sp,
   fontFamily: AppTheme.fontName,
   color: Color(0xFF777C90),
 );
@@ -52,24 +54,25 @@ TextStyle columnNameListStyle = TextStyle(
   fontWeight: FontWeight.w500,
   color: commonGreyColor,
 );
-
-const emailStyle = TextStyle(
+TextStyle incomeNameStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle emailStyle = TextStyle(
+  fontSize: 12.sp,
   fontWeight: FontWeight.w300,
   fontFamily: AppTheme.fontName,
 );
 
-const textFieldHintStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500);
-const signupButtonStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: commonButtonColor);
-const searchBankStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
-const expenseNameStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle textFieldHintStyle = TextStyle(fontSize: 11.sp, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500);
+TextStyle signupButtonStyle = TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: commonButtonColor);
+TextStyle searchBankStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, fontSize: 12.sp);
+TextStyle expenseNameStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle dropDownStyle = TextStyle(color: Color(0xff777C90), fontSize: 10.sp, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle greyMontserrat10W500 = TextStyle(color: Color(0xff777C90), fontSize: 10.sp, fontWeight: FontWeight.w500, fontFamily: AppTheme.fontName);
 TextStyle blackMontserrat10W500 = TextStyle(color: Color(0xff252733), fontSize: 10.sp, fontWeight: FontWeight.w500, fontFamily: AppTheme.fontName);
-const dropDownStyle2 = TextStyle(color: Color(0xff777C90), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
-const amountStyle = TextStyle(color: commonGreyColor, fontFamily: AppTheme.fontName);
-const textFieldStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14);
+TextStyle dropDownStyle2 = TextStyle(color: Color(0xff777C90), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, fontSize: 11.sp);
+TextStyle amountStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontFamily: AppTheme.fontName);
+TextStyle textFieldStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 12.sp);
 const prefixTextStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 13);
-const addWeekIncomeStyle = TextStyle(color: Color(0xff087DA1), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, decoration: TextDecoration.underline);
+TextStyle addWeekIncomeStyle = TextStyle(fontSize: 12.sp, color: Color(0xff087DA1), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, decoration: TextDecoration.underline);
 TextStyle expenseNameStyle2 = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 11.sp);
 const chooseDateStyle = TextStyle(
   color: commonGreyColor,
@@ -102,8 +105,9 @@ const recomendedTextStyle = TextStyle(
   color: Color(0xFF777C90),
 );
 
-const backButtonStyle = TextStyle(
+TextStyle backButtonStyle = TextStyle(
   color: Color(0xff174261),
+  fontSize: 12.sp,
   fontFamily: AppTheme.fontName,
   fontWeight: FontWeight.w600,
 );
@@ -207,3 +211,6 @@ TextStyle blackMontserrat13W600 = TextStyle(fontSize: 13.sp, fontWeight: FontWei
 TextStyle redMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: Colors.red, fontWeight: FontWeight.w500, fontSize: 11.sp);
 TextStyle greenMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: cameraBackGroundColor, fontWeight: FontWeight.w500, fontSize: 11.sp);
 TextStyle whiteMontserrat11W500 = TextStyle(fontSize: 11.sp, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, color: backGroundColor);
+TextStyle blackMontserrat12W600 = TextStyle(color: colors252733, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 12.sp);
+TextStyle blueMontserrat12W600 = TextStyle(color: containerColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 12.sp);
+TextStyle blueMontserrat13W600 = TextStyle(color: containerColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 18.sp);

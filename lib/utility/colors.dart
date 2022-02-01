@@ -15,8 +15,10 @@ const Color containerColor = Color(0xff097EA2);
 const Color greyColor = Color(0xff4B506D);
 const Color greyColor969CB2 = Color(0xff969CB2);
 const Color borderColor = Color(0xffEDEDED);
+const Color colorsFFEBEB = Color(0xffFFEBEB);
 //hardik
 const Color colors252733 = Color(0xff252733);
+const Color colorsebf0f4 = Color(0xffebf0f4);
 const Color colorsFFC700 = Color(0xffFFC700);
 const Color colorsFFF4EB = Color(0xffFFF4EB);
 const Color colorsECF4FF = Color(0xffabc3ff);

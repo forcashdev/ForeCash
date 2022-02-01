@@ -6,13 +6,13 @@ import 'package:get/get.dart';
 
 class SelectedDropDownItem extends GetxController {
   String? selectedMonth = '1 mon';
-  String? selectedSingleMonth;
+  String? selectedSingleMonthlyExpenseMonth;
   String? selectedDate = '1st';
-  String? selectedSingleDate;
+  String? selectedSingleMonthlyExpenseDate;
   String? selectedDay = 'Sun';
   // String? weeklyBudgetSingleDay;
-  String? selectedSingleDay;
-  String? selectedSingleWeek;
+  String? selectedSingleWeeklyIncomeDay;
+  String? selectedSingleWeeklyIncomeWeek;
   String? selectedWeek = '1W';
   String? weeklyBudgetDay;
   String? weeklyBudgetWeek;
@@ -57,15 +57,15 @@ class SelectedDropDownItem extends GetxController {
   }
 
   void changeSingleDay({Object? item}) {
-    selectedSingleDay = item as String?;
+    selectedSingleWeeklyIncomeDay = item as String?;
     update();
-    print(selectedSingleDay);
+    print(selectedSingleWeeklyIncomeDay);
   }
 
   void changeSingleWeek({
     Object? item,
   }) {
-    selectedSingleWeek = item as String?;
+    selectedSingleWeeklyIncomeWeek = item as String?;
     update();
     print(selectedMonth);
   }
@@ -84,12 +84,12 @@ class SelectedDropDownItem extends GetxController {
   }
 
   void changeSingleDate({Object? item}) {
-    selectedSingleDate = item! as String?;
+    selectedSingleMonthlyExpenseDate = item! as String?;
     update();
   }
 
   void changeSingleMonth({Object? item}) {
-    selectedSingleMonth = item! as String?;
+    selectedSingleMonthlyExpenseMonth = item! as String?;
     update();
   }
 

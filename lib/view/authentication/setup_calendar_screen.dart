@@ -67,7 +67,7 @@ class SetupCalendarScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               maxWidth
-                                  ? const Text(
+                                  ? Text(
                                       '< Back',
                                       style: backButtonStyle,
                                     )

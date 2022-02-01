@@ -25,3 +25,4 @@ String calendarImage = 'assets/image/png/calendarImage.png';
 String deleteImage = 'assets/image/png/deleteImg.png';
 String informationSvg = 'assets/image/png/Information.svg';
 String editPenImage = 'assets/image/png/edit.png';
+String calendarImage2 = 'assets/image/png/calendarImage2.png';
