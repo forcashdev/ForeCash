@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fore_cash/common_widget/common_methods.dart';
-import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
-import 'package:fore_cash/common_widget/common_web_appbar.dart';
+import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
@@ -19,88 +17,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
-        appBar: constraints.maxWidth > 1000
-            ? CommonWebAppbar.commonWebAppbar(scale: Get.mediaQuery.size.aspectRatio * 150, actions: [
-                Padding(
-                  padding: EdgeInsets.only(top: Get.height * 0.01),
-                  child: Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => const NotificationsScreen());
-                        },
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          padding: const EdgeInsets.all(7),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: appBarActionColor,
-                          ),
-                          child: Image.asset('assets/image/png/notificationIcon.png'),
-                        ),
-                      ),
-                      const Positioned(
-                        right: 3,
-                        top: 4,
-                        child: CircleAvatar(
-                          backgroundColor: cameraBackGroundColor,
-                          radius: 6,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: Get.width * 0.007,
-                ),
-                Container(
-                  width: 160,
-                  margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
-                  padding: const EdgeInsets.only(left: 4),
-                  decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
-                  child: Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 17,
-                        backgroundImage: AssetImage('assets/image/png/profilePhoto.png'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: Text(
-                          userName,
-                          style: userNameProfileStyle,
-                        ),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            showPopupMenu(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ))
-                    ],
-                  ),
-                ),
-              ])
-            : CommonMobileAppbar.commonMobileAppbar(
-                leading: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                ),
-                color: Colors.white,
-                title: Text(
-                  notification,
-                  style: mobileAppBarStyle,
-                ),
-              ),
-        backgroundColor: backGroundColor,
+        appBar: constraints.maxWidth > 1000 ? appBarWithUserNAme(context: context) : null,
+        backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -108,12 +26,35 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             //physics: const NeverScrollableScrollPhysics(),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: constraints.maxWidth > 1000 ? 0.0 : Get.height * 0.02,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  constraints.maxWidth > 1000
+                      ? SizedBox()
+                      : IconButton(
+                          splashRadius: 0.1,
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: const Icon(
+                            Icons.chevron_left,
+                          )),
+                  constraints.maxWidth > 1000
+                      ? Container()
+                      : Text(
+                          notification,
+                          style: mobileAppBarStyle,
+                        ),
+                  SizedBox(
+                    width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+                  )
+                ],
+              ),
               const SizedBox(
                 height: 15.0,
-              ),
-              Text(
-                notifications,
-                style: mobileAppBarStyle,
               ),
               Expanded(
                 child: getNotificationList(constraints),

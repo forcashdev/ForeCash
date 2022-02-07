@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
-import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
 import 'package:fore_cash/common_widget/common_textfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
@@ -9,6 +8,8 @@ import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+
+import 'forgot_password_screen.dart';
 
 class ProfileUpdateScreen extends StatefulWidget {
   const ProfileUpdateScreen({Key? key}) : super(key: key);
@@ -27,87 +28,21 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
     final TextEditingController _email = TextEditingController();
     final TextEditingController _password = TextEditingController();
     final TextEditingController _newPassword = TextEditingController();
+    final TextEditingController _userName = TextEditingController();
     final TextEditingController _newPasswordConfirm = TextEditingController();
     return SafeArea(child: LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth > 1000;
         return Scaffold(
-          appBar: maxWidth
-              ? AppBarWithUserName.appBarWithUserNAme()
-              // CommonWebAppbar.commonWebAppbar(scale: Get.mediaQuery.size.aspectRatio * 150, actions: [
-              //         Padding(
-              //           padding: EdgeInsets.only(top: Get.height * 0.01),
-              //           child: Stack(
-              //             children: [
-              //               Container(
-              //                 height: 35,
-              //                 width: 35,
-              //                 padding: const EdgeInsets.all(7),
-              //                 decoration: const BoxDecoration(
-              //                   shape: BoxShape.circle,
-              //                   color: appBarActionColor,
-              //                 ),
-              //                 child: Image.asset('assets/image/png/notificationIcon.png'),
-              //               ),
-              //               const Positioned(
-              //                 right: 3,
-              //                 top: 4,
-              //                 child: CircleAvatar(
-              //                   backgroundColor: cameraBackGroundColor,
-              //                   radius: 6,
-              //                 ),
-              //               )
-              //             ],
-              //           ),
-              //         ),
-              //         SizedBox(
-              //           width: Get.width * 0.007,
-              //         ),
-              //         Container(
-              //           width: 160,
-              //           margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
-              //           padding: const EdgeInsets.only(left: 4),
-              //           decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
-              //           child: Row(
-              //             children: [
-              //               const CircleAvatar(
-              //                 radius: 17,
-              //                 backgroundImage: AssetImage('assets/image/png/profilePhoto.png'),
-              //               ),
-              //               Padding(
-              //                 padding: const EdgeInsets.only(left: 5),
-              //                 child: Text(
-              //                   userName,
-              //                   style: userNameProfileStyle,
-              //                 ),
-              //               ),
-              //               IconButton(
-              //                   onPressed: () {},
-              //                   icon: const Icon(
-              //                     Icons.arrow_drop_down,
-              //                     color: Colors.black,
-              //                   ))
-              //             ],
-              //           ),
-              //         ),
-              //       ])
-              : CommonMobileAppbar.commonMobileAppbar(
-                  centerTitle: true,
-                  color: Colors.white.withOpacity(0.9),
-                  title: Text(profileSetting),
-                  titleTextStyle: mobileAppBarStyle,
-                  leading: Icon(
-                    Icons.chevron_left,
-                    color: Colors.black,
-                  ),
-                ),
+          appBar: maxWidth ? appBarWithUserNAme(context: context) : null,
           backgroundColor: maxWidth ? backGroundColor : null,
           // resizeToAvoidBottomInset: false,
-          body: Center(
+          body: Align(
+            alignment: maxWidth ? Alignment.center : Alignment.topCenter,
             child: Container(
               decoration: BoxDecoration(color: constraints.maxWidth > 1000 ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
               width: constraints.maxWidth > 1000 ? 600 : null,
-              height: constraints.maxWidth > 1000 ? 780 : null,
+              // height: constraints.maxWidth > 1000 ? 780 : null,
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
@@ -116,37 +51,49 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // SizedBox(
-                        //   height: maxWidth ? Get.height * 0.01 : Get.height * 0.0,
-                        // ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     maxWidth
-                        //         ? const SizedBox()
-                        //         : const Icon(
-                        //             Icons.chevron_left,
-                        //           ),
-                        //     maxWidth
-                        //         ? Container()
-                        //         : Text(
-                        //             profileSetting,
-                        //             style: headTitleTheme,
-                        //           ),
-                        //     Container()
-                        //   ],
-                        // ),
+                        SizedBox(
+                          height: maxWidth ? 0.0 : Get.height * 0.02,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            maxWidth
+                                ? SizedBox()
+                                : IconButton(
+                                    splashRadius: 0.1,
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                    )),
+                            maxWidth
+                                ? Container()
+                                : Text(
+                                    profileSetting,
+                                    style: mobileAppBarStyle,
+                                  ),
+                            SizedBox(
+                              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+                            )
+                          ],
+                        ),
                         SizedBox(
                           height: maxWidth ? Get.height * 0.03 : 0.0,
                         ),
-                        // maxWidth ? Container() : commonDivider(),
+
                         // SizedBox(
                         //   height: maxWidth ? 0.0 : Get.height * 0.0,
                         // ),
                         maxWidth
-                            ? Text(
-                                backButton,
-                                style: backButtonStyle,
+                            ? InkWell(
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: Text(
+                                  backButton,
+                                  style: backButtonStyle,
+                                ),
                               )
                             : Container(),
                         Align(
@@ -188,7 +135,16 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        commonTextField(hint: userName, contentPadding: const EdgeInsets.only(left: 13)),
+                        commonTextField(
+                          controller: _userName,
+                          hint: userName,
+                          contentPadding: const EdgeInsets.only(left: 13),
+                          validator: (value) {
+                            if (_userName.text.isEmpty) {
+                              return enterName;
+                            }
+                          },
+                        ),
                         SizedBox(
                           height: Get.height * 0.02,
                         ),
@@ -218,9 +174,14 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                               password,
                               style: fullNameHintStyle,
                             ),
-                            Text(
-                              forgotPass,
-                              style: forgotPassStyle,
+                            InkWell(
+                              onTap: () {
+                                Get.to(ForgotPassword());
+                              },
+                              child: Text(
+                                forgotPass,
+                                style: forgotPassStyle,
+                              ),
                             ),
                           ],
                         ),
@@ -247,7 +208,6 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                             },
                           ),
                           obscureText: isObscurePass,
-                          errorTextStyle: const TextStyle(color: commonTextColor),
                           validator: (value) {
                             if (_password.text.length < 6) {
                               return minimumCharacter;
@@ -280,7 +240,6 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                             },
                           ),
                           obscureText: isObscureNewPass,
-                          errorTextStyle: const TextStyle(color: commonTextColor),
                           validator: (value) {
                             if (_password.text.length < 6) {
                               return minimumCharacter;
@@ -288,7 +247,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                           },
                         ),
                         SizedBox(
-                          height: Get.height * 0.01,
+                          height: Get.height * 0.02,
                         ),
                         Text(confirmNewPass, style: fullNameHintStyle),
                         SizedBox(
@@ -313,7 +272,6 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                             },
                           ),
                           obscureText: isObscureNewPassCon,
-                          errorTextStyle: const TextStyle(color: commonTextColor),
                           validator: (value) {
                             if (_password.text.length < 6) {
                               return minimumCharacter;
@@ -323,13 +281,16 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.04,
                         ),
-                        CommonMaterialButton.commonButton(
-                          onPress: () {
-                            _formKey.currentState!.validate();
-                            if (_formKey.currentState!.validate()) {}
-                          },
-                          text: save,
-                          height: 50,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: Get.height * 0.035),
+                          child: CommonMaterialButton.commonButton(
+                            onPress: () {
+                              _formKey.currentState!.validate();
+                              if (_formKey.currentState!.validate()) {}
+                            },
+                            text: save,
+                            height: 50,
+                          ),
                         )
                       ],
                     ),

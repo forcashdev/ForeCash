@@ -54,11 +54,7 @@ class CommonIncomeScrollableWidget {
         return Container(
           margin: EdgeInsets.only(bottom: Get.height * 0.014),
           // color: Colors.red,
-          height: height != null
-              ? height
-              : editMode == true
-                  ? Get.height * 0.06
-                  : Get.height * 0.018,
+          height: height != null ? height : Get.height * 0.018,
           child: PageView.builder(
             // scrollDirection: Axis.horizontal,
             onPageChanged: (value) {

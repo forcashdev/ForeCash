@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CommonDropDown {
   static Widget commonDropDown({TextStyle? valueTextStyle, TextStyle? selectedItemTextStyle, Object? value, List<String>? itemList, Function? onChanged, String? hintText, TextStyle? hintTextStyle}) {
@@ -27,8 +28,8 @@ class CommonDropDown {
           // controller.changeItem(item: item);
         },
         isExpanded: true,
-        icon: const Icon(
-          Icons.keyboard_arrow_down, color: Color(0xff777C90),
+        icon: Icon(
+          Icons.keyboard_arrow_down, color: Color(0xff777C90), size: 12.sp,
           // color: AppTheme.colorGrey,
         ),
       ),

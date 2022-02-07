@@ -152,27 +152,6 @@ class MonthlyIncomeScreen extends StatelessWidget {
     );
   }
 
-  _nameRowWidget() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-      Text(
-        incomeName,
-        style: columnNameListStyle,
-      ),
-      Text(
-        paidOn,
-        style: columnNameListStyle,
-      ),
-      Text(
-        every,
-        style: columnNameListStyle,
-      ),
-      Text(
-        amount,
-        style: columnNameListStyle,
-      ),
-    ]);
-  }
-
   _nameTableRowWidget({BoxConstraints? constraints}) {
     return Table(
       columnWidths: const <int, TableColumnWidth>{
@@ -181,6 +160,7 @@ class MonthlyIncomeScreen extends StatelessWidget {
         2: FlexColumnWidth(2),
         3: FlexColumnWidth(2),
         4: FlexColumnWidth(2),
+        5: FlexColumnWidth(2),
       },
       children: [
         TableRow(children: [
@@ -201,6 +181,10 @@ class MonthlyIncomeScreen extends StatelessWidget {
           ),
           Text(
             every,
+            style: columnNameListStyle,
+          ),
+          Text(
+            startDate,
             style: columnNameListStyle,
           ),
           Text(

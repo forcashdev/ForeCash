@@ -3,6 +3,10 @@ import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/authentication/login_screen.dart';
+import 'package:fore_cash/view/authentication/profile_update_screen_screen.dart';
+import 'package:fore_cash/view/authentication/update_calendar_screen.dart';
+import 'package:get/get.dart';
 
 showCommonDialog(BuildContext context) {
   showDialog(
@@ -63,15 +67,20 @@ showPopupMenu(BuildContext context) {
     //position where you want to show the menu on screen
     items: [
       PopupMenuItem<String>(
-        child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_user.png', title: 'Profile'),
+        child: getOptionItem(
+            imagePath: 'assets/image/icons/ic_menu_user.png',
+            title: 'Profile',
+            onTap: () {
+              Get.to(() => const ProfileUpdateScreen());
+            }),
         value: '1',
-        onTap: () {
-          print("Profile====>");
-        },
       ),
       PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
-          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_credit_card.png', title: 'Chase Bank #2345'),
+          child: getOptionItem(
+            imagePath: 'assets/image/icons/ic_menu_credit_card.png',
+            title: 'Chase Bank #2345',
+          ),
           value: '2',
           onTap: () {
             print("Profile====>");
@@ -85,14 +94,24 @@ showPopupMenu(BuildContext context) {
           }),
       PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
-          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_user_plus.png', title: 'Add Account'),
+          child: getOptionItem(
+              imagePath: 'assets/image/icons/ic_menu_user_plus.png',
+              title: 'Add Account',
+              onTap: () {
+                Get.to(() => const LoginScreen());
+              }),
           value: '4',
           onTap: () {
             print("Add Account====>");
           }),
       const PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
-          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_setting.png', title: 'Setting'),
+          child: getOptionItem(
+              imagePath: 'assets/image/icons/ic_menu_setting.png',
+              title: 'Setting',
+              onTap: () {
+                Get.to(() => const UpdateCalendarScreen());
+              }),
           value: '5',
           onTap: () {
             print("Setting====>");
@@ -110,21 +129,26 @@ showPopupMenu(BuildContext context) {
   );
 }
 
-getOptionItem({String? imagePath, String? title, colors = Colors.transparent, TextStyle? stlyes = blackMontserrat14w500}) {
-  return Container(
-    height: 40,
-    width: double.infinity,
-    color: colors,
-    child: Row(
-      children: [
-        Image.asset(
-          imagePath ?? "",
-          scale: 3.5,
-          color: commonTextColor,
-        ),
-        const SizedBox(width: 14),
-        Text(title ?? "", style: stlyes)
-      ],
+getOptionItem({Function? onTap, String? imagePath, String? title, colors = Colors.transparent, TextStyle? stlyes = blackMontserrat14w500}) {
+  return GestureDetector(
+    onTap: () {
+      onTap!();
+    },
+    child: Container(
+      height: 40,
+      width: double.infinity,
+      color: colors,
+      child: Row(
+        children: [
+          Image.asset(
+            imagePath ?? "",
+            scale: 3.5,
+            color: commonTextColor,
+          ),
+          const SizedBox(width: 14),
+          Text(title ?? "", style: stlyes)
+        ],
+      ),
     ),
   );
 }

@@ -12,33 +12,33 @@ class WeeklyIncomeModel {
       expenseName: 'Apple inc.',
       amount: '500',
     ),
-    // WeeklyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: '500',
-    // ),
-    // WeeklyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: '500',
-    // ),
-    // WeeklyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: '500',
-    // ),
-    // WeeklyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: '500',
-    // ),
-    // WeeklyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: '500',
-    // ),
-    // WeeklyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: '500',
-    // ),
-    // WeeklyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: '500',
-    // ),
+    WeeklyIncomeModel(
+      expenseName: 'Apple inc.',
+      amount: '500',
+    ),
+    WeeklyIncomeModel(
+      expenseName: 'Apple inc.',
+      amount: '500',
+    ),
+    WeeklyIncomeModel(
+      expenseName: 'Apple inc.',
+      amount: '500',
+    ),
+    WeeklyIncomeModel(
+      expenseName: 'Apple inc.',
+      amount: '500',
+    ),
+    WeeklyIncomeModel(
+      expenseName: 'Apple inc.',
+      amount: '500',
+    ),
+    WeeklyIncomeModel(
+      expenseName: 'Apple inc.',
+      amount: '500',
+    ),
+    WeeklyIncomeModel(
+      expenseName: 'Apple inc.',
+      amount: '500',
+    ),
   ];
 }

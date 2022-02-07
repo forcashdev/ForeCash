@@ -11,8 +11,7 @@ import 'package:fore_cash/common_widget/common_add_data_textfield.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_income_scrollable_widget.dart';
 import 'package:fore_cash/common_widget/common_methods.dart';
-import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
-import 'package:fore_cash/common_widget/common_web_appbar.dart';
+import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/page_view_common_widget.dart';
 import 'package:fore_cash/getx/add_monthly_expense_showtext_controller.dart';
 import 'package:fore_cash/getx/add_monthly_income_controller.dart';
@@ -144,72 +143,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: maxWidth ? const Color(0xffebf0f4) : const Color(0xffE5E5E5),
           appBar: maxWidth
-              ? CommonWebAppbar.commonWebAppbar(scale: Get.mediaQuery.size.aspectRatio * 150, actions: [
-                  Padding(
-                    padding: EdgeInsets.only(top: Get.height * 0.01),
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => const NotificationsScreen());
-                          },
-                          child: Container(
-                            height: 35,
-                            width: 35,
-                            padding: const EdgeInsets.all(7),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: appBarActionColor,
-                            ),
-                            child: Image.asset('assets/image/png/notificationIcon.png'),
-                          ),
-                        ),
-                        const Positioned(
-                          right: 3,
-                          top: 4,
-                          child: CircleAvatar(
-                            backgroundColor: cameraBackGroundColor,
-                            radius: 6,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: Get.width * 0.007,
-                  ),
-                  Container(
-                    width: 160,
-                    margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
-                    padding: const EdgeInsets.only(left: 4),
-                    decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 17,
-                          backgroundImage: AssetImage('assets/image/png/profilePhoto.png'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            userName,
-                            style: userNameProfileStyle,
-                          ),
-                        ),
-                        IconButton(
-                            onPressed: () {
-                              showPopupMenu(context);
-                            },
-                            icon: const Icon(
-                              Icons.arrow_drop_down,
-                              color: Colors.black,
-                            ))
-                      ],
-                    ),
-                  ),
-                ])
-              : CommonMobileAppbar.commonMobileAppbar(
-                  color: Colors.white,
+              ? appBarWithUserNAme(context: context)
+              : AppBar(
+                  backgroundColor: Colors.white,
                   title: Text(
                     dashBoard,
                     style: mobileAppBarStyle,
@@ -266,10 +202,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   profileImage,
                                 ),
                               ),
+                              SizedBox(
+                                width: Get.width * 0.015,
+                              ),
                               const Icon(
-                                Icons.arrow_drop_down,
+                                Icons.keyboard_arrow_down,
                                 color: Colors.black,
                               )
+                              // Image.asset(
+                              //   'assets/image/png/arrow_Down.png',
+                              //   width: 20,
+                              //   fit: BoxFit.cover,
+                              // )
                             ],
                           ),
                         ),
@@ -538,12 +482,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     ? controller.showTextWeb == false
                                                                         ? 62
                                                                         : controller.showTextWeb == true && MonthlyEditModeController.editMode == false
-                                                                            ? 35.0
+                                                                            ? Get.height * 0.042
                                                                             : 0.0
                                                                     : 0.0,
                                                               ),
                                                               child: CommonIncomeScrollableWidget.scrollableWidget(
-                                                                  height: monthlyIncomeEditMode.editMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
+                                                                  height: monthlyIncomeEditMode.editMode == true && maxWidth
+                                                                      ? Get.height * 0.041
+                                                                      : maxWidth
+                                                                          ? Get.height * 0.019
+                                                                          : Get.height * 0.018,
                                                                   editMode: monthlyIncomeEditMode.editMode,
                                                                   text: incomes,
                                                                   listViewItemCount: monthlyIncomepageControllerList.length,
@@ -688,12 +636,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     ? controller.weeklyIncomeShowTextWeb == false
                                                                         ? 62.0
                                                                         : controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false
-                                                                            ? 35.0
+                                                                            ? Get.height * 0.042
                                                                             : 0.0
                                                                     : 0.0,
                                                               ),
                                                               child: CommonIncomeScrollableWidget.scrollableWidget(
-                                                                  height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
+                                                                  height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth ? Get.height * 0.041 : maxWidth
+                                                              ? Get.height * 0.019
+                                                                  : Get.height * 0.018,
                                                                   text: incomes,
                                                                   listViewItemCount: weeklyIncomePageControllerList.length,
                                                                   constraints: constraints,
@@ -1112,8 +1062,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   ? Column()
                                                                   : Table(
                                                                       columnWidths: <int, TableColumnWidth>{
-                                                                        0: FlexColumnWidth(oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true ? 2.7 : 3.8),
-                                                                        1: FlexColumnWidth(oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true ? 2.3 : 3.3),
+                                                                        0: FlexColumnWidth(oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true ? 2.7 : 3.6),
+                                                                        1: FlexColumnWidth(oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true ? 2.3 : 3.1),
                                                                         2: FlexColumnWidth(oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true ? 1.6 : 1.1),
                                                                       },
                                                                       children: [
@@ -1155,12 +1105,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                   ? 62.0
                                                                                   : showOneTimeIncomeSaveTextController.oneTimeIncomeShowTextWeb == true &&
                                                                                           oneTimeIncomeEditModeController.oneTimeIncomeEditMode == false
-                                                                                      ? 35.0
+                                                                                      ? Get.height*0.042
                                                                                       : 0.0
                                                                               : 0.0,
                                                                         ),
                                                                         child: CommonIncomeScrollableWidget.scrollableWidget(
-                                                                            height: oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
+                                                                            height: oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true && maxWidth ? Get.height * 0.04 : maxWidth
+                                                          ? Get.height * 0.019
+                                                              : Get.height * 0.018,
                                                                             text: incomes,
                                                                             listViewItemCount: oneTimeIncomePageControllerList.length,
                                                                             constraints: constraints,
@@ -1283,8 +1235,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   ? Column()
                                                                   : Table(
                                                                       columnWidths: <int, TableColumnWidth>{
-                                                                        0: FlexColumnWidth(oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true ? 2.7 : 3.8),
-                                                                        1: FlexColumnWidth(oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true ? 2.3 : 3.3),
+                                                                        0: FlexColumnWidth(oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true ? 2.7 : 3.6),
+                                                                        1: FlexColumnWidth(oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true ? 2.3 : 3.1),
                                                                         2: FlexColumnWidth(oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true ? 1.6 : 1.1),
                                                                       },
                                                                       children: [
@@ -1326,14 +1278,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                   ? 62.0
                                                                                   : showOneTimeExpenseSaveTextController.oneTimeExpenseShowText == true &&
                                                                                           oneTimeExpenseEditModeController.oneTimeExpenseEditMode == false
-                                                                                      ? 35.0
+                                                                                      ? Get.height*0.042
                                                                                       : 0.0
                                                                               : 0.0,
                                                                         ),
                                                                         child: CommonIncomeScrollableWidget.scrollableWidget(
                                                                             text: incomes,
                                                                             height:
-                                                                                oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
+                                                                                oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true && maxWidth ? Get.height * 0.04 : maxWidth
+                                                          ? Get.height * 0.019
+                                                              : Get.height * 0.018,
                                                                             listViewItemCount: oneTimeExpensePageControllerList.length,
                                                                             constraints: constraints,
                                                                             controller: oneTimeExpensePageControllerList,
@@ -2025,9 +1979,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: Get.height * 0.019),
             width: double.infinity,
-            height: Get.height * 0.06,
+            // height: Get.height * 0.06,
             decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(7)),
             child: Row(
               children: [
@@ -2061,9 +2015,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 children: [
                   Expanded(
                       child: Container(
-                    padding: const EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: Get.height * 0.01),
                     margin: const EdgeInsets.only(left: 10, right: 7),
-                    height: Get.height * 0.07,
+                    // height: Get.height * 0.07,
                     decoration: BoxDecoration(color: containerColor, borderRadius: BorderRadius.circular(7)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -2072,6 +2026,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         Text(
                           thisWeekBalance,
                           style: foreCashWeeklyBalanceStyle,
+                        ),
+                        SizedBox(
+                          height: 5,
                         ),
                         Text(
                           incomeThisWeek,
@@ -2083,8 +2040,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   Expanded(
                       child: Container(
                     margin: const EdgeInsets.only(right: 10),
-                    height: Get.height * 0.07,
-                    padding: const EdgeInsets.only(left: 10),
+                    // height: Get.height * 0.07,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: Get.height * 0.01),
                     decoration: BoxDecoration(color: containerColor, borderRadius: BorderRadius.circular(7)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -2093,6 +2050,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         Text(
                           thisWeekExpense,
                           style: foreCashWeeklyBalanceStyle,
+                        ),
+                        SizedBox(
+                          height: 5,
                         ),
                         Text(
                           expenseThisWeek,
@@ -2233,8 +2193,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     action,
                                     style: columnNameListStyle,
                                   )
-                                // Text(editModeController.editMode && constraints.maxWidth > 1000 ? 'Effective date' : ''),
-                                // Text(editModeController.editMode && constraints.maxWidth > 1000 ? 'Action' : ''),
                               ]),
                             ],
                           )
@@ -2244,7 +2202,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       shrinkWrap: true,
                       itemCount: MonthlyIncomeModel.monthlyIncomeList.length,
                       itemBuilder: (context, index) {
-                        // if (index < MonthlyIncomeModel.monthlyIncomeList.length) {
                         return Padding(
                           padding: EdgeInsets.only(
                             bottom: Get.height * 0.015,
@@ -2311,12 +2268,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         children: [
                                           Container(
                                             padding: EdgeInsets.only(
-                                              right: editModeController.editMode == true ? 10 : 0.0,
-                                              left: editModeController.editMode == true
-                                                  ? 10
-                                                  : constraints.maxWidth < 1000
-                                                      ? 10.0
-                                                      : 0.0,
+                                              left: editModeController.editMode == true ? 10 : 0.0,
                                             ),
                                             width: editModeController.editMode == true
                                                 ? constraints.maxWidth < 1000
@@ -4470,9 +4422,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 )
                               : Table(
                                   columnWidths: <int, TableColumnWidth>{
-                                    0: FlexColumnWidth(editModeController.oneTimeIncomeEditMode == true ? 3.5 : 3.8),
-                                    1: FlexColumnWidth(editModeController.oneTimeIncomeEditMode == true ? 3 : 3.3),
-                                    2: FlexColumnWidth(editModeController.oneTimeIncomeEditMode == true ? 2 : 1.05),
+                                    0: FlexColumnWidth(editModeController.oneTimeIncomeEditMode == true ? 3.5 : 3.6),
+                                    1: FlexColumnWidth(editModeController.oneTimeIncomeEditMode == true ? 3 : 3.1),
+                                    2: FlexColumnWidth(editModeController.oneTimeIncomeEditMode == true ? 2 : 1.1),
                                   },
                                   children: [
                                     TableRow(
@@ -4491,6 +4443,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   style: blackMontserrat10W500,
                                                 )
                                               : CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   hintText: OneTimeIncomeModel.oneTimeIncomeList[index].incomeName,
                                                   hintStyle: blackMontserrat10W500,
                                                   contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
@@ -4546,6 +4499,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   maxLines: 1,
                                                 )
                                               : CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   hintText: OneTimeIncomeModel.oneTimeIncomeList[index].amount,
                                                   hintStyle: blackMontserrat10W500,
                                                   prefixStyle: blackMontserrat10W500,
@@ -4594,6 +4548,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
                                                 height: Get.height * 0.04,
                                                 child: CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   controller: _monthlyIncomeNameController,
                                                   hintText: expenseName,
                                                   hintStyle: blackMontserrat10W500,
@@ -4627,6 +4582,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 alignment: Alignment.center,
                                                 padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
                                                 child: CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   controller: _monthlyAmountController,
                                                   prefixStyle: blackMontserrat10W500,
                                                   prefixText: '\$',
@@ -4764,9 +4720,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     constraints!.maxWidth > 1000
                         ? Table(
                             columnWidths: <int, TableColumnWidth>{
-                              0: FlexColumnWidth(editModeController.oneTimeExpenseEditMode == true ? 3.5 : 3.9),
-                              1: FlexColumnWidth(editModeController.oneTimeExpenseEditMode == true ? 3 : 3.4),
-                              2: FlexColumnWidth(editModeController.oneTimeExpenseEditMode == true ? 2 : 1),
+                              0: FlexColumnWidth(editModeController.oneTimeExpenseEditMode == true ? 3.5 : 3.6),
+                              1: FlexColumnWidth(editModeController.oneTimeExpenseEditMode == true ? 3 : 3.1),
+                              2: FlexColumnWidth(editModeController.oneTimeExpenseEditMode == true ? 2 : 1.1),
                             },
                             children: [
                               TableRow(children: [
@@ -4834,6 +4790,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   style: blackMontserrat10W500,
                                                 )
                                               : CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   hintText: OneTimeExpenseModel.oneTimeExpenseList[index].incomeName,
                                                   hintStyle: blackMontserrat10W500,
                                                   contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
@@ -4888,6 +4845,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   maxLines: 1,
                                                 )
                                               : CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   hintText: OneTimeExpenseModel.oneTimeExpenseList[index].amount,
                                                   hintStyle: blackMontserrat10W500,
                                                   prefixStyle: blackMontserrat10W500,
@@ -4898,67 +4856,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                           decoration:
                                               BoxDecoration(color: editModeController.oneTimeExpenseEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
                                         )
-                                        // Visibility(
-                                        //     visible: constraints.maxWidth < 1000 ? visibilityValue as bool : true,
-                                        //     child: Container(
-                                        //       padding: const EdgeInsets.only(left: 6),
-                                        //       width: editModeController.oneTimeExpenseEditMode == true
-                                        //           ? constraints.maxWidth < 1000
-                                        //               ? Get.width * 0.18
-                                        //               : Get.width * 0.06
-                                        //           : null,
-                                        //       height: editModeController.oneTimeExpenseEditMode == true ? Get.height * 0.04 : null,
-                                        //       alignment: Alignment.center,
-                                        //       child: editModeController.oneTimeExpenseEditMode == true
-                                        //           ? InkWell(
-                                        //               child: Text(
-                                        //                 '${DateFormat('dd/MM/yyyy').format(currentDate)}',
-                                        //                 style: blackMontserrat10W500,
-                                        //               ),
-                                        //               onTap: () {
-                                        //                 _selectDate(context: context);
-                                        //               },
-                                        //             )
-                                        //           : Text(
-                                        //               '${DateFormat('dd/MM/yyyy').format(currentDate)}',
-                                        //               style: blackMontserrat10W500,
-                                        //             ),
-                                        //       margin: EdgeInsets.only(right: editModeController.oneTimeExpenseEditMode == true ? Get.width * 0.02 : Get.width * 0.045),
-                                        //       decoration: BoxDecoration(color: editModeController.oneTimeExpenseEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                        //     )),
-                                        // Visibility(
-                                        //   visible: constraints.maxWidth < 1000 ? visibilityValue as bool : true,
-                                        //   child: Padding(
-                                        //     padding: EdgeInsets.only(right: editModeController.oneTimeExpenseEditMode == true ? 0.0 : 30.0),
-                                        //     child: Container(
-                                        //       padding: EdgeInsets.only(left: editModeController.oneTimeExpenseEditMode == false && constraints.maxWidth > 1000 ? 7 : 0),
-                                        //       width: editModeController.oneTimeExpenseEditMode == true
-                                        //           ? constraints.maxWidth < 1000
-                                        //               ? Get.width * 0.15
-                                        //               : Get.width * 0.06
-                                        //           : constraints.maxWidth < 1000
-                                        //               ? Get.width * 0.06
-                                        //               : Get.width * 0.025,
-                                        //       height: editModeController.oneTimeExpenseEditMode == true ? Get.height * 0.04 : null,
-                                        //       alignment: Alignment.centerLeft,
-                                        //       child: editModeController.oneTimeExpenseEditMode == false
-                                        //           ? Text(
-                                        //               '${OneTimeExpenseModel.oneTimeExpenseList[index].amount}',
-                                        //               style: blackMontserrat10W500,
-                                        //               maxLines: 1,
-                                        //             )
-                                        //           : CommonDataTextField.commonTextField(
-                                        //               hintText: OneTimeExpenseModel.oneTimeExpenseList[index].amount,
-                                        //               hintStyle: blackMontserrat10W500,
-                                        //               prefixStyle: blackMontserrat10W500,
-                                        //               contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
-                                        //               textStyle: blackMontserrat10W500,
-                                        //               prefixText: '\$',
-                                        //             ),
-                                        //       decoration: BoxDecoration(color: editModeController.oneTimeExpenseEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                        //     ),
-                                        //   ),
-                                        // )
                                       ],
                                     ),
                                   ],
@@ -4993,6 +4890,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
                                                 height: Get.height * 0.04,
                                                 child: CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   controller: _monthlyIncomeNameController,
                                                   hintText: expenseName,
                                                   hintStyle: blackMontserrat10W500,
@@ -5026,6 +4924,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 alignment: Alignment.center,
                                                 padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
                                                 child: CommonDataTextField.commonTextField(
+                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   controller: _monthlyAmountController,
                                                   prefixStyle: blackMontserrat10W500,
                                                   prefixText: '\$',

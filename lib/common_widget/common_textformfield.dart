@@ -1,0 +1,127 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fore_cash/utility/colors.dart';
+import 'package:fore_cash/utility/const.dart';
+import 'package:get/get.dart';
+
+OutlineInputBorder textFieldBorderStyle = OutlineInputBorder(
+  borderSide: const BorderSide(color: commonTextFieldColor),
+  borderRadius: BorderRadius.circular(4.0),
+);
+
+commonTextFormField(
+    {String? fieldTitleText,
+    TextStyle? textStyle,
+    TextStyle? prefixstyle,
+    String? prefixText,
+    String? hintText,
+    bool isPassword = false,
+    TextEditingController? textEditingController,
+    Function? validationFunction,
+    Function? onSavedFunction,
+    Function? onFieldSubmit,
+    TextInputType? keyboardType,
+    Function? onEditingComplete,
+    Function? onTapFunction,
+    Function? onChangedFunction,
+    TextAlign align = TextAlign.start,
+    TextInputAction? inputAction,
+    List<TextInputFormatter>? inputFormatter,
+    bool? isEnabled,
+    int? errorMaxLines,
+    int? maxLine,
+    FocusNode? textFocusNode,
+    GlobalKey<FormFieldState>? key,
+    bool isReadOnly = false,
+    Widget? suffixIcon,
+    Widget? preFixIcon,
+    Color? filledColor = commonTextFieldColor,
+    RxBool? showPassword,
+    EdgeInsets? contentPadding,
+    ScrollController? scrollController,
+    TextStyle? hintStyle}) {
+  bool passwordVisible = isPassword;
+  return StatefulBuilder(builder: (context, newSetState) {
+    return TextFormField(
+      scrollController: scrollController,
+      // for scroll extra while keyboard open
+      // scrollPadding: EdgeInsets.fromLTRB(20, 20, 20, 120),
+      enabled: isEnabled != null && !isEnabled ? false : true,
+      textAlign: align,
+      showCursor: !isReadOnly,
+      onTap: () {
+        if (onTapFunction != null) {
+          onTapFunction();
+        }
+      },
+      key: key,
+      focusNode: textFocusNode,
+      onChanged: (value) {
+        if (onChangedFunction != null) {
+          onChangedFunction(value);
+        }
+      },
+      onEditingComplete: () {
+        if (onEditingComplete != null) {
+          onEditingComplete();
+        }
+      },
+      validator: (value) {
+        return validationFunction != null ? validationFunction(value) : null;
+      },
+      // onSaved: onSavedFunction != null ? onSavedFunction : (value) {},
+      onSaved: (value) {
+        // ignore: void_checks
+        return onSavedFunction != null ? onSavedFunction(value) : null;
+      },
+      onFieldSubmitted: (value) {
+        // ignore: void_checks
+        return onFieldSubmit != null ? onFieldSubmit(value) : null;
+      },
+      maxLines: maxLine ?? 1,
+      keyboardType: keyboardType,
+      controller: textEditingController,
+      // initialValue: initialText,
+      cursorColor: colorPrimary,
+      obscureText: passwordVisible,
+      textInputAction: inputAction,
+      style: textStyle ?? blackMontserrat10W500,
+      inputFormatters: inputFormatter,
+      decoration: InputDecoration(
+        hoverColor: Colors.transparent,
+        prefixStyle: prefixstyle ?? incomeNameStyle,
+        prefixText: prefixText ?? null,
+        errorMaxLines: errorMaxLines ?? 1,
+        filled: true,
+        fillColor: filledColor,
+        contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
+        focusedBorder: textFieldBorderStyle,
+        disabledBorder: textFieldBorderStyle,
+        enabledBorder: textFieldBorderStyle,
+        errorBorder: textFieldBorderStyle,
+        focusedErrorBorder: textFieldBorderStyle,
+        hintText: hintText ?? '',
+        prefixIcon: preFixIcon != null ? preFixIcon : null,
+        suffixIcon: isPassword
+            ? InkWell(
+                onTap: () {
+                  newSetState(() {
+                    passwordVisible = !passwordVisible;
+                  });
+                },
+                child: passwordVisible
+                    ? const Icon(
+                        Icons.visibility_off,
+                        color: colorPrimary,
+                      )
+                    : const Icon(
+                        Icons.visibility,
+                        color: colorPrimary,
+                      ))
+            : suffixIcon ?? null,
+        hintStyle: hintStyle ?? blackMontserrat10W500,
+      ),
+    );
+  });
+}

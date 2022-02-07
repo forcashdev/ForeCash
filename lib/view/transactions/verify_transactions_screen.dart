@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
 import 'package:fore_cash/getx/verifytransactions_controller.dart';
 import 'package:fore_cash/model/verify_transaction_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
+import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
@@ -37,13 +37,6 @@ class _VerifyTransactionsScreenState extends State<VerifyTransactionsScreen> {
     return LayoutBuilder(builder: (context, constraints) {
       final maxWidth = constraints.maxWidth > 1000;
       return Scaffold(
-        appBar: CommonMobileAppbar.commonMobileAppbar(
-          color: Colors.white,
-          title: Text(
-            'DashBoard',
-            style: mobileAppBarStyle,
-          ),
-        ),
         backgroundColor: backGroundColor,
         body: Center(
           child: Container(
@@ -57,6 +50,12 @@ class _VerifyTransactionsScreenState extends State<VerifyTransactionsScreen> {
                 const SizedBox(
                   height: 15.0,
                 ),
+                maxWidth
+                    ? Container()
+                    : Image.asset(
+                        foreCashLogo2,
+                        scale: 3,
+                      ),
                 getTitleText(),
                 const SizedBox(
                   height: 40.0,

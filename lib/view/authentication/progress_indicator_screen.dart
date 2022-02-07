@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/app_theme/app_theme.dart';
-import 'package:fore_cash/common_widget/common_web_appbar.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
+import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/connect_bank_account_screen.dart';
 import 'package:fore_cash/view/authentication/monthly_expenses_screen.dart';
@@ -27,7 +27,18 @@ class ScreenProgressIndicator extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Scaffold(
-            appBar: constraints.maxWidth > 1000 ? CommonWebAppbar.commonWebAppbar(scale: Get.mediaQuery.size.aspectRatio * 150) : null,
+            appBar: constraints.maxWidth > 1000
+                ? AppBar(
+                    elevation: 5,
+                    backgroundColor: Colors.white,
+                    leadingWidth: 180,
+                    leading: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Image.asset(
+                          foreCashLogo2,
+                        )),
+                  )
+                : null,
             backgroundColor: constraints.maxWidth < 1000 ? null : backGroundColor,
             body: Column(
               children: [

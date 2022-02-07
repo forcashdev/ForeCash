@@ -38,7 +38,7 @@ TextStyle loginStyle = TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, c
 TextStyle textSpanStyle1 = TextStyle(
   fontWeight: FontWeight.w200,
   fontSize: 12.sp,
-  height: 1.5,
+  height: 1.7,
   color: Color(0xFF777C90),
   fontFamily: AppTheme.fontName,
 );
@@ -56,6 +56,7 @@ TextStyle columnNameListStyle = TextStyle(
   color: commonGreyColor,
 );
 TextStyle incomeNameStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle dateStyle = TextStyle(fontSize: 10.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle emailStyle = TextStyle(
   fontSize: 12.sp,
   fontWeight: FontWeight.w300,

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
+import 'package:fore_cash/common_widget/common_input_formatter.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
@@ -346,52 +348,88 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               children: [
                 TableRow(
                   children: [
-                    SizedBox(),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10),
-                      width: constraints!.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
-                      height: Get.height * 0.044,
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                      child: TextField(
-                        controller: _monthlyExpenseName,
-                        style: textFieldStyle,
-                        decoration: InputDecoration(hintStyle: expenseNameStyle2, hintText: expenseName, contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                    SizedBox(height: constraints!.maxWidth > 1000 ? Get.height * 0.04 : Get.height * 0.044),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                        child: Container(
+                          // padding: const EdgeInsets.only(left: 10),
+                          // width: constraints!.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
+                          // height: Get.height * 0.044,
+                          // alignment: Alignment.centerLeft,
+                          // margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                          // child: TextField(
+                          //   controller: _monthlyExpenseName,
+                          //   style: textFieldStyle,
+                          //   decoration: InputDecoration(hintStyle: expenseNameStyle2, hintText: expenseName, contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                          // ),
+                          child: commonTextFormField(
+                              hintText: addExpense,
+                              hintStyle: incomeNameStyle,
+                              inputAction: TextInputAction.done,
+                              inputFormatter: [characterInputFormatter()],
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              textStyle: incomeNameStyle,
+                              textEditingController: _monthlyExpenseName),
+                          // decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                        ),
                       ),
-                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 6,
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                        ),
+                        // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                        // height: Get.height * 0.044,
+                        // alignment: Alignment.center,
+                        child: dropDownDayGetBuilder(dropDownList: dateList),
+                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                       ),
-                      width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                      height: Get.height * 0.044,
-                      alignment: Alignment.center,
-                      child: dropDownDayGetBuilder(dropDownList: dateList),
-                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 6),
-                      width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                      height: Get.height * 0.044,
-                      alignment: Alignment.center,
-                      child: dropDownWeekGetBuilder(dropDownList: months),
-                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                    ),
-                    Container(
-                      // width: sequenceSize.width * 0.14,
-                      height: Get.height * 0.044,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.only(left: 6),
-                      child: TextField(
-                        controller: _monthlyAmount,
-                        style: textFieldStyle,
-                        decoration: const InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                        // height: Get.height * 0.044,
+                        // alignment: Alignment.center,
+                        child: dropDownWeekGetBuilder(dropDownList: months),
+                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                       ),
-                      margin: EdgeInsets.only(right: Get.width * 0.04),
-                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                    ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: Get.width * 0.04),
+                        child: Container(
+                          // width: sequenceSize.width * 0.14,
+                          // height: Get.height * 0.044,
+                          // alignment: Alignment.center,
+                          // padding: EdgeInsets.only(left: 6),
+                          // child: TextField(
+                          //   controller: _monthlyAmount,
+                          //   style: textFieldStyle,
+                          //   decoration: const InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                          // ),
+                          child: commonTextFormField(
+                              prefixText: '\$',
+                              prefixstyle: incomeNameStyle,
+                              inputAction: TextInputAction.done,
+                              inputFormatter: [digitInputFormatter()],
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                              textStyle: incomeNameStyle,
+                              textEditingController: _monthlyAmount),
+                          // margin: EdgeInsets.only(right: Get.width * 0.04),
+                          decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                        ),
+                      ),
                     ),
                   ],
                 ),
