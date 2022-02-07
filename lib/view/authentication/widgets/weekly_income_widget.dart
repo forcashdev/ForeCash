@@ -62,7 +62,7 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                   width: constraints.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
                   height: Get.height * 0.044,
                   alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                   child: Text(
                     '${WeeklyIncomeModel.weeklyIncomeList[index].expenseName}',
                     maxLines: 1,

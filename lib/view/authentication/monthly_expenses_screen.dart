@@ -33,95 +33,85 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth > 1000;
-          return Scaffold(
-            body: Align(
-              alignment: maxWidth ? Alignment.center : Alignment.topCenter,
-              child: SingleChildScrollView(
-                physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
-                  decoration: BoxDecoration(color: maxWidth ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
-                  width: maxWidth ? Get.width / 1.4 : null,
-                  height: maxWidth ? Get.height * 0.81 : null,
-                  child: Column(
-                    children: [
-                      _headerWidget(constraints: constraints),
-                      Expanded(
-                        flex: maxWidth ? 2 : 0,
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                          ),
-                          // width: maxWidth ? Get.width / 1.5 : null,
-                          // height: maxWidth ? 300 : null,
+      child: WillPopScope(
+        onWillPop: () async {
+          screenIndexController.updateIndex(index: 3);
+          return false;
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = constraints.maxWidth > 1000;
+            return Scaffold(
+              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+              body: Align(
+                alignment: maxWidth ? Alignment.center : Alignment.topCenter,
+                child: SingleChildScrollView(
+                  physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
+                    decoration: BoxDecoration(color: maxWidth ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
+                    width: maxWidth ? Get.width / 1.4 : null,
+                    height: maxWidth ? Get.height * 0.78 : null,
+                    child: Column(
+                      children: [
+                        _headerWidget(constraints: constraints),
+                        Expanded(
+                          flex: maxWidth ? 2 : 0,
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            // width: maxWidth ? Get.width / 1.5 : null,
+                            // height: maxWidth ? 300 : null,
 
-                          decoration: BoxDecoration(
-                              // color: Colors.red,
-                              border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _nameTableRowWidget(),
-                              SizedBox(
-                                height: Get.height * 0.01,
-                              ),
-                              maxWidth
-                                  ? Divider(
-                                      color: commonGreyColor.withOpacity(0.5),
-                                    )
-                                  : Container(),
-                              SizedBox(
-                                height: Get.height * 0.020,
-                              ),
-                              Expanded(
-                                  flex: maxWidth ? 2 : 0,
-                                  child: SingleChildScrollView(
-                                    physics: maxWidth ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
-                                    child: Column(
-                                      children: [
-                                        MonthlyExpensesWidget(
-                                          constraints: constraints,
-                                        ),
-                                        _addNewMonthlyExpenseWidget(constraints: constraints),
-                                        _addMonthlyExpenseButton(),
-                                      ],
-                                    ),
-                                  )),
-                            ],
+                            decoration: BoxDecoration(
+                                // color: Colors.red,
+                                border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _nameTableRowWidget(),
+                                SizedBox(
+                                  height: Get.height * 0.01,
+                                ),
+                                maxWidth
+                                    ? Divider(
+                                        color: commonGreyColor.withOpacity(0.5),
+                                      )
+                                    : Container(),
+                                // SizedBox(
+                                //   height: Get.height * 0.020,
+                                // ),
+                                Expanded(
+                                    flex: maxWidth ? 2 : 0,
+                                    child: SingleChildScrollView(
+                                      physics: maxWidth ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
+                                      child: Column(
+                                        children: [
+                                          MonthlyExpensesWidget(
+                                            constraints: constraints,
+                                          ),
+                                          _addNewMonthlyExpenseWidget(constraints: constraints),
+                                          _addMonthlyExpenseButton(constraints: constraints),
+                                        ],
+                                      ),
+                                    )),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: Get.height * 0.03, left: maxWidth ? Get.width * 0.15 : Get.width * 0.04, right: maxWidth ? Get.width * 0.15 : Get.width * 0.04, top: Get.width * 0.035),
-                        child: CommonMaterialButton.commonButton(
-                          height: 50,
-                          text: next,
-                          onPress: () {
-                            screenIndex = 5;
-                            print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-                            screenIndexController.updateIndex(index: 5);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => SetupWeeklyBudgetScreen(),
-                            //     ));
-
-                            // Get.to(SetupWeeklyBudgetScreen());
-                          },
-                        ),
-                      )
-                    ],
+                        Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+              bottomNavigationBar: Visibility(
+                visible: maxWidth ? false : true,
+                child: _nextButtonWidget(constraints: constraints),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -273,7 +263,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                 ? SizedBox()
                 : IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      screenIndexController.updateIndex(index: 3);
                     },
                     icon: Icon(
                       Icons.chevron_left,
@@ -284,7 +274,9 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                     foreCashLogo2,
                     scale: 3,
                   ),
-            Container()
+            SizedBox(
+              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+            )
           ],
         ),
         SizedBox(
@@ -299,7 +291,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                 alignment: Alignment.centerLeft,
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      screenIndexController.updateIndex(index: 3);
                     },
                     child: Text(
                       backButton,
@@ -360,9 +352,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                       width: constraints!.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
                       height: Get.height * 0.044,
                       alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(
-                        right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02,
-                      ),
+                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                       child: TextField(
                         controller: _monthlyExpenseName,
                         style: textFieldStyle,
@@ -413,9 +403,9 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
     );
   }
 
-  _addMonthlyExpenseButton() {
+  _addMonthlyExpenseButton({BoxConstraints? constraints}) {
     return Padding(
-      padding: EdgeInsets.only(bottom: Get.height * 0.01),
+      padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
       child: GestureDetector(
         onTap: () {
           setState(() {
@@ -433,6 +423,32 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
             style: addWeekIncomeStyle,
           ),
         ),
+      ),
+    );
+  }
+
+  _nextButtonWidget({BoxConstraints? constraints}) {
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
+          left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          top: Get.width * 0.015),
+      child: CommonMaterialButton.commonButton(
+        height: 50,
+        text: next,
+        onPress: () {
+          screenIndex = 5;
+          print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+          screenIndexController.updateIndex(index: 5);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => SetupWeeklyBudgetScreen(),
+          //     ));
+
+          // Get.to(SetupWeeklyBudgetScreen());
+        },
       ),
     );
   }

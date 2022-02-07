@@ -52,7 +52,7 @@ class AllCaughtUpScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Align(
                 alignment: Alignment.center,
                 child: Lottie.asset(
@@ -62,7 +62,7 @@ class AllCaughtUpScreen extends StatelessWidget {
                   // fit: BoxFit.cover,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: EdgeInsets.only(bottom: Get.height * 0.08),
                 child: Text(

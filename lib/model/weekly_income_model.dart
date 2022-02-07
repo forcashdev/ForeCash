@@ -14,35 +14,31 @@ class WeeklyIncomeModel {
     ),
     // WeeklyIncomeModel(
     //   expenseName: 'Apple inc.',
-    //   amount: 500,
+    //   amount: '500',
     // ),
-    // MonthlyIncomeModel(
+    // WeeklyIncomeModel(
     //   expenseName: 'Apple inc.',
-    //   amount: 500,
+    //   amount: '500',
     // ),
-    // MonthlyIncomeModel(
+    // WeeklyIncomeModel(
     //   expenseName: 'Apple inc.',
-    //   amount: 500,
+    //   amount: '500',
     // ),
-    // MonthlyIncomeModel(
+    // WeeklyIncomeModel(
     //   expenseName: 'Apple inc.',
-    //   amount: 500,
+    //   amount: '500',
     // ),
-    // MonthlyIncomeModel(
+    // WeeklyIncomeModel(
     //   expenseName: 'Apple inc.',
-    //   amount: 500,
+    //   amount: '500',
     // ),
-    // MonthlyIncomeModel(
+    // WeeklyIncomeModel(
     //   expenseName: 'Apple inc.',
-    //   amount: 500,
+    //   amount: '500',
     // ),
-    // MonthlyIncomeModel(
+    // WeeklyIncomeModel(
     //   expenseName: 'Apple inc.',
-    //   amount: 500,
-    // ),
-    // MonthlyIncomeModel(
-    //   expenseName: 'Apple inc.',
-    //   amount: 500,
+    //   amount: '500',
     // ),
   ];
 }

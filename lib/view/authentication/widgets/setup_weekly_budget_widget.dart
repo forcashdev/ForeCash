@@ -53,12 +53,12 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                         ),
                       ),
                 Container(
-                  padding: const EdgeInsets.only(left: 3),
+                  padding: const EdgeInsets.only(left: 10),
                   width: constraints.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
                   height: Get.height * 0.044,
                   alignment: Alignment.centerLeft,
-                  color: Colors.transparent,
-                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                   child: Text(
                     '${WeeklyBudgetModel.weeklyBudgetModel[index].expenseName}',
                     maxLines: 1,
@@ -73,6 +73,7 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                   width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
                   height: Get.height * 0.044,
                   alignment: Alignment.center,
+                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                   child: GetBuilder<SelectedDropDownItem>(
                     builder: (controller1) {
                       // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
@@ -113,7 +114,6 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                       // );
                     },
                   ),
-                  color: Colors.transparent,
                   margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
                 ),
                 Container(
@@ -162,11 +162,11 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                     },
                   ),
                   margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                  color: Colors.transparent,
+                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                 ),
                 Container(
                   // width: sequenceSize.width * 0.14,
-                  height: Get.height * 0.044,
+                  height: Get.height * 0.044, padding: EdgeInsets.only(left: 10),
                   alignment: Alignment.centerLeft,
                   child: Text(
                     '\$${WeeklyBudgetModel.weeklyBudgetModel[index].amount}',
@@ -182,7 +182,7 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                   //       contentPadding: EdgeInsets.only(bottom: 7),
                   //       border: InputBorder.none),
                   // ),
-                  margin: EdgeInsets.only(right: Get.width * 0.04), color: Colors.transparent,
+                  margin: EdgeInsets.only(right: Get.width * 0.04), decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                 ),
               ],
             ),

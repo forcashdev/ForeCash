@@ -24,7 +24,7 @@ class SetupWeeklyBudgetScreen extends StatefulWidget {
 }
 
 class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
-  TextEditingController _incomeName = TextEditingController();
+  TextEditingController _expenseName = TextEditingController();
   TextEditingController _amount = TextEditingController();
   final visibilityController = Get.put(VisibilityController());
   final controller = Get.put(SelectedDropDownItem());
@@ -33,94 +33,83 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth > 1000;
-          return Scaffold(
-            body: Align(
-              alignment: maxWidth ? Alignment.center : Alignment.topCenter,
-              child: SingleChildScrollView(
-                physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
-                  width: maxWidth ? Get.width / 1.4 : null,
-                  height: maxWidth ? 700 : null,
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
-                  child: Column(
-                    children: [
-                      _headerColumnWidget(constraints: constraints),
-                      SizedBox(
-                        height: Get.height * 0.03,
-                      ),
-                      Expanded(
-                        flex: maxWidth ? 2 : 0,
-                        child: Container(
-                          padding: const EdgeInsets.only(top: 10),
-                          // width: maxWidth ? sequenceSize.width / 1.5 : null,
-                          // height: maxWidth ? 300 : null,
-                          decoration: BoxDecoration(
-                              // color: Colors.red,
-                              border: maxWidth ? Border.all(color: commonGreyColor) : null,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _nameTableRowWidget(),
-                              SizedBox(
-                                height: Get.height * 0.01,
-                              ),
-                              maxWidth
-                                  ? const Divider(
-                                      color: commonGreyColor,
-                                    )
-                                  : Container(),
-                              SizedBox(
-                                height: Get.height * 0.020,
-                              ),
-                              Expanded(
-                                flex: maxWidth ? 2 : 0,
-                                child: SingleChildScrollView(
-                                  physics: maxWidth ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
-                                  child: Column(
-                                    children: [
-                                      setUpWeeklyBudgetWidget(constraints: constraints),
-                                      _addNewWeeklyBudgetWidget(constraints: constraints),
-                                      _addBudgetButton(),
-                                    ],
+      child: WillPopScope(
+        onWillPop: () async {
+          screenIndexController.updateIndex(index: 4);
+          return false;
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = constraints.maxWidth > 1000;
+            return Scaffold(
+              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+              body: Align(
+                alignment: maxWidth ? Alignment.center : Alignment.topCenter,
+                child: SingleChildScrollView(
+                  physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
+                    width: maxWidth ? Get.width / 1.4 : null,
+                    height: maxWidth ? Get.height * 0.78 : null,
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
+                    child: Column(
+                      children: [
+                        _headerColumnWidget(constraints: constraints),
+                        SizedBox(
+                          height: Get.height * 0.03,
+                        ),
+                        Expanded(
+                          flex: maxWidth ? 2 : 0,
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            // width: maxWidth ? sequenceSize.width / 1.5 : null,
+                            // height: maxWidth ? 300 : null,
+                            decoration: BoxDecoration(
+                                // color: Colors.red,
+                                border: maxWidth ? Border.all(color: commonGreyColor) : null,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _nameTableRowWidget(constraints: constraints),
+                                SizedBox(
+                                  height: Get.height * 0.01,
+                                ),
+                                maxWidth
+                                    ? const Divider(
+                                        color: commonGreyColor,
+                                      )
+                                    : Container(),
+                                Expanded(
+                                  flex: maxWidth ? 2 : 0,
+                                  child: SingleChildScrollView(
+                                    physics: maxWidth ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
+                                    child: Column(
+                                      children: [
+                                        setUpWeeklyBudgetWidget(constraints: constraints),
+                                        _addNewWeeklyBudgetWidget(constraints: constraints),
+                                        _addBudgetButton(constraints: constraints),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: Get.height * 0.03, left: maxWidth ? Get.width * 0.15 : Get.width * 0.04, right: maxWidth ? Get.width * 0.15 : Get.width * 0.04, top: Get.width * 0.015),
-                        child: CommonMaterialButton.commonButton(
-                          height: 50,
-                          text: next,
-                          onPress: () {
-                            screenIndex = 6;
-                            print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-                            screenIndexController.updateIndex(index: 6);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => SetupCalendarScreen(),
-                            //     ));
-
-                            // Get.to(SetupCalendarScreen());
-                          },
-                        ),
-                      )
-                    ],
+                        Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+              bottomNavigationBar: Visibility(
+                visible: maxWidth ? false : true,
+                child: _nextButtonWidget(constraints: constraints),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -140,35 +129,6 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
               controller.changeWeeklyBudgetSingleDay(item: item);
               print(item);
             });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       day,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.weeklyBudgetDay,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeWeeklyBudgetSingleDay(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
       },
     );
   }
@@ -189,35 +149,6 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
               controller.changeWeeklyBudgetSingleWeek(item: item);
               print(item);
             });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       every,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.weeklyBudgetWeek,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeWeeklyBudgetSingleWeek(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
       },
     );
   }
@@ -236,7 +167,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                 ? const SizedBox()
                 : IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      screenIndexController.updateIndex(index: 4);
                     },
                     icon: const Icon(
                       Icons.chevron_left,
@@ -247,7 +178,9 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                     foreCashLogo2,
                     scale: 3,
                   ),
-            Container()
+            SizedBox(
+              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+            )
           ],
         ),
         SizedBox(
@@ -262,7 +195,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                 alignment: Alignment.centerLeft,
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      screenIndexController.updateIndex(index: 4);
                     },
                     child: Text(
                       backButton,
@@ -294,7 +227,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
     );
   }
 
-  _nameTableRowWidget() {
+  _nameTableRowWidget({BoxConstraints? constraints}) {
     return Table(
       columnWidths: const <int, TableColumnWidth>{
         0: FlexColumnWidth(0.35),
@@ -306,9 +239,12 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
       children: [
         TableRow(children: [
           SizedBox(),
-          Text(
-            expenseName,
-            style: columnNameListStyle,
+          Padding(
+            padding: EdgeInsets.only(left: constraints!.maxWidth > 1000 ? 5 : 0.0),
+            child: Text(
+              expenseName,
+              style: columnNameListStyle,
+            ),
           ),
           Text(
             resetOn,
@@ -351,15 +287,13 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                     width: constraints!.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
                     height: Get.height * 0.044,
                     alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(
-                      right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02,
-                    ),
+                    margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                     child: TextField(
-                      controller: _incomeName,
+                      controller: _expenseName,
                       style: textFieldStyle,
                       decoration: InputDecoration(hintText: budget, hintStyle: expenseNameStyle2, contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
                     ),
-                    decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                   ),
                   Container(
                     padding: const EdgeInsets.only(
@@ -370,7 +304,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                     alignment: Alignment.center,
                     child: dropDownDayGetBuilder(dropDownList: days),
                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                    decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                   ),
                   Container(
                     padding: const EdgeInsets.only(left: 6),
@@ -379,7 +313,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                     alignment: Alignment.center,
                     child: dropDownWeekGetBuilder(dropDownList: weeks),
                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                    decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                   ),
                   Container(
                     // width: sequenceSize.width * 0.14,
@@ -389,10 +323,10 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                     child: TextField(
                       controller: _amount,
                       style: textFieldStyle,
-                      decoration: const InputDecoration(prefixStyle: prefixTextStyle, prefixText: '\$', contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
+                      decoration: InputDecoration(hintText: '\$', hintStyle: expenseNameStyle2, contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
                     ),
                     margin: EdgeInsets.only(right: Get.width * 0.04),
-                    decoration: BoxDecoration(color: const Color(0xffEDF2F6), borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                   ),
                 ],
               ),
@@ -403,19 +337,22 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
     );
   }
 
-  _addBudgetButton() {
+  _addBudgetButton({BoxConstraints? constraints}) {
     return Padding(
-      padding: EdgeInsets.only(bottom: Get.height * 0.01),
+      padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
       child: GestureDetector(
         onTap: () {
-          if (_incomeName.text.isNotEmpty && _amount.text.isNotEmpty) {
+          if (_expenseName.text.isNotEmpty && _amount.text.isNotEmpty) {
             setState(() {
-              WeeklyBudgetModel.weeklyBudgetModel.add(WeeklyBudgetModel(expenseName: _incomeName.text, amount: _amount.text));
+              WeeklyBudgetModel.weeklyBudgetModel.add(WeeklyBudgetModel(expenseName: _expenseName.text, amount: _amount.text));
               controller.weeklyBudgetDayDropDownList.add(controller.weeklyBudgetDay as Object);
               controller.weeklyBudgetWeekDropDownList.add(controller.weeklyBudgetWeek as Object);
               checkBoxController.weeklyBudgetCheckBoxValueList.add(false);
             });
           }
+          _expenseName.clear();
+          _amount.clear();
+
           visibilityController.changeVisibility();
         },
         child: Align(
@@ -425,6 +362,32 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
             style: addWeekIncomeStyle,
           ),
         ),
+      ),
+    );
+  }
+
+  _nextButtonWidget({BoxConstraints? constraints}) {
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
+          left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          top: Get.width * 0.015),
+      child: CommonMaterialButton.commonButton(
+        height: 50,
+        text: next,
+        onPress: () {
+          screenIndex = 6;
+          print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+          screenIndexController.updateIndex(index: 6);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => SetupCalendarScreen(),
+          //     ));
+
+          // Get.to(SetupCalendarScreen());
+        },
       ),
     );
   }

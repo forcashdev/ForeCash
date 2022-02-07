@@ -163,7 +163,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            CommonTextField.commonTextField(
+                            commonTextField(
                               contentPadding: EdgeInsets.only(left: 13),
                               hint: password,
                               // controller: _newPassword,
@@ -196,7 +196,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            CommonTextField.commonTextField(
+                            commonTextField(
                               contentPadding: const EdgeInsets.only(left: 13),
                               hint: password,
                               // controller: _newPasswordConfirm,

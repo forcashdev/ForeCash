@@ -188,7 +188,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        CommonTextField.commonTextField(hint: userName, contentPadding: const EdgeInsets.only(left: 13)),
+                        commonTextField(hint: userName, contentPadding: const EdgeInsets.only(left: 13)),
                         SizedBox(
                           height: Get.height * 0.02,
                         ),
@@ -196,7 +196,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        CommonTextField.commonTextField(
+                        commonTextField(
                           contentPadding: const EdgeInsets.only(left: 13),
                           hint: emailAddress,
                           controller: _email,
@@ -227,7 +227,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        CommonTextField.commonTextField(
+                        commonTextField(
                           contentPadding: const EdgeInsets.only(left: 13),
                           hint: password,
                           controller: _password,
@@ -261,7 +261,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        CommonTextField.commonTextField(
+                        commonTextField(
                           contentPadding: const EdgeInsets.only(left: 13),
                           hint: password,
                           controller: _newPassword,
@@ -294,7 +294,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        CommonTextField.commonTextField(
+                        commonTextField(
                           contentPadding: const EdgeInsets.only(left: 13),
                           hint: password,
                           controller: _newPasswordConfirm,

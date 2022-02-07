@@ -23,7 +23,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
                 width: constraints.maxWidth > 1000 ? 700 : null,
-                height: constraints.maxWidth > 1000 ? 700 : null,
+                height: constraints.maxWidth > 1000 ? 650 : null,
                 child: Padding(
                   padding: EdgeInsets.only(left: Get.width * 0.04, right: Get.width * 0.04, bottom: constraints.maxWidth < 1000 ? Get.width * 0.0 : 0.1),
                   child: Column(

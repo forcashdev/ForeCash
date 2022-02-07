@@ -39,14 +39,14 @@ class SelectedDropDownItem extends GetxController {
     // selectedDate = item as String?;
     selectedMonthlyIncomeDateList[index!] = item!;
     update();
-    print(selectedDate);
+    print(selectedMonthlyIncomeDateList);
   }
 
   void changeDay({Object? item, int? index}) {
     // selectedDay = item as String?;
     selectDayDropDown[index!] = item!;
     update();
-    print(selectedDay);
+    print(selectDayDropDown);
   }
 
   void changeWeek({Object? item, int? index}) {

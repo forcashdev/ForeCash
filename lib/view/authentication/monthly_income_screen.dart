@@ -23,144 +23,131 @@ class MonthlyIncomeScreen extends StatelessWidget {
     final checkBoxController = Get.put(CheckBoxController());
     final screenIndexController = Get.put(ScreenIndexController());
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth > 1000;
-          return Scaffold(
-            backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
-            body: Align(
-              alignment: maxWidth ? Alignment.center : Alignment.topCenter,
-              child: SingleChildScrollView(
-                physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
-                  width: maxWidth ? Get.width / 1.4 : null,
-                  height: maxWidth ? Get.height * 0.81 : null,
-                  child: Column(
-                    // direction: Axis.vertical,
-                    // mainAxisSize: constraints.maxWidth > 1000 ? MainAxisSize.min : MainAxisSize.min,
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        height: Get.height * 0.02,
-                      ),
-                      Align(
-                        alignment: const FractionalOffset(0.5, 0.0),
-                        child: maxWidth
-                            ? null
-                            : Image.asset(
-                                foreCashLogo2,
-                                scale: 3,
-                              ),
-                      ),
-                      SizedBox(
-                        height: maxWidth ? Get.height * 0.03 : 0.0,
-                      ),
-                      maxWidth ? const SizedBox() : commonDivider(),
-                      SizedBox(
-                        height: Get.height * 0.04,
-                      ),
-                      Text(
-                        selectMonthlyIncomes,
-                        style: headTitleTheme,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.1),
-                        child: RichText(
+      child: WillPopScope(
+        onWillPop: () async {
+          screenIndexController.updateIndex(index: 1);
+          return false;
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = constraints.maxWidth > 1000;
+            return Scaffold(
+              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+              body: Align(
+                alignment: maxWidth ? Alignment.center : Alignment.topCenter,
+                child: SingleChildScrollView(
+                  physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
+                    width: maxWidth ? Get.width / 1.4 : null,
+                    height: maxWidth ? Get.height * 0.78 : null,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: Get.height * 0.02,
+                        ),
+                        Align(
+                          alignment: const FractionalOffset(0.5, 0.0),
+                          child: maxWidth
+                              ? null
+                              : Image.asset(
+                                  foreCashLogo2,
+                                  scale: 3,
+                                ),
+                        ),
+                        SizedBox(
+                          height: maxWidth ? Get.height * 0.03 : 0.0,
+                        ),
+                        maxWidth ? const SizedBox() : commonDivider(),
+                        SizedBox(
+                          height: maxWidth ? Get.height * 0.02 : Get.height * 0.04,
+                        ),
+                        Text(
+                          selectMonthlyIncomes,
+                          style: headTitleTheme,
                           textAlign: TextAlign.center,
-                          maxLines: 4,
-                          text: TextSpan(
-                            text: identified,
-                            style: textSpanStyle1,
-                            children: [
-                              TextSpan(
-                                text: towards,
-                                style: textSpanStyle2,
-                              )
-                            ],
+                          maxLines: 2,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.1),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            maxLines: 4,
+                            text: TextSpan(
+                              text: identified,
+                              style: textSpanStyle1,
+                              children: [
+                                TextSpan(
+                                  text: towards,
+                                  style: textSpanStyle2,
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: Get.height * 0.03,
-                      ),
-                      Expanded(
-                        flex: maxWidth ? 2 : 0,
-                        // flex: constraints.maxWidth > 1000 ? 2 : 0,
-                        child: Container(
-                          padding: const EdgeInsets.only(top: 10, bottom: 5),
-                          height: constraints.maxWidth > 1000 ? double.infinity : null,
-                          decoration: BoxDecoration(color: Colors.white, border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
-                          // child: Column(
-                          //   // direction: Axis.vertical, mainAxisSize: MainAxisSize.min,
-                          //   // direction: Axis.vertical,
-                          //   // mainAxisSize: constraints.maxWidth > 1000 ? MainAxisSize.min : MainAxisSize.min,
-                          //   children: [
-                          //     _nameTableRowWidget(constraints: constraints),
-                          //     SizedBox(
-                          //       height: Get.height * 0.01,
-                          //     ),
-                          //     maxWidth
-                          //         ? Divider(
-                          //             color: commonGreyColor.withOpacity(0.5),
-                          //           )
-                          //         : Container(),
-                          //     Expanded(flex: constraints.maxWidth > 1000 ? 2 : 0, child: monthlyIncomeWidget(constraints: constraints)),
-                          //   ],
-                          // ),
-                          child: Column(
-                            children: [
-                              _nameTableRowWidget(constraints: constraints),
-                              SizedBox(
-                                height: Get.height * 0.01,
-                              ),
-                              maxWidth
-                                  ? Divider(
-                                      color: commonGreyColor.withOpacity(0.5),
-                                    )
-                                  : Container(),
-                              SizedBox(
-                                height: Get.height * 0.025,
-                              ),
-                              Expanded(flex: maxWidth ? 2 : 0, child: monthlyIncomeWidget(constraints: constraints)),
-                            ],
+                        SizedBox(
+                          height: Get.height * 0.03,
+                        ),
+                        Expanded(
+                          flex: maxWidth ? 2 : 0,
+                          // flex: constraints.maxWidth > 1000 ? 2 : 0,
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
+                            height: constraints.maxWidth > 1000 ? double.infinity : null,
+                            decoration: BoxDecoration(color: Colors.white, border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
+                            // child: Column(
+                            //   // direction: Axis.vertical, mainAxisSize: MainAxisSize.min,
+                            //   // direction: Axis.vertical,
+                            //   // mainAxisSize: constraints.maxWidth > 1000 ? MainAxisSize.min : MainAxisSize.min,
+                            //   children: [
+                            //     _nameTableRowWidget(constraints: constraints),
+                            //     SizedBox(
+                            //       height: Get.height * 0.01,
+                            //     ),
+                            //     maxWidth
+                            //         ? Divider(
+                            //             color: commonGreyColor.withOpacity(0.5),
+                            //           )
+                            //         : Container(),
+                            //     Expanded(flex: constraints.maxWidth > 1000 ? 2 : 0, child: monthlyIncomeWidget(constraints: constraints)),
+                            //   ],
+                            // ),
+                            child: Column(
+                              children: [
+                                _nameTableRowWidget(constraints: constraints),
+                                SizedBox(
+                                  height: Get.height * 0.01,
+                                ),
+                                maxWidth
+                                    ? Divider(
+                                        color: commonGreyColor.withOpacity(0.5),
+                                      )
+                                    : Container(),
+                                // SizedBox(
+                                //   height: Get.height * 0.025,
+                                // ),
+                                Expanded(flex: maxWidth ? 2 : 0, child: monthlyIncomeWidget(constraints: constraints)),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: Get.height * 0.03, left: maxWidth ? Get.width * 0.15 : Get.width * 0.04, right: maxWidth ? Get.width * 0.15 : Get.width * 0.04, top: Get.width * 0.015),
-                        child: CommonMaterialButton.commonButton(
-                          height: 50,
-                          text: next,
-                          onPress: () {
-                            screenIndex = 3;
-                            print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-                            screenIndexController.updateIndex(index: 3);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => WeeklyIncomeScreen(),
-                            //     ));
-
-                            // Get.to(WeeklyIncomeScreen());
-                          },
-                        ),
-                      )
-                    ],
+                        Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+              bottomNavigationBar: Visibility(
+                visible: maxWidth ? false : true,
+                child: _nextButtonWidget(constraints: constraints),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -200,9 +187,12 @@ class MonthlyIncomeScreen extends StatelessWidget {
           SizedBox(),
           Padding(
             padding: EdgeInsets.only(left: constraints!.maxWidth > 1000 ? 0 : 0.0),
-            child: Text(
-              incomeName,
-              style: columnNameListStyle,
+            child: Padding(
+              padding: EdgeInsets.only(left: constraints.maxWidth > 1000 ? 5 : 0.0),
+              child: Text(
+                incomeName,
+                style: columnNameListStyle,
+              ),
             ),
           ),
           Text(
@@ -219,6 +209,33 @@ class MonthlyIncomeScreen extends StatelessWidget {
           ),
         ]),
       ],
+    );
+  }
+
+  _nextButtonWidget({BoxConstraints? constraints}) {
+    final screenIndexController = Get.put(ScreenIndexController());
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
+          left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          top: Get.width * 0.015),
+      child: CommonMaterialButton.commonButton(
+        height: 50,
+        text: next,
+        onPress: () {
+          screenIndex = 3;
+          print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+          screenIndexController.updateIndex(index: 3);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => WeeklyIncomeScreen(),
+          //     ));
+
+          // Get.to(WeeklyIncomeScreen());
+        },
+      ),
     );
   }
 }

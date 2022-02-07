@@ -15,7 +15,7 @@ Widget monthlyIncomeWidget({BoxConstraints? constraints}) {
   final checkBoxController = Get.put(CheckBoxController());
 
   return ListView.builder(
-    physics: NeverScrollableScrollPhysics(),
+    physics: constraints!.maxWidth > 1000 ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
     shrinkWrap: true,
     itemCount: MonthlyIncomeModel.monthlyIncomeList.length,
     itemBuilder: (context, index) {
@@ -32,31 +32,34 @@ Widget monthlyIncomeWidget({BoxConstraints? constraints}) {
           children: [
             TableRow(
               children: [
-                constraints!.maxWidth < 1000
+                constraints.maxWidth < 1000
                     ? Container(
                         height: Get.height * 0.044,
                         width: 8,
                         margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                       )
-                    : GetBuilder<CheckBoxController>(
-                        builder: (controller) {
-                          return Checkbox(
-                            activeColor: cameraBackGroundColor,
-                            checkColor: Colors.white,
-                            value: checkBoxController.monthlyIncomeCheckBoxValueList[index],
-                            onChanged: (value) {
-                              checkBoxController.selectCheckBox(value: value, index: index);
-                            },
-                          );
-                        },
+                    : Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: GetBuilder<CheckBoxController>(
+                          builder: (controller) {
+                            return Checkbox(
+                              activeColor: cameraBackGroundColor,
+                              checkColor: Colors.white,
+                              value: checkBoxController.monthlyIncomeCheckBoxValueList[index],
+                              onChanged: (value) {
+                                checkBoxController.selectCheckBox(value: value, index: index);
+                              },
+                            );
+                          },
+                        ),
                       ),
                 Container(
                   padding: const EdgeInsets.only(left: 10),
                   width: constraints.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
                   height: Get.height * 0.044,
                   alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth > 1000 ? 5 : 0.0),
                   child: Text(
                     '${MonthlyIncomeModel.monthlyIncomeList[index].expenseName}',
                     maxLines: 1,

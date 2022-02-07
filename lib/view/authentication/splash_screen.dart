@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 3), () {
       screenIndexController.updateIndex(index: 0);
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => ScreenProgressIndicator(),
@@ -59,8 +59,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   top: Get.height * 0.05,
                   left: Get.width * 0.03,
                   child: Image.asset(
-                    dollerImage,
-                    scale: 1,
+                    'assets/image/png/dollerimgg.png',
+                    scale: 3,
                   ),
                 ),
                 Positioned(

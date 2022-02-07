@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_mobile_appbar.dart';
+import 'package:fore_cash/common_widget/common_web_appbar.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:get/get.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
@@ -16,13 +19,87 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
-        appBar: CommonMobileAppbar.commonMobileAppbar(
-          color: Colors.white,
-          title: Text(
-            'DashBoard',
-            style: mobileAppBarStyle,
-          ),
-        ),
+        appBar: constraints.maxWidth > 1000
+            ? CommonWebAppbar.commonWebAppbar(scale: Get.mediaQuery.size.aspectRatio * 150, actions: [
+                Padding(
+                  padding: EdgeInsets.only(top: Get.height * 0.01),
+                  child: Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const NotificationsScreen());
+                        },
+                        child: Container(
+                          height: 35,
+                          width: 35,
+                          padding: const EdgeInsets.all(7),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: appBarActionColor,
+                          ),
+                          child: Image.asset('assets/image/png/notificationIcon.png'),
+                        ),
+                      ),
+                      const Positioned(
+                        right: 3,
+                        top: 4,
+                        child: CircleAvatar(
+                          backgroundColor: cameraBackGroundColor,
+                          radius: 6,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: Get.width * 0.007,
+                ),
+                Container(
+                  width: 160,
+                  margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
+                  padding: const EdgeInsets.only(left: 4),
+                  decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 17,
+                        backgroundImage: AssetImage('assets/image/png/profilePhoto.png'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Text(
+                          userName,
+                          style: userNameProfileStyle,
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            showPopupMenu(context);
+                          },
+                          icon: const Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.black,
+                          ))
+                    ],
+                  ),
+                ),
+              ])
+            : CommonMobileAppbar.commonMobileAppbar(
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black,
+                  ),
+                ),
+                color: Colors.white,
+                title: Text(
+                  notification,
+                  style: mobileAppBarStyle,
+                ),
+              ),
         backgroundColor: backGroundColor,
         body: Padding(
           padding: const EdgeInsets.all(16.0),

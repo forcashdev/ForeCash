@@ -7,7 +7,8 @@ String dollerImage3 = 'assets/image/png/doller3.png';
 String splashImage = 'assets/image/png/splashImage.png';
 String splashImage2 = 'assets/image/png/splashImage2.png';
 String foreCashLogo2 = 'assets/image/png/fore_cash_Logo.png';
-
+String dollerImage4 = 'assets/image/png/dollarimage.png';
+String dollerImage5 = 'assets/image/png/dollerimg.png';
 List<String> bankListImage = [
   'assets/image/png/bankofamerica.png',
   'assets/image/png/capitalbank.png',

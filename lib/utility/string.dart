@@ -7,12 +7,13 @@ String emailAddress = 'Email Address';
 String password = 'Password';
 String minimumCharacter = 'Minimum 6 Character required';
 String notValidEmail = 'Enter Valid Email';
-String signUp = 'SingUp';
+String enterName = 'Enter Name';
+String signUp = 'Sign Up';
 String save = 'Save';
 String send = 'Send';
 String resetPass = 'Reset Password';
 String createNewPass = 'Create New Password';
-String dontAccount = "Don't Have An Account?";
+String dontAccount = "Don't have an account?";
 String logIn = 'Login';
 String configureText = 'Configuration';
 String foreCashWeeklyBalance = 'Forecash Weekly Balance';
@@ -21,10 +22,10 @@ String loginForeCash = 'Login to ForeCash';
 String enterPassEmail = 'Enter your email and password below';
 String forgotPass = 'Forgot Password?';
 String currentWeek = 'Current Week';
-String currentWeekDate = 'September11-September-16';
+String currentWeekDate = 'Sep-11-Sep-16';
 String simulateMode = 'Simulate Mode OFF';
 String calendar = 'Calender';
-String alreadyAccount = 'Already have a Account';
+String alreadyAccount = 'Already have an account';
 String connectBank = 'Connect Bank Account';
 String searchBank = 'Search for your Bank';
 String selectMonthlyIncomes = 'Select Monthly incomes';
@@ -40,6 +41,7 @@ String date = 'Date';
 String every = 'Every';
 String amount = 'Amount';
 String next = 'Next';
+String done = 'Done';
 String previousWeekBalance = 'Previous Week Balance';
 String totalWeeklyIncome = 'Total Weekly Income';
 String totalWeeklyExpense = 'Total Weekly Expense';
@@ -180,33 +182,33 @@ String confirmNewPass = 'Confirm New password';
 List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyIncome, weeklyIncome, monthlyExpense, weeklyExpense, setUpCalendar];
 String cancel = 'Cancel';
 List<String> dataDateList = [
-  "Sep,1",
-  "Dec,1",
-  "Jun,15",
-  "May,15",
-  "Mar,6",
-  "Jul,28",
-  "Jun,7",
-  "Dec,3",
-  "Nov,20",
-  "Oct,25",
-  "Aug,18",
-  "Sep,23",
-  "Aug,29",
-  "Jul,25",
-  "Jun,11",
-  "Mar,22",
-  "Feb,12",
-  "Aug,17",
-  "Aug,21",
-  "Aug,30",
-  "Jan,25",
-  "Sep,2",
-  "Nov,15",
-  "Nov,5",
-  "Nov,12",
-  "Oct,1",
-  "Dec,1",
+  "Sep, 1",
+  "Dec, 1",
+  "Jun, 15",
+  "May, 15",
+  "Mar, 6",
+  "Jul, 28",
+  "Jun, 7",
+  "Dec, 3",
+  "Nov, 20",
+  "Oct, 25",
+  "Aug, 18",
+  "Sep, 23",
+  "Aug, 29",
+  "Jul, 25",
+  "Jun, 11",
+  "Mar, 22",
+  "Feb, 12",
+  "Aug, 17",
+  "Aug, 21",
+  "Aug, 30",
+  "Jan, 25",
+  "Sep, 2",
+  "Nov, 15",
+  "Nov, 5",
+  "Nov, 12",
+  "Oct, 1",
+  "Dec, 1",
 ];
 List<String> incomes = [
   '\$1200',
@@ -238,6 +240,7 @@ List<String> incomes = [
   '-',
 ];
 String dashBoard = 'DashBoard';
+String notification = 'Notification';
 //verify_transaction
 const String notifications = 'Notifications';
 const String allCaughtUp = 'All Caught Up!';

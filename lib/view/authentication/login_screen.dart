@@ -4,10 +4,12 @@ import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/getx/login_password_obscure_controller.dart';
+import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/authentication/forgot_password_screen.dart';
 import 'package:fore_cash/view/authentication/signup_screen.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final obscureTextController = Get.put(LogInPasswordObscureController());
+  final screenIndexController = Get.put(ScreenIndexController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +35,20 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context, constraints) {
           return Scaffold(
               backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
-              body: Center(
+              body: Align(
+                alignment: constraints.maxWidth > 1000 ? Alignment.center : Alignment.topCenter,
                 child: SingleChildScrollView(
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
                     width: constraints.maxWidth > 1000 ? 600 : null,
-                    height: constraints.maxWidth > 1000 ? 600 : null,
+                    // height: constraints.maxWidth > 1000 ? 600 : null,
                     alignment: Alignment.center,
                     padding: EdgeInsets.only(bottom: constraints.maxWidth < 1000 ? 20 : 60),
                     child: Padding(
-                      padding: EdgeInsets.only(left: Get.width * 0.04, right: Get.width * 0.04, bottom: constraints.maxWidth < 1000 ? Get.width * 0.02 : 0.1),
+                      padding: EdgeInsets.only(
+                          left: constraints.maxWidth > 1000 ? Get.width * 0.03 : Get.width * 0.04,
+                          right: constraints.maxWidth > 1000 ? Get.width * 0.03 : Get.width * 0.04,
+                          bottom: constraints.maxWidth < 1000 ? Get.width * 0.02 : 0.1),
                       child: Form(
                         key: _formKey,
                         child: Column(
@@ -49,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              height: constraints.maxWidth < 1000 ? Get.height * 0.02 : Get.height * 0.05,
+                              height: constraints.maxWidth < 1000 ? Get.height * 0.02 : Get.height * 0.04,
                             ),
                             Align(
                               alignment: FractionalOffset(0.5, 0.0),
@@ -90,8 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            CommonTextField.commonTextField(
-                              errorTextStyle: const TextStyle(color: commonTextColor),
+                            commonTextField(
                               textInputAction: TextInputAction.next,
                               hint: emailAddress,
                               controller: _email,
@@ -113,55 +119,60 @@ class _LoginScreenState extends State<LoginScreen> {
                                   password,
                                   style: fullNameHintStyle,
                                 ),
-                                Text(
-                                  forgotPass,
-                                  style: fullNameHintStyle,
+                                InkWell(
+                                  onTap: () {
+                                    Get.to(ForgotPassword());
+                                  },
+                                  child: Text(
+                                    forgotPass,
+                                    style: fullNameHintStyle,
+                                  ),
                                 ),
                               ],
                             ),
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            GetBuilder<LogInPasswordObscureController>(
-                              builder: (controller) {
-                                return CommonTextField.commonTextField(
-                                  textInputAction: TextInputAction.done,
-                                  hint: password,
-                                  controller: _password,
-                                  suffixIcon: IconButton(
-                                    splashRadius: 0.1,
-                                    onPressed: () {
-                                      controller.changeObscure();
-                                      // setState(() {
-                                      //   isObscure = !isObscure;
-                                      // });
+                            Padding(
+                              padding: EdgeInsets.only(bottom: constraints.maxWidth > 1000 ? Get.height * 0.05 : Get.height * 0.36),
+                              child: GetBuilder<LogInPasswordObscureController>(
+                                builder: (controller) {
+                                  return commonTextField(
+                                    textInputAction: TextInputAction.done,
+                                    hint: password,
+                                    controller: _password,
+                                    suffixIcon: IconButton(
+                                      splashRadius: 0.1,
+                                      onPressed: () {
+                                        controller.changeObscure();
+                                        // setState(() {
+                                        //   isObscure = !isObscure;
+                                        // });
+                                      },
+                                      icon: controller.obscure == true
+                                          ? const Icon(
+                                              Icons.visibility,
+                                              color: commonTextColor2,
+                                            )
+                                          : const Icon(Icons.visibility_off, color: commonTextColor2),
+                                    ),
+                                    obscureText: controller.obscure,
+                                    validator: (value) {
+                                      if (_password.text.length < 6) {
+                                        return minimumCharacter;
+                                      }
                                     },
-                                    icon: controller.obscure == true
-                                        ? const Icon(
-                                            Icons.visibility,
-                                            color: commonTextColor2,
-                                          )
-                                        : const Icon(Icons.visibility_off, color: commonTextColor2),
-                                  ),
-                                  obscureText: controller.obscure,
-                                  errorTextStyle: const TextStyle(color: commonTextColor),
-                                  validator: (value) {
-                                    if (_password.text.length < 6) {
-                                      return minimumCharacter;
-                                    }
-                                  },
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                             // Spacer(),
                             // SizedBox(
                             //   height: constraints.maxWidth > 1000 ? Get.height * 0.02 : 0.0,
                             // ),
-                            constraints.maxWidth > 1000
-                                ? Spacer()
-                                : SizedBox(
-                                    height: Get.height * 0.3,
-                                  ),
+                            // SizedBox(
+                            //   height: Get.height * 0.04,
+                            // ),
                             CommonMaterialButton.commonButton(
                               onPress: () {
                                 _formKey.currentState!.validate();
@@ -172,30 +183,33 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(
                               height: Get.height * 0.02,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  dontAccount,
-                                  style: dontHaveAccountStyle,
-                                ),
-                                SizedBox(
-                                  width: Get.width * 0.005,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SignUpScreen(),
-                                        ));
-                                  },
-                                  child: Text(
-                                    signUp,
-                                    style: signupButtonStyle,
+                            Padding(
+                              padding: EdgeInsets.only(bottom: constraints.maxWidth > 1000 ? Get.height * 0.02 : 0.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    dontAccount,
+                                    style: dontHaveAccountStyle,
                                   ),
-                                )
-                              ],
+                                  SizedBox(
+                                    width: Get.width * 0.005,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SignUpScreen(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      signUp,
+                                      style: signupButtonStyle,
+                                    ),
+                                  )
+                                ],
+                              ),
                             )
                           ],
                         ),

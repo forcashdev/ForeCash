@@ -38,6 +38,7 @@ TextStyle loginStyle = TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, c
 TextStyle textSpanStyle1 = TextStyle(
   fontWeight: FontWeight.w200,
   fontSize: 12.sp,
+  height: 1.5,
   color: Color(0xFF777C90),
   fontFamily: AppTheme.fontName,
 );
@@ -121,7 +122,7 @@ TextStyle foreCashWeeklyBalanceTextStyle = TextStyle(fontFamily: AppTheme.fontNa
 TextStyle foreCashWeeklyBalanceTextStyleWeb = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w400, fontSize: 10.sp);
 TextStyle currentWeekTextStyle = TextStyle(color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 11.sp);
 TextStyle currentWeekDateTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.black.withOpacity(0.7), fontWeight: FontWeight.w600, fontSize: 11.sp);
-TextStyle foreCashWeeklyBalanceStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14.sp);
+TextStyle foreCashWeeklyBalanceStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14.sp);
 TextStyle foreCashWeeklyBalanceStyleWeb = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13.sp);
 TextStyle incomeExpenseTExtStyle = TextStyle(color: Colors.white, fontSize: 11.sp, fontFamily: AppTheme.fontName);
 TextStyle blackCalendarStyle11W500 = TextStyle(fontFamily: AppTheme.fontName, fontSize: 11.sp, fontWeight: FontWeight.w500);

@@ -54,3 +54,77 @@ showCommonDialog(BuildContext context) {
         );
       });
 }
+
+showPopupMenu(BuildContext context) {
+  showMenu<String>(
+    color: Colors.white,
+    context: context,
+    position: RelativeRect.fromLTRB(25.0, 0.0, 0.0, 0.0),
+    //position where you want to show the menu on screen
+    items: [
+      PopupMenuItem<String>(
+        child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_user.png', title: 'Profile'),
+        value: '1',
+        onTap: () {
+          print("Profile====>");
+        },
+      ),
+      PopupMenuDivider(height: 0.0),
+      PopupMenuItem<String>(
+          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_credit_card.png', title: 'Chase Bank #2345'),
+          value: '2',
+          onTap: () {
+            print("Profile====>");
+          }),
+      PopupMenuDivider(height: 0.0),
+      PopupMenuItem<String>(
+          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_credit_card.png', title: 'Chime Bank #1568'),
+          value: '3',
+          onTap: () {
+            print("Profile====>");
+          }),
+      PopupMenuDivider(height: 0.0),
+      PopupMenuItem<String>(
+          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_user_plus.png', title: 'Add Account'),
+          value: '4',
+          onTap: () {
+            print("Add Account====>");
+          }),
+      const PopupMenuDivider(height: 0.0),
+      PopupMenuItem<String>(
+          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_setting.png', title: 'Setting'),
+          value: '5',
+          onTap: () {
+            print("Setting====>");
+          }),
+      const PopupMenuDivider(height: 0.0),
+      PopupMenuItem<String>(
+          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_logout.png', title: 'Logout'),
+          value: '5',
+          onTap: () {
+            print("Setting====>");
+          }),
+      //PopupMenuItem<String>(child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_logout.png',title: 'Logout',colors: Colors.red,stlyes: whiteMontserrat14w500), value: '5',onTap: (){print("Setting====>");}),
+    ],
+    elevation: 8.0,
+  );
+}
+
+getOptionItem({String? imagePath, String? title, colors = Colors.transparent, TextStyle? stlyes = blackMontserrat14w500}) {
+  return Container(
+    height: 40,
+    width: double.infinity,
+    color: colors,
+    child: Row(
+      children: [
+        Image.asset(
+          imagePath ?? "",
+          scale: 3.5,
+          color: commonTextColor,
+        ),
+        const SizedBox(width: 14),
+        Text(title ?? "", style: stlyes)
+      ],
+    ),
+  );
+}

@@ -28,7 +28,7 @@ class ScreenProgressIndicator extends StatelessWidget {
         builder: (context, constraints) {
           return Scaffold(
             appBar: constraints.maxWidth > 1000 ? CommonWebAppbar.commonWebAppbar(scale: Get.mediaQuery.size.aspectRatio * 150) : null,
-            backgroundColor: constraints.maxWidth < 1000 ? backGroundColor : null,
+            backgroundColor: constraints.maxWidth < 1000 ? null : backGroundColor,
             body: Column(
               children: [
                 SizedBox(
@@ -50,8 +50,9 @@ class ScreenProgressIndicator extends StatelessWidget {
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontFamily: AppTheme.fontName,
-                                              fontWeight: screenIndexController.screensIndexes == index ? FontWeight.w600 : FontWeight.w500,
-                                              color: screenIndexController.screensIndexes == index ? indicatorColor : indicatorColor2),
+                                              fontWeight: index <= screenIndexController.screensIndexes ? FontWeight.w600 : FontWeight.w500,
+                                              color: index <= screenIndexController.screensIndexes ? indicatorColor : indicatorColor2),
+                                          //color: screenIndexController.screensIndexes == index && screenIndexController.screensIndexes >= index ? indicatorColor : indicatorColor2),
                                         ),
                                       );
                                     },
@@ -114,16 +115,19 @@ class ScreenProgressIndicator extends StatelessWidget {
                         },
                       )
                     : Container(),
-                SizedBox(
-                  height: constraints.maxWidth > 1000 ? Get.height * 0.03 : 0.0,
-                ),
+                // SizedBox(
+                //   height: constraints.maxWidth > 1000 ? Get.height * 0.0 : 0.0,
+                // ),
                 Flexible(
                   child: GetBuilder<ScreenIndexController>(
                     builder: (controller) {
-                      return screensList[screenIndexController.screensIndexes];
+                      return screensList[controller.screensIndexes];
                     },
                   ),
                 ),
+                // SizedBox(
+                //   height: constraints.maxWidth > 1000 ? 100 : 0.0,
+                // )
               ],
             ),
           );

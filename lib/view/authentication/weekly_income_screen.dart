@@ -35,92 +35,83 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth > 1000;
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: Align(
-              alignment: maxWidth ? Alignment.center : Alignment.topCenter,
-              child: SingleChildScrollView(
-                physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
-                  decoration: BoxDecoration(color: maxWidth ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
-                  width: maxWidth ? Get.width / 1.4 : null,
-                  height: maxWidth ? Get.height * 0.81 : null,
-                  child: Column(
-                    children: [
-                      _headerColumn(constraints: constraints),
-                      Expanded(
-                        flex: maxWidth ? 2 : 0,
-                        child: Container(
-                          // height: constraints.maxWidth > 1000 ? double.infinity : null,
-                          padding: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: maxWidth ? Get.height * 0.015 : 0.0,
-                              ),
-                              _nameTableRowWidget(),
-                              SizedBox(
-                                height: Get.height * 0.01,
-                              ),
-                              maxWidth
-                                  ? Divider(
-                                      color: commonGreyColor.withOpacity(0.5),
-                                    )
-                                  : Container(),
-                              SizedBox(
-                                height: maxWidth ? Get.height * 0.005 : Get.height * 0.005,
-                              ),
-                              Expanded(
-                                flex: maxWidth ? 2 : 0,
-                                child: SingleChildScrollView(
-                                  physics: maxWidth ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      weeklyIncomeWidget(constraints: constraints),
-                                      _addNewWeeklyIncomeWidget(constraints: constraints),
-                                      _addWeeklyIncomeButton(constraints: constraints),
-                                    ],
+      child: WillPopScope(
+        onWillPop: () async {
+          screenIndexController.updateIndex(index: 2);
+          return false;
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = constraints.maxWidth > 1000;
+            return Scaffold(
+              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+              body: Align(
+                alignment: maxWidth ? Alignment.center : Alignment.topCenter,
+                child: SingleChildScrollView(
+                  physics: maxWidth ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
+                    decoration: BoxDecoration(color: maxWidth ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
+                    width: maxWidth ? Get.width / 1.4 : null,
+                    height: maxWidth ? Get.height * 0.78 : null,
+                    child: Column(
+                      children: [
+                        _headerColumn(constraints: constraints),
+                        Expanded(
+                          flex: maxWidth ? 2 : 0,
+                          child: Container(
+                            // height: constraints.maxWidth > 1000 ? double.infinity : null,
+                            padding: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: maxWidth ? Get.height * 0.015 : 0.0,
+                                ),
+                                _nameTableRowWidget(),
+                                SizedBox(
+                                  height: Get.height * 0.01,
+                                ),
+                                maxWidth
+                                    ? Divider(
+                                        color: commonGreyColor.withOpacity(0.5),
+                                      )
+                                    : Container(),
+                                SizedBox(
+                                  height: maxWidth ? Get.height * 0.005 : Get.height * 0.005,
+                                ),
+                                Expanded(
+                                  flex: maxWidth ? 2 : 0,
+                                  child: SingleChildScrollView(
+                                    physics: maxWidth ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        weeklyIncomeWidget(constraints: constraints),
+                                        _addNewWeeklyIncomeWidget(constraints: constraints),
+                                        _addWeeklyIncomeButton(constraints: constraints),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: Get.height * 0.03, left: maxWidth ? Get.width * 0.15 : Get.width * 0.04, right: maxWidth ? Get.width * 0.15 : Get.width * 0.04, top: Get.width * 0.015),
-                        child: CommonMaterialButton.commonButton(
-                          height: 50,
-                          text: next,
-                          onPress: () {
-                            screenIndex = 4;
-                            print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-                            screenIndexController.updateIndex(index: 4);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => MonthlyExpensesScreen(),
-                            //     ));
-
-                            // Get.to(MonthlyExpensesScreen());
-                          },
-                        ),
-                      )
-                    ],
+                        Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+              bottomNavigationBar: Visibility(
+                visible: maxWidth ? false : true,
+                child: _nextButtonWidget(constraints: constraints),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -305,9 +296,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                       width: constraints!.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
                       height: Get.height * 0.044,
                       alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(
-                        right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02,
-                      ),
+                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                       child: TextField(
                         controller: _incomeName,
                         style: textFieldStyle,
@@ -373,7 +362,8 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                 : IconButton(
                     splashRadius: 0.1,
                     onPressed: () {
-                      Navigator.pop(context);
+                      screenIndexController.updateIndex(index: 2);
+                      // Navigator.pop(context);
                     },
                     icon: const Icon(
                       Icons.chevron_left,
@@ -384,7 +374,9 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                     foreCashLogo2,
                     scale: 3,
                   ),
-            Container()
+            SizedBox(
+              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+            )
           ],
         ),
         SizedBox(
@@ -399,7 +391,8 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                 alignment: Alignment.centerLeft,
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      screenIndexController.updateIndex(index: 2);
+                      // Navigator.pop(context);
                     },
                     child: Text(
                       backButton,
@@ -436,7 +429,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
 
   _addWeeklyIncomeButton({BoxConstraints? constraints}) {
     return Padding(
-      padding: EdgeInsets.only(bottom: Get.height * 0.03),
+      padding: EdgeInsets.only(bottom: Get.height * 0.03, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
       child: GestureDetector(
         onTap: () {
           if (_incomeName.text.isNotEmpty && _amount.text.isNotEmpty) {
@@ -458,6 +451,32 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
             style: addWeekIncomeStyle,
           ),
         ),
+      ),
+    );
+  }
+
+  _nextButtonWidget({BoxConstraints? constraints}) {
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
+          left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
+          top: Get.width * 0.015),
+      child: CommonMaterialButton.commonButton(
+        height: 50,
+        text: next,
+        onPress: () {
+          screenIndex = 4;
+          print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+          screenIndexController.updateIndex(index: 4);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => MonthlyExpensesScreen(),
+          //     ));
+
+          // Get.to(MonthlyExpensesScreen());
+        },
       ),
     );
   }
