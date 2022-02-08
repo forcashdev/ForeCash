@@ -51,7 +51,7 @@ Widget monthlyIncomeWidget({BoxConstraints? constraints}) {
                         decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                       )
                     : SizedBox(
-                        height: Get.height * 0.04,
+                        height: Get.height * 0.044,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5.0),
                           child: GetBuilder<CheckBoxController>(
@@ -75,7 +75,7 @@ Widget monthlyIncomeWidget({BoxConstraints? constraints}) {
                     child: commonTextFormField(
                         inputAction: TextInputAction.done,
                         inputFormatter: [characterInputFormatter()],
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                         textStyle: incomeNameStyle,
                         textEditingController: TextEditingController(text: MonthlyIncomeModel.monthlyIncomeList[index].expenseName)),
                   ),
@@ -142,6 +142,7 @@ Widget monthlyIncomeWidget({BoxConstraints? constraints}) {
                         child: Text(
                           '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                           style: dateStyle,
+                          maxLines: 1,
                         ),
                         margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
@@ -156,7 +157,7 @@ Widget monthlyIncomeWidget({BoxConstraints? constraints}) {
                         prefixstyle: incomeNameStyle,
                         inputAction: TextInputAction.done,
                         inputFormatter: [digitInputFormatter()],
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                         textStyle: incomeNameStyle,
                         textEditingController: TextEditingController(text: MonthlyIncomeModel.monthlyIncomeList[index].amount)),
                   ),

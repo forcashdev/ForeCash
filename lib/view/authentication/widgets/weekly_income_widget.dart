@@ -45,9 +45,9 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                         decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                       )
                     : SizedBox(
-                        height: Get.height * 0.04,
+                        height: Get.height * 0.044,
                         child: Padding(
-                          padding: EdgeInsets.only(left: 5),
+                          padding: const EdgeInsets.only(left: 5),
                           child: GetBuilder<CheckBoxController>(
                             builder: (controller) {
                               return Checkbox(
@@ -69,10 +69,7 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                     child: commonTextFormField(
                         inputAction: TextInputAction.done,
                         inputFormatter: [characterInputFormatter()],
-                        contentPadding: EdgeInsets.only(
-                          right: 10,
-                          left: 10,
-                        ),
+                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                         textStyle: incomeNameStyle,
                         textEditingController: TextEditingController(text: WeeklyIncomeModel.weeklyIncomeList[index].expenseName)),
                   ),
@@ -88,8 +85,6 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                     alignment: Alignment.center,
                     child: GetBuilder<SelectedDropDownItem>(
                       builder: (controller1) {
-                        // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
-                        // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
                         return CommonDropDown.commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
@@ -99,31 +94,6 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                               controller.changeDay(item: item, index: index);
                               print(item);
                             });
-                        //   DropdownButtonHideUnderline(
-                        //   child: DropdownButton(
-                        //     value: controller.selectDayDropDown[index],
-                        //     // value: controller.selectedItem,
-                        //     style: dropDownStyle,
-                        //     items: days.map((String items) {
-                        //       return DropdownMenuItem(
-                        //         value: items,
-                        //         child: Text(
-                        //           items,
-                        //           style: dropDownStyle2,
-                        //         ),
-                        //       );
-                        //     }).toList(),
-                        //     onChanged: (item) {
-                        //       controller.changeDay(item: item, index: index);
-                        //     },
-                        //     isExpanded: true,
-                        //
-                        //     icon: const Icon(
-                        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                        //       // color: AppTheme.colorGrey,
-                        //     ),
-                        //   ),
-                        // );
                       },
                     ),
                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
@@ -141,7 +111,6 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                     alignment: Alignment.center,
                     child: GetBuilder<SelectedDropDownItem>(
                       builder: (controller1) {
-                        // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
                         return CommonDropDown.commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
@@ -151,32 +120,6 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                               controller.changeWeek(item: item, index: index);
                               print(item);
                             });
-                        //   DropdownButtonHideUnderline(
-                        //   child: DropdownButton(
-                        //     value: controller.selectWeekDropDown[index],
-                        //     // value: controller.selectedItem,
-                        //     style: dropDownStyle,
-                        //
-                        //     items: weeks.map((String items) {
-                        //       return DropdownMenuItem(
-                        //         value: items,
-                        //         child: Text(
-                        //           items,
-                        //           style: dropDownStyle2,
-                        //         ),
-                        //       );
-                        //     }).toList(),
-                        //     onChanged: (item) {
-                        //       controller.changeWeek(item: item, index: index);
-                        //     },
-                        //     isExpanded: true,
-                        //
-                        //     icon: const Icon(
-                        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                        //       // color: AppTheme.colorGrey,
-                        //     ),
-                        //   ),
-                        // );
                       },
                     ),
                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
@@ -192,7 +135,7 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                         prefixstyle: incomeNameStyle,
                         inputAction: TextInputAction.done,
                         inputFormatter: [digitInputFormatter()],
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                         textStyle: incomeNameStyle,
                         textEditingController: TextEditingController(text: WeeklyIncomeModel.weeklyIncomeList[index].amount)),
                   ),

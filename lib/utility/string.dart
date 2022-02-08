@@ -1,3 +1,4 @@
+String appName = 'Forecash';
 String getStarted = 'Get Started with Forecash';
 String createAccount = 'Create Your New Account';
 String fullName = 'Full Name';
@@ -254,3 +255,8 @@ const String saveYourChanges = 'Do you want to save your Changes ?';
 const String description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ';
 const String yes = 'Yes';
 const String no = 'No';
+
+///Api Config
+
+const String baseUri = "https://node.staging.rentechdigital.com:3001/";
+const String mLogIn = baseUri + 'auth/login';

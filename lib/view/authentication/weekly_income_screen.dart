@@ -28,8 +28,8 @@ class WeeklyIncomeScreen extends StatefulWidget {
 }
 
 class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
-  TextEditingController _incomeName = TextEditingController();
-  TextEditingController _amount = TextEditingController();
+  final TextEditingController _incomeName = TextEditingController();
+  final TextEditingController _amount = TextEditingController();
   final visibilityController = Get.put(VisibilityController());
   final controller = Get.put(SelectedDropDownItem());
   final checkBoxController = Get.put(CheckBoxController());
@@ -86,13 +86,12 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                 Expanded(
                                   flex: maxWidth ? 2 : 0,
                                   child: SingleChildScrollView(
-                                    physics: maxWidth ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
+                                    physics: maxWidth ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         weeklyIncomeWidget(constraints: constraints),
                                         _addNewWeeklyIncomeWidget(constraints: constraints),
-                                        _addWeeklyIncomeButton(constraints: constraints),
                                       ],
                                     ),
                                   ),
@@ -229,7 +228,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         TableRow(
             // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SizedBox(),
+              const SizedBox(),
               Text(
                 incomeName,
                 style: columnNameListStyle,
@@ -256,81 +255,147 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
       padding: EdgeInsets.only(top: Get.height * 0.01),
       child: GetBuilder<VisibilityController>(
         builder: (controller1) {
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: Get.height * 0.019,
-            ),
-            child: Table(
-              columnWidths: const <int, TableColumnWidth>{
-                0: FlexColumnWidth(0.35),
-                1: FlexColumnWidth(3),
-                2: FlexColumnWidth(2),
-                3: FlexColumnWidth(2),
-                4: FlexColumnWidth(2),
-              },
-              children: [
-                TableRow(
-                  children: [
-                    SizedBox(height: constraints!.maxWidth > 1000 ? Get.height * 0.04 : Get.height * 0.044),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                        child: commonTextFormField(
-                            hintText: addIncome,
-                            hintStyle: incomeNameStyle,
-                            inputAction: TextInputAction.done,
-                            inputFormatter: [characterInputFormatter()],
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                            textStyle: incomeNameStyle,
-                            textEditingController: _incomeName),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                          left: 6,
-                        ),
-                        // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        // height: Get.height * 0.044,
-                        alignment: Alignment.center,
-                        child: dropDownDayGetBuilder(dropDownList: days),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 6),
-                        // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        // height: Get.height * 0.044,
-                        alignment: Alignment.center,
-                        child: dropDownWeekGetBuilder(dropDownList: weeks),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: Get.width * 0.04),
-                        child: commonTextFormField(
-                            prefixText: '\$',
-                            prefixstyle: incomeNameStyle,
-                            // hintText: '\$',
-                            // hintStyle: incomeNameStyle,
-                            inputAction: TextInputAction.done,
-                            inputFormatter: [digitInputFormatter()],
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                            textStyle: incomeNameStyle,
-                            textEditingController: _amount),
-                      ),
-                    ),
-                  ],
+          return Visibility(
+            visible: controller1.visibility,
+            replacement: Padding(
+              padding: EdgeInsets.only(bottom: Get.height * 0.03, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
+              child: GestureDetector(
+                onTap: () {
+                  visibilityController.changeVisibility();
+                },
+                child: Align(
+                  alignment: const FractionalOffset(0.015, 0.0),
+                  child: Text(
+                    addWeeklyIncome,
+                    style: addWeekIncomeStyle,
+                  ),
                 ),
-              ],
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: Get.height * 0.019,
+              ),
+              child: Column(
+                children: [
+                  Table(
+                    columnWidths: const <int, TableColumnWidth>{
+                      0: FlexColumnWidth(0.35),
+                      1: FlexColumnWidth(3),
+                      2: FlexColumnWidth(2),
+                      3: FlexColumnWidth(2),
+                      4: FlexColumnWidth(2),
+                    },
+                    children: [
+                      TableRow(
+                        children: [
+                          SizedBox(height: Get.height * 0.044),
+                          TableCell(
+                            verticalAlignment: TableCellVerticalAlignment.fill,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                              child: commonTextFormField(
+                                  hintText: addIncome,
+                                  hintStyle: incomeNameStyle,
+                                  inputAction: TextInputAction.done,
+                                  inputFormatter: [characterInputFormatter()],
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                  textStyle: incomeNameStyle,
+                                  textEditingController: _incomeName),
+                            ),
+                          ),
+                          TableCell(
+                            verticalAlignment: TableCellVerticalAlignment.fill,
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                left: 6,
+                              ),
+                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                              // height: Get.height * 0.044,
+                              alignment: Alignment.center,
+                              child: dropDownDayGetBuilder(dropDownList: days),
+                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                            ),
+                          ),
+                          TableCell(
+                            verticalAlignment: TableCellVerticalAlignment.fill,
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 6),
+                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                              // height: Get.height * 0.044,
+                              alignment: Alignment.center,
+                              child: dropDownWeekGetBuilder(dropDownList: weeks),
+                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                            ),
+                          ),
+                          TableCell(
+                            verticalAlignment: TableCellVerticalAlignment.fill,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: Get.width * 0.04),
+                              child: commonTextFormField(
+                                  prefixText: '\$',
+                                  prefixstyle: incomeNameStyle,
+                                  // hintText: '\$',
+                                  // hintStyle: incomeNameStyle,
+                                  inputAction: TextInputAction.done,
+                                  inputFormatter: [digitInputFormatter()],
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                  textStyle: incomeNameStyle,
+                                  textEditingController: _amount),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: Get.height * 0.01, left: constraints.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.018),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: Get.width * 0.01,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (_incomeName.text.isNotEmpty && _amount.text.isNotEmpty) {
+                              setState(() {
+                                WeeklyIncomeModel.weeklyIncomeList.add(WeeklyIncomeModel(expenseName: _incomeName.text, amount: _amount.text));
+                                controller.selectDayDropDown.add(controller.selectedSingleWeeklyIncomeDay as Object);
+                                controller.selectWeekDropDown.add(controller.selectedSingleWeeklyIncomeWeek as Object);
+                                checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
+                              });
+                              controller1.changeVisibility();
+                            }
+                            _amount.clear();
+                            _incomeName.clear();
+
+                            // monthlyIncomeEditMode.showEditMode();
+                          },
+                          child: Text(
+                            save,
+                            style: greenMontserrat11W500,
+                          ),
+                        ),
+                        SizedBox(
+                          width: Get.width * 0.017,
+                        ),
+                        InkWell(
+                          child: Text(
+                            cancel,
+                            style: redMontserrat11W500,
+                          ),
+                          onTap: () {
+                            controller1.changeVisibility();
+                            // monthlyIncomeEditMode.showEditMode();
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         },
@@ -348,7 +413,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         Row(
           children: [
             maxWidth
-                ? SizedBox()
+                ? const SizedBox()
                 : IconButton(
                     splashRadius: 0.1,
                     onPressed: () {
@@ -388,7 +453,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                       backButton,
                       style: backButtonStyle,
                     )))
-            : SizedBox(),
+            : const SizedBox(),
         Text(
           selectWeeklyIncome,
           style: headTitleTheme,
@@ -414,34 +479,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
           height: Get.height * 0.03,
         ),
       ],
-    );
-  }
-
-  _addWeeklyIncomeButton({BoxConstraints? constraints}) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: Get.height * 0.03, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
-      child: GestureDetector(
-        onTap: () {
-          if (_incomeName.text.isNotEmpty && _amount.text.isNotEmpty) {
-            setState(() {
-              WeeklyIncomeModel.weeklyIncomeList.add(WeeklyIncomeModel(expenseName: _incomeName.text, amount: _amount.text));
-              controller.selectDayDropDown.add(controller.selectedSingleWeeklyIncomeDay as Object);
-              controller.selectWeekDropDown.add(controller.selectedSingleWeeklyIncomeWeek as Object);
-              checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
-            });
-          }
-          _amount.clear();
-          _incomeName.clear();
-          visibilityController.changeVisibility();
-        },
-        child: Align(
-          alignment: const FractionalOffset(0.015, 0.0),
-          child: Text(
-            addWeeklyIncome,
-            style: addWeekIncomeStyle,
-          ),
-        ),
-      ),
     );
   }
 

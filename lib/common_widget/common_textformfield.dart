@@ -48,6 +48,7 @@ commonTextFormField(
       // for scroll extra while keyboard open
       // scrollPadding: EdgeInsets.fromLTRB(20, 20, 20, 120),
       enabled: isEnabled != null && !isEnabled ? false : true,
+      //enabled: true,
       textAlign: align,
       showCursor: !isReadOnly,
       onTap: () {
@@ -79,15 +80,16 @@ commonTextFormField(
         // ignore: void_checks
         return onFieldSubmit != null ? onFieldSubmit(value) : null;
       },
-      maxLines: maxLine ?? 1,
+      // maxLines: maxLine ?? 1,
       keyboardType: keyboardType,
       controller: textEditingController,
       // initialValue: initialText,
       cursorColor: colorPrimary,
       obscureText: passwordVisible,
-      textInputAction: inputAction,
+      textInputAction: inputAction ?? TextInputAction.done,
       style: textStyle ?? blackMontserrat10W500,
       inputFormatters: inputFormatter,
+      //expands: true,
       decoration: InputDecoration(
         hoverColor: Colors.transparent,
         prefixStyle: prefixstyle ?? incomeNameStyle,
@@ -95,7 +97,8 @@ commonTextFormField(
         errorMaxLines: errorMaxLines ?? 1,
         filled: true,
         fillColor: filledColor,
-        contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
+        // isDense: true,
+        contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
         focusedBorder: textFieldBorderStyle,
         disabledBorder: textFieldBorderStyle,
         enabledBorder: textFieldBorderStyle,
