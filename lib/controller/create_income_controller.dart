@@ -40,7 +40,6 @@ class CreateIncomeController extends GetxController {
           print('>>>>>>>>>>>>>>');
           print(data.toString());
 
-
           print('>>>>>>>>>>>>>>');
           // incomeModel.value = IncomeModel.fromJson(data);
           // incomeModel.value.toJson();
