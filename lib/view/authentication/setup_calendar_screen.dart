@@ -43,7 +43,7 @@ class SetupCalendarScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: Get.height * 0.02,
+                          height: Get.height * 0.01,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,12 +60,16 @@ class SetupCalendarScreen extends StatelessWidget {
                                   ),
                             maxWidth
                                 ? Container()
-                                : Image.asset(
-                                    foreCashLogo2,
-                                    scale: 3,
+                                : Align(
+                                    child: Image.asset(
+                                      foreCashLogo2,
+                                      height: Get.height * 0.055,
+                                      width: Get.height * 0.25,
+                                      // fit: BoxFit.cover,
+                                    ),
                                   ),
                             SizedBox(
-                              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+                              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.01,
                             )
                           ],
                         ),
@@ -100,7 +104,9 @@ class SetupCalendarScreen extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                     maxLines: 2,
                                   ),
-                                  Container()
+                                  SizedBox(
+                                    width: maxWidth ? Get.width * 0.035 : 0.0,
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -138,7 +144,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                 alignment: Alignment.center,
                                 child: GetBuilder<SelectedDropDownItem>(
                                   builder: (controller1) {
-                                    return CommonDropDown.commonDropDown(
+                                    return commonDropDown(
                                         selectedItemTextStyle: dropDownStyle2,
                                         valueTextStyle: dropDownStyle,
                                         value: controller.setupCalendarDay,
@@ -195,7 +201,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                   style: recomendedTextStyle,
                                 ),
                               ),
-                              CommonMaterialButton.commonButton(
+                              commonButton(
                                 height: 50,
                                 text: done,
                                 onPress: () {

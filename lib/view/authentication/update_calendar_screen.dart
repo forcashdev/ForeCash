@@ -118,7 +118,7 @@ class UpdateCalendarScreen extends StatelessWidget {
                           alignment: Alignment.center,
                           child: GetBuilder<SelectedDropDownItem>(
                             builder: (controller1) {
-                              return CommonDropDown.commonDropDown(
+                              return commonDropDown(
                                   selectedItemTextStyle: dropDownStyle2,
                                   valueTextStyle: dropDownStyle,
                                   value: controller.setupCalendarDay,
@@ -190,7 +190,7 @@ class UpdateCalendarScreen extends StatelessWidget {
                         // ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-                          child: CommonMaterialButton.commonButton(
+                          child: commonButton(
                             height: 50,
                             text: next,
                             onPress: () {},

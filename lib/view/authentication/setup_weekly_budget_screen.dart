@@ -120,7 +120,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
     final controller = Get.put(SelectedDropDownItem());
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
-        return CommonDropDown.commonDropDown(
+        return commonDropDown(
             hintText: day,
             hintTextStyle: chooseDateStyle,
             selectedItemTextStyle: dropDownStyle2,
@@ -140,7 +140,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
 
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
-        return CommonDropDown.commonDropDown(
+        return commonDropDown(
             hintText: every,
             hintTextStyle: chooseDateStyle,
             selectedItemTextStyle: dropDownStyle2,
@@ -178,10 +178,11 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                 ? Container()
                 : Image.asset(
                     foreCashLogo2,
-                    scale: 3,
+                    height: Get.height * 0.055,
+                    width: Get.height * 0.25,
                   ),
             SizedBox(
-              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+              width: context.isTablet ? Get.width * 0.0 : Get.width * 0.01,
             )
           ],
         ),
@@ -424,7 +425,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
           left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
           right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
           top: Get.width * 0.015),
-      child: CommonMaterialButton.commonButton(
+      child: commonButton(
         height: 50,
         text: next,
         onPress: () {

@@ -62,7 +62,7 @@ class Api {
 
       Map<String, dynamic> headerParameters;
       headerParameters = {
-        "token": storage.read("loginToken") ?? "",
+        "authorization": storage.read("loginToken") != null ? "Bearer " + storage.read("loginToken") : "",
         "timeZoneOffset": DateTime.now().timeZoneOffset,
         "deviceType": Platform.isAndroid
             ? "1"
@@ -73,6 +73,8 @@ class Api {
       String mainUrl = baseUri + url;
 
       try {
+        print("headerParameters ==>");
+        print(headerParameters);
         Response response;
         if (methodType == MethodType.get) {
           response = await Dio().get(mainUrl,
@@ -95,6 +97,9 @@ class Api {
                 headers: headerParameters,
                 responseType: ResponseType.plain,
               ));
+          // if (response.statusCode == 200) {
+          //   return response;
+          // }
         }
         if (handleResponse(response)) {
           if (kDebugMode) {
@@ -109,6 +114,7 @@ class Api {
           Map<String, dynamic>? responseData;
           responseData = jsonDecode(response.data);
           if (isHideLoader!) {
+            //
             hideProgressDialog();
           }
           if (responseData?["success"] ?? false) {
@@ -119,23 +125,25 @@ class Api {
               await apiAlertDialog(message: responseData?["message"], buttonTitle: "Okay");
             }
             //#endregion alert
-            if ((responseData?.containsKey("data") ?? false) && (responseData?["data"].containsKey("token") ?? false) && (responseData?["data"]["token"].toString().isNotEmpty ?? false)) {
-              storage.write("loginToken", responseData?["data"]["token"]);
-            }
+            // if ((responseData?.containsKey("data") ?? false) && (responseData?["data"].containsKey("token") ?? false) && (responseData?["data"]["token"].toString().isNotEmpty ?? false)) {
+            //   storage.write("loginToken", responseData?["data"]["token"]);
+            // }
             success(responseData);
           } else {
             //region 401 = Session Expired  Manage Authentication/Session Expire
             if (response.statusCode == 401 || response.statusCode == 403) {
               unauthorizedDialog(responseData?["message"]);
-            } else if (error != null) {
+            } else {
               //#region alert
               if (errorMessageType == ErrorMessageType.snackBarOnlyError || errorMessageType == ErrorMessageType.snackBarOnResponse) {
                 getX.Get.snackbar("Error", responseData?["message"]);
               } else if (errorMessageType == ErrorMessageType.dialogOnlyError || errorMessageType == ErrorMessageType.dialogOnResponse) {
                 await apiAlertDialog(message: responseData?["message"], buttonTitle: "Okay");
               }
-              //#endregion alert
-              error(responseData);
+              if (error != null) {
+                //#endregion alert
+                error(responseData);
+              }
             }
             //endregion
           }

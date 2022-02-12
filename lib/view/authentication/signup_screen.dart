@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textfield.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
+import 'package:fore_cash/controller/register_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/signup_password_obscure_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -11,7 +13,6 @@ import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/login_screen.dart';
-import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -73,7 +74,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               child: constraints.maxWidth < 1000
                                   ? Image.asset(
                                       foreCashLogo2,
-                                      scale: 3,
+                                      height: Get.height * 0.055,
+                                      width: Get.height * 0.25,
                                     )
                                   : null,
                             ),
@@ -121,6 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
+
                             commonTextField(
                               textInputAction: TextInputAction.next,
                               hint: emailAddress,
@@ -146,33 +149,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             // ),
                             Padding(
                               padding: EdgeInsets.only(bottom: constraints.maxWidth > 1000 ? Get.height * 0.05 : Get.height * 0.2),
-                              child: GetBuilder<SignUpPasswordObscureController>(
-                                builder: (controller) {
-                                  return commonTextField(
-                                    textInputAction: TextInputAction.done,
-                                    hint: password,
-                                    controller: _password,
-                                    suffixIcon: IconButton(
-                                      splashRadius: 0.1,
-                                      onPressed: () {
-                                        controller.changeObscure();
-                                      },
-                                      icon: controller.obscure == true
-                                          ? const Icon(
-                                              Icons.visibility,
-                                              color: commonTextColor2,
-                                            )
-                                          : const Icon(Icons.visibility_off, color: commonTextColor2),
-                                    ),
-                                    obscureText: controller.obscure,
-                                    validator: (value) {
-                                      if (_password.text.length < 6) {
-                                        return minimumCharacter;
-                                      }
-                                    },
-                                  );
+                              child: commonTextFormField(
+                                onFieldSubmit: (String value) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                },
+                                inputAction: TextInputAction.done,
+                                hintText: password,
+                                textStyle: textFieldStyle,
+                                hintStyle: textFieldHintStyle,
+                                isPassword: true,
+                                textEditingController: _password,
+                                errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
+                                validationFunction: (value) {
+                                  if (_password.text.length < 6) {
+                                    return minimumCharacter;
+                                  }
                                 },
                               ),
+                              // child: GetBuilder<SignUpPasswordObscureController>(
+                              //   builder: (controller) {
+                              //     return commonTextField(
+                              //       textInputAction: TextInputAction.done,
+                              //       hint: password,
+                              //       controller: _password,
+                              //       suffixIcon: IconButton(
+                              //         splashRadius: 0.1,
+                              //         onPressed: () {
+                              //           controller.changeObscure();
+                              //         },
+                              //         icon: controller.obscure == true
+                              //             ? const Icon(
+                              //                 Icons.visibility,
+                              //                 color: commonTextColor2,
+                              //               )
+                              //             : const Icon(Icons.visibility_off, color: commonTextColor2),
+                              //       ),
+                              //       obscureText: controller.obscure,
+                              //       validator: (value) {
+                              //         if (_password.text.length < 6) {
+                              //           return minimumCharacter;
+                              //         }
+                              //       },
+                              //     );
+                              //   },
+                              // ),
                             ),
                             // SizedBox(
                             //   height: widget.constraints!.maxWidth > 1000 ? Get.height * 0.05 : Get.height * 0.09,
@@ -182,13 +207,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             //     : SizedBox(
                             //         height: constraints.maxWidth < 1000 ? Get.height * 0.17 : 0,
                             //       ),
-                            CommonMaterialButton.commonButton(
+                            commonButton(
                               onPress: () {
                                 _formKey.currentState!.validate();
                                 if (_formKey.currentState!.validate()) {
-                                  screenIndex = 1;
-                                  print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-                                  screenIndexController.updateIndex(index: 1);
+                                  RegisterController().callRegister(name: _name.text, email: _email.text, password: _password.text);
+                                  // screenIndex = 1;
+                                  // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+                                  // screenIndexController.updateIndex(index: 1);
                                 }
                               },
                               text: signUp,

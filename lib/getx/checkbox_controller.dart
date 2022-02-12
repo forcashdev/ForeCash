@@ -5,7 +5,7 @@ import 'package:fore_cash/model/weekly_income_model.dart';
 import 'package:get/get.dart';
 
 class CheckBoxController extends GetxController {
-  List<bool> monthlyIncomeCheckBoxValueList = List.generate(MonthlyIncomeModel.monthlyIncomeList.length, (index) => false);
+  List<bool> monthlyIncomeCheckBoxValueList = List.generate(MonthlyIncomeModelOld.monthlyIncomeList.length, (index) => false);
   List<bool> weeklyIncomeCheckBoxValueList = List.generate(WeeklyIncomeModel.weeklyIncomeList.length, (index) => false);
   List<bool> monthlyExpenseCheckBoxValueList = List.generate(MonthlyExpensesModel.monthlyExpensesList.length, (index) => false);
   List<bool> weeklyBudgetCheckBoxValueList = List.generate(WeeklyBudgetModel.weeklyBudgetModel.length, (index) => false);

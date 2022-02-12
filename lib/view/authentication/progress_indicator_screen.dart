@@ -22,7 +22,15 @@ class ScreenProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenIndexController = Get.put(ScreenIndexController());
-    List screensList = const [SignUpScreen(), ConnectBankAccountScreen(), MonthlyIncomeScreen(), WeeklyIncomeScreen(), MonthlyExpensesScreen(), SetupWeeklyBudgetScreen(), SetupCalendarScreen()];
+    List screensList = [
+      const SignUpScreen(),
+      const ConnectBankAccountScreen(),
+      MonthlyIncomeScreen(),
+      const WeeklyIncomeScreen(),
+      const MonthlyExpensesScreen(),
+      const SetupWeeklyBudgetScreen(),
+      const SetupCalendarScreen()
+    ];
     return SafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {

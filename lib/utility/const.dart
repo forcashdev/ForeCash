@@ -55,14 +55,8 @@ TextStyle columnNameListStyle = TextStyle(
   fontWeight: FontWeight.w500,
   color: commonGreyColor,
 );
-TextStyle incomeNameStyle = TextStyle(fontSize: 10.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
-TextStyle dateStyle = TextStyle(shadows: [
-  BoxShadow(
-    offset: const Offset(45.0, 0.0),
-    blurRadius: 10,
-    color: Colors.black.withOpacity(0.4),
-  )
-], fontSize: 10.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle incomeNameStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle dateStyle = TextStyle(fontSize: 10.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle emailStyle = TextStyle(
   fontSize: 12.sp,
   fontWeight: FontWeight.w300,

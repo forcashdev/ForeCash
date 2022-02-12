@@ -36,7 +36,8 @@ class ConnectBankAccountScreen extends StatelessWidget {
                         child: constraints.maxWidth < 1000
                             ? Image.asset(
                                 foreCashLogo2,
-                                scale: 3,
+                                height: Get.height * 0.055,
+                                width: Get.height * 0.25,
                               )
                             : null,
                       ),

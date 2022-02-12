@@ -16,6 +16,11 @@ commonTextFormField(
     TextStyle? prefixstyle,
     String? prefixText,
     String? hintText,
+    InputBorder? focusedBorder,
+    InputBorder? disabledBorder,
+    InputBorder? enabledBorder,
+    InputBorder? errorBorder,
+    InputBorder? focusedErrorBorder,
     bool isPassword = false,
     TextEditingController? textEditingController,
     Function? validationFunction,
@@ -44,49 +49,49 @@ commonTextFormField(
   bool passwordVisible = isPassword;
   return StatefulBuilder(builder: (context, newSetState) {
     return TextFormField(
-      scrollController: scrollController,
+      // scrollController: scrollController,
       // for scroll extra while keyboard open
       // scrollPadding: EdgeInsets.fromLTRB(20, 20, 20, 120),
-      enabled: isEnabled != null && !isEnabled ? false : true,
+      // enabled: isEnabled != null && !isEnabled ? false : true,
       //enabled: true,
       textAlign: align,
-      showCursor: !isReadOnly,
+      // showCursor: !isReadOnly,
       onTap: () {
         if (onTapFunction != null) {
           onTapFunction();
         }
       },
-      key: key,
+      // key: key,
       focusNode: textFocusNode,
-      onChanged: (value) {
-        if (onChangedFunction != null) {
-          onChangedFunction(value);
-        }
-      },
-      onEditingComplete: () {
-        if (onEditingComplete != null) {
-          onEditingComplete();
-        }
-      },
+      // onChanged: (value) {
+      //   if (onChangedFunction != null) {
+      //     onChangedFunction(value);
+      //   }
+      // },
+      // onEditingComplete: () {
+      //   if (onEditingComplete != null) {
+      //     onEditingComplete();
+      //   }
+      // },
       validator: (value) {
         return validationFunction != null ? validationFunction(value) : null;
       },
       // onSaved: onSavedFunction != null ? onSavedFunction : (value) {},
-      onSaved: (value) {
-        // ignore: void_checks
-        return onSavedFunction != null ? onSavedFunction(value) : null;
-      },
-      onFieldSubmitted: (value) {
-        // ignore: void_checks
-        return onFieldSubmit != null ? onFieldSubmit(value) : null;
-      },
+      // onSaved: (value) {
+      //   // ignore: void_checks
+      //   return onSavedFunction != null ? onSavedFunction(value) : null;
+      // },
+      // onFieldSubmitted: (value) {
+      //   // ignore: void_checks
+      //   return onFieldSubmit != null ? onFieldSubmit(value) : null;
+      // },
       // maxLines: maxLine ?? 1,
       keyboardType: keyboardType,
       controller: textEditingController,
       // initialValue: initialText,
-      cursorColor: colorPrimary,
+      // cursorColor: colorPrimary,
       obscureText: passwordVisible,
-      textInputAction: inputAction ?? TextInputAction.done,
+      textInputAction: inputAction ?? TextInputAction.next,
       style: textStyle ?? blackMontserrat10W500,
       inputFormatters: inputFormatter,
       //expands: true,
@@ -99,11 +104,11 @@ commonTextFormField(
         fillColor: filledColor,
         // isDense: true,
         contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-        focusedBorder: textFieldBorderStyle,
-        disabledBorder: textFieldBorderStyle,
-        enabledBorder: textFieldBorderStyle,
-        errorBorder: textFieldBorderStyle,
-        focusedErrorBorder: textFieldBorderStyle,
+        focusedBorder: focusedBorder ?? textFieldBorderStyle,
+        disabledBorder: disabledBorder ?? textFieldBorderStyle,
+        enabledBorder: enabledBorder ?? textFieldBorderStyle,
+        errorBorder: errorBorder ?? textFieldBorderStyle,
+        focusedErrorBorder: focusedErrorBorder ?? textFieldBorderStyle,
         hintText: hintText ?? '',
         prefixIcon: preFixIcon != null ? preFixIcon : null,
         suffixIcon: isPassword
@@ -116,11 +121,11 @@ commonTextFormField(
                 child: passwordVisible
                     ? const Icon(
                         Icons.visibility_off,
-                        color: colorPrimary,
+                        color: commonTextColor2,
                       )
                     : const Icon(
                         Icons.visibility,
-                        color: colorPrimary,
+                        color: commonTextColor2,
                       ))
             : suffixIcon ?? null,
         hintStyle: hintStyle ?? blackMontserrat10W500,

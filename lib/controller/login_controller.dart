@@ -1,6 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:fore_cash/api/api_call.dart';
+import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/model/login_model.dart';
+import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 // import 'package:swipecart/Model/loginModel.dart';
 //
 // import '../../utility/api_call.dart';
@@ -11,9 +15,9 @@ class LoginInController extends GetxController {
   static LoginInController get to => Get.find();
 
   Rx<LoginModel> loginModel = LoginModel().obs;
-  final formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  // final formKey = GlobalKey<FormState>();
+  // TextEditingController emailController = TextEditingController();
+  // TextEditingController passwordController = TextEditingController();
 
   validateEmail(String? value) {
     if (value?.isEmpty ?? false) {
@@ -42,21 +46,35 @@ class LoginInController extends GetxController {
     }*/
   }
 
-  callLogin() {
-    emailController.text = "krish@rentechdigital.com";
-    passwordController.text = "Krish@123";
-    if (formKey.currentState!.validate()) {
-      // Api().call(
-      //     url: mLogIn,
-      //     params: {
-      //       CS.rEmail: emailController.value.text,
-      //       CS.rPassword: passwordController.value.text,
-      //     },
-      //     success: (Map<String, dynamic> data) {
-      //       loginModel.value = LoginModel.fromJson(data);
-      //       loginModel.value.toJson();
-      //       Get.offAll(() => const MainScreen());
-      //     });
-    }
+  callLogin({String? email, String? password}) {
+    // if (formKey.currentState!.validate()) {
+    Api().call(
+        // isHideLoader: false,
+        // isProgressShow: false,
+        url: mLogIn,
+        params: {
+          rEmail: email,
+          rPassword: password,
+        },
+        error: () {
+          print(loginModel.value.success);
+        },
+        success: (Map<String, dynamic> data) {
+          print("loginModel.value.success");
+          print(data.toString());
+          loginModel.value = LoginModel.fromJson(data);
+
+          loginModel.value.toJson();
+          if (loginModel.value.success == true) {
+            final box = GetStorage();
+            box.write('userEmail', email);
+            storage.write("loginToken", loginModel.value.data!.token);
+            final screenIndexController = Get.put(ScreenIndexController());
+            screenIndexController.updateIndex(index: 1);
+            Get.to(() => const ScreenProgressIndicator());
+          }
+          // Get.offAll(() => const MainScreen());
+        });
+    // }
   }
 }

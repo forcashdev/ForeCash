@@ -83,7 +83,7 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                       builder: (controller1) {
                         // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
                         // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
-                        return CommonDropDown.commonDropDown(
+                        return commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
                             value: controller.weeklyBudgetDayDropDownList[index],
@@ -107,7 +107,7 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                     child: GetBuilder<SelectedDropDownItem>(
                       builder: (controller1) {
                         // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
-                        return CommonDropDown.commonDropDown(
+                        return commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
                             value: controller.weeklyBudgetWeekDropDownList[index],

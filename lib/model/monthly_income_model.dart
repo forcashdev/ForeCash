@@ -1,63 +1,67 @@
-class MonthlyIncomeModel {
-  final String? expenseName;
-  final String? amount;
-  MonthlyIncomeModel({
-    this.expenseName,
-    this.amount,
-  });
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-  static List<MonthlyIncomeModel> monthlyIncomeList = [
-    MonthlyIncomeModel(
+class MonthlyIncomeModelOld {
+  String? expenseName;
+  String? amount;
+  String? paidOn;
+  MonthlyIncomeModelOld({this.expenseName, this.amount, this.paidOn});
+  static List<MonthlyIncomeModelOld> monthlyIncomeList = [
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '100',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '200',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '300',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '400',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '500',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '600',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '700',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '800',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '900',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '1000',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '1100',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '1200',
     ),
-    MonthlyIncomeModel(
+    MonthlyIncomeModelOld(
       expenseName: 'Apple inc.',
       amount: '8000',
     ),
   ];
+  @override
+  DataGridRowAdapter? buildRow(DataGridRow row) {
+    // TODO: implement buildRow
+    throw UnimplementedError();
+  }
 }
