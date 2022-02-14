@@ -70,6 +70,7 @@ class LoginInController extends GetxController {
             box.write('userEmail', email);
             storage.write("loginToken", loginModel.value.data!.token);
             final screenIndexController = Get.put(ScreenIndexController());
+            // screenIndexController.pageController.animateToPage(2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
             screenIndexController.updateIndex(index: 1);
             Get.to(() => const ScreenProgressIndicator());
           }

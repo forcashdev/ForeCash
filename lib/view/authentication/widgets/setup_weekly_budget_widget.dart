@@ -17,7 +17,7 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
   return ListView.builder(
     physics: NeverScrollableScrollPhysics(),
     shrinkWrap: true,
-    itemCount: WeeklyBudgetModel.weeklyBudgetModel.length,
+    itemCount: WeeklyBudgetListController.to.weeklyBudgetList?.length,
     itemBuilder: (context, index) {
       return Padding(
         padding: EdgeInsets.only(bottom: Get.height * 0.019),

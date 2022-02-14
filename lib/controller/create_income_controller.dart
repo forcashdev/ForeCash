@@ -1,25 +1,13 @@
 import 'package:fore_cash/api/api_call.dart';
+import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/model/income_request_model.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
 class CreateIncomeController extends GetxController {
   static CreateIncomeController get to => Get.find();
-
-  // Rx<IncomeModel> incomeModel = IncomeModel().obs;
   Api api = Api();
-
-  // findLength() {
-  //   int monthlyIncomeLength = 0;
-  //   for (int i = 0; i < CreateIncomeController.to.incomeModel.value.data!.length; i++) {
-  //     if (CreateIncomeController.to.incomeModel.value.data?[i].incomeOutgoing == 1 && CreateIncomeController.to.incomeModel.value.data?[i].weekMonth == 2) {
-  //       monthlyIncomeLength++;
-  //     }
-  //   }
-  //   print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>$monthlyIncomeLength');
-  //   return monthlyIncomeLength;
-  // }
-
-  createIncome({parameter}) {
+  createIncome({parameter, int? screenIndex}) {
     api.call(
         // isHideLoader: false,
         // isProgressShow: false,
@@ -38,29 +26,29 @@ class CreateIncomeController extends GetxController {
         },
         success: (data) {
           print('>>>>>>>>>>>>>>');
-          print(data.toString());
-
-          print('>>>>>>>>>>>>>>');
-          // incomeModel.value = IncomeModel.fromJson(data);
-          // incomeModel.value.toJson();
-
-          // if (dataModel.value.success == true) {
-          //   final box = GetStorage();
-          //   box.write('userEmail', email);
-          //   final screenIndexController = Get.put(ScreenIndexController());
-          //   screenIndexController.updateIndex(index: 1);
-          //   Get.to(() => const ScreenProgressIndicator());
-          // }
+          print('<<<<<<<<<<<<<<<<<<<${data['success'].toString()}');
+          if (data['success'] == true) {
+            final screenIndexController = Get.put(ScreenIndexController());
+            screenIndexController.updateIndex(index: screenIndex);
+          }
         });
 
     // }
   }
 
-  RxList<MonthlyIncomeModel> monthlyIncomesList = <MonthlyIncomeModel>[].obs;
+  RxList<MonthlyIncomeModel> IncomesList = <MonthlyIncomeModel>[].obs;
 
   getMonthlyIncome() {
-    monthlyIncomesList.add(
+    IncomesList.add(
       MonthlyIncomeModel(incomeName: '', amount: '', paidOn: '1st', dateTime: DateTime.now(), every: '1 mon'),
+    );
+  }
+
+  RxList<Income>? monthlyIncomeList = <Income>[].obs;
+
+  getMonthlyIncomeList() {
+    monthlyIncomeList?.add(
+      Income(paidOn: 5, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
     );
   }
 
@@ -68,7 +56,7 @@ class CreateIncomeController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    getMonthlyIncome();
+    getMonthlyIncomeList();
   }
 }
 

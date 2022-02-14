@@ -18,8 +18,8 @@ class SelectedDropDownItem extends GetxController {
   String? weeklyBudgetWeek;
   String? setupCalendarDay = 'Sunday';
   List<Object> selectedMonthlyIncomeMonthList = List.generate(MonthlyIncomeModelOld.monthlyIncomeList.length, (index) => '1 mon');
-  List<Object> selectedMonthlyExpenseDate = List.generate(MonthlyExpensesModel.monthlyExpensesList.length, (index) => '1st');
-  List<Object> selectedMonthlyExpenseMonth = List.generate(MonthlyExpensesModel.monthlyExpensesList.length, (index) => '1 mon');
+  List<Object> selectedMonthlyExpenseDate = List.generate(MonthlyExpensesModel.monthlyExpensesListOld.length, (index) => '1st');
+  List<Object> selectedMonthlyExpenseMonth = List.generate(MonthlyExpensesModel.monthlyExpensesListOld.length, (index) => '1 mon');
   List<Object> selectedMonthlyIncomeDateList = List.generate(MonthlyIncomeModelOld.monthlyIncomeList.length, (index) => '1st');
   // List<Object> selectedMonthlyIncomeDateListDouble = List.generate(5, (index) => CreateIncomeController.to.incomeModel.value.data?[index].amount as Object);
   List<Object> selectDayDropDown = List.generate(WeeklyIncomeModel.weeklyIncomeList.length, (index) => 'Sun');

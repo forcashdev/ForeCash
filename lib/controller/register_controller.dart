@@ -33,6 +33,7 @@ class RegisterController extends GetxController {
             final box = GetStorage();
             box.write('userEmail', email);
             final screenIndexController = Get.put(ScreenIndexController());
+            // screenIndexController.pageController.animateToPage(2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
             screenIndexController.updateIndex(index: 1);
             Get.to(() => const ScreenProgressIndicator());
           }

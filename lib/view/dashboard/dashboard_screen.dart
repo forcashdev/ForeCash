@@ -121,7 +121,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
                 ));
         List<PageController> monthlyExpensePageControllerList = List.generate(
-            MonthlyExpensesModel.monthlyExpensesList.length,
+            MonthlyExpensesModel.monthlyExpensesListOld.length,
             (index) => PageController(
                   viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
                 ));
@@ -3351,7 +3351,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: MonthlyExpensesModel.monthlyExpensesList.length,
+                      itemCount: MonthlyExpensesModel.monthlyExpensesListOld.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
@@ -3363,7 +3363,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    MonthlyExpensesModel.monthlyExpensesList.removeAt(index);
+                                    MonthlyExpensesModel.monthlyExpensesListOld.removeAt(index);
                                   });
                                 },
                                 child: Container(
@@ -3392,7 +3392,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     height: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? Get.height * 0.04 : null,
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      '${MonthlyExpensesModel.monthlyExpensesList[index].expenseName}',
+                                      '${MonthlyExpensesModel.monthlyExpensesListOld[index].expenseName}',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: blackMontserrat10W500,
@@ -3429,7 +3429,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
                                             child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
                                                 ? Text(
-                                                    '${MonthlyExpensesModel.monthlyExpensesList[index].expenseName}',
+                                                    '${MonthlyExpensesModel.monthlyExpensesListOld[index].expenseName}',
                                                     maxLines: 1,
                                                     overflow: TextOverflow.ellipsis,
                                                     style: blackMontserrat10W500,
@@ -3437,7 +3437,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   )
                                                 : CommonDataTextField.commonTextField(
                                                     inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
-                                                    hintText: MonthlyExpensesModel.monthlyExpensesList[index].expenseName,
+                                                    hintText: MonthlyExpensesModel.monthlyExpensesListOld[index].expenseName,
                                                     hintStyle: blackMontserrat10W500,
                                                     contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
                                                     textStyle: blackMontserrat10W500,
@@ -3528,13 +3528,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             alignment: Alignment.centerLeft,
                                             child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
                                                 ? Text(
-                                                    '${MonthlyExpensesModel.monthlyExpensesList[index].amount}',
+                                                    '${MonthlyExpensesModel.monthlyExpensesListOld[index].amount}',
                                                     style: blackMontserrat10W500,
                                                     maxLines: 1,
                                                   )
                                                 : CommonDataTextField.commonTextField(
                                                     inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
-                                                    hintText: MonthlyExpensesModel.monthlyExpensesList[index].amount,
+                                                    hintText: MonthlyExpensesModel.monthlyExpensesListOld[index].amount,
                                                     hintStyle: blackMontserrat10W500,
                                                     contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
                                                     textStyle: blackMontserrat10W500,
@@ -3578,7 +3578,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  MonthlyExpensesModel.monthlyExpensesList.removeAt(index);
+                                                  MonthlyExpensesModel.monthlyExpensesListOld.removeAt(index);
                                                 });
                                               },
                                               child: Container(
@@ -3737,7 +3737,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       onTap: () {
                                         setState(() {
                                           final controller = Get.put(SelectedDropDownItem());
-                                          MonthlyExpensesModel.monthlyExpensesList.add(MonthlyExpensesModel(expenseName: _weeklyIncomeNameController.text, amount: _weeklyAmountController.text));
+                                          MonthlyExpensesModel.monthlyExpensesListOld.add(MonthlyExpensesModel(expenseName: _weeklyIncomeNameController.text, amount: _weeklyAmountController.text));
                                           controller.selectedMonthlyExpenseDate.add(controller.selectedSingleMonthlyExpenseDate as Object);
                                           controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonthlyExpenseMonth as Object);
                                         });

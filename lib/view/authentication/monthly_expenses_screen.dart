@@ -1,22 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
+import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/controller/create_income_controller.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/getx/visibility_controller.dart';
+import 'package:fore_cash/model/income_request_model.dart';
 import 'package:fore_cash/model/monthly_expenses_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
-import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
-import 'package:fore_cash/view/authentication/widgets/monthly_expenses_widget.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class MonthlyExpensesScreen extends StatefulWidget {
   const MonthlyExpensesScreen({Key? key}) : super(key: key);
@@ -26,12 +29,16 @@ class MonthlyExpensesScreen extends StatefulWidget {
 }
 
 class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
-  final TextEditingController _monthlyExpenseName = TextEditingController();
-  final TextEditingController _monthlyAmount = TextEditingController();
+  final TextEditingController _expenseName2 = TextEditingController();
+  final TextEditingController _expenseAmount2 = TextEditingController();
+  TextEditingController? _monthlyExpenseName;
+  TextEditingController? _monthlyAmount;
   final visibilityController = Get.put(VisibilityController());
   final controller = Get.put(SelectedDropDownItem());
   final checkBoxController = Get.put(CheckBoxController());
+  final monthlyExpenseListController = Get.put(MonthlyExpenseListController());
   final screenIndexController = Get.put(ScreenIndexController());
+  DateTime currentDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,80 +47,80 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
           screenIndexController.updateIndex(index: 3);
           return false;
         },
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final maxWidth = constraints.maxWidth > 1000;
-            return Scaffold(
-              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
-              body: Align(
-                alignment: maxWidth ? Alignment.center : Alignment.topCenter,
-                child: SingleChildScrollView(
-                  physics: maxWidth ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
-                    decoration: BoxDecoration(color: maxWidth ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
-                    width: maxWidth ? Get.width / 1.4 : null,
-                    height: maxWidth ? Get.height * 0.78 : null,
-                    child: Column(
-                      children: [
-                        _headerWidget(constraints: constraints),
-                        Expanded(
-                          flex: maxWidth ? 2 : 0,
-                          child: Container(
-                            padding: const EdgeInsets.only(top: 10, bottom: 10),
-                            // width: maxWidth ? Get.width / 1.5 : null,
-                            // height: maxWidth ? 300 : null,
+        child: StreamBuilder(
+            stream: MonthlyExpenseListController.to.monthlyExpenseList?.stream,
+            builder: (context, snapshot) {
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  final maxWidth = constraints.maxWidth > 1000;
+                  return Scaffold(
+                    backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+                    body: Align(
+                      alignment: maxWidth ? Alignment.center : Alignment.topCenter,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : 0.0),
+                        decoration: BoxDecoration(color: maxWidth ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
+                        width: maxWidth ? Get.width / 1.4 : null,
+                        height: maxWidth ? Get.height * 0.78 : null,
+                        child: Column(
+                          children: [
+                            _headerWidget(constraints: constraints),
+                            Expanded(
+                              flex: maxWidth ? 2 : 2,
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                // width: maxWidth ? Get.width / 1.5 : null,
+                                // height: maxWidth ? 300 : null,
 
-                            decoration: BoxDecoration(
-                                // color: Colors.red,
-                                border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _nameTableRowWidget(),
-                                SizedBox(
-                                  height: Get.height * 0.01,
-                                ),
-                                maxWidth
-                                    ? Divider(
-                                        color: commonGreyColor.withOpacity(0.5),
-                                      )
-                                    : Container(),
-                                // SizedBox(
-                                //   height: Get.height * 0.020,
-                                // ),
-                                Expanded(
-                                    flex: maxWidth ? 2 : 0,
-                                    child: SingleChildScrollView(
-                                      physics: maxWidth ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
-                                      child: Column(
-                                        children: [
-                                          MonthlyExpensesWidget(
-                                            constraints: constraints,
+                                decoration: BoxDecoration(
+                                    // color: Colors.red,
+                                    border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _nameTableRowWidget(),
+                                    SizedBox(
+                                      height: Get.height * 0.01,
+                                    ),
+                                    maxWidth
+                                        ? Divider(
+                                            color: commonGreyColor.withOpacity(0.5),
+                                          )
+                                        : Container(),
+                                    // SizedBox(
+                                    //   height: Get.height * 0.020,
+                                    // ),
+                                    Expanded(
+                                        flex: maxWidth ? 2 : 2,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              monthlyExpenseRowWidget(
+                                                constraints: constraints,
+                                              ),
+                                              _addNewMonthlyExpenseWidget(constraints: constraints),
+                                              // _addMonthlyExpenseButton(constraints: constraints),
+                                            ],
                                           ),
-                                          _addNewMonthlyExpenseWidget(constraints: constraints),
-                                          // _addMonthlyExpenseButton(constraints: constraints),
-                                        ],
-                                      ),
-                                    )),
-                              ],
+                                        )),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+                            Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
+                          ],
                         ),
-                        Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              bottomNavigationBar: Visibility(
-                visible: maxWidth ? false : true,
-                child: _nextButtonWidget(constraints: constraints),
-              ),
-            );
-          },
-        ),
+                    bottomNavigationBar: Visibility(
+                      visible: maxWidth ? false : true,
+                      child: _nextButtonWidget(constraints: constraints),
+                    ),
+                  );
+                },
+              );
+            }),
       ),
     );
   }
@@ -224,6 +231,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         2: FlexColumnWidth(2),
         3: FlexColumnWidth(2),
         4: FlexColumnWidth(2),
+        5: FlexColumnWidth(2),
       },
       children: [
         TableRow(
@@ -239,6 +247,10 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
             ),
             Text(
               every,
+              style: columnNameListStyle,
+            ),
+            Text(
+              startDate,
               style: columnNameListStyle,
             ),
             Text(
@@ -329,6 +341,178 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
     );
   }
 
+  monthlyExpenseRowWidget({BoxConstraints? constraints}) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: MonthlyExpenseListController.to.monthlyExpenseList?.length,
+      itemBuilder: (context, index) {
+        _monthlyExpenseName = TextEditingController(text: MonthlyExpenseListController.to.monthlyExpenseList?[index].name);
+        _monthlyAmount = TextEditingController(text: MonthlyExpenseListController.to.monthlyExpenseList?[index].amount.toString());
+        print('Check bob leangth=> ${checkBoxController.monthlyExpenseCheckBoxValueList.length}');
+        return Padding(
+          padding: EdgeInsets.only(bottom: Get.height * 0.019),
+          child: Slidable(
+            actionPane: const SlidableDrawerActionPane(),
+            actionExtentRatio: 0.13,
+            secondaryActions: [
+              deleteImageWidget(onTap: () {
+                MonthlyExpenseListController.to.monthlyExpenseList?.removeAt(index);
+              }),
+            ],
+            child: Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: FlexColumnWidth(0.35),
+                1: FlexColumnWidth(3),
+                2: FlexColumnWidth(2),
+                3: FlexColumnWidth(2),
+                4: FlexColumnWidth(2),
+                5: FlexColumnWidth(2),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    constraints!.maxWidth < 1000
+                        ? Container(
+                            height: Get.height * 0.044,
+                            // width: 8,
+                            margin: EdgeInsets.only(right: Get.width * 0.02),
+                            decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
+                          )
+                        : SizedBox(
+                            height: Get.height * 0.044,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: GetBuilder<CheckBoxController>(
+                                builder: (controller) {
+                                  return Checkbox(
+                                    activeColor: cameraBackGroundColor,
+                                    checkColor: Colors.white,
+                                    value: checkBoxController.monthlyExpenseCheckBoxValueList[index],
+                                    //value: checkBoxController.monthlyExpenseCheckBoxValueList[index] ?? false,
+                                    onChanged: (value) {
+                                      checkBoxController.selectedMonthlyExpenseCheckBox(value: value, index: index);
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Padding(
+                          padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                          child: commonTextFormField(
+                              inputAction: TextInputAction.next,
+                              // maxLine: 2,
+                              inputFormatter: [characterInputFormatter()],
+                              //contentPadding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
+                              contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                              textStyle: incomeNameStyle,
+                              textEditingController: _monthlyExpenseName)),
+                    ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        // width: widget.constraints!.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                        // height: Get.height * 0.044,
+
+                        child: commonDropDown(
+                            selectedItemTextStyle: dropDownStyle2,
+                            valueTextStyle: dropDownStyle,
+                            // value: controller.selectedMonthlyExpenseDate[index],
+                            value: '${MonthlyExpenseListController.to.monthlyExpenseList?[index].paidOn}th',
+                            itemList: dateList,
+                            onChanged: (item) {
+                              MonthlyExpenseListController.to.monthlyExpenseList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
+                              MonthlyExpenseListController.to.monthlyExpenseList?.refresh();
+                              // controller.changeMonthlyExpenseDate(item: item, index: index);
+                              print(item);
+                            }),
+                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        // width: widget.constraints!.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                        // height: Get.height * 0.044,
+
+                        child: commonDropDown(
+                            selectedItemTextStyle: dropDownStyle2,
+                            valueTextStyle: dropDownStyle,
+                            value: '${MonthlyExpenseListController.to.monthlyExpenseList?[index].every} mon',
+                            // value: controller.selectedMonthlyExpenseMonth[index],
+                            itemList: months,
+                            onChanged: (item) {
+                              MonthlyExpenseListController.to.monthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                              MonthlyExpenseListController.to.monthlyExpenseList?.refresh();
+                              // controller.changeMonthlyExpenseMonth(item: item, index: index);
+                              print(item);
+                            }),
+                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    TableCell(
+                        verticalAlignment: TableCellVerticalAlignment.fill,
+                        child: GestureDetector(
+                          onTap: () {
+                            _selectDate(context: context, index: index);
+                          },
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '${MonthlyExpenseListController.to.monthlyExpenseList?[index].date}',
+                              // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                              style: dateStyle,
+                              maxLines: 1,
+                            ),
+                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                            decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                          ),
+                        )),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: Get.width * 0.02),
+                        child: commonTextFormField(
+                            prefixText: '\$',
+                            prefixstyle: incomeNameStyle,
+                            keyboardType: TextInputType.phone,
+                            inputAction: TextInputAction.done,
+                            inputFormatter: [digitInputFormatter()],
+                            contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                            textStyle: incomeNameStyle,
+                            textEditingController: _monthlyAmount),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _selectDate({BuildContext? context, int? index}) async {
+    final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
+    if (pickedDate != null && pickedDate != currentDate) {
+      setState(() {
+        currentDate = pickedDate;
+      });
+      print('>>>>>>>>>>>>>>>>>$currentDate');
+      // CreateIncomeController.to.IncomesList[index!].dateTime = currentDate;
+      MonthlyExpenseListController.to.monthlyExpenseList?[index!].date = currentDate.toString();
+      MonthlyExpenseListController.to.monthlyExpenseList?.refresh();
+    }
+  }
+
   _addNewMonthlyExpenseWidget({BoxConstraints? constraints}) {
     return Padding(
       padding: EdgeInsets.only(top: Get.height * 0.01),
@@ -340,6 +524,17 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
               child: GestureDetector(
                 onTap: () {
+                  if (MonthlyExpenseListController.to.monthlyExpenseList?.length == 1) {
+                    MonthlyExpenseListController.to.monthlyExpenseList?[0].amount = int.parse(_monthlyAmount!.text.toString());
+                    MonthlyExpenseListController.to.monthlyExpenseList?[0].name = _monthlyExpenseName!.text;
+                    MonthlyExpenseListController.to.monthlyExpenseList?[0].incomeOutgoing = 2;
+                    MonthlyExpenseListController.to.monthlyExpenseList?[0].weekMonth = 2;
+                    MonthlyExpenseListController.to.monthlyExpenseList?[0].date = DateTime.now().toString();
+
+                    controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
+                    controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
+                    checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
+                  }
                   visibilityController.changeVisibility();
                 },
                 child: Align(
@@ -364,6 +559,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                       2: FlexColumnWidth(2),
                       3: FlexColumnWidth(2),
                       4: FlexColumnWidth(2),
+                      5: FlexColumnWidth(2),
                     },
                     children: [
                       TableRow(
@@ -372,15 +568,15 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                           TableCell(
                             verticalAlignment: TableCellVerticalAlignment.fill,
                             child: Padding(
-                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                               child: commonTextFormField(
                                   hintText: addExpense,
                                   hintStyle: incomeNameStyle,
-                                  inputAction: TextInputAction.done,
+                                  inputAction: TextInputAction.next,
                                   inputFormatter: [characterInputFormatter()],
                                   contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                   textStyle: incomeNameStyle,
-                                  textEditingController: _monthlyExpenseName),
+                                  textEditingController: _expenseName2),
                             ),
                           ),
                           TableCell(
@@ -393,7 +589,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               // height: Get.height * 0.044,
                               // alignment: Alignment.center,
                               child: dropDownDayGetBuilder(dropDownList: dateList),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
                               decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                             ),
                           ),
@@ -405,22 +601,40 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               // height: Get.height * 0.044,
                               // alignment: Alignment.center,
                               child: dropDownWeekGetBuilder(dropDownList: months),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
                               decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                             ),
                           ),
                           TableCell(
+                              verticalAlignment: TableCellVerticalAlignment.fill,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _selectDate(context: context);
+                                },
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                                    style: dateStyle,
+                                    maxLines: 1,
+                                  ),
+                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                                ),
+                              )),
+                          TableCell(
                             verticalAlignment: TableCellVerticalAlignment.fill,
                             child: Padding(
-                              padding: EdgeInsets.only(right: Get.width * 0.04),
+                              padding: EdgeInsets.only(right: Get.width * 0.02),
                               child: commonTextFormField(
                                   prefixText: '\$',
+                                  keyboardType: TextInputType.phone,
                                   prefixstyle: incomeNameStyle,
                                   inputAction: TextInputAction.done,
                                   inputFormatter: [digitInputFormatter()],
                                   contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                   textStyle: incomeNameStyle,
-                                  textEditingController: _monthlyAmount),
+                                  textEditingController: _expenseAmount2),
                             ),
                           ),
                         ],
@@ -436,16 +650,30 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              MonthlyExpensesModel.monthlyExpensesList.add(MonthlyExpensesModel(expenseName: _monthlyExpenseName.text, amount: _monthlyAmount.text));
-                              controller.selectedMonthlyExpenseDate.add(controller.selectedSingleMonthlyExpenseDate as Object);
-                              controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonthlyExpenseMonth as Object);
-                              checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
-                              controller1.changeVisibility();
-                            });
-                            _monthlyAmount.clear();
-                            _monthlyExpenseName.clear();
+                            // setState(() {
+                            //   MonthlyExpensesModel.monthlyExpensesListOld.add(MonthlyExpensesModel(expenseName: _monthlyExpenseName.text, amount: _monthlyAmount.text));
+                            //   controller.selectedMonthlyExpenseDate.add(controller.selectedSingleMonthlyExpenseDate as Object);
+                            //   controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonthlyExpenseMonth as Object);
+                            //   checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
+                            //   controller1.changeVisibility();
+                            // });
+                            // _monthlyAmount.clear();
+                            // _monthlyExpenseName.clear();
 
+                            MonthlyExpenseListController.to.monthlyExpenseList?.add(Income(
+                                name: _expenseName2.text,
+                                amount: int.parse(_expenseAmount2.text),
+                                incomeOutgoing: 2,
+                                weekMonth: 2,
+                                every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                                paidOn: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                date: DateFormat('yyyy-MM-dd').format(currentDate)));
+                            checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
+                            // print('00000${checkBoxController.monthlyExpenseCheckBoxValueList.indexWhere((element) => element)}');
+                            // checkBoxController.monthlyExpenseCheckBoxValueList.forEach((element) {
+                            //   print(element);
+                            // });
+                            controller1.changeVisibility();
                             // monthlyIncomeEditMode.showEditMode();
                           },
                           child: Text(
@@ -493,9 +721,10 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         height: 50,
         text: next,
         onPress: () {
-          screenIndex = 5;
-          print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-          screenIndexController.updateIndex(index: 5);
+          CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': MonthlyExpenseListController.to.monthlyExpenseList});
+          // screenIndex = 5;
+          // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+          // screenIndexController.updateIndex(index: 5);
           // Navigator.push(
           //     context,
           //     MaterialPageRoute(

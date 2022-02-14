@@ -25,7 +25,7 @@ class ScreenProgressIndicator extends StatelessWidget {
     List screensList = [
       const SignUpScreen(),
       const ConnectBankAccountScreen(),
-      MonthlyIncomeScreen(),
+      const MonthlyIncomeScreen(),
       const WeeklyIncomeScreen(),
       const MonthlyExpensesScreen(),
       const SetupWeeklyBudgetScreen(),

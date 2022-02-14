@@ -1,13 +1,15 @@
 import 'package:get/get.dart';
 
-class WeeklyIncomeController extends GetxController {
-  static WeeklyIncomeController get to => Get.find();
+import 'income_request_model.dart';
 
-  RxList<WeeklyIncomeModel> weeklyIncomesList = <WeeklyIncomeModel>[].obs;
+class WeeklyIncomeListController extends GetxController {
+  static WeeklyIncomeListController get to => Get.find();
+
+  RxList<Income>? weeklyIncomesList = <Income>[].obs;
 
   getWeeklyIncome() {
-    weeklyIncomesList.add(
-      WeeklyIncomeModel(incomeName: '', amount: '', paidOn: 'Sun', every: '1W'),
+    weeklyIncomesList?.add(
+      Income(name: '', amount: 0, paidOn: 5, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1),
     );
   }
 

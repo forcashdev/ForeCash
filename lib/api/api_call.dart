@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -62,14 +61,21 @@ class Api {
 
       Map<String, dynamic> headerParameters;
       headerParameters = {
-        "authorization": storage.read("loginToken") != null ? "Bearer " + storage.read("loginToken") : "",
-        "timeZoneOffset": DateTime.now().timeZoneOffset,
-        "deviceType": Platform.isAndroid
-            ? "1"
-            : Platform.isIOS
-                ? "2"
-                : "3",
+        "authorization": storage.read("loginToken") != null
+            ? "Bearer " + storage.read("loginToken")
+            : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NDY1NDU4NCwiZXhwIjoxNjQ0NjkwNTg0fQ.3E1N11Kz8ciOKz6uXUEUZLjt05OUBvRtt2FLOfNBI_I",
+        // 'Authorization':
+        //     'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NDY1NDU4NCwiZXhwIjoxNjQ0NjkwNTg0fQ.3E1N11Kz8ciOKz6uXUEUZLjt05OUBvRtt2FLOfNBI_I',
+        // "timeZoneOffset": DateTime.now().timeZoneOffset,
+        // "deviceType": Platform.isAndroid
+        //     ? "1"
+        //     : Platform.isIOS
+        //         ? "2"
+        //         : "3",
       };
+      // if (kIsWeb) {
+      //   headerParameters['Access-Control-Allow-Origin'] = '*';
+      // }
       String mainUrl = baseUri + url;
 
       try {

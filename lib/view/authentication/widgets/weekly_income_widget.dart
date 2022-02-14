@@ -23,12 +23,12 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
   final checkBoxController = Get.put(CheckBoxController());
   final weeklyEditModeController = Get.put(WeeklyIncomeEditModeController());
   return StreamBuilder(
-      stream: WeeklyIncomeController.to.weeklyIncomesList.stream,
+      stream: WeeklyIncomeListController.to.weeklyIncomesList?.stream,
       builder: (context, snapshot) {
         return ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: WeeklyIncomeController.to.weeklyIncomesList.length,
+          itemCount: WeeklyIncomeListController.to.weeklyIncomesList?.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.only(bottom: Get.height * 0.019),
@@ -77,7 +77,7 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                               inputFormatter: [characterInputFormatter()],
                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                               textStyle: incomeNameStyle,
-                              textEditingController: TextEditingController(text: WeeklyIncomeController.to.weeklyIncomesList[index].incomeName)),
+                              textEditingController: TextEditingController(text: WeeklyIncomeListController.to.weeklyIncomesList?[index].name)),
                         ),
                       ),
                       TableCell(
@@ -143,7 +143,7 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                               inputFormatter: [digitInputFormatter()],
                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                               textStyle: incomeNameStyle,
-                              textEditingController: TextEditingController(text: WeeklyIncomeController.to.weeklyIncomesList[index].amount)),
+                              textEditingController: TextEditingController(text: WeeklyIncomeListController.to.weeklyIncomesList?[index].amount.toString())),
                         ),
                       ),
                       // Expanded(
@@ -177,185 +177,4 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
           },
         );
       });
-}
-
-weeklyIncomeTableWidget({BoxConstraints? constraints}) {
-  final controller = Get.put(SelectedDropDownItem());
-  final checkBoxController = Get.put(CheckBoxController());
-  return Table(
-    columnWidths: const <int, TableColumnWidth>{
-      0: FlexColumnWidth(0.35),
-      1: FlexColumnWidth(3),
-      2: FlexColumnWidth(2),
-      3: FlexColumnWidth(2),
-      4: FlexColumnWidth(2),
-    },
-    children: [
-      ...List.generate(
-          WeeklyIncomeController.to.weeklyIncomesList.length,
-          (index) => TableRow(
-                children: [
-                  constraints!.maxWidth < 1000
-                      ? Container(
-                          height: Get.height * 0.044,
-                          width: 8,
-                          margin: EdgeInsets.only(right: Get.width * 0.02),
-                          decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.only(left: 5),
-                          child: GetBuilder<CheckBoxController>(
-                            builder: (controller) {
-                              return Checkbox(
-                                activeColor: cameraBackGroundColor,
-                                checkColor: Colors.white,
-                                value: checkBoxController.monthlyIncomeCheckBoxValueList[index],
-                                onChanged: (value) {
-                                  checkBoxController.selectCheckBox(value: value, index: index);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 10),
-                    width: constraints.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
-                    height: Get.height * 0.044,
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                    child: Text(
-                      '${WeeklyIncomeController.to.weeklyIncomesList[index].incomeName}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: incomeNameStyle,
-                    ),
-                    // child: const TextField(
-                    //   style: TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14),
-                    //   decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 7), border: InputBorder.none),
-                    // ),
-                    decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                      left: 6,
-                    ),
-                    width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                    height: Get.height * 0.044,
-                    alignment: Alignment.center,
-                    child: GetBuilder<SelectedDropDownItem>(
-                      builder: (controller1) {
-                        // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
-                        // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
-                        return commonDropDown(
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: controller.selectDayDropDown[index],
-                            itemList: days,
-                            onChanged: (item) {
-                              controller.changeDay(item: item, index: index);
-                              print(item);
-                            });
-                        //   DropdownButtonHideUnderline(
-                        //   child: DropdownButton(
-                        //     value: controller.selectDayDropDown[index],
-                        //     // value: controller.selectedItem,
-                        //     style: dropDownStyle,
-                        //     items: days.map((String items) {
-                        //       return DropdownMenuItem(
-                        //         value: items,
-                        //         child: Text(
-                        //           items,
-                        //           style: dropDownStyle2,
-                        //         ),
-                        //       );
-                        //     }).toList(),
-                        //     onChanged: (item) {
-                        //       controller.changeDay(item: item, index: index);
-                        //     },
-                        //     isExpanded: true,
-                        //
-                        //     icon: const Icon(
-                        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                        //       // color: AppTheme.colorGrey,
-                        //     ),
-                        //   ),
-                        // );
-                      },
-                    ),
-                    margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                    decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 6),
-                    width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                    height: Get.height * 0.044,
-                    alignment: Alignment.center,
-                    child: GetBuilder<SelectedDropDownItem>(
-                      builder: (controller1) {
-                        // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
-                        return commonDropDown(
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: controller.selectWeekDropDown[index],
-                            itemList: weeks,
-                            onChanged: (item) {
-                              controller.changeWeek(item: item, index: index);
-                              print(item);
-                            });
-                        //   DropdownButtonHideUnderline(
-                        //   child: DropdownButton(
-                        //     value: controller.selectWeekDropDown[index],
-                        //     // value: controller.selectedItem,
-                        //     style: dropDownStyle,
-                        //
-                        //     items: weeks.map((String items) {
-                        //       return DropdownMenuItem(
-                        //         value: items,
-                        //         child: Text(
-                        //           items,
-                        //           style: dropDownStyle2,
-                        //         ),
-                        //       );
-                        //     }).toList(),
-                        //     onChanged: (item) {
-                        //       controller.changeWeek(item: item, index: index);
-                        //     },
-                        //     isExpanded: true,
-                        //
-                        //     icon: const Icon(
-                        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                        //       // color: AppTheme.colorGrey,
-                        //     ),
-                        //   ),
-                        // );
-                      },
-                    ),
-                    margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                    decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                  ),
-                  Container(
-                    // width: sequenceSize.width * 0.14,
-                    height: Get.height * 0.044, padding: EdgeInsets.only(left: 10),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '\$${WeeklyIncomeController.to.weeklyIncomesList[index].amount}',
-                      style: incomeNameStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    // child: const TextField(
-                    //   style: TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14),
-                    //   decoration: InputDecoration(
-                    //       prefixStyle: TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 13),
-                    //       prefixText: '\$',
-                    //       contentPadding: EdgeInsets.only(bottom: 7),
-                    //       border: InputBorder.none),
-                    // ),
-                    margin: EdgeInsets.only(right: Get.width * 0.04),
-                    decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                  ),
-                ],
-              ))
-    ],
-  );
 }

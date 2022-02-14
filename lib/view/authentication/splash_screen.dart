@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       final box = GetStorage();
       final finalUserEmail = box.read('userEmail');
       screenIndexController.updateIndex(index: finalUserEmail == null ? 0 : 1);
+      // screenIndexController.pageController.animateToPage(finalUserEmail == null ? 1 : 2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

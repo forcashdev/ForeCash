@@ -1,19 +1,18 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
 class IncomeRequestModel {
+  List<Income>? income;
+
   IncomeRequestModel({
     this.income,
   });
 
   IncomeRequestModel.fromJson(dynamic json) {
     if (json['income'] != null) {
-      income = [] as RxList<Income>?;
+      income = [];
       json['income'].forEach((v) {
         income?.add(Income.fromJson(v));
       });
     }
   }
-  RxList<Income>? income;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -29,6 +28,7 @@ class Income {
     this.name,
     this.incomeOutgoing,
     this.weekMonth,
+    this.every,
     this.paidOn,
     this.amount,
     this.date,
@@ -38,6 +38,7 @@ class Income {
     name = json['name'];
     incomeOutgoing = json['income_outgoing'];
     weekMonth = json['week_month'];
+    every = json['every'];
     paidOn = json['paid_on'];
     amount = json['amount'];
     date = json['date'];
@@ -45,6 +46,7 @@ class Income {
   String? name;
   int? incomeOutgoing;
   int? weekMonth;
+  int? every;
   int? paidOn;
   int? amount;
   String? date;
@@ -54,6 +56,7 @@ class Income {
     map['name'] = name;
     map['income_outgoing'] = incomeOutgoing;
     map['week_month'] = weekMonth;
+    map['every'] = every;
     map['paid_on'] = paidOn;
     map['amount'] = amount;
     map['date'] = date;
