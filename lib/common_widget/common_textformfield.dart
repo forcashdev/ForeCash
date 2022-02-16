@@ -16,6 +16,11 @@ commonTextFormField(
     TextStyle? prefixstyle,
     String? prefixText,
     String? hintText,
+    InputBorder? focusedBorder,
+    InputBorder? disabledBorder,
+    InputBorder? enabledBorder,
+    InputBorder? errorBorder,
+    InputBorder? focusedErrorBorder,
     bool isPassword = false,
     TextEditingController? textEditingController,
     Function? validationFunction,
@@ -40,16 +45,18 @@ commonTextFormField(
     RxBool? showPassword,
     EdgeInsets? contentPadding,
     ScrollController? scrollController,
-    TextStyle? hintStyle}) {
+    TextStyle? hintStyle,
+    String? intialValue}) {
   bool passwordVisible = isPassword;
   return StatefulBuilder(builder: (context, newSetState) {
     return TextFormField(
-      scrollController: scrollController,
+      // scrollController: scrollController,
       // for scroll extra while keyboard open
       // scrollPadding: EdgeInsets.fromLTRB(20, 20, 20, 120),
-      enabled: isEnabled != null && !isEnabled ? false : true,
+      // enabled: isEnabled != null && !isEnabled ? false : true,
+      //enabled: true,
       textAlign: align,
-      showCursor: !isReadOnly,
+      // showCursor: !isReadOnly,
       onTap: () {
         if (onTapFunction != null) {
           onTapFunction();
@@ -79,15 +86,16 @@ commonTextFormField(
         // ignore: void_checks
         return onFieldSubmit != null ? onFieldSubmit(value) : null;
       },
-      maxLines: maxLine ?? 1,
+      // maxLines: maxLine ?? 1,
       keyboardType: keyboardType,
       controller: textEditingController,
       // initialValue: initialText,
-      cursorColor: colorPrimary,
+      // cursorColor: colorPrimary,
       obscureText: passwordVisible,
-      textInputAction: inputAction,
+      textInputAction: inputAction ?? TextInputAction.next,
       style: textStyle ?? blackMontserrat10W500,
       inputFormatters: inputFormatter,
+      //expands: true,
       decoration: InputDecoration(
         hoverColor: Colors.transparent,
         prefixStyle: prefixstyle ?? incomeNameStyle,
@@ -95,12 +103,13 @@ commonTextFormField(
         errorMaxLines: errorMaxLines ?? 1,
         filled: true,
         fillColor: filledColor,
-        contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-        focusedBorder: textFieldBorderStyle,
-        disabledBorder: textFieldBorderStyle,
-        enabledBorder: textFieldBorderStyle,
-        errorBorder: textFieldBorderStyle,
-        focusedErrorBorder: textFieldBorderStyle,
+        // isDense: true,
+        contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+        focusedBorder: focusedBorder ?? textFieldBorderStyle,
+        disabledBorder: disabledBorder ?? textFieldBorderStyle,
+        enabledBorder: enabledBorder ?? textFieldBorderStyle,
+        errorBorder: errorBorder ?? textFieldBorderStyle,
+        focusedErrorBorder: focusedErrorBorder ?? textFieldBorderStyle,
         hintText: hintText ?? '',
         prefixIcon: preFixIcon != null ? preFixIcon : null,
         suffixIcon: isPassword
@@ -113,11 +122,11 @@ commonTextFormField(
                 child: passwordVisible
                     ? const Icon(
                         Icons.visibility_off,
-                        color: colorPrimary,
+                        color: commonTextColor2,
                       )
                     : const Icon(
                         Icons.visibility,
-                        color: colorPrimary,
+                        color: commonTextColor2,
                       ))
             : suffixIcon ?? null,
         hintStyle: hintStyle ?? blackMontserrat10W500,

@@ -1,3 +1,4 @@
+String appName = 'Forecash';
 String getStarted = 'Get Started with Forecash';
 String createAccount = 'Create Your New Account';
 String fullName = 'Full Name';
@@ -23,7 +24,8 @@ String enterPassEmail = 'Enter your email and password below';
 String forgotPass = 'Forgot Password?';
 String currentWeek = 'Current Week';
 String currentWeekDate = 'Sep-11-Sep-16';
-String simulateMode = 'Simulate Mode OFF';
+String simulateModeOff = 'Simulate Mode OFF';
+String simulateModeOn = 'Simulate Mode On';
 String calendar = 'Calender';
 String alreadyAccount = 'Already have an account';
 String connectBank = 'Connect Bank Account';
@@ -80,7 +82,7 @@ List<String> dateList = [
   '1st',
   '2nd',
   '3rd',
-  '4rd',
+  '4th',
   '5th',
   '6th',
   '7th',
@@ -97,9 +99,9 @@ List<String> dateList = [
   '18th',
   '19th',
   '20th',
-  '21th',
-  '22th',
-  '23th',
+  '21st',
+  '22nd',
+  '23rd',
   '24th',
   '25th',
   '26th',
@@ -109,6 +111,74 @@ List<String> dateList = [
   '30th',
   '31st'
 ];
+
+List<double> dateListDouble = [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+];
+
+Map<int, String> dateMap = {
+  1: '1st',
+  2: '2nd',
+  3: '3rd',
+  4: '4rd',
+  5: '5th',
+  6: '6th',
+  7: '7th',
+  8: '8th',
+  9: '9th',
+  10: '10th',
+  11: '11th',
+  12: '12th',
+  13: '13th',
+  14: '14th',
+  15: '15th',
+  16: '16th',
+  17: '17th',
+  18: '18th',
+  19: '19th',
+  20: '20th',
+  21: '21th',
+  22: '22th',
+  23: '23th',
+  24: '24th',
+  25: '25th',
+  26: '26th',
+  27: '27th',
+  28: '28th',
+  29: '29th',
+  30: '30th',
+  31: '31st'
+};
 
 List<String> days = [
   'Sun',
@@ -216,7 +286,7 @@ List<String> dataDateList = [
 List<String> incomes = [
   '\$1200',
   '-',
-  '\$800',
+  '\$1000',
   '-',
   '\$1000',
   '\$1800',
@@ -254,3 +324,20 @@ const String saveYourChanges = 'Do you want to save your Changes ?';
 const String description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ';
 const String yes = 'Yes';
 const String no = 'No';
+
+///Api Config
+
+const String baseUri = "https://node.staging.rentechdigital.com:3001/";
+const String mLogIn = 'auth/login';
+const String mRegister = 'auth/register';
+const String mGetIncome = 'app/getincome';
+const String mAddIncome = 'app/addincome';
+const String mDeleteIncomeExpense = 'app/deleteincome';
+const String rEmail = 'email';
+const String rPassword = 'password';
+const String rName = 'name';
+const String rIncomeOutgoing = 'income_outgoing';
+const String rWeekMonth = 'week_month';
+const String rPaidOn = 'paid_on';
+const String rAmount = 'amount';
+const String rDate = 'date';

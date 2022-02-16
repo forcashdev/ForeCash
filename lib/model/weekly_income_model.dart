@@ -1,43 +1,15 @@
 class WeeklyIncomeModel {
-  final String? expenseName;
-  final String? amount;
+  String? incomeName;
+  String? amount;
+  String? paidOn;
+  String? every;
+  // DateTime? dateTime;
   // final Widget? dropDown;
-  WeeklyIncomeModel({
-    this.expenseName,
-    this.amount,
-  });
+  WeeklyIncomeModel({this.incomeName, this.amount, this.every, this.paidOn});
 
   static List<WeeklyIncomeModel> weeklyIncomeList = [
     WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
-      amount: '500',
-    ),
-    WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
-      amount: '500',
-    ),
-    WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
-      amount: '500',
-    ),
-    WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
-      amount: '500',
-    ),
-    WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
-      amount: '500',
-    ),
-    WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
-      amount: '500',
-    ),
-    WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
-      amount: '500',
-    ),
-    WeeklyIncomeModel(
-      expenseName: 'Apple inc.',
+      incomeName: 'Apple inc.',
       amount: '500',
     ),
   ];

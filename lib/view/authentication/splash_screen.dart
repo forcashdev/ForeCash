@@ -5,6 +5,7 @@ import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -19,7 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
     final screenIndexController = Get.put(ScreenIndexController());
     super.initState();
     Timer(Duration(seconds: 3), () {
-      screenIndexController.updateIndex(index: 0);
+      final box = GetStorage();
+      final finalUserEmail = box.read('userEmail');
+      screenIndexController.updateIndex(index: finalUserEmail == null ? 0 : 1);
+      // screenIndexController.pageController.animateToPage(finalUserEmail == null ? 1 : 2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -39,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      image: constraints.maxWidth < 800
+                      image: constraints.maxWidth < 1000
                           ? DecorationImage(
                               // fit: BoxFit.cover,
                               image: AssetImage(backGroundImage),
@@ -51,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Center(
                     child: Image.asset(
                       foreCashLogo,
-                      scale: constraints.maxWidth < 800 ? 4 : 3,
+                      scale: constraints.maxWidth < 1000 ? 4 : 3,
                     ),
                   ),
                 ),
@@ -64,9 +68,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 Positioned(
-                  top: constraints.maxWidth < 800 ? Get.height * 0.09 : Get.height * 0.02,
+                  top: constraints.maxWidth < 1000 ? Get.height * 0.09 : Get.height * 0.02,
                   right: Get.width * 0.0,
-                  child: constraints.maxWidth < 800
+                  child: constraints.maxWidth < 1000
                       ? Image.asset(
                           dollerImage2,
                           scale: 4,
@@ -77,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                 ),
                 Positioned(
-                  bottom: constraints.maxWidth < 800 ? Get.height * 0.0 : Get.height * 0.1,
+                  bottom: constraints.maxWidth < 1000 ? Get.height * 0.0 : Get.height * 0.1,
                   left: Get.width * 0.03,
                   child: Image.asset(
                     splashImage,
@@ -85,8 +89,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 Positioned(
-                  bottom: constraints.maxWidth < 800 ? Get.height * 0.05 : Get.height * 0.2,
-                  right: constraints.maxWidth < 800 ? Get.width * 0.06 : Get.width * 0.1,
+                  bottom: constraints.maxWidth < 1000 ? Get.height * 0.05 : Get.height * 0.2,
+                  right: constraints.maxWidth < 1000 ? Get.width * 0.06 : Get.width * 0.1,
                   child: Image.asset(
                     splashImage2,
                     scale: 4,

@@ -14,7 +14,7 @@ import 'package:fore_cash/view/authentication/signup_screen.dart';
 import 'package:fore_cash/view/authentication/weekly_income_screen.dart';
 import 'package:get/get.dart';
 
-int screenIndex = 0;
+// int screenIndex = 0;
 
 class ScreenProgressIndicator extends StatelessWidget {
   const ScreenProgressIndicator({Key? key}) : super(key: key);
@@ -22,7 +22,15 @@ class ScreenProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenIndexController = Get.put(ScreenIndexController());
-    List screensList = const [SignUpScreen(), ConnectBankAccountScreen(), MonthlyIncomeScreen(), WeeklyIncomeScreen(), MonthlyExpensesScreen(), SetupWeeklyBudgetScreen(), SetupCalendarScreen()];
+    List screensList = [
+      const SignUpScreen(),
+      const ConnectBankAccountScreen(),
+      const MonthlyIncomeScreen(),
+      const WeeklyIncomeScreen(),
+      const MonthlyExpensesScreen(),
+      const SetupWeeklyBudgetScreen(),
+      const SetupCalendarScreen()
+    ];
     return SafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {

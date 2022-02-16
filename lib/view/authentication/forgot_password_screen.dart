@@ -137,7 +137,7 @@ class ForgotPassword extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04),
-                      child: CommonMaterialButton.commonButton(
+                      child: commonButton(
                         onPress: () {
                           if (_formKey.currentState!.validate()) {
                             Get.to(ResetPasswordScreen());

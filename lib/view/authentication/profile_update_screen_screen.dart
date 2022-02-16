@@ -283,7 +283,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(bottom: Get.height * 0.035),
-                          child: CommonMaterialButton.commonButton(
+                          child: commonButton(
                             onPress: () {
                               _formKey.currentState!.validate();
                               if (_formKey.currentState!.validate()) {}

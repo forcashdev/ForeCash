@@ -44,8 +44,8 @@ import 'package:get/get.dart';
 // },
 // )
 
-class CommonIncomeScrollableWidget {
-  static scrollableWidget({double? height, bool? editMode, int? listViewItemCount, BoxConstraints? constraints, Function? onPageChanged, dynamic controller, int? pageViewItemCount, dynamic text}) {
+
+   scrollableWidget({double? height, bool? editMode, int? listViewItemCount, BoxConstraints? constraints, Function? onPageChanged, dynamic controller, int? pageViewItemCount, dynamic text}) {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -74,4 +74,4 @@ class CommonIncomeScrollableWidget {
       },
     );
   }
-}
+

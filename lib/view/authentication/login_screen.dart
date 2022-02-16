@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
+import 'package:fore_cash/controller/login_controller.dart';
 import 'package:fore_cash/getx/login_password_obscure_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -27,6 +29,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _password = TextEditingController();
   final obscureTextController = Get.put(LogInPasswordObscureController());
   final screenIndexController = Get.put(ScreenIndexController());
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   if (kDebugMode) {
+  //     _email.text = 'admin5@gmail.com';
+  //     _password.text = '12345';
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: constraints.maxWidth < 1000
                                   ? Image.asset(
                                       foreCashLogo2,
-                                      scale: 3,
+                                      height: Get.height * 0.055,
+                                      width: Get.height * 0.25,
                                     )
                                   : null,
                             ),
@@ -158,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     obscureText: controller.obscure,
                                     validator: (value) {
-                                      if (_password.text.length < 6) {
+                                      if (_password.text.length < 5) {
                                         return minimumCharacter;
                                       }
                                     },
@@ -173,9 +186,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             // SizedBox(
                             //   height: Get.height * 0.04,
                             // ),
-                            CommonMaterialButton.commonButton(
+                            commonButton(
                               onPress: () {
-                                _formKey.currentState!.validate();
+                                if (_formKey.currentState!.validate()) {
+                                  LoginInController().callLogin(email: _email.text, password: _password.text);
+                                }
                               },
                               text: logIn,
                               height: 50,

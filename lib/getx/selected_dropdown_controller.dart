@@ -17,16 +17,15 @@ class SelectedDropDownItem extends GetxController {
   String? weeklyBudgetDay;
   String? weeklyBudgetWeek;
   String? setupCalendarDay = 'Sunday';
-  List<Object> selectedMonthlyIncomeMonthList = List.generate(MonthlyIncomeModel.monthlyIncomeList.length, (index) => '1 mon');
-  List<Object> selectedMonthlyExpenseDate = List.generate(MonthlyExpensesModel.monthlyExpensesList.length, (index) => '1st');
-  List<Object> selectedMonthlyExpenseMonth = List.generate(MonthlyExpensesModel.monthlyExpensesList.length, (index) => '1 mon');
-  List<Object> selectedMonthlyIncomeDateList = List.generate(MonthlyIncomeModel.monthlyIncomeList.length, (index) => '1st');
+  List<Object> selectedMonthlyIncomeMonthList = List.generate(MonthlyIncomeModelOld.monthlyIncomeList.length, (index) => '1 mon');
+  List<Object> selectedMonthlyExpenseDate = List.generate(MonthlyExpensesModel.monthlyExpensesListOld.length, (index) => '1st');
+  List<Object> selectedMonthlyExpenseMonth = List.generate(MonthlyExpensesModel.monthlyExpensesListOld.length, (index) => '1 mon');
+  List<Object> selectedMonthlyIncomeDateList = List.generate(MonthlyIncomeModelOld.monthlyIncomeList.length, (index) => '1st');
+  // List<Object> selectedMonthlyIncomeDateListDouble = List.generate(5, (index) => CreateIncomeController.to.incomeModel.value.data?[index].amount as Object);
   List<Object> selectDayDropDown = List.generate(WeeklyIncomeModel.weeklyIncomeList.length, (index) => 'Sun');
   List<Object> selectWeekDropDown = List.generate(WeeklyIncomeModel.weeklyIncomeList.length, (index) => '1W');
   List<Object> weeklyBudgetDayDropDownList = List.generate(WeeklyBudgetModel.weeklyBudgetModel.length, (index) => 'Sun');
   List<Object> weeklyBudgetWeekDropDownList = List.generate(WeeklyBudgetModel.weeklyBudgetModel.length, (index) => '1W');
-
-  String? get selectedDropItem => selectedMonth;
 
   void changeItem({Object? item, int? index}) {
     // selectedMonth = item as String?;
@@ -77,7 +76,7 @@ class SelectedDropDownItem extends GetxController {
   }
 
   void changeMonthlyExpenseDate({Object? item, int? index}) {
-    selectedDate = item as String?;
+    // selectedDate = item as String?;
     selectedMonthlyExpenseDate[index!] = item!;
     update();
     print(selectedDate);
@@ -90,6 +89,16 @@ class SelectedDropDownItem extends GetxController {
 
   void changeSingleMonth({Object? item}) {
     selectedSingleMonthlyExpenseMonth = item! as String?;
+    update();
+  }
+
+  void changeMonthlyIncomeMonth({Object? item}) {
+    selectedMonth = item! as String?;
+    update();
+  }
+
+  void changeMonthlyIncomeDate({Object? item}) {
+    selectedDate = item! as String?;
     update();
   }
 

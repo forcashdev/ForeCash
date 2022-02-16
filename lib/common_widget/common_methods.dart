@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fore_cash/api/api_call.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
+import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
+import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/login_screen.dart';
 import 'package:fore_cash/view/authentication/profile_update_screen_screen.dart';
+import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:fore_cash/view/authentication/update_calendar_screen.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 showCommonDialog(BuildContext context) {
   showDialog(
@@ -30,7 +35,7 @@ showCommonDialog(BuildContext context) {
                   Row(
                     children: [
                       Flexible(
-                          child: CommonMaterialButton.commonButton(
+                          child: commonButton(
                         height: maxWidth ? 65 : 50,
                         text: yes,
                         onPress: () {
@@ -39,7 +44,7 @@ showCommonDialog(BuildContext context) {
                       )),
                       const SizedBox(width: 30),
                       Flexible(
-                          child: CommonMaterialButton.commonButton(
+                          child: commonButton(
                         height: maxWidth ? 65 : 50,
                         text: no,
                         bgColor: Colors.white,
@@ -118,14 +123,41 @@ showPopupMenu(BuildContext context) {
           }),
       const PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
-          child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_logout.png', title: 'Logout'),
-          value: '5',
-          onTap: () {
-            print("Setting====>");
-          }),
+        child: getOptionItem(
+            imagePath: 'assets/image/icons/ic_menu_logout.png',
+            title: 'Logout',
+            onTap: () {
+              print('>>>>>>>>>>>');
+              final screenIndexController = Get.put(ScreenIndexController());
+              // screenIndexController.updateIndex(index: 1);
+              final box = GetStorage();
+              final finalUserEmail = box.remove('userEmail');
+              storage.write("loginToken", '');
+              screenIndexController.updateIndex(index: 0);
+              Get.to(() => const ScreenProgressIndicator());
+            }),
+        value: '5',
+      ),
       //PopupMenuItem<String>(child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_logout.png',title: 'Logout',colors: Colors.red,stlyes: whiteMontserrat14w500), value: '5',onTap: (){print("Setting====>");}),
     ],
     elevation: 8.0,
+  );
+}
+
+deleteImageWidget({Function? onTap}) {
+  return InkWell(
+    onTap: () {
+      onTap!();
+    },
+    child: Container(
+        decoration: BoxDecoration(color: colorsFFEBEB, borderRadius: BorderRadius.circular(5)),
+        margin: const EdgeInsets.symmetric(horizontal: 7.0),
+        padding: const EdgeInsets.all(5.0),
+        child: Image.asset(
+          deleteImage,
+          height: Get.height * 0.025,
+          // width: 30.0,
+        )),
   );
 }
 

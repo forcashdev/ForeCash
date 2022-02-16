@@ -7,7 +7,7 @@ class MonthlyExpensesModel {
     this.amount,
   });
 
-  static List<MonthlyExpensesModel> monthlyExpensesList = [
+  static List<MonthlyExpensesModel> monthlyExpensesListOld = [
     MonthlyExpensesModel(
       expenseName: 'Apple ',
       amount: '8000',

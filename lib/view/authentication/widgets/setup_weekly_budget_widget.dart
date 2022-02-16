@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
+import 'package:fore_cash/common_widget/common_input_formatter.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/weekly_budget_model.dart';
@@ -15,7 +18,7 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
   return ListView.builder(
     physics: NeverScrollableScrollPhysics(),
     shrinkWrap: true,
-    itemCount: WeeklyBudgetModel.weeklyBudgetModel.length,
+    itemCount: GetIncomeController.to.weeklyBudgetList?.length,
     itemBuilder: (context, index) {
       return Padding(
         padding: EdgeInsets.only(bottom: Get.height * 0.019),
@@ -33,156 +36,106 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
                 constraints!.maxWidth < 1000
                     ? Container(
                         height: Get.height * 0.044,
-                        width: 8,
+                        // width: 8,
                         margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                       )
-                    : Padding(
-                        padding: EdgeInsets.only(left: 5),
-                        child: GetBuilder<CheckBoxController>(
-                          builder: (controller) {
-                            return Checkbox(
-                              activeColor: cameraBackGroundColor,
-                              checkColor: Colors.white,
-                              value: checkBoxController.weeklyBudgetCheckBoxValueList[index],
-                              onChanged: (value) {
-                                checkBoxController.selectedWeeklyBudgetCheckBox(value: value, index: index);
-                              },
-                            );
-                          },
+                    : SizedBox(
+                        height: Get.height * 0.044,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5),
+                          child: GetBuilder<CheckBoxController>(
+                            builder: (controller) {
+                              return Checkbox(
+                                activeColor: cameraBackGroundColor,
+                                checkColor: Colors.white,
+                                value: checkBoxController.weeklyBudgetCheckBoxValueList[index],
+                                onChanged: (value) {
+                                  checkBoxController.selectedWeeklyBudgetCheckBox(value: value, index: index);
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.only(left: 10),
-                  width: constraints.maxWidth < 1000 ? Get.width * 0.29 : Get.width * 0.15,
-                  height: Get.height * 0.044,
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                  child: Text(
-                    '${WeeklyBudgetModel.weeklyBudgetModel[index].expenseName}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: expenseNameStyle,
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.fill,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                    child: commonTextFormField(
+                        inputAction: TextInputAction.done,
+                        inputFormatter: [characterInputFormatter()],
+                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                        textStyle: incomeNameStyle,
+                        textEditingController: TextEditingController(text: WeeklyBudgetModel.weeklyBudgetModel[index].expenseName)),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(
-                    left: 6,
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.fill,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                    ),
+                    // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                    // height: Get.height * 0.044,
+                    // alignment: Alignment.center,
+                    decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                    child: GetBuilder<SelectedDropDownItem>(
+                      builder: (controller1) {
+                        // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
+                        // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
+                        return commonDropDown(
+                            selectedItemTextStyle: dropDownStyle2,
+                            valueTextStyle: dropDownStyle,
+                            value: controller.weeklyBudgetDayDropDownList[index],
+                            itemList: days,
+                            onChanged: (item) {
+                              controller.changeWeeklyBudgetDayList(item: item, index: index);
+                              print(item);
+                            });
+                      },
+                    ),
+                    margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
                   ),
-                  width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                  height: Get.height * 0.044,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                  child: GetBuilder<SelectedDropDownItem>(
-                    builder: (controller1) {
-                      // return commonDropDown(value: controller.selectDayDropDown[index], itemList: days);
-                      // return commonDropDown(itemList: itemsList[index], value: controller.selectedItem);
-                      return CommonDropDown.commonDropDown(
-                          selectedItemTextStyle: dropDownStyle2,
-                          valueTextStyle: dropDownStyle,
-                          value: controller.weeklyBudgetDayDropDownList[index],
-                          itemList: days,
-                          onChanged: (item) {
-                            controller.changeWeeklyBudgetDayList(item: item, index: index);
-                            print(item);
-                          });
-                      //   DropdownButtonHideUnderline(
-                      //   child: DropdownButton(
-                      //     value: controller.weeklyBudgetDayDropDownList[index],
-                      //     // value: controller.selectedItem,
-                      //     style: dropDownStyle,
-                      //     items: days.map((String items) {
-                      //       return DropdownMenuItem(
-                      //         value: items,
-                      //         child: Text(
-                      //           items,
-                      //           style: dropDownStyle2,
-                      //         ),
-                      //       );
-                      //     }).toList(),
-                      //     onChanged: (item) {
-                      //       controller.changeWeeklyBudgetDayList(item: item, index: index);
-                      //     },
-                      //     isExpanded: true,
-                      //
-                      //     icon: const Icon(
-                      //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                      //       // color: AppTheme.colorGrey,
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                  ),
-                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 6),
-                  width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                  height: Get.height * 0.044,
-                  alignment: Alignment.center,
-                  child: GetBuilder<SelectedDropDownItem>(
-                    builder: (controller1) {
-                      // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
-                      return CommonDropDown.commonDropDown(
-                          selectedItemTextStyle: dropDownStyle2,
-                          valueTextStyle: dropDownStyle,
-                          value: controller.weeklyBudgetWeekDropDownList[index],
-                          itemList: weeks,
-                          onChanged: (item) {
-                            controller.changeWeeklyBudgetWeekList(item: item, index: index);
-                            print(item);
-                          });
-                      //   DropdownButtonHideUnderline(
-                      //   child: DropdownButton(
-                      //     value: controller.weeklyBudgetWeekDropDownList[index],
-                      //     // value: controller.selectedItem,
-                      //     style: dropDownStyle,
-                      //
-                      //     items: weeks.map((String items) {
-                      //       return DropdownMenuItem(
-                      //         value: items,
-                      //         child: Text(
-                      //           items,
-                      //           style: dropDownStyle2,
-                      //         ),
-                      //       );
-                      //     }).toList(),
-                      //     onChanged: (item) {
-                      //       controller.changeWeeklyBudgetWeekList(item: item, index: index);
-                      //     },
-                      //     isExpanded: true,
-                      //
-                      //     icon: const Icon(
-                      //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-                      //       // color: AppTheme.colorGrey,
-                      //     ),
-                      //   ),
-                      // );
-                    },
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.fill,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                    height: Get.height * 0.044,
+                    alignment: Alignment.center,
+                    child: GetBuilder<SelectedDropDownItem>(
+                      builder: (controller1) {
+                        // return commonDropDown(itemList: weeks, value: controller.selectWeekDropDown[index]);
+                        return commonDropDown(
+                            selectedItemTextStyle: dropDownStyle2,
+                            valueTextStyle: dropDownStyle,
+                            value: controller.weeklyBudgetWeekDropDownList[index],
+                            itemList: weeks,
+                            onChanged: (item) {
+                              controller.changeWeeklyBudgetWeekList(item: item, index: index);
+                              print(item);
+                            });
+                      },
+                    ),
+                    margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                    decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                   ),
-                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                 ),
-                Container(
-                  // width: sequenceSize.width * 0.14,
-                  height: Get.height * 0.044, padding: EdgeInsets.only(left: 10),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '\$${WeeklyBudgetModel.weeklyBudgetModel[index].amount}',
-                    style: amountStyle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.fill,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: Get.width * 0.04),
+                    child: commonTextFormField(
+                        prefixText: '\$',
+                        prefixstyle: incomeNameStyle,
+                        inputAction: TextInputAction.done,
+                        inputFormatter: [digitInputFormatter()],
+                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                        textStyle: incomeNameStyle,
+                        textEditingController: TextEditingController(text: WeeklyBudgetModel.weeklyBudgetModel[index].amount)),
                   ),
-                  // child: const TextField(
-                  //   style: TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 14),
-                  //   decoration: InputDecoration(
-                  //       prefixStyle: TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 13),
-                  //       prefixText: '\$',
-                  //       contentPadding: EdgeInsets.only(bottom: 7),
-                  //       border: InputBorder.none),
-                  // ),
-                  margin: EdgeInsets.only(right: Get.width * 0.04), decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                 ),
               ],
             ),

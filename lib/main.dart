@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fore_cash/utility/colors.dart';
-import 'package:fore_cash/view/authentication/monthly_expenses_screen.dart';
+import 'package:fore_cash/view/authentication/splash_screen.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import 'api/app_binding/app_bindings.dart';
 import 'app_theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -18,9 +21,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(360, 690),
+      designSize: const Size(360, 690),
       minTextAdapt: true,
       builder: () => GetMaterialApp(
+        initialBinding: AppBinding(),
         builder: (context, widget) {
           return ResponsiveWrapper.builder(widget, maxWidth: 4000, minWidth: 480, defaultScale: false, breakpoints: [
             const ResponsiveBreakpoint.resize(480, name: MOBILE),
@@ -29,7 +33,7 @@ class MyApp extends StatelessWidget {
           ]);
         },
         debugShowCheckedModeBanner: false,
-        home: const MonthlyExpensesScreen(),
+        home: const SplashScreen(),
         theme: ThemeData(
             primaryColor: colorPrimary,
             fontFamily: AppTheme.fontName,

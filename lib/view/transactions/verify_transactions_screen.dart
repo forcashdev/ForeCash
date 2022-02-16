@@ -42,7 +42,7 @@ class _VerifyTransactionsScreenState extends State<VerifyTransactionsScreen> {
           child: Container(
             decoration: constraints.maxWidth > 1000 ? BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.0)) : const BoxDecoration(),
             width: constraints.maxWidth > 1000 ? 900 : null,
-            height: constraints.maxWidth > 1000 ? 800 : null,
+            height: constraints.maxWidth > 1000 ? 1000 : null,
             child: ListView(
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
