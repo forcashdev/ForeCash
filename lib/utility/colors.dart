@@ -23,3 +23,4 @@ const Color colorsFFC700 = Color(0xffFFC700);
 const Color colorsFFF4EB = Color(0xffFFF4EB);
 const Color colorsECF4FF = Color(0xffabc3ff);
 const Color colors12CC8E = Color(0xff12CC8E);
+const Color colorsEE4242 = Color(0xffEE4242);

@@ -15,7 +15,6 @@ import 'package:fore_cash/getx/monthly_income_show_text_visibility.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
-import 'package:fore_cash/model/income_request_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -175,7 +174,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                           flex: maxWidth ? 2 : 2,
                                           child: SingleChildScrollView(
                                             child: Column(
-                                              children: [rowList(constraints: constraints), _addNewMonthlyIncomeWidget(constraints: constraints, context: context)],
+                                              children: [rowList(constraints: constraints, context: context), _addNewMonthlyIncomeWidget(constraints: constraints, context: context)],
                                             ),
                                           )),
                                     ],
@@ -215,13 +214,15 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                     GetIncomeController.to.monthlyIncomeList?[0].name = _incomeName!.text;
                     GetIncomeController.to.monthlyIncomeList?[0].incomeOutgoing = 1;
                     GetIncomeController.to.monthlyIncomeList?[0].weekMonth = 2;
-                    GetIncomeController.to.monthlyIncomeList?[0].date = DateTime.now().toString();
+                    GetIncomeController.to.monthlyIncomeList?[0].date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
                     controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
                     controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
                     checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
                   }
+                  print(GetIncomeController.to.monthlyIncomeList);
                   controller1.changeVisibility();
+
                   // _amount2.clear();
                   // _incomeName2.clear();
                 },
@@ -302,7 +303,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 child: Container(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                                    DateFormat('yyyy-MM-dd').format(currentDate),
                                     style: dateStyle,
                                     maxLines: 1,
                                   ),
@@ -397,8 +398,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
       setState(() {
         currentDate = pickedDate;
       });
-      print('>>>>>>>>>>>>>>>>>$currentDate');
-      // CreateIncomeController.to.IncomesList[index!].dateTime = currentDate;
       GetIncomeController.to.monthlyIncomeList?[index!].date = currentDate.toString();
       GetIncomeController.to.monthlyIncomeList?.refresh();
     }
@@ -554,48 +553,61 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         height: 50,
         text: next,
         onPress: () {
-          List<int> matchValue = [];
-          checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) => value ? matchValue.add(index) : print('No index'));
-          print(matchValue);
-          // List.generate(CreateIncomeController.to.monthlyIncomeList!.length, (index) {
-          //   CreateIncomeController.to.monthlyIncomeList?[index].name = _incomeName?.text;
-          //   CreateIncomeController.to.monthlyIncomeList?[index].amount = int.parse(_amount!.text);
-          // });
-          List<Income> matchValueModelList = [];
-          // CreateIncomeController.to.monthlyIncomeList?.asMap().forEach((key, value) {
-          //   key == matchValue ? matchValueModelList.add(value) : print('not match');
-          // });
-          print(GetIncomeController.to.monthlyIncomeList);
-          CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': GetIncomeController.to.monthlyIncomeList});
+          List<DataModel> tempMonthlyIncome = [];
+          checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) {
+            if (value) {
+              tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList!.value[index]);
+            }
+          });
+          CreateIncomeController.to.createIncome(screenIndex: 3, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.monthlyIncomeList} : {'income': tempMonthlyIncome});
         },
       ),
     );
   }
 
-  rowList({BoxConstraints? constraints}) {
+  rowList({BoxConstraints? constraints, BuildContext? context}) {
     return StreamBuilder(
         stream: GetIncomeController.to.monthlyIncomeList?.stream,
         builder: (context, snapshot) {
+          final SlidableController _slidableController = SlidableController();
           return ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: GetIncomeController.to.monthlyIncomeList?.length,
             itemBuilder: (context, index) {
-              _incomeName = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].name);
-              _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString());
+              _incomeName = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].name ?? '');
+              _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString() ?? '');
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: Slidable(
+                  controller: _slidableController,
                   actionExtentRatio: 0.13,
                   enabled: constraints!.maxWidth > 1000 ? false : true,
                   secondaryActions: [
                     deleteImageWidget(onTap: () {
+                      showCommonDialog(
+                          context: context,
+                          headerTitle: sureToDelete,
+                          descriptionTitle: sureToDeleteSubTitle,
+                          buttonColor: Colors.white,
+                          saveButtonBorderColor: colorsEE4242,
+                          noButtonTextStyle: noButtonTextStyle,
+                          saveButtonTextStyle: yesButtonTextStyle,
+                          noButtonColor: Colors.black,
+                          onPressYes: () {
+                            GetIncomeController.to.monthlyIncomeList?.removeAt(index);
+                            Get.back();
+                          },
+                          onPressNo: () {
+                            Get.back();
+                          });
                       // if (CreateIncomeController.to.monthlyIncomeList?[index].id != null) {
                       //   print(CreateIncomeController.to.monthlyIncomeList?[index].id);
                       //   DeleteIncomeExpenseController.to.callDelete(id: CreateIncomeController.to.monthlyIncomeList?[index].id);
                       //   CreateIncomeController.to.monthlyIncomeList?.refresh();
                       // } else {
-                      GetIncomeController.to.monthlyIncomeList?.removeAt(index);
+
+                      // Slidable.of(context)?.close();
                       // deleteIdList.add(CreateIncomeController.to.monthlyIncomeList?[index].id);
 
                       // }
@@ -636,8 +648,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                         );
                                       },
                                     ),
-                                  ),
-                                ),
+                                  )),
                           TableCell(
                             verticalAlignment: TableCellVerticalAlignment.fill,
                             child: Padding(
@@ -645,7 +656,9 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                               child: commonTextFormField(
                                 textEditingController: _incomeName,
                                 onChangedFunction: (value) {
-                                  GetIncomeController.to.monthlyIncomeList?[index].name = _incomeName?.text;
+                                  // GetIncomeController.to.monthlyIncomeList?[index].name = _incomeName?.text;
+
+                                  GetIncomeController.to.monthlyIncomeList?[index].name = value;
                                   // CreateIncomeController.to.monthlyIncomeList?.refresh();
                                 },
                                 hintText: 'Income Name',
@@ -665,7 +678,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                               child: commonDropDown(
                                   selectedItemTextStyle: dropDownStyle2,
                                   valueTextStyle: dropDownStyle,
-                                  value: '${GetIncomeController.to.monthlyIncomeList?[index].paidOn}th'
+                                  value: '${GetIncomeController.to.monthlyIncomeList?[index].paidOn ?? 1}th'
                                       .replaceAllMapped('1th', (match) => '1st')
                                       .replaceAllMapped('2th', (match) => '2nd')
                                       .replaceAllMapped('3th', (match) => '3rd')
@@ -694,7 +707,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                               child: commonDropDown(
                                   selectedItemTextStyle: dropDownStyle2,
                                   valueTextStyle: dropDownStyle,
-                                  value: '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 5} mon',
+                                  value: '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 1} mon',
                                   // value: controller.selectedMonthlyIncomeMonthList[index],
                                   itemList: months,
                                   onChanged: (item) {
@@ -713,10 +726,10 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 onTap: () {
                                   _selectDate(context: context, index: index);
                                 },
-                                child: Container(
+                                child: Container(padding: const EdgeInsets.symmetric(horizontal: 10),
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    '${GetIncomeController.to.monthlyIncomeList?[index].date}',
+                                    '${GetIncomeController.to.monthlyIncomeList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
                                     // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                                     style: dateStyle,
                                     maxLines: 1,
@@ -738,7 +751,8 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 prefixstyle: incomeNameStyle,
                                 inputAction: TextInputAction.done,
                                 onChangedFunction: (value) {
-                                  GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(_amount!.text);
+                                  GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
+                                  // GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(_amount!.text);
                                   // CreateIncomeController.to.monthlyIncomeList?.refresh();
                                 },
                                 inputFormatter: [digitInputFormatter()],

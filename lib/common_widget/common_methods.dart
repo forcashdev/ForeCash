@@ -13,9 +13,19 @@ import 'package:fore_cash/view/authentication/update_calendar_screen.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-showCommonDialog(BuildContext context) {
+showCommonDialog(
+    {Function? onPressYes,
+    Function? onPressNo,
+    BuildContext? context,
+    String? headerTitle,
+    String? descriptionTitle,
+    Color? saveButtonBorderColor,
+    Color? noButtonColor,
+    Color? buttonColor,
+    TextStyle? saveButtonTextStyle,
+    TextStyle? noButtonTextStyle}) {
   showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -28,17 +38,23 @@ showCommonDialog(BuildContext context) {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(saveYourChanges, style: blackMontserrat16w700),
+                  Text(headerTitle ?? saveYourChanges, style: blackMontserrat16w700),
                   maxWidth ? const SizedBox(height: 20) : const SizedBox(height: 10),
-                  const Text(description, style: grey2Montserrat14w500),
+                  Text(descriptionTitle ?? description, style: grey2Montserrat14w500),
                   maxWidth ? const SizedBox(height: 55) : const SizedBox(height: 25),
                   Row(
                     children: [
                       Flexible(
                           child: commonButton(
+                        textStyle: saveButtonTextStyle,
+                        borderColor: saveButtonBorderColor,
                         height: maxWidth ? 65 : 50,
                         text: yes,
+                        bgColor: buttonColor,
                         onPress: () {
+                          if (onPressYes != null) {
+                            onPressYes();
+                          }
                           // Get.to(SetupWeeklyBudgetScreen());
                         },
                       )),
@@ -47,10 +63,13 @@ showCommonDialog(BuildContext context) {
                           child: commonButton(
                         height: maxWidth ? 65 : 50,
                         text: no,
-                        bgColor: Colors.white,
+                        bgColor: noButtonColor ?? Colors.white,
                         borderColor: commonTextColor,
-                        textStyle: commonBackButtonTheme,
+                        textStyle: noButtonTextStyle ?? commonBackButtonTheme,
                         onPress: () {
+                          if (onPressNo != null) {
+                            onPressNo();
+                          }
                           // Get.to(SetupWeeklyBudgetScreen());
                         },
                       )),

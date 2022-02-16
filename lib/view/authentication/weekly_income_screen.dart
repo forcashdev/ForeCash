@@ -103,7 +103,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            // weeklyIncomeWidget(constraints: constraints),
                                             _weeklyincomeRowList(constraints: constraints),
                                             _addNewWeeklyIncomeWidget(constraints: constraints),
                                           ],
@@ -146,35 +145,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
               controller.changeSingleDay(item: item);
               print(item);
             });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       day,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.selectedSingleDay,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeSingleDay(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
       },
     );
   }
@@ -184,7 +154,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
 
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
-        // return commonDropDown(itemList: dropDownList, value: controller.selectedSingleWeek);
         return commonDropDown(
             selectedItemTextStyle: dropDownStyle2,
             valueTextStyle: dropDownStyle,
@@ -196,35 +165,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
               controller.changeSingleWeek(item: item);
               print(item);
             });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       every,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.selectedSingleWeek,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeSingleWeek(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
       },
     );
   }
@@ -371,7 +311,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                 child: Container(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                                    DateFormat('yyyy-MM-dd').format(currentDate),
                                     style: dateStyle,
                                     maxLines: 1,
                                   ),
@@ -561,23 +501,13 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         height: 50,
         text: next,
         onPress: () {
-          // List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) {
-          //   GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
-          //   GetIncomeController.to.weeklyIncomesList?[index].amount = int.parse(_amount!.text);
-          // });
-          print("length===>${GetIncomeController.to.weeklyIncomesList}");
-          CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {'income': GetIncomeController.to.weeklyIncomesList});
-
-          // screenIndex = 4;
-          // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-          // screenIndexController.updateIndex(index: 4);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => MonthlyExpensesScreen(),
-          //     ));
-
-          // Get.to(MonthlyExpensesScreen());
+          List<DataModel> tempWeeklyIncomeList = [];
+          checkBoxController.weeklyIncomeCheckBoxValueList.asMap().forEach((index, value) {
+            if (value) {
+              tempWeeklyIncomeList.add(GetIncomeController.to.weeklyIncomesList!.value[index]);
+            }
+          });
+          CreateIncomeController.to.createIncome(screenIndex: 4, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.weeklyIncomesList} : {'income': tempWeeklyIncomeList});
         },
       ),
     );
@@ -586,10 +516,9 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
   Future<void> _selectDate({BuildContext? context, int? index}) async {
     final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
     if (pickedDate != null && pickedDate != currentDate) {
-      // setState(() {
-      currentDate = pickedDate;
-      print('>>>>>>>>>>>>>>>>>$currentDate');
-      // CreateIncomeController.to.IncomesList[index!].dateTime = currentDate;
+      setState(() {
+        currentDate = pickedDate;
+      });
       GetIncomeController.to.weeklyIncomesList?[index!].date = currentDate.toString();
       GetIncomeController.to.weeklyIncomesList?.refresh();
 
@@ -599,23 +528,38 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
 
   _weeklyincomeRowList({BoxConstraints? constraints}) {
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: GetIncomeController.to.weeklyIncomesList?.length,
       itemBuilder: (context, index) {
-        _incomeName = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].name);
-        _amount = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString());
+        _incomeName = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].name ?? "");
+        _amount = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString() ?? "");
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
           child: Slidable(
-            actionPane: const SlidableDrawerActionPane(),
             actionExtentRatio: 0.13,
             enabled: constraints!.maxWidth > 1000 ? false : true,
             secondaryActions: [
               deleteImageWidget(onTap: () {
-                GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                showCommonDialog(
+                    context: context,
+                    headerTitle: sureToDelete,
+                    descriptionTitle: sureToDeleteSubTitle,
+                    buttonColor: Colors.white,
+                    saveButtonBorderColor: colorsEE4242,
+                    noButtonTextStyle: noButtonTextStyle,
+                    saveButtonTextStyle: yesButtonTextStyle,
+                    noButtonColor: Colors.black,
+                    onPressYes: () {
+                      GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                      Get.back();
+                    },
+                    onPressNo: () {
+                      Get.back();
+                    });
               }),
             ],
+            actionPane: const SlidableDrawerActionPane(),
             child: Table(
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(0.35),
@@ -631,7 +575,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                     constraints.maxWidth < 1000
                         ? Container(
                             height: Get.height * 0.044,
-                            // width: 8,
                             margin: EdgeInsets.only(right: Get.width * 0.02),
                             decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
                           )
@@ -666,7 +609,8 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                           textStyle: incomeNameStyle,
                           textEditingController: _incomeName,
                           onChangedFunction: (value) {
-                            GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                            GetIncomeController.to.weeklyIncomesList?[index].name = value;
+                            // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
                           },
                         ),
                       ),
@@ -685,7 +629,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                             return commonDropDown(
                                 selectedItemTextStyle: dropDownStyle2,
                                 valueTextStyle: dropDownStyle,
-                                value: GetIncomeController.to.weeklyIncomesList?[index].paidOn
+                                value: '${GetIncomeController.to.weeklyIncomesList?[index].paidOn ?? 1}'
                                     .toString()
                                     .replaceAll('1', 'Sun')
                                     .replaceAll('2', 'Mon')
@@ -731,7 +675,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                             return commonDropDown(
                                 selectedItemTextStyle: dropDownStyle2,
                                 valueTextStyle: dropDownStyle,
-                                value: '${GetIncomeController.to.weeklyIncomesList?[index].every}W',
+                                value: '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
 
                                 // value: controller.selectWeekDropDown[index],
                                 // value: GetIncomeController.to.weeklyIncomesList?[index].every,
@@ -757,9 +701,10 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                             _selectDate(context: context, index: index);
                           },
                           child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${GetIncomeController.to.weeklyIncomesList?[index].date}',
+                              '${GetIncomeController.to.weeklyIncomesList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
                               // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                               style: dateStyle,
                               maxLines: 1,
@@ -784,7 +729,8 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                           textStyle: incomeNameStyle,
                           textEditingController: _amount,
                           onChangedFunction: (value) {
-                            GetIncomeController.to.weeklyIncomesList?[index].amount = int.parse(_amount!.text);
+                            GetIncomeController.to.weeklyIncomesList?[index].amount = int.parse(value);
+                            // GetIncomeController.to.weeklyIncomesList?[index].amount = int.parse(_amount!.text);
                           },
                         ),
                       ),

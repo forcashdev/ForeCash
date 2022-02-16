@@ -13,7 +13,7 @@ import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/getx/visibility_controller.dart';
-import 'package:fore_cash/model/income_request_model.dart';
+import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -39,6 +39,12 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   final screenIndexController = Get.put(ScreenIndexController());
   final getIncomeController = Get.put(GetIncomeController());
   DateTime currentDate = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    GetIncomeController.to.callIncome(income_outgoing: 2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -244,6 +250,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         2: FlexColumnWidth(2),
         3: FlexColumnWidth(2),
         4: FlexColumnWidth(2),
+        5: FlexColumnWidth(2),
       },
       children: [
         TableRow(children: [
@@ -261,6 +268,10 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
           ),
           Text(
             every,
+            style: columnNameListStyle,
+          ),
+          Text(
+            startDate,
             style: columnNameListStyle,
           ),
           Text(
@@ -405,7 +416,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                       InkWell(
                         onTap: () {
                           if (_expenseName2.text.isNotEmpty && _amount2.text.isNotEmpty) {
-                            GetIncomeController.to.weeklyBudgetList?.add(Income(
+                            GetIncomeController.to.weeklyBudgetList?.add(DataModel(
                                 name: _expenseName2.text,
                                 amount: int.parse(_amount2.text),
                                 incomeOutgoing: 2,
@@ -458,10 +469,6 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
     );
   }
 
-  // _addBudgetButton({BoxConstraints? constraints}) {
-  //   return ;
-  // }
-
   _nextButtonWidget({BoxConstraints? constraints}) {
     return Padding(
       padding: EdgeInsets.only(
@@ -478,7 +485,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
           //   GetIncomeController.to.weeklyBudgetList?[index].name = _expenseName?.text;
           //   GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(_amount!.text);
           // });
-          print(GetIncomeController.to.weeklyBudgetList);
+          print('((((((((((((((((${GetIncomeController.to.weeklyBudgetList}');
           CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'income': GetIncomeController.to.weeklyBudgetList});
 
           // Get.to(SetupCalendarScreen());
@@ -503,7 +510,24 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
             enabled: constraints!.maxWidth > 1000 ? false : true,
             secondaryActions: [
               deleteImageWidget(onTap: () {
-                GetIncomeController.to.weeklyBudgetList?.removeAt(index);
+                showCommonDialog(
+                    context: context,
+                    headerTitle: sureToDelete,
+                    descriptionTitle: sureToDeleteSubTitle,
+                    buttonColor: Colors.white,
+                    saveButtonBorderColor: colorsEE4242,
+                    noButtonTextStyle: noButtonTextStyle,
+                    saveButtonTextStyle: yesButtonTextStyle,
+                    noButtonColor: Colors.black,
+                    onPressYes: () {
+                      GetIncomeController.to.weeklyBudgetList?.removeAt(index);
+                      Get.back();
+                    },
+                    onPressNo: () {
+                      Get.back();
+                    });
+
+                Slidable.of(context)!.close();
               }),
             ],
             child: Table(
@@ -554,7 +578,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                             textStyle: incomeNameStyle,
                             textEditingController: _expenseName,
                             onChangedFunction: (value) {
-                              GetIncomeController.to.weeklyBudgetList?[index].name = _expenseName?.text;
+                              GetIncomeController.to.weeklyBudgetList?[index].name = value;
+                              // GetIncomeController.to.weeklyBudgetList?[index].name = _expenseName?.text;
                             }),
                       ),
                     ),
@@ -568,7 +593,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         child: commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
-                            value: GetIncomeController.to.weeklyBudgetList?[index].paidOn
+                            value: '${GetIncomeController.to.weeklyBudgetList?[index].paidOn ?? 1}'
                                 .toString()
                                 .replaceAll('1', 'Sun')
                                 .replaceAll('2', 'Mon')
@@ -605,7 +630,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         child: commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.weeklyBudgetList?[index].every}W',
+                            value: '${GetIncomeController.to.weeklyBudgetList?[index].every ?? 1}W',
                             // value: controller.weeklyBudgetWeekDropDownList[index],
                             itemList: weeks,
                             onChanged: (item) {
@@ -624,10 +649,10 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                           onTap: () {
                             _selectDate(context: context, index: index);
                           },
-                          child: Container(
+                          child: Container(padding: const EdgeInsets.symmetric(horizontal: 10),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${GetIncomeController.to.weeklyBudgetList?[index].date}',
+                              '${GetIncomeController.to.weeklyBudgetList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
                               // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                               style: dateStyle,
                               maxLines: 1,
@@ -650,7 +675,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                             textStyle: incomeNameStyle,
                             textEditingController: _amount,
                             onChangedFunction: (value) {
-                              GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(_amount!.text);
+                              GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(value);
+                              // GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(_amount!.text);
                             }),
                       ),
                     ),
@@ -667,14 +693,11 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   Future<void> _selectDate({BuildContext? context, int? index}) async {
     final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
     if (pickedDate != null && pickedDate != currentDate) {
-      // setState(() {
-      currentDate = pickedDate;
-      print('>>>>>>>>>>>>>>>>>$currentDate');
-      // CreateIncomeController.to.IncomesList[index!].dateTime = currentDate;
+      setState(() {
+        currentDate = pickedDate;
+      });
       GetIncomeController.to.weeklyBudgetList?[index!].date = currentDate.toString();
       GetIncomeController.to.weeklyBudgetList?.refresh();
-
-      // });
     }
   }
 }

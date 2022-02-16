@@ -13,7 +13,7 @@ import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/getx/visibility_controller.dart';
-import 'package:fore_cash/model/income_request_model.dart';
+import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -39,6 +39,13 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
   final getIncomeController = Get.put(GetIncomeController());
   final screenIndexController = Get.put(ScreenIndexController());
   DateTime currentDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    GetIncomeController.to.callIncome(income_outgoing: 2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -347,8 +354,8 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
       shrinkWrap: true,
       itemCount: GetIncomeController.to.monthlyExpenseList?.length,
       itemBuilder: (context, index) {
-        _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name);
-        _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString());
+        _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? '');
+        _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString() ?? '');
         print('Check bob leangth=> ${checkBoxController.monthlyExpenseCheckBoxValueList.length}');
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
@@ -357,7 +364,22 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
             actionExtentRatio: 0.13,
             secondaryActions: [
               deleteImageWidget(onTap: () {
-                GetIncomeController.to.monthlyExpenseList?.removeAt(index);
+                showCommonDialog(
+                    context: context,
+                    headerTitle: sureToDelete,
+                    descriptionTitle: sureToDeleteSubTitle,
+                    buttonColor: Colors.white,
+                    saveButtonBorderColor: colorsEE4242,
+                    noButtonTextStyle: noButtonTextStyle,
+                    saveButtonTextStyle: yesButtonTextStyle,
+                    noButtonColor: Colors.black,
+                    onPressYes: () {
+                      GetIncomeController.to.monthlyExpenseList?.removeAt(index);
+                      Get.back();
+                    },
+                    onPressNo: () {
+                      Get.back();
+                    });
               }),
             ],
             child: Table(
@@ -411,21 +433,24 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               textStyle: incomeNameStyle,
                               textEditingController: _monthlyExpenseName,
                               onChangedFunction: (value) {
-                                GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
+                                GetIncomeController.to.monthlyExpenseList?[index].name = value;
+                                // GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
                               })),
                     ),
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.fill,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
-                        // width: widget.constraints!.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        // height: Get.height * 0.044,
-
                         child: commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
-                            // value: controller.selectedMonthlyExpenseDate[index],
-                            value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn}th',
+                            value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn ?? 1}th'
+                                .replaceAllMapped('1th', (match) => '1st')
+                                .replaceAllMapped('2th', (match) => '2nd')
+                                .replaceAllMapped('3th', (match) => '3rd')
+                                .replaceAllMapped('11st', (match) => '11th')
+                                .replaceAllMapped('12nd', (match) => '12th')
+                                .replaceAllMapped('13rd', (match) => '13th'),
                             itemList: dateList,
                             onChanged: (item) {
                               GetIncomeController.to.monthlyExpenseList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
@@ -447,7 +472,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         child: commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.monthlyExpenseList?[index].every} mon',
+                            value: '${GetIncomeController.to.monthlyExpenseList?[index].every ?? 1} mon',
                             // value: controller.selectedMonthlyExpenseMonth[index],
                             itemList: months,
                             onChanged: (item) {
@@ -466,10 +491,10 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                           onTap: () {
                             _selectDate(context: context, index: index);
                           },
-                          child: Container(
+                          child: Container(padding: const EdgeInsets.symmetric(horizontal: 10),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${GetIncomeController.to.monthlyExpenseList?[index].date}',
+                              '${GetIncomeController.to.monthlyExpenseList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
                               // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                               style: dateStyle,
                               maxLines: 1,
@@ -492,7 +517,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             textStyle: incomeNameStyle,
                             textEditingController: _monthlyAmount,
                             onChangedFunction: (value) {
-                              GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(_monthlyAmount!.text);
+                              GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(value);
                             }),
                       ),
                     )
@@ -656,17 +681,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            // setState(() {
-                            //   MonthlyExpensesModel.monthlyExpensesListOld.add(MonthlyExpensesModel(expenseName: _monthlyExpenseName.text, amount: _monthlyAmount.text));
-                            //   controller.selectedMonthlyExpenseDate.add(controller.selectedSingleMonthlyExpenseDate as Object);
-                            //   controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonthlyExpenseMonth as Object);
-                            //   checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
-                            //   controller1.changeVisibility();
-                            // });
-                            // _monthlyAmount.clear();
-                            // _monthlyExpenseName.clear();
-
-                            GetIncomeController.to.monthlyExpenseList?.add(Income(
+                            GetIncomeController.to.monthlyExpenseList?.add(DataModel(
                                 name: _expenseName2.text,
                                 amount: int.parse(_expenseAmount2.text),
                                 incomeOutgoing: 2,
@@ -723,22 +738,14 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         height: 50,
         text: next,
         onPress: () {
-          // List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) {
-          //   GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
-          //   GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(_monthlyAmount!.text);
-          // });
+          List<DataModel> tempMonthlyExpenseList = [];
+          checkBoxController.monthlyExpenseCheckBoxValueList.asMap().forEach((index, value) {
+            if (value) {
+              tempMonthlyExpenseList.add(GetIncomeController.to.monthlyExpenseList!.value[index]);
+            }
+          });
           print(GetIncomeController.to.monthlyExpenseList);
-          CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': GetIncomeController.to.monthlyExpenseList});
-          // screenIndex = 5;
-          // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-          // screenIndexController.updateIndex(index: 5);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => SetupWeeklyBudgetScreen(),
-          //     ));
-
-          // Get.to(SetupWeeklyBudgetScreen());
+          CreateIncomeController.to.createIncome(screenIndex: 5, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.monthlyExpenseList} : {'income': tempMonthlyExpenseList});
         },
       ),
     );

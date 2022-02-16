@@ -31,7 +31,7 @@ class CreateIncomeController extends GetxController {
           print('<<<<<<<<<<<<<<<<<<<${data['success'].toString()}');
           if (data['success'] == true) {
             final screenIndexController = Get.put(ScreenIndexController());
-            screenIndexController.updateIndex(index: screenIndex);
+            screenIndexController.updateIndex(index: screenIndex ?? screenIndexController.screensIndexes);
           }
         });
 

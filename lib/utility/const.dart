@@ -19,7 +19,8 @@ TextStyle mobileAppBarStyle = TextStyle(
 );
 const commonButtonTheme = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.white);
 const commonBackButtonTheme = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.black);
-
+TextStyle yesButtonTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: colorsEE4242);
+TextStyle noButtonTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.white);
 TextStyle createAccountTextStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w300, fontSize: 12.sp);
 TextStyle fullNameHintStyle = TextStyle(
   color: commonTextColor2,
