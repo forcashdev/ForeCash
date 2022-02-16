@@ -45,7 +45,8 @@ commonTextFormField(
     RxBool? showPassword,
     EdgeInsets? contentPadding,
     ScrollController? scrollController,
-    TextStyle? hintStyle}) {
+    TextStyle? hintStyle,
+    String? intialValue}) {
   bool passwordVisible = isPassword;
   return StatefulBuilder(builder: (context, newSetState) {
     return TextFormField(
@@ -61,30 +62,30 @@ commonTextFormField(
           onTapFunction();
         }
       },
-      // key: key,
+      key: key,
       focusNode: textFocusNode,
-      // onChanged: (value) {
-      //   if (onChangedFunction != null) {
-      //     onChangedFunction(value);
-      //   }
-      // },
-      // onEditingComplete: () {
-      //   if (onEditingComplete != null) {
-      //     onEditingComplete();
-      //   }
-      // },
+      onChanged: (value) {
+        if (onChangedFunction != null) {
+          onChangedFunction(value);
+        }
+      },
+      onEditingComplete: () {
+        if (onEditingComplete != null) {
+          onEditingComplete();
+        }
+      },
       validator: (value) {
         return validationFunction != null ? validationFunction(value) : null;
       },
       // onSaved: onSavedFunction != null ? onSavedFunction : (value) {},
-      // onSaved: (value) {
-      //   // ignore: void_checks
-      //   return onSavedFunction != null ? onSavedFunction(value) : null;
-      // },
-      // onFieldSubmitted: (value) {
-      //   // ignore: void_checks
-      //   return onFieldSubmit != null ? onFieldSubmit(value) : null;
-      // },
+      onSaved: (value) {
+        // ignore: void_checks
+        return onSavedFunction != null ? onSavedFunction(value) : null;
+      },
+      onFieldSubmitted: (value) {
+        // ignore: void_checks
+        return onFieldSubmit != null ? onFieldSubmit(value) : null;
+      },
       // maxLines: maxLine ?? 1,
       keyboardType: keyboardType,
       controller: textEditingController,

@@ -2180,11 +2180,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               4: FlexColumnWidth(editModeController.editMode == true ? 2.3 : 2.2),
                               5: const FlexColumnWidth(1),
                             },
-
-                            //               0: FlexColumnWidth(monthlyIncomeEditModeController.editMode == true ? 3.4 : 3.25),
-                            //               1: FlexColumnWidth(monthlyIncomeEditModeController.editMode == true ? 2.3 : 2.25),
-                            //               2: FlexColumnWidth(monthlyIncomeEditModeController.editMode == true ? 2.2 : 2.2),
-                            //               3: FlexColumnWidth(monthlyIncomeEditModeController.editMode == true ? 1.5 : 1.5),
                             children: [
                               TableRow(children: [
                                 Padding(
@@ -3187,7 +3182,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       onTap: () {
                                         setState(() {
                                           final controller = Get.put(SelectedDropDownItem());
-                                          WeeklyIncomeModel.weeklyIncomeList.add(WeeklyIncomeModel(incomeName:  _weeklyIncomeNameController.text, amount: _weeklyAmountController.text));
+                                          WeeklyIncomeModel.weeklyIncomeList.add(WeeklyIncomeModel(incomeName: _weeklyIncomeNameController.text, amount: _weeklyAmountController.text));
                                           controller.selectDayDropDown.add(controller.selectedSingleWeeklyIncomeDay as Object);
                                           controller.selectWeekDropDown.add(controller.selectedSingleWeeklyIncomeWeek as Object);
                                           // checkBoxController.monthlyExpenseCheckBoxValueList.add(false);

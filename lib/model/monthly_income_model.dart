@@ -1,4 +1,8 @@
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:get/get.dart';
+
+class MonthlyIncomeModelListController extends GetxController {
+  static MonthlyIncomeModelListController get to => Get.find();
+}
 
 class MonthlyIncomeModelOld {
   String? expenseName;
@@ -59,9 +63,4 @@ class MonthlyIncomeModelOld {
       amount: '8000',
     ),
   ];
-  @override
-  DataGridRowAdapter? buildRow(DataGridRow row) {
-    // TODO: implement buildRow
-    throw UnimplementedError();
-  }
 }

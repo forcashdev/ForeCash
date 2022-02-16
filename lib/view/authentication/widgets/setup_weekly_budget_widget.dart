@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/weekly_budget_model.dart';
@@ -17,7 +18,7 @@ Widget setUpWeeklyBudgetWidget({BoxConstraints? constraints}) {
   return ListView.builder(
     physics: NeverScrollableScrollPhysics(),
     shrinkWrap: true,
-    itemCount: WeeklyBudgetListController.to.weeklyBudgetList?.length,
+    itemCount: GetIncomeController.to.weeklyBudgetList?.length,
     itemBuilder: (context, index) {
       return Padding(
         padding: EdgeInsets.only(bottom: Get.height * 0.019),

@@ -5,7 +5,6 @@ import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
-import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
 
 class ConnectBankAccountScreen extends StatelessWidget {
@@ -93,8 +92,8 @@ class ConnectBankAccountScreen extends StatelessWidget {
                 onTap: () {
                   // controller.changeBank(bankIndex: index);
                   // print(controller.selectedIndex);
-                  screenIndex = 2;
-                  print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+                  // screenIndex = 2;
+                  // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
                   screenIndexController.updateIndex(index: 2);
                   // Navigator.push(
                   //     context,
@@ -104,11 +103,11 @@ class ConnectBankAccountScreen extends StatelessWidget {
                   // Get.to(MonthlyIncomeScreen());
                 },
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     // color: controller.selectedIndex == index ? Color(0xff12CC8E).withOpacity(0.2) : null,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Color(0xff5A7184), width: 1.2),
+                    border: Border.all(color: const Color(0xff5A7184), width: 1.2),
                   ),
                   height: 65,
                   width: 142,

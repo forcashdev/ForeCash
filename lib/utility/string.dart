@@ -99,9 +99,9 @@ List<String> dateList = [
   '18th',
   '19th',
   '20th',
-  '21th',
-  '22th',
-  '23th',
+  '21st',
+  '22nd',
+  '23rd',
   '24th',
   '25th',
   '26th',
@@ -332,6 +332,7 @@ const String mLogIn = 'auth/login';
 const String mRegister = 'auth/register';
 const String mGetIncome = 'app/getincome';
 const String mAddIncome = 'app/addincome';
+const String mDeleteIncomeExpense = 'app/deleteincome';
 const String rEmail = 'email';
 const String rPassword = 'password';
 const String rName = 'name';

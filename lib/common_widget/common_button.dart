@@ -26,6 +26,6 @@ commonButton({
     //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
     color: bgColor ?? commonButtonColor,
     minWidth: width ?? double.infinity,
-    height: height,
+    height: height ?? 50,
   );
 }

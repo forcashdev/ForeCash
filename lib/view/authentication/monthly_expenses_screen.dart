@@ -8,12 +8,12 @@ import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/getx/visibility_controller.dart';
 import 'package:fore_cash/model/income_request_model.dart';
-import 'package:fore_cash/model/monthly_expenses_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -36,7 +36,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
   final visibilityController = Get.put(VisibilityController());
   final controller = Get.put(SelectedDropDownItem());
   final checkBoxController = Get.put(CheckBoxController());
-  final monthlyExpenseListController = Get.put(MonthlyExpenseListController());
+  final getIncomeController = Get.put(GetIncomeController());
   final screenIndexController = Get.put(ScreenIndexController());
   DateTime currentDate = DateTime.now();
   @override
@@ -48,7 +48,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
           return false;
         },
         child: StreamBuilder(
-            stream: MonthlyExpenseListController.to.monthlyExpenseList?.stream,
+            stream: GetIncomeController.to.monthlyExpenseList?.stream,
             builder: (context, snapshot) {
               return LayoutBuilder(
                 builder: (context, constraints) {
@@ -345,10 +345,10 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: MonthlyExpenseListController.to.monthlyExpenseList?.length,
+      itemCount: GetIncomeController.to.monthlyExpenseList?.length,
       itemBuilder: (context, index) {
-        _monthlyExpenseName = TextEditingController(text: MonthlyExpenseListController.to.monthlyExpenseList?[index].name);
-        _monthlyAmount = TextEditingController(text: MonthlyExpenseListController.to.monthlyExpenseList?[index].amount.toString());
+        _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name);
+        _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString());
         print('Check bob leangth=> ${checkBoxController.monthlyExpenseCheckBoxValueList.length}');
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
@@ -357,7 +357,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
             actionExtentRatio: 0.13,
             secondaryActions: [
               deleteImageWidget(onTap: () {
-                MonthlyExpenseListController.to.monthlyExpenseList?.removeAt(index);
+                GetIncomeController.to.monthlyExpenseList?.removeAt(index);
               }),
             ],
             child: Table(
@@ -409,7 +409,10 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               //contentPadding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                               textStyle: incomeNameStyle,
-                              textEditingController: _monthlyExpenseName)),
+                              textEditingController: _monthlyExpenseName,
+                              onChangedFunction: (value) {
+                                GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
+                              })),
                     ),
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.fill,
@@ -422,11 +425,11 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
                             // value: controller.selectedMonthlyExpenseDate[index],
-                            value: '${MonthlyExpenseListController.to.monthlyExpenseList?[index].paidOn}th',
+                            value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn}th',
                             itemList: dateList,
                             onChanged: (item) {
-                              MonthlyExpenseListController.to.monthlyExpenseList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
-                              MonthlyExpenseListController.to.monthlyExpenseList?.refresh();
+                              GetIncomeController.to.monthlyExpenseList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
+                              GetIncomeController.to.monthlyExpenseList?.refresh();
                               // controller.changeMonthlyExpenseDate(item: item, index: index);
                               print(item);
                             }),
@@ -444,12 +447,12 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         child: commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
-                            value: '${MonthlyExpenseListController.to.monthlyExpenseList?[index].every} mon',
+                            value: '${GetIncomeController.to.monthlyExpenseList?[index].every} mon',
                             // value: controller.selectedMonthlyExpenseMonth[index],
                             itemList: months,
                             onChanged: (item) {
-                              MonthlyExpenseListController.to.monthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
-                              MonthlyExpenseListController.to.monthlyExpenseList?.refresh();
+                              GetIncomeController.to.monthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                              GetIncomeController.to.monthlyExpenseList?.refresh();
                               // controller.changeMonthlyExpenseMonth(item: item, index: index);
                               print(item);
                             }),
@@ -466,7 +469,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                           child: Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${MonthlyExpenseListController.to.monthlyExpenseList?[index].date}',
+                              '${GetIncomeController.to.monthlyExpenseList?[index].date}',
                               // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                               style: dateStyle,
                               maxLines: 1,
@@ -487,7 +490,10 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             inputFormatter: [digitInputFormatter()],
                             contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                             textStyle: incomeNameStyle,
-                            textEditingController: _monthlyAmount),
+                            textEditingController: _monthlyAmount,
+                            onChangedFunction: (value) {
+                              GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(_monthlyAmount!.text);
+                            }),
                       ),
                     )
                   ],
@@ -508,8 +514,8 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
       });
       print('>>>>>>>>>>>>>>>>>$currentDate');
       // CreateIncomeController.to.IncomesList[index!].dateTime = currentDate;
-      MonthlyExpenseListController.to.monthlyExpenseList?[index!].date = currentDate.toString();
-      MonthlyExpenseListController.to.monthlyExpenseList?.refresh();
+      GetIncomeController.to.monthlyExpenseList?[index!].date = currentDate.toString();
+      GetIncomeController.to.monthlyExpenseList?.refresh();
     }
   }
 
@@ -524,12 +530,12 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
               child: GestureDetector(
                 onTap: () {
-                  if (MonthlyExpenseListController.to.monthlyExpenseList?.length == 1) {
-                    MonthlyExpenseListController.to.monthlyExpenseList?[0].amount = int.parse(_monthlyAmount!.text.toString());
-                    MonthlyExpenseListController.to.monthlyExpenseList?[0].name = _monthlyExpenseName!.text;
-                    MonthlyExpenseListController.to.monthlyExpenseList?[0].incomeOutgoing = 2;
-                    MonthlyExpenseListController.to.monthlyExpenseList?[0].weekMonth = 2;
-                    MonthlyExpenseListController.to.monthlyExpenseList?[0].date = DateTime.now().toString();
+                  if (GetIncomeController.to.monthlyExpenseList?.length == 1) {
+                    GetIncomeController.to.monthlyExpenseList?[0].amount = int.parse(_monthlyAmount!.text.toString());
+                    GetIncomeController.to.monthlyExpenseList?[0].name = _monthlyExpenseName!.text;
+                    GetIncomeController.to.monthlyExpenseList?[0].incomeOutgoing = 2;
+                    GetIncomeController.to.monthlyExpenseList?[0].weekMonth = 2;
+                    GetIncomeController.to.monthlyExpenseList?[0].date = DateTime.now().toString();
 
                     controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
                     controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
@@ -660,7 +666,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             // _monthlyAmount.clear();
                             // _monthlyExpenseName.clear();
 
-                            MonthlyExpenseListController.to.monthlyExpenseList?.add(Income(
+                            GetIncomeController.to.monthlyExpenseList?.add(Income(
                                 name: _expenseName2.text,
                                 amount: int.parse(_expenseAmount2.text),
                                 incomeOutgoing: 2,
@@ -706,10 +712,6 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
     );
   }
 
-  // _addMonthlyExpenseButton({BoxConstraints? constraints}) {
-  //   return ;
-  // }
-
   _nextButtonWidget({BoxConstraints? constraints}) {
     return Padding(
       padding: EdgeInsets.only(
@@ -721,7 +723,12 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         height: 50,
         text: next,
         onPress: () {
-          CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': MonthlyExpenseListController.to.monthlyExpenseList});
+          // List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) {
+          //   GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
+          //   GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(_monthlyAmount!.text);
+          // });
+          print(GetIncomeController.to.monthlyExpenseList);
+          CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': GetIncomeController.to.monthlyExpenseList});
           // screenIndex = 5;
           // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
           // screenIndexController.updateIndex(index: 5);

@@ -1,18 +1,13 @@
-import 'package:fore_cash/controller/create_income_controller.dart';
-import 'package:fore_cash/model/monthly_expenses_model.dart';
-import 'package:fore_cash/model/weekly_budget_model.dart';
-import 'package:fore_cash/model/weekly_income_model.dart';
+import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:get/get.dart';
 
 class CheckBoxController extends GetxController {
-  final monthlyExpenseListController = Get.put(MonthlyExpenseListController());
-  final weeklyExpenseListController = Get.put(WeeklyIncomeListController());
-  final weeklyBudgetListController = Get.put(WeeklyBudgetListController());
+  final getIncomeController = Get.put(GetIncomeController());
 
-  List<bool> monthlyIncomeCheckBoxValueList = List.generate(CreateIncomeController.to.monthlyIncomeList!.length, (index) => false);
-  List<bool> weeklyIncomeCheckBoxValueList = List.generate(WeeklyIncomeListController.to.weeklyIncomesList!.length, (index) => false);
-  List<bool> monthlyExpenseCheckBoxValueList = List.generate(MonthlyExpenseListController.to.monthlyExpenseList!.length, (index) => false);
-  List<bool> weeklyBudgetCheckBoxValueList = List.generate(WeeklyBudgetListController.to.weeklyBudgetList!.length, (index) => false);
+  List<bool> monthlyIncomeCheckBoxValueList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false);
+  List<bool> weeklyIncomeCheckBoxValueList = List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) => false);
+  List<bool> monthlyExpenseCheckBoxValueList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false);
+  List<bool> weeklyBudgetCheckBoxValueList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false);
   // List<bool> get SelectedCheckBoxValueList => checkBoxValueList;
   void selectCheckBox({bool? value, int? index}) {
     monthlyIncomeCheckBoxValueList[index!] = value!;

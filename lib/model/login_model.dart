@@ -8,11 +8,11 @@ class LoginModel {
   LoginModel.fromJson(dynamic json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? DataModel.fromJson(json['data']) : null;
   }
   bool? success;
   String? message;
-  Data? data;
+  DataModel? data;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -25,12 +25,12 @@ class LoginModel {
   }
 }
 
-class Data {
-  Data({
+class DataModel {
+  DataModel({
     this.token,
   });
 
-  Data.fromJson(dynamic json) {
+  DataModel.fromJson(dynamic json) {
     token = json['token'];
   }
   String? token;

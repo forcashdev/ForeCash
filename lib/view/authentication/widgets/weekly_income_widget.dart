@@ -5,30 +5,25 @@ import 'package:flutter/widgets.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
-import 'package:fore_cash/getx/visibility_controller.dart';
-import 'package:fore_cash/getx/weekly_income_edit_mode_controller.dart';
-import 'package:fore_cash/model/weekly_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
 Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
-  TextEditingController _incomeName = TextEditingController();
-  TextEditingController _amount = TextEditingController();
-  final visibilityController = Get.put(VisibilityController());
   final controller = Get.put(SelectedDropDownItem());
   final checkBoxController = Get.put(CheckBoxController());
-  final weeklyEditModeController = Get.put(WeeklyIncomeEditModeController());
+
   return StreamBuilder(
-      stream: WeeklyIncomeListController.to.weeklyIncomesList?.stream,
+      stream: GetIncomeController.to.weeklyIncomesList?.stream,
       builder: (context, snapshot) {
         return ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: WeeklyIncomeListController.to.weeklyIncomesList?.length,
+          itemCount: GetIncomeController.to.weeklyIncomesList?.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.only(bottom: Get.height * 0.019),
@@ -77,7 +72,7 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                               inputFormatter: [characterInputFormatter()],
                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                               textStyle: incomeNameStyle,
-                              textEditingController: TextEditingController(text: WeeklyIncomeListController.to.weeklyIncomesList?[index].name)),
+                              textEditingController: TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].name)),
                         ),
                       ),
                       TableCell(
@@ -143,7 +138,7 @@ Widget weeklyIncomeWidget({BoxConstraints? constraints}) {
                               inputFormatter: [digitInputFormatter()],
                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                               textStyle: incomeNameStyle,
-                              textEditingController: TextEditingController(text: WeeklyIncomeListController.to.weeklyIncomesList?[index].amount.toString())),
+                              textEditingController: TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString())),
                         ),
                       ),
                       // Expanded(

@@ -155,7 +155,7 @@ deleteImageWidget({Function? onTap}) {
         padding: const EdgeInsets.all(5.0),
         child: Image.asset(
           deleteImage,
-          height: Get.height * 0.04,
+          height: Get.height * 0.025,
           // width: 30.0,
         )),
   );

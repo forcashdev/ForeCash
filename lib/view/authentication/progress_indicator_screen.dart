@@ -14,7 +14,7 @@ import 'package:fore_cash/view/authentication/signup_screen.dart';
 import 'package:fore_cash/view/authentication/weekly_income_screen.dart';
 import 'package:get/get.dart';
 
-int screenIndex = 0;
+// int screenIndex = 0;
 
 class ScreenProgressIndicator extends StatelessWidget {
   const ScreenProgressIndicator({Key? key}) : super(key: key);

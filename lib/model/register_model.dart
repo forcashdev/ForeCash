@@ -1,17 +1,18 @@
 class RegisterModel {
   RegisterModel({
-      this.success, 
-      this.message, 
-      this.data,});
+    this.success,
+    this.message,
+    this.data,
+  });
 
   RegisterModel.fromJson(dynamic json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? DataModel.fromJson(json['data']) : null;
   }
   bool? success;
   String? message;
-  Data? data;
+  DataModel? data;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -22,15 +23,15 @@ class RegisterModel {
     }
     return map;
   }
-
 }
 
-class Data {
-  Data({
-      this.user, 
-      this.token,});
+class DataModel {
+  DataModel({
+    this.user,
+    this.token,
+  });
 
-  Data.fromJson(dynamic json) {
+  DataModel.fromJson(dynamic json) {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     token = json['token'];
   }
@@ -45,15 +46,15 @@ class Data {
     map['token'] = token;
     return map;
   }
-
 }
 
 class User {
   User({
-      this.id, 
-      this.name, 
-      this.email, 
-      this.v,});
+    this.id,
+    this.name,
+    this.email,
+    this.v,
+  });
 
   User.fromJson(dynamic json) {
     id = json['_id'];
@@ -74,5 +75,4 @@ class User {
     map['__v'] = v;
     return map;
   }
-
 }
