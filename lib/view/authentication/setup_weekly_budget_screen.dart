@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
@@ -504,32 +504,37 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         _amount = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].amount.toString());
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
-          child: Slidable(
-            actionPane: const SlidableDrawerActionPane(),
-            actionExtentRatio: 0.13,
-            enabled: constraints!.maxWidth > 1000 ? false : true,
-            secondaryActions: [
-              deleteImageWidget(onTap: () {
-                showCommonDialog(
-                    context: context,
-                    headerTitle: sureToDelete,
-                    descriptionTitle: sureToDeleteSubTitle,
-                    buttonColor: Colors.white,
-                    saveButtonBorderColor: colorsEE4242,
-                    noButtonTextStyle: noButtonTextStyle,
-                    saveButtonTextStyle: yesButtonTextStyle,
-                    noButtonColor: Colors.black,
-                    onPressYes: () {
-                      GetIncomeController.to.weeklyBudgetList?.removeAt(index);
-                      Get.back();
-                    },
-                    onPressNo: () {
-                      Get.back();
-                    });
-
-                Slidable.of(context)!.close();
-              }),
+          child: SwipeActionCell(
+            trailingActions: [
+              SwipeAction(
+                backgroundRadius: 5,
+                widthSpace: 50,
+                color: colorsFFEBEB,
+                icon: Image.asset(
+                  deleteImage,
+                  height: Get.height * 0.025,
+                ),
+                onTap: (p0) {
+                  showCommonDialog(
+                      context: context,
+                      headerTitle: sureToDelete,
+                      descriptionTitle: sureToDeleteSubTitle,
+                      buttonColor: Colors.white,
+                      saveButtonBorderColor: colorsEE4242,
+                      noButtonTextStyle: noButtonTextStyle,
+                      saveButtonTextStyle: yesButtonTextStyle,
+                      noButtonColor: Colors.black,
+                      onPressYes: () {
+                        GetIncomeController.to.weeklyBudgetList?.removeAt(index);
+                        Get.back();
+                      },
+                      onPressNo: () {
+                        Get.back();
+                      });
+                },
+              ),
             ],
+            key: UniqueKey(),
             child: Table(
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(0.35),
@@ -542,7 +547,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
               children: [
                 TableRow(
                   children: [
-                    constraints.maxWidth < 1000
+                    constraints!.maxWidth < 1000
                         ? Container(
                             height: Get.height * 0.044,
                             // width: 8,
@@ -649,7 +654,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                           onTap: () {
                             _selectDate(context: context, index: index);
                           },
-                          child: Container(padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             alignment: Alignment.centerLeft,
                             child: Text(
                               '${GetIncomeController.to.weeklyBudgetList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),

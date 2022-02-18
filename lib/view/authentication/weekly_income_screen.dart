@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
@@ -502,11 +502,11 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         text: next,
         onPress: () {
           List<DataModel> tempWeeklyIncomeList = [];
-          checkBoxController.weeklyIncomeCheckBoxValueList.asMap().forEach((index, value) {
-            if (value) {
-              tempWeeklyIncomeList.add(GetIncomeController.to.weeklyIncomesList!.value[index]);
-            }
-          });
+          // checkBoxController.weeklyIncomeCheckBoxValueList.asMap().forEach((index, value) {
+          //   if (value) {
+          //     tempWeeklyIncomeList.add(GetIncomeController.to.weeklyIncomesList!.value[index]);
+          //   }
+          // });
           CreateIncomeController.to.createIncome(screenIndex: 4, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.weeklyIncomesList} : {'income': tempWeeklyIncomeList});
         },
       ),
@@ -536,30 +536,38 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         _amount = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString() ?? "");
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
-          child: Slidable(
-            actionExtentRatio: 0.13,
-            enabled: constraints!.maxWidth > 1000 ? false : true,
-            secondaryActions: [
-              deleteImageWidget(onTap: () {
-                showCommonDialog(
-                    context: context,
-                    headerTitle: sureToDelete,
-                    descriptionTitle: sureToDeleteSubTitle,
-                    buttonColor: Colors.white,
-                    saveButtonBorderColor: colorsEE4242,
-                    noButtonTextStyle: noButtonTextStyle,
-                    saveButtonTextStyle: yesButtonTextStyle,
-                    noButtonColor: Colors.black,
-                    onPressYes: () {
-                      GetIncomeController.to.weeklyIncomesList?.removeAt(index);
-                      Get.back();
-                    },
-                    onPressNo: () {
-                      Get.back();
-                    });
-              }),
+          child: SwipeActionCell(
+            backgroundColor: Colors.transparent,
+            trailingActions: [
+              SwipeAction(
+                backgroundRadius: 5,
+                widthSpace: 50,
+                color: colorsFFEBEB,
+                icon: Image.asset(
+                  deleteImage,
+                  height: Get.height * 0.025,
+                ),
+                onTap: (p0) {
+                  showCommonDialog(
+                      context: context,
+                      headerTitle: sureToDelete,
+                      descriptionTitle: sureToDeleteSubTitle,
+                      buttonColor: Colors.white,
+                      saveButtonBorderColor: colorsEE4242,
+                      noButtonTextStyle: noButtonTextStyle,
+                      saveButtonTextStyle: yesButtonTextStyle,
+                      noButtonColor: Colors.black,
+                      onPressYes: () {
+                        GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                        Get.back();
+                      },
+                      onPressNo: () {
+                        Get.back();
+                      });
+                },
+              ),
             ],
-            actionPane: const SlidableDrawerActionPane(),
+            key: UniqueKey(),
             child: Table(
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(0.35),
@@ -572,7 +580,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
               children: [
                 TableRow(
                   children: [
-                    constraints.maxWidth < 1000
+                    constraints!.maxWidth < 1000
                         ? Container(
                             height: Get.height * 0.044,
                             margin: EdgeInsets.only(right: Get.width * 0.02),

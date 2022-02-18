@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
@@ -37,10 +38,11 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   final screenIndexController = Get.put(ScreenIndexController());
   final getIncomeController = Get.put(GetIncomeController());
   final addMonthlyIncomeTextVisibility = Get.put(AddMonthlyIncomeVisibilityController());
-  TextEditingController? _incomeName;
-  TextEditingController? _amount;
+  GlobalKey<FormState> _formKeyValidator = GlobalKey<FormState>();
+
   DateTime currentDate = DateTime.now();
-  List deleteIdList = [];
+  bool validate = false;
+
   @override
   void initState() {
     // callAPI();
@@ -54,6 +56,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
       child: WillPopScope(
           onWillPop: () async {
             screenIndexController.updateIndex(index: 1);
+            GetIncomeController.to.monthlyIncomeList?.clear();
             return false;
           },
           child: StreamBuilder(
@@ -71,118 +74,124 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
                           width: maxWidth ? Get.width / 1.4 : null,
                           height: maxWidth ? Get.height * 0.78 : null,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: Get.height * 0.02,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  maxWidth
-                                      ? const SizedBox()
-                                      : IconButton(
-                                          splashRadius: 0.1,
-                                          onPressed: () {
-                                            screenIndexController.updateIndex(index: 1);
-                                            // Navigator.pop(context);
-                                          },
-                                          icon: const Icon(
-                                            Icons.chevron_left,
-                                          )),
-                                  maxWidth
-                                      ? Container()
-                                      : Align(
-                                          alignment: const FractionalOffset(0.5, 0.0),
-                                          child: Image.asset(
-                                            foreCashLogo2,
-                                            height: Get.height * 0.055,
-                                            width: Get.height * 0.25,
-                                          ),
-                                        ),
-                                  Container()
-                                ],
-                              ),
-                              SizedBox(
-                                height: maxWidth ? Get.height * 0.03 : 0.0,
-                              ),
-                              maxWidth ? Container() : commonDivider(),
-                              SizedBox(
-                                height: maxWidth ? Get.height * 0.02 : Get.height * 0.04,
-                              ),
-                              maxWidth
-                                  ? Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: TextButton(
-                                          onPressed: () {
-                                            screenIndexController.updateIndex(index: 2);
-                                            // Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            backButton,
-                                            style: backButtonStyle,
-                                          )))
-                                  : const SizedBox(),
-                              Text(
-                                selectMonthlyIncomes,
-                                style: headTitleTheme,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.1),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  maxLines: 4,
-                                  text: TextSpan(
-                                    text: identified,
-                                    style: textSpanStyle1,
-                                    children: [
-                                      TextSpan(
-                                        text: towards,
-                                        style: textSpanStyle2,
-                                      )
-                                    ],
-                                  ),
+                          child: Form(
+                            key: _formKeyValidator,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: Get.height * 0.02,
                                 ),
-                              ),
-                              SizedBox(
-                                height: Get.height * 0.03,
-                              ),
-                              Expanded(
-                                flex: maxWidth ? 2 : 2,
-                                // flex: constraints.maxWidth > 1000 ? 2 : 0,
-                                child: Container(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 5),
-                                  height: maxWidth ? double.infinity : null,
-                                  decoration: BoxDecoration(color: Colors.white, border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
-                                  child: Column(
-                                    children: [
-                                      _nameTableRowWidget(constraints: constraints),
-                                      SizedBox(
-                                        height: Get.height * 0.01,
-                                      ),
-                                      maxWidth
-                                          ? Divider(
-                                              color: commonGreyColor.withOpacity(0.5),
-                                            )
-                                          : Container(),
-                                      Expanded(
-                                          flex: maxWidth ? 2 : 2,
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              children: [rowList(constraints: constraints, context: context), _addNewMonthlyIncomeWidget(constraints: constraints, context: context)],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    maxWidth
+                                        ? const SizedBox()
+                                        : IconButton(
+                                            splashRadius: 0.1,
+                                            onPressed: () {
+                                              screenIndexController.updateIndex(index: 1);
+                                              GetIncomeController.to.monthlyIncomeList?.clear();
+                                              // Navigator.pop(context);
+                                            },
+                                            icon: const Icon(
+                                              Icons.chevron_left,
+                                            )),
+                                    maxWidth
+                                        ? Container()
+                                        : Align(
+                                            alignment: const FractionalOffset(0.5, 0.0),
+                                            child: Image.asset(
+                                              foreCashLogo2,
+                                              height: Get.height * 0.055,
+                                              width: Get.height * 0.25,
                                             ),
-                                          )),
-                                    ],
+                                          ),
+                                    Container()
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: maxWidth ? Get.height * 0.03 : 0.0,
+                                ),
+                                maxWidth ? Container() : commonDivider(),
+                                SizedBox(
+                                  height: maxWidth ? Get.height * 0.02 : Get.height * 0.04,
+                                ),
+                                maxWidth
+                                    ? Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: TextButton(
+                                            onPressed: () {
+                                              screenIndexController.updateIndex(index: 1);
+                                              GetIncomeController.to.monthlyIncomeList?.clear();
+                                              // Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              backButton,
+                                              style: backButtonStyle,
+                                            )))
+                                    : const SizedBox(),
+                                Text(
+                                  selectMonthlyIncomes,
+                                  style: headTitleTheme,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.1),
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    maxLines: 4,
+                                    text: TextSpan(
+                                      text: identified,
+                                      style: textSpanStyle1,
+                                      children: [
+                                        TextSpan(
+                                          text: towards,
+                                          style: textSpanStyle2,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
-                            ],
+                                SizedBox(
+                                  height: Get.height * 0.03,
+                                ),
+                                Expanded(
+                                  flex: maxWidth ? 2 : 2,
+                                  // flex: constraints.maxWidth > 1000 ? 2 : 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.only(top: 10, bottom: 5),
+                                    height: maxWidth ? double.infinity : null,
+                                    decoration:
+                                        BoxDecoration(color: Colors.white, border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
+                                    child: Column(
+                                      children: [
+                                        _nameTableRowWidget(constraints: constraints),
+                                        SizedBox(
+                                          height: Get.height * 0.01,
+                                        ),
+                                        maxWidth
+                                            ? Divider(
+                                                color: commonGreyColor.withOpacity(0.5),
+                                              )
+                                            : Container(),
+                                        Expanded(
+                                            flex: maxWidth ? 2 : 2,
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                children: [rowList(constraints: constraints, context: context), _addNewMonthlyIncomeWidget(constraints: constraints, context: context)],
+                                              ),
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -208,18 +217,17 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
               padding: EdgeInsets.only(bottom: Get.height * 0.03, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
               child: GestureDetector(
                 onTap: () {
-                  print(deleteIdList);
-                  if (GetIncomeController.to.monthlyIncomeList?.length == 1) {
-                    GetIncomeController.to.monthlyIncomeList?[0].amount = int.parse(_amount!.text.toString());
-                    GetIncomeController.to.monthlyIncomeList?[0].name = _incomeName!.text;
-                    GetIncomeController.to.monthlyIncomeList?[0].incomeOutgoing = 1;
-                    GetIncomeController.to.monthlyIncomeList?[0].weekMonth = 2;
-                    GetIncomeController.to.monthlyIncomeList?[0].date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-                    controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
-                    controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
-                    checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
-                  }
+                  // if (GetIncomeController.to.monthlyIncomeList?.length == 1) {
+                  //   GetIncomeController.to.monthlyIncomeList?[0].amount = int.parse(_amount!.text.toString());
+                  //   GetIncomeController.to.monthlyIncomeList?[0].name = _incomeName!.text;
+                  //   GetIncomeController.to.monthlyIncomeList?[0].incomeOutgoing = 1;
+                  //   GetIncomeController.to.monthlyIncomeList?[0].weekMonth = 2;
+                  //   GetIncomeController.to.monthlyIncomeList?[0].date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  //
+                  //   // controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
+                  //   // controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
+                  //   // checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
+                  // }
                   print(GetIncomeController.to.monthlyIncomeList);
                   controller1.changeVisibility();
 
@@ -254,77 +262,81 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                       TableRow(
                         children: [
                           SizedBox(height: Get.height * 0.044),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                              child: commonTextFormField(
-                                  hintText: addIncome,
-                                  hintStyle: incomeNameStyle,
-                                  inputAction: TextInputAction.done,
-                                  inputFormatter: [characterInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                  textStyle: incomeNameStyle,
-                                  textEditingController: _incomeName2),
-                            ),
+                          Padding(
+                            padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                            child: commonTextFormField(
+                                hintText: addIncome,
+                                hintStyle: incomeNameStyle,
+                                inputAction: TextInputAction.done,
+                                inputFormatter: [characterInputFormatter()],
+                                contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.017, 10.0, Get.height * 0.016),
+                                textStyle: incomeNameStyle,
+                                textEditingController: _incomeName2,
+                                validationFunction: (value) {
+                                  if (value.isEmpty) {
+                                    // setState(() {
+                                    //   validate = true;
+                                    // });
+                                    // return 'Fill';
+                                  }
+                                }),
                           ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
+                          Container(
+                            padding: const EdgeInsets.only(
+                              left: 6,
+                            ),
+                            // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                            height: Get.height * 0.044,
+                            alignment: Alignment.center,
+                            child: dropDownDayGetBuilder(dropDownList: dateList),
+                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                            decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 6),
+                            // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                            height: Get.height * 0.044,
+                            alignment: Alignment.center,
+                            child: dropDownWeekGetBuilder(dropDownList: months),
+                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                            decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _selectDate(context: context);
+                            },
                             child: Container(
-                              padding: const EdgeInsets.only(
-                                left: 6,
+                              height: Get.height * 0.044,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                DateFormat('yyyy-MM-dd').format(currentDate),
+                                style: dateStyle,
+                                maxLines: 1,
                               ),
-                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                              // height: Get.height * 0.044,
-                              alignment: Alignment.center,
-                              child: dropDownDayGetBuilder(dropDownList: dateList),
                               margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                              decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                             ),
                           ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 6),
-                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                              // height: Get.height * 0.044,
-                              alignment: Alignment.center,
-                              child: dropDownWeekGetBuilder(dropDownList: months),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.fill,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _selectDate(context: context);
+                          Padding(
+                            padding: EdgeInsets.only(right: Get.width * 0.02),
+                            child: commonTextFormField(
+                                prefixText: '\$',
+                                keyboardType: TextInputType.phone,
+                                prefixstyle: incomeNameStyle,
+                                inputAction: TextInputAction.done,
+                                validationFunction: (value) {
+                                  if (value.isEmpty) {
+                                    // setState(() {
+                                    //   validate = true;
+                                    // });
+                                    return 'Fill';
+                                  }
                                 },
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    DateFormat('yyyy-MM-dd').format(currentDate),
-                                    style: dateStyle,
-                                    maxLines: 1,
-                                  ),
-                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                                ),
-                              )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: Get.width * 0.02),
-                              child: commonTextFormField(
-                                  prefixText: '\$',
-                                  keyboardType: TextInputType.phone,
-                                  prefixstyle: incomeNameStyle,
-                                  inputAction: TextInputAction.done,
-                                  inputFormatter: [digitInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                  textStyle: incomeNameStyle,
-                                  textEditingController: _amount2),
-                            ),
+                                inputFormatter: [digitInputFormatter()],
+                                // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.017, 10.0, Get.height * 0.016),
+                                textStyle: incomeNameStyle,
+                                textEditingController: _amount2),
                           ),
                         ],
                       ),
@@ -339,11 +351,16 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            if (_incomeName2.text.isNotEmpty && _amount2.text.isNotEmpty) {
-                              // setState(() {
-                              // CreateIncomeController.to.IncomesList.add(MonthlyIncomeModel(
-                              //     every: controller.selectedMonth, incomeName: _incomeName2.text, amount: _amount2.text, paidOn: controller.selectedDate, dateTime: currentDate));
-
+                            if (controller.selectedMonth == null || controller.selectedDate == null) {
+                              Fluttertoast.showToast(
+                                  webPosition: 'center',
+                                  msg: "Select DropDown",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  // webBgColor: Colors.black.withOpacity(0.5), // also possible "TOP" and "CENTER"
+                                  // backgroundColor: Colors.black.withOpacity(0.5),
+                                  textColor: const Color(0xffffffff));
+                            } else if (_formKeyValidator.currentState!.validate()) {
                               GetIncomeController.to.monthlyIncomeList?.add(DataModel(
                                   name: _incomeName2.text,
                                   amount: int.parse(_amount2.text),
@@ -354,10 +371,36 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                   date: DateFormat('yyyy-MM-dd').format(currentDate)));
                               controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
                               controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
-                              checkBoxController.monthlyIncomeCheckBoxValueList.add(false);
-                              // });
+                              checkBoxController.monthlyIncomeCheckBoxValueList.add(true);
+
                               controller1.changeVisibility();
                             }
+
+                            // if (_incomeName2.text.isNotEmpty && _amount2.text.isNotEmpty) {
+                            // if (_formKeyValidator.currentState!.validate()) {
+                            // setState(() {
+                            // CreateIncomeController.to.IncomesList.add(MonthlyIncomeModel(
+                            //     every: controller.selectedMonth, incomeName: _incomeName2.text, amount: _amount2.text, paidOn: controller.selectedDate, dateTime: currentDate));
+
+                            // GetIncomeController.to.monthlyIncomeList?.add(DataModel(
+                            //     name: _incomeName2.text,
+                            //     amount: int.parse(_amount2.text),
+                            //     incomeOutgoing: 1,
+                            //     weekMonth: 2,
+                            //     every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                            //     paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                            //     date: DateFormat('yyyy-MM-dd').format(currentDate)));
+                            // controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
+                            // controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
+                            // checkBoxController.monthlyIncomeCheckBoxValueList.add(true);
+                            // });
+                            // controller1.changeVisibility();
+                            // }
+                            // else {
+                            //   setState(() {
+                            //     validate = true;
+                            //   });
+                            // }
                             _amount2.clear();
                             _incomeName2.clear();
                             // monthlyIncomeEditMode.showEditMode();
@@ -418,35 +461,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
               controller.changeMonthlyIncomeDate(item: item);
               print(item);
             });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       day,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.selectedSingleDay,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeSingleDay(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
       },
     );
   }
@@ -468,35 +482,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
               controller.changeMonthlyIncomeMonth(item: item);
               print(item);
             });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       every,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.selectedSingleWeek,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeSingleWeek(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
       },
     );
   }
@@ -553,222 +538,277 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         height: 50,
         text: next,
         onPress: () {
-          List<DataModel> tempMonthlyIncome = [];
-          checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) {
-            if (value) {
-              tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList!.value[index]);
-            }
-          });
-          CreateIncomeController.to.createIncome(screenIndex: 3, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.monthlyIncomeList} : {'income': tempMonthlyIncome});
+          _formKeyValidator.currentState!.validate();
+
+          if (_formKeyValidator.currentState!.validate()) {
+            // List<DataModel> tempMonthlyIncome = [];
+            // checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) {
+            //   if (value) {
+            //     tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList!.value[index]);
+            //   }
+            // });
+            // CreateIncomeController.to.createIncome(screenIndex: 3, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.monthlyIncomeList} : {'income': tempMonthlyIncome});
+            // GetIncomeController.to.monthlyIncomeList?.clear();
+            List<DataModel> tempMonthlyIncome = [];
+            checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) {
+              if (value) {
+                print(value);
+                tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList!.value[index]);
+              }
+            });
+            CreateIncomeController.to.createIncome(screenIndex: 3, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.monthlyIncomeList} : {'income': tempMonthlyIncome});
+          }
         },
       ),
     );
   }
 
   rowList({BoxConstraints? constraints, BuildContext? context}) {
-    return StreamBuilder(
-        stream: GetIncomeController.to.monthlyIncomeList?.stream,
-        builder: (context, snapshot) {
-          final SlidableController _slidableController = SlidableController();
-          return ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: GetIncomeController.to.monthlyIncomeList?.length,
-            itemBuilder: (context, index) {
-              _incomeName = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].name ?? '');
-              _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString() ?? '');
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Slidable(
-                  controller: _slidableController,
-                  actionExtentRatio: 0.13,
-                  enabled: constraints!.maxWidth > 1000 ? false : true,
-                  secondaryActions: [
-                    deleteImageWidget(onTap: () {
-                      showCommonDialog(
-                          context: context,
-                          headerTitle: sureToDelete,
-                          descriptionTitle: sureToDeleteSubTitle,
-                          buttonColor: Colors.white,
-                          saveButtonBorderColor: colorsEE4242,
-                          noButtonTextStyle: noButtonTextStyle,
-                          saveButtonTextStyle: yesButtonTextStyle,
-                          noButtonColor: Colors.black,
-                          onPressYes: () {
-                            GetIncomeController.to.monthlyIncomeList?.removeAt(index);
-                            Get.back();
-                          },
-                          onPressNo: () {
-                            Get.back();
-                          });
-                      // if (CreateIncomeController.to.monthlyIncomeList?[index].id != null) {
-                      //   print(CreateIncomeController.to.monthlyIncomeList?[index].id);
-                      //   DeleteIncomeExpenseController.to.callDelete(id: CreateIncomeController.to.monthlyIncomeList?[index].id);
-                      //   CreateIncomeController.to.monthlyIncomeList?.refresh();
-                      // } else {
-
-                      // Slidable.of(context)?.close();
-                      // deleteIdList.add(CreateIncomeController.to.monthlyIncomeList?[index].id);
-
-                      // }
-                    }),
-                  ],
-                  actionPane: const SlidableDrawerActionPane(),
-                  child: Table(
-                    columnWidths: const <int, TableColumnWidth>{
-                      0: FlexColumnWidth(0.35),
-                      1: FlexColumnWidth(3),
-                      2: FlexColumnWidth(2),
-                      3: FlexColumnWidth(2),
-                      4: FlexColumnWidth(2),
-                      5: FlexColumnWidth(2),
-                    },
-                    children: [
-                      TableRow(
-                        children: [
-                          constraints.maxWidth < 1000
-                              ? Container(
-                                  height: Get.height * 0.044,
-                                  margin: EdgeInsets.only(right: Get.width * 0.02),
-                                  decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
-                                )
-                              : SizedBox(
-                                  height: Get.height * 0.044,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: GetBuilder<CheckBoxController>(
-                                      builder: (controller) {
-                                        return Checkbox(
-                                          activeColor: cameraBackGroundColor,
-                                          checkColor: Colors.white,
-                                          value: checkBoxController.monthlyIncomeCheckBoxValueList[index],
-                                          onChanged: (value) {
-                                            checkBoxController.selectCheckBox(value: value, index: index);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth > 1000 ? 5 : 0.0),
-                              child: commonTextFormField(
-                                textEditingController: _incomeName,
-                                onChangedFunction: (value) {
-                                  // GetIncomeController.to.monthlyIncomeList?[index].name = _incomeName?.text;
-
-                                  GetIncomeController.to.monthlyIncomeList?[index].name = value;
-                                  // CreateIncomeController.to.monthlyIncomeList?.refresh();
-                                },
-                                hintText: 'Income Name',
-                                hintStyle: incomeNameStyle,
-                                inputAction: TextInputAction.next,
-                                inputFormatter: [characterInputFormatter()],
-                                contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                textStyle: incomeNameStyle,
-                              ),
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
-                              alignment: Alignment.center,
-                              child: commonDropDown(
-                                  selectedItemTextStyle: dropDownStyle2,
-                                  valueTextStyle: dropDownStyle,
-                                  value: '${GetIncomeController.to.monthlyIncomeList?[index].paidOn ?? 1}th'
-                                      .replaceAllMapped('1th', (match) => '1st')
-                                      .replaceAllMapped('2th', (match) => '2nd')
-                                      .replaceAllMapped('3th', (match) => '3rd')
-                                      .replaceAllMapped('11st', (match) => '11th')
-                                      .replaceAllMapped('12nd', (match) => '12th')
-                                      .replaceAllMapped('13rd', (match) => '13th'),
-                                  itemList: dateList,
-                                  onChanged: (item) {
-                                    GetIncomeController.to.monthlyIncomeList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
-                                    // CreateIncomeController.to.IncomesList[index].paidOn = item;
-                                    GetIncomeController.to.monthlyIncomeList?.refresh();
-                                    print(item);
-                                    // controller.changeDate(item: item, index: index);
-                                  }),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                              ),
-                              alignment: Alignment.center,
-                              child: commonDropDown(
-                                  selectedItemTextStyle: dropDownStyle2,
-                                  valueTextStyle: dropDownStyle,
-                                  value: '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 1} mon',
-                                  // value: controller.selectedMonthlyIncomeMonthList[index],
-                                  itemList: months,
-                                  onChanged: (item) {
-                                    GetIncomeController.to.monthlyIncomeList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
-                                    GetIncomeController.to.monthlyIncomeList?.refresh();
-                                    // controller.changeItem(item: item, index: index);
-                                    print(item);
-                                  }),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.fill,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _selectDate(context: context, index: index);
-                                },
-                                child: Container(padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${GetIncomeController.to.monthlyIncomeList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
-                                    // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                                    style: dateStyle,
-                                    maxLines: 1,
-                                  ),
-                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                                ),
-                              )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: Get.width * 0.02),
-                              child: commonTextFormField(
-                                textEditingController: _amount,
-                                hintText: 'Amount',
-                                hintStyle: incomeNameStyle,
-                                prefixText: '\$',
-                                keyboardType: TextInputType.phone,
-                                prefixstyle: incomeNameStyle,
-                                inputAction: TextInputAction.done,
-                                onChangedFunction: (value) {
-                                  GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
-                                  // GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(_amount!.text);
-                                  // CreateIncomeController.to.monthlyIncomeList?.refresh();
-                                },
-                                inputFormatter: [digitInputFormatter()],
-                                contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
-                                textStyle: incomeNameStyle,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: GetIncomeController.to.monthlyIncomeList?.length,
+      itemBuilder: (context, index) {
+        TextEditingController? _incomeName;
+        TextEditingController? _amount;
+        _incomeName = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].name ?? '');
+        _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString() ?? '');
+        RxBool whenErrorOnlyShowRedBorder = false.obs;
+        RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: SwipeActionCell(
+            backgroundColor: Colors.transparent,
+            // isDraggable: false,
+            trailingActions: [
+              SwipeAction(
+                backgroundRadius: 5,
+                widthSpace: 50,
+                color: colorsFFEBEB,
+                icon: Image.asset(
+                  deleteImage,
+                  height: Get.height * 0.025,
                 ),
-              );
-            },
-          );
-        });
+                onTap: (p0) {
+                  showCommonDialog(
+                      context: context,
+                      headerTitle: sureToDelete,
+                      descriptionTitle: sureToDeleteSubTitle,
+                      buttonColor: Colors.white,
+                      saveButtonBorderColor: colorsEE4242,
+                      noButtonTextStyle: noButtonTextStyle,
+                      saveButtonTextStyle: yesButtonTextStyle,
+                      noButtonColor: Colors.black,
+                      onPressYes: () {
+                        GetIncomeController.to.monthlyIncomeList?.removeAt(index);
+                        Get.back();
+                      },
+                      onPressNo: () {
+                        Get.back();
+                      });
+                },
+              ),
+            ],
+            key: UniqueKey(),
+            child: Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: FlexColumnWidth(0.35),
+                1: FlexColumnWidth(3),
+                2: FlexColumnWidth(2),
+                3: FlexColumnWidth(2),
+                4: FlexColumnWidth(2),
+                5: FlexColumnWidth(2),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    constraints!.maxWidth < 1000
+                        ? Container(
+                            height: Get.height * 0.044,
+                            margin: EdgeInsets.only(right: Get.width * 0.02),
+                            decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
+                          )
+                        : SizedBox(
+                            height: Get.height * 0.044,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: GetBuilder<CheckBoxController>(
+                                builder: (controller) {
+                                  return Checkbox(
+                                    activeColor: cameraBackGroundColor,
+                                    checkColor: Colors.white,
+                                    value: checkBoxController.monthlyIncomeCheckBoxValueList[index],
+                                    onChanged: (value) {
+                                      checkBoxController.selectCheckBox(value: value, index: index);
+                                    },
+                                  );
+                                },
+                              ),
+                            )),
+                    TableCell(
+                        verticalAlignment: TableCellVerticalAlignment.fill,
+                        child: StreamBuilder(
+                            stream: whenErrorOnlyShowRedBorder.stream,
+                            builder: (context, snapshot) {
+                              return Padding(
+                                padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth > 1000 ? 5 : 0.0),
+                                child: commonTextFormField(
+                                  textEditingController: _incomeName,
+                                  onChangedFunction: (value) {
+                                    // GetIncomeController.to.monthlyIncomeList?[index].name = _incomeName?.text;
+                                    GetIncomeController.to.monthlyIncomeList?[index].name = value;
+                                    // CreateIncomeController.to.monthlyIncomeList?.refresh();
+                                  },
+                                  // errorBorder: OutlineInputBorder(
+                                  //   borderSide: const BorderSide(color: Colors.red),
+                                  //   borderRadius: BorderRadius.circular(4.0),
+                                  // ),
+                                  enabledBorder: whenErrorOnlyShowRedBorder.value
+                                      ? OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderRadius: BorderRadius.circular(4.0),
+                                        )
+                                      : null,
+                                  validationFunction: (value) {
+                                    if (whenErrorOnlyShowRedBorder.value != value.isEmpty) {
+                                      whenErrorOnlyShowRedBorder.value = value.isEmpty;
+                                      print(whenErrorOnlyShowRedBorder.value);
+                                      whenErrorOnlyShowRedBorder.refresh();
+                                      // setState(() {});
+                                    }
+                                    return null;
+                                  },
+
+                                  // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.017, 10.0, Get.height * 0.016),
+                                  hintText: 'Income Name',
+                                  hintStyle: incomeNameStyle,
+                                  inputAction: TextInputAction.next,
+                                  inputFormatter: [characterInputFormatter()],
+                                  contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
+                                  textStyle: incomeNameStyle,
+                                ),
+                              );
+                            })),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Container(
+                        // height: Get.height * 0.044,
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        alignment: Alignment.center,
+                        child: commonDropDown(
+                            selectedItemTextStyle: dropDownStyle2,
+                            valueTextStyle: dropDownStyle,
+                            value: '${GetIncomeController.to.monthlyIncomeList?[index].paidOn ?? 1}th'
+                                .replaceAllMapped('1th', (match) => '1st')
+                                .replaceAllMapped('2th', (match) => '2nd')
+                                .replaceAllMapped('3th', (match) => '3rd')
+                                .replaceAllMapped('11st', (match) => '11th')
+                                .replaceAllMapped('12nd', (match) => '12th')
+                                .replaceAllMapped('13rd', (match) => '13th'),
+                            itemList: dateList,
+                            onChanged: (item) {
+                              GetIncomeController.to.monthlyIncomeList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
+                              // CreateIncomeController.to.IncomesList[index].paidOn = item;
+                              GetIncomeController.to.monthlyIncomeList?.refresh();
+                              print(item);
+                              // controller.changeDate(item: item, index: index);
+                            }),
+                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: Container(
+                        // height: Get.height * 0.044,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                        ),
+                        alignment: Alignment.center,
+                        child: commonDropDown(
+                            selectedItemTextStyle: dropDownStyle2,
+                            valueTextStyle: dropDownStyle,
+                            value: '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 1} mon',
+                            // value: controller.selectedMonthlyIncomeMonthList[index],
+                            itemList: months,
+                            onChanged: (item) {
+                              GetIncomeController.to.monthlyIncomeList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                              GetIncomeController.to.monthlyIncomeList?.refresh();
+                              // controller.changeItem(item: item, index: index);
+                              print(item);
+                            }),
+                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: GestureDetector(
+                        onTap: () {
+                          _selectDate(context: context, index: index);
+                        },
+                        child: Container(
+                          // height: Get.height * 0.044,
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '${GetIncomeController.to.monthlyIncomeList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
+                            // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                            style: dateStyle,
+                            maxLines: 1,
+                          ),
+                          margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                          decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                        ),
+                      ),
+                    ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: StatefulBuilder(builder: (context, setState) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: Get.width * 0.02),
+                          child: commonTextFormField(
+                            textEditingController: _amount,
+                            hintText: 'Amount',
+                            hintStyle: incomeNameStyle,
+                            prefixText: '\$',
+                            keyboardType: TextInputType.phone,
+                            prefixstyle: incomeNameStyle,
+                            inputAction: TextInputAction.done,
+                            enabledBorder: whenErrorOnlyShowRedBorderAmount.value
+                                ? OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  )
+                                : null,
+                            validationFunction: (value) {
+                              if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {
+                                whenErrorOnlyShowRedBorderAmount.value = value.isEmpty;
+                                print(whenErrorOnlyShowRedBorderAmount.value);
+                                setState(() {});
+                              }
+                              return null;
+                            },
+                            // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.017, 10.0, Get.height * 0.016),
+                            onChangedFunction: (value) {
+                              GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
+                              // GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(_amount!.text);
+                              // CreateIncomeController.to.monthlyIncomeList?.refresh();
+                            },
+                            inputFormatter: [digitInputFormatter()],
+                            contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
+                            textStyle: incomeNameStyle,
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

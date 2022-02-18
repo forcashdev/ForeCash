@@ -46,7 +46,7 @@ commonTextFormField(
     EdgeInsets? contentPadding,
     ScrollController? scrollController,
     TextStyle? hintStyle,
-    String? intialValue}) {
+    String? errorText}) {
   bool passwordVisible = isPassword;
   return StatefulBuilder(builder: (context, newSetState) {
     return TextFormField(
@@ -96,7 +96,10 @@ commonTextFormField(
       style: textStyle ?? blackMontserrat10W500,
       inputFormatters: inputFormatter,
       //expands: true,
+
       decoration: InputDecoration(
+        // isCollapsed: true,
+        errorText: errorText ?? null,
         hoverColor: Colors.transparent,
         prefixStyle: prefixstyle ?? incomeNameStyle,
         prefixText: prefixText ?? null,

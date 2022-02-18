@@ -40,7 +40,11 @@ showCommonDialog(
                 children: [
                   Text(headerTitle ?? saveYourChanges, style: blackMontserrat16w700),
                   maxWidth ? const SizedBox(height: 20) : const SizedBox(height: 10),
-                  Text(descriptionTitle ?? description, style: grey2Montserrat14w500),
+                  Text(
+                    descriptionTitle ?? description,
+                    style: grey2Montserrat14w500,
+                    textAlign: TextAlign.center,
+                  ),
                   maxWidth ? const SizedBox(height: 55) : const SizedBox(height: 25),
                   Row(
                     children: [

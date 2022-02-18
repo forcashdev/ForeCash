@@ -5,9 +5,9 @@ import 'package:fore_cash/model/weekly_income_model.dart';
 import 'package:get/get.dart';
 
 class SelectedDropDownItem extends GetxController {
-  String? selectedMonth = '1 mon';
+  String? selectedMonth;
   String? selectedSingleMonthlyExpenseMonth;
-  String? selectedDate = '1st';
+  String? selectedDate;
   String? selectedSingleMonthlyExpenseDate;
   String? selectedDay = 'Sun';
   // String? weeklyBudgetSingleDay;

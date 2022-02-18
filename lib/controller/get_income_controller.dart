@@ -16,34 +16,52 @@ class GetIncomeController extends GetxController {
   callIncome({int? income_outgoing}) {
     Api().call(
         url: mGetIncome,
-        params: {"income_outgoing": income_outgoing ?? 1},
+        params: {"income_outgoing": income_outgoing},
         success: (data) {
-          final checkBoxController = Get.put(CheckBoxController());
           getIncomeModel.value = GetIncomeModel.fromJson(data);
           getIncomeModel.value.toJson();
           for (int i = 0; i < getIncomeModel.value.data!.length; i++) {
             if (getIncomeModel.value.data?[i].incomeOutgoing == 1 && getIncomeModel.value.data?[i].weekMonth == 2) {
               monthlyIncomeList?.add(getIncomeModel.value.data![i]);
-              checkBoxController.monthlyIncomeCheckBoxValueList.add(false);
+              CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
             } else if (getIncomeModel.value.data?[i].incomeOutgoing == 1 && getIncomeModel.value.data?[i].weekMonth == 1) {
               weeklyIncomesList?.add(getIncomeModel.value.data![i]);
-              checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
+              CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
             } else if (getIncomeModel.value.data?[i].incomeOutgoing == 2 && getIncomeModel.value.data?[i].weekMonth == 2) {
               monthlyExpenseList?.add(getIncomeModel.value.data![i]);
-              checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
+              CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
             } else {
               weeklyBudgetList?.add(getIncomeModel.value.data![i]);
-              checkBoxController.weeklyBudgetCheckBoxValueList.add(false);
+              CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
             }
           }
+          getMonthlyIncomeList();
         });
-    // }
   }
 
   getMonthlyIncomeList() {
-    // monthlyIncomeList?.add(
-    //   DataModel(paidOn: 5, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
-    // );
+    if (monthlyIncomeList!.isEmpty) {
+      monthlyIncomeList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
+      monthlyIncomeList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
+      monthlyIncomeList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
+      monthlyIncomeList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
+      monthlyIncomeList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
+    }
   }
 
   getWeeklyIncomeList() {
@@ -67,8 +85,7 @@ class GetIncomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getMonthlyIncomeList();
-
+    // getMonthlyIncomeList();
     getWeeklyIncomeList();
     getMonthlyExpenseList();
     getWeeklyBudgetList();
