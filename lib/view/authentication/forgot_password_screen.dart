@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
-import 'package:fore_cash/common_widget/common_textfield.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -119,11 +119,22 @@ class ForgotPassword extends StatelessWidget {
                                   ? Get.height * 0.17
                                   : Get.height * 0.5
                               : Get.height * 0.2),
-                      child: commonTextField(
-                        contentPadding: const EdgeInsets.only(left: 13),
-                        hint: emailAddress,
-                        controller: _email,
-                        validator: (value) {
+                      child: commonTextFormField(
+                        onFieldSubmit: (String value) {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        },
+                        inputAction: TextInputAction.done,
+                        hintText: emailAddress,
+                        textStyle: textFieldStyle,
+                        hintStyle: textFieldHintStyle,
+                        textEditingController: _email,
+                        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
+                        validationFunction: (value) {
                           if (_email.text.isEmpty) {
                             return 'Enter email';
                           }

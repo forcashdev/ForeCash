@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
+import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -24,6 +25,7 @@ class SetupCalendarScreen extends StatelessWidget {
       child: WillPopScope(
         onWillPop: () async {
           screenIndexController.updateIndex(index: 5);
+          GetIncomeController.to.weeklyBudgetList?.clear();
           return false;
         },
         child: LayoutBuilder(
@@ -56,6 +58,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                     ),
                                     onPressed: () {
                                       screenIndexController.updateIndex(index: 5);
+                                      GetIncomeController.to.weeklyBudgetList?.clear();
                                     },
                                   ),
                             maxWidth
@@ -92,6 +95,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                       ? TextButton(
                                           onPressed: () {
                                             screenIndexController.updateIndex(index: 5);
+                                            GetIncomeController.to.weeklyBudgetList?.clear();
                                           },
                                           child: Text(
                                             backButton,

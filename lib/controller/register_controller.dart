@@ -30,6 +30,7 @@ class RegisterController extends GetxController {
           registerModel.value = RegisterModel.fromJson(data);
           registerModel.value.toJson();
           if (registerModel.value.success == true) {
+            storage.write("loginToken", registerModel.value.data!.token);
             final box = GetStorage();
             box.write('userEmail', email);
             final screenIndexController = Get.put(ScreenIndexController());

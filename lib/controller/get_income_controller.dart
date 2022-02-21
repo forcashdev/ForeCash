@@ -20,6 +20,7 @@ class GetIncomeController extends GetxController {
         success: (data) {
           getIncomeModel.value = GetIncomeModel.fromJson(data);
           getIncomeModel.value.toJson();
+          // final checkBoxController = Get.put(CheckBoxController());
           for (int i = 0; i < getIncomeModel.value.data!.length; i++) {
             if (getIncomeModel.value.data?[i].incomeOutgoing == 1 && getIncomeModel.value.data?[i].weekMonth == 2) {
               monthlyIncomeList?.add(getIncomeModel.value.data![i]);
@@ -35,11 +36,23 @@ class GetIncomeController extends GetxController {
               CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
             }
           }
-          getMonthlyIncomeList();
+          if (monthlyIncomeList!.isEmpty) {
+            getMonthlyIncomeList();
+          }
+          if (weeklyIncomesList!.isEmpty) {
+            getWeeklyIncomeList();
+          }
+          if (monthlyExpenseList!.isEmpty) {
+            getMonthlyExpenseList();
+          }
+          if (weeklyBudgetList!.isEmpty) {
+            getWeeklyBudgetList();
+          }
         });
   }
 
   getMonthlyIncomeList() {
+    // final checkBoxController = Get.put(CheckBoxController());
     if (monthlyIncomeList!.isEmpty) {
       monthlyIncomeList?.add(
         DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 2, every: 1, amount: 0),
@@ -65,29 +78,93 @@ class GetIncomeController extends GetxController {
   }
 
   getWeeklyIncomeList() {
-    // weeklyIncomesList?.add(
-    //   DataModel(name: '', amount: 0, paidOn: 5, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1),
-    // );
+    // final checkBoxController = Get.put(CheckBoxController());
+    if (weeklyIncomesList!.isEmpty) {
+      weeklyIncomesList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
+      weeklyIncomesList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
+      weeklyIncomesList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
+      weeklyIncomesList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
+      weeklyIncomesList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
+    }
   }
 
   getMonthlyExpenseList() {
-    // monthlyExpenseList?.add(
-    //   DataModel(amount: 0, paidOn: 5, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 2, every: 1),
-    // );
+    // final checkBoxController = Get.put(CheckBoxController());
+    if (monthlyExpenseList!.isEmpty) {
+      monthlyExpenseList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
+      monthlyExpenseList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
+      monthlyExpenseList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
+      monthlyExpenseList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
+      monthlyExpenseList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 2, every: 1, amount: 0),
+      );
+      CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
+    }
   }
 
   getWeeklyBudgetList() {
-    // weeklyBudgetList?.add(
-    //   DataModel(name: '', amount: 0, paidOn: 5, date: DateTime.now().toString(), incomeOutgoing: 1, weekMonth: 1, every: 1),
-    // );
+    // final checkBoxController = Get.put(CheckBoxController());
+    if (weeklyBudgetList!.isEmpty) {
+      weeklyBudgetList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
+      weeklyBudgetList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
+      weeklyBudgetList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
+      weeklyBudgetList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
+      weeklyBudgetList?.add(
+        DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, weekMonth: 1, every: 1, amount: 0),
+      );
+      CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
+    }
   }
 
   @override
   void onInit() {
     super.onInit();
+    monthlyIncomeList!.clear();
+    weeklyIncomesList!.clear();
+    weeklyBudgetList!.clear();
+    monthlyExpenseList!.clear();
     // getMonthlyIncomeList();
-    getWeeklyIncomeList();
-    getMonthlyExpenseList();
-    getWeeklyBudgetList();
+    // getWeeklyIncomeList();
+    // getMonthlyExpenseList();
+    // getWeeklyBudgetList();
   }
 }

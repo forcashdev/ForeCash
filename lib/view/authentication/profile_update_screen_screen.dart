@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
-import 'package:fore_cash/common_widget/common_textfield.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -30,6 +30,10 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
     final TextEditingController _newPassword = TextEditingController();
     final TextEditingController _userName = TextEditingController();
     final TextEditingController _newPasswordConfirm = TextEditingController();
+    final FocusNode _emailFocus = FocusNode();
+    final FocusNode _passwordFocus = FocusNode();
+    final FocusNode _newPasswordFocus = FocusNode();
+    final FocusNode _confirmPasswordFocus = FocusNode();
     return SafeArea(child: LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth > 1000;
@@ -135,16 +139,28 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        commonTextField(
-                          controller: _userName,
-                          hint: userName,
-                          contentPadding: const EdgeInsets.only(left: 13),
-                          validator: (value) {
+                        commonTextFormField(
+                          onFieldSubmit: (String value) {
+                            FocusScope.of(context).requestFocus(_emailFocus);
+                          },
+                          inputAction: TextInputAction.next,
+                          hintText: userName,
+                          textStyle: textFieldStyle,
+                          hintStyle: textFieldHintStyle,
+                          textEditingController: _userName,
+                          errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                          validationFunction: (value) {
                             if (_userName.text.isEmpty) {
                               return enterName;
                             }
                           },
                         ),
+
                         SizedBox(
                           height: Get.height * 0.02,
                         ),
@@ -152,11 +168,24 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        commonTextField(
-                          contentPadding: const EdgeInsets.only(left: 13),
-                          hint: emailAddress,
-                          controller: _email,
-                          validator: (value) {
+
+                        commonTextFormField(
+                          textFocusNode: _emailFocus,
+                          onFieldSubmit: (String value) {
+                            FocusScope.of(context).requestFocus(_passwordFocus);
+                          },
+                          inputAction: TextInputAction.next,
+                          hintText: emailAddress,
+                          textStyle: textFieldStyle,
+                          hintStyle: textFieldHintStyle,
+                          textEditingController: _email,
+                          errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                          validationFunction: (value) {
                             if (_email.text.isValidEmail()) {
                               return null;
                             } else {
@@ -188,27 +217,24 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        commonTextField(
-                          contentPadding: const EdgeInsets.only(left: 13),
-                          hint: password,
-                          controller: _password,
-                          suffixIcon: IconButton(
-                            splashRadius: 0.1,
-                            icon: isObscurePass == true
-                                ? const Icon(
-                                    Icons.visibility,
-                                    color: commonTextColor2,
-                                  )
-                                : const Icon(Icons.visibility_off, color: commonTextColor2),
-                            onPressed: () {
-                              setState(() {
-                                isObscurePass = !isObscurePass;
-                              });
-                              print(isObscurePass);
-                            },
-                          ),
-                          obscureText: isObscurePass,
-                          validator: (value) {
+                        commonTextFormField(
+                          textFocusNode: _passwordFocus,
+                          onFieldSubmit: (String value) {
+                            FocusScope.of(context).requestFocus(_newPasswordFocus);
+                          },
+                          inputAction: TextInputAction.next,
+                          hintText: password,
+                          isPassword: true,
+                          textStyle: textFieldStyle,
+                          hintStyle: textFieldHintStyle,
+                          textEditingController: _password,
+                          errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                          validationFunction: (value) {
                             if (_password.text.length < 6) {
                               return minimumCharacter;
                             }
@@ -221,31 +247,30 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        commonTextField(
-                          contentPadding: const EdgeInsets.only(left: 13),
-                          hint: password,
-                          controller: _newPassword,
-                          suffixIcon: IconButton(
-                            splashRadius: 0.1,
-                            icon: isObscureNewPass == true
-                                ? const Icon(
-                                    Icons.visibility,
-                                    color: commonTextColor2,
-                                  )
-                                : const Icon(Icons.visibility_off, color: commonTextColor2),
-                            onPressed: () {
-                              setState(() {
-                                isObscureNewPass = !isObscureNewPass;
-                              });
-                            },
-                          ),
-                          obscureText: isObscureNewPass,
-                          validator: (value) {
+                        commonTextFormField(
+                          textFocusNode: _newPasswordFocus,
+                          onFieldSubmit: (String value) {
+                            FocusScope.of(context).requestFocus(_confirmPasswordFocus);
+                          },
+                          inputAction: TextInputAction.next,
+                          hintText: password,
+                          isPassword: true,
+                          textStyle: textFieldStyle,
+                          hintStyle: textFieldHintStyle,
+                          textEditingController: _newPassword,
+                          errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                          validationFunction: (value) {
                             if (_password.text.length < 6) {
                               return minimumCharacter;
                             }
                           },
                         ),
+
                         SizedBox(
                           height: Get.height * 0.02,
                         ),
@@ -253,31 +278,30 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
-                        commonTextField(
-                          contentPadding: const EdgeInsets.only(left: 13),
-                          hint: password,
-                          controller: _newPasswordConfirm,
-                          suffixIcon: IconButton(
-                            splashRadius: 0.1,
-                            icon: isObscureNewPassCon == true
-                                ? const Icon(
-                                    Icons.visibility,
-                                    color: commonTextColor2,
-                                  )
-                                : const Icon(Icons.visibility_off, color: commonTextColor2),
-                            onPressed: () {
-                              setState(() {
-                                isObscureNewPassCon = !isObscureNewPassCon;
-                              });
-                            },
-                          ),
-                          obscureText: isObscureNewPassCon,
-                          validator: (value) {
+                        commonTextFormField(
+                          textFocusNode: _confirmPasswordFocus,
+                          onFieldSubmit: (String value) {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                          },
+                          inputAction: TextInputAction.next,
+                          hintText: password,
+                          isPassword: true,
+                          textStyle: textFieldStyle,
+                          hintStyle: textFieldHintStyle,
+                          textEditingController: _newPasswordConfirm,
+                          errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                          validationFunction: (value) {
                             if (_password.text.length < 6) {
                               return minimumCharacter;
                             }
                           },
                         ),
+
                         SizedBox(
                           height: Get.height * 0.04,
                         ),

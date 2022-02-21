@@ -32,6 +32,7 @@ class CreateIncomeController extends GetxController {
           if (data['success'] == true) {
             final screenIndexController = Get.put(ScreenIndexController());
             screenIndexController.updateIndex(index: screenIndex ?? screenIndexController.screensIndexes);
+            GetIncomeController.to.monthlyIncomeList?.clear();
           }
         });
 
