@@ -62,8 +62,10 @@ class Api {
       Map<String, dynamic> headerParameters;
       headerParameters = {
         "authorization": storage.read("loginToken") != null
-            ? "Bearer " + storage.read("loginToken")
-            : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NDY1NDU4NCwiZXhwIjoxNjQ0NjkwNTg0fQ.3E1N11Kz8ciOKz6uXUEUZLjt05OUBvRtt2FLOfNBI_I",
+            ? "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMGY2MjJlYzVkYWNkMDE2OWE4NGI5ZiIsImlhdCI6MTY0NTQxOTE0OCwiZXhwIjoxNjQ1NDU1MTQ4fQ.VPvaP3QretIxy1SW1P-_47rR3uLbPPQQF0jH1ki2k2s"
+            // ? "Bearer " + storage.read("loginToken")
+            : "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMGY2MjJlYzVkYWNkMDE2OWE4NGI5ZiIsImlhdCI6MTY0NTQxOTE0OCwiZXhwIjoxNjQ1NDU1MTQ4fQ.VPvaP3QretIxy1SW1P-_47rR3uLbPPQQF0jH1ki2k2s",
+        // : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NDY1NDU4NCwiZXhwIjoxNjQ0NjkwNTg0fQ.3E1N11Kz8ciOKz6uXUEUZLjt05OUBvRtt2FLOfNBI_I",
         // 'Authorization':
         //     'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NDY1NDU4NCwiZXhwIjoxNjQ0NjkwNTg0fQ.3E1N11Kz8ciOKz6uXUEUZLjt05OUBvRtt2FLOfNBI_I',
         // "timeZoneOffset": DateTime.now().timeZoneOffset,

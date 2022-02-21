@@ -66,7 +66,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth > 1000;
                   return Scaffold(
-                    backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+                    backgroundColor: maxWidth ? backGroundColor : Colors.white,
                     body: Align(
                       alignment: maxWidth ? Alignment.center : Alignment.topCenter,
                       child: Container(
