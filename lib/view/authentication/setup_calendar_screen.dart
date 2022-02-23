@@ -4,13 +4,13 @@ import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
+import 'package:fore_cash/controller/set_up_calendar_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
-import 'package:fore_cash/view/authentication/allset_screen.dart';
 import 'package:get/get.dart';
 
 class SetupCalendarScreen extends StatelessWidget {
@@ -209,7 +209,28 @@ class SetupCalendarScreen extends StatelessWidget {
                                 height: 50,
                                 text: done,
                                 onPress: () {
-                                  Get.to(AllSetScreen());
+                                  print('>>>>>>>>>>>${controller.setupCalendarDay}>>>>>>>>>>>>>${_amountController.text}');
+                                  SetUpCalendarController.to.callCalendar(
+                                    resetWeekOn: controller.setupCalendarDay
+                                        .toString()
+                                        .replaceAll('Sunday', '1')
+                                        .replaceAll('Monday', '2')
+                                        .replaceAll('Tuesday', '3')
+                                        .replaceAll('WedDay', '4')
+                                        .replaceAll('Thursday', '5')
+                                        .replaceAll('Friday', '6')
+                                        .replaceAll('Saturday', '7'),
+                                    lowBalance: _amountController.text,
+                                  );
+                                  // Get.to(AllSetScreen());
+
+                                  // 'Sunday',
+                                  // 'Monday',
+                                  // 'Tuesday',
+                                  // 'WedDay',
+                                  // 'Thursday',
+                                  // 'Friday',
+                                  // 'Saturday',
                                 },
                               )
                             ],

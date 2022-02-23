@@ -42,10 +42,12 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
 
   @override
   void initState() {
-    // callAPI();
     super.initState();
-    // GetIncomeController.to.monthlyIncomeList?.clear();
-    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
+      if (GetIncomeController.to.monthlyIncomeList!.isEmpty) {
+        GetIncomeController.to.getMonthlyIncomeList();
+      }
+    });
   }
 
   @override

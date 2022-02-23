@@ -13,16 +13,15 @@ class GetIncomeController extends GetxController {
   RxList<DataModel>? monthlyExpenseList = <DataModel>[].obs;
   RxList<DataModel>? weeklyBudgetList = <DataModel>[].obs;
 
-  callIncome({int? income_outgoing, dynamic parameter}) {
+  Future<dynamic> callIncome({dynamic parameter}) async {
     var response;
-    Api().call(
+    response = await Api().call(
         url: mGetIncome,
         params: parameter,
         success: (data) {
           print('>>>>>>>>>>>>>>>>$data');
           getIncomeModel.value = GetIncomeModel.fromJson(data);
           getIncomeModel.value.toJson();
-          // final checkBoxController = Get.put(CheckBoxController());
           for (int i = 0; i < getIncomeModel.value.data!.length; i++) {
             if (getIncomeModel.value.data?[i].incomeOutgoing == 1 && getIncomeModel.value.data?[i].weekMonth == 2) {
               monthlyIncomeList?.add(getIncomeModel.value.data![i]);
@@ -51,6 +50,7 @@ class GetIncomeController extends GetxController {
           //   getWeeklyBudgetList();
           // }
         });
+    // return response;
   }
 
   getMonthlyIncomeList() {
@@ -160,6 +160,15 @@ class GetIncomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // monthlyIncomeList!.clear();
+    // weeklyIncomesList!.clear();
+    // weeklyBudgetList!.clear();
+    // monthlyExpenseList!.clear();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
     monthlyIncomeList!.clear();
     weeklyIncomesList!.clear();
     weeklyBudgetList!.clear();

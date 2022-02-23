@@ -40,12 +40,15 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   final getIncomeController = Get.put(GetIncomeController());
   DateTime currentDate = DateTime.now();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
-    GetIncomeController.to.callIncome(
-      parameter: {"income_outgoing": "2", "week_month": "1"},
-    );
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"}).whenComplete(() {
+      if (GetIncomeController.to.weeklyBudgetList!.isEmpty) {
+        GetIncomeController.to.getWeeklyBudgetList();
+      }
+    });
   }
 
   @override

@@ -45,7 +45,11 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
   @override
   void initState() {
     super.initState();
-    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"});
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
+      if (GetIncomeController.to.weeklyIncomesList!.isEmpty) {
+        GetIncomeController.to.getWeeklyIncomeList();
+      }
+    });
   }
 
   @override
@@ -580,8 +584,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
       });
       GetIncomeController.to.weeklyIncomesList?[index!].date = currentDate.toString();
       GetIncomeController.to.weeklyIncomesList?.refresh();
-
-      // });
     }
   }
 

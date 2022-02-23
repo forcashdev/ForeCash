@@ -22,23 +22,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // bool isObscure = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
+  final TextEditingController _email = TextEditingController(text: 'rajesh@gmail.com');
+  final TextEditingController _password = TextEditingController(text: '123456');
 
   final screenIndexController = Get.put(ScreenIndexController());
   final FocusNode _focusNode = FocusNode();
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   if (kDebugMode) {
-  //     _email.text = 'admin5@gmail.com';
-  //     _password.text = '12345';
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
