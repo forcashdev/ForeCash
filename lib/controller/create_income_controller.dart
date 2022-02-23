@@ -9,11 +9,12 @@ class CreateIncomeController extends GetxController {
   final getIncomeController = Get.put(GetIncomeController());
   static CreateIncomeController get to => Get.find();
   // Api api = Api();
-  createIncome({parameter, int? screenIndex}) {
-    Api().call(
+  Future createIncome({parameter, int? screenIndex}) async {
+    var response;
+    await Api().call(
         // isHideLoader: false,
         // isProgressShow: false,
-        url: mAddIncome,
+        url: mUpsertIncome,
         params: parameter,
         // params: {
         //   rName: name,
@@ -30,12 +31,14 @@ class CreateIncomeController extends GetxController {
           print('>>>>>>>>>>>>>>');
           print('<<<<<<<<<<<<<<<<<<<${data['success'].toString()}');
           if (data['success'] == true) {
+            response = data;
             final screenIndexController = Get.put(ScreenIndexController());
             screenIndexController.updateIndex(index: screenIndex ?? screenIndexController.screensIndexes);
-            GetIncomeController.to.monthlyIncomeList?.clear();
+
+            // GetIncomeController.to.monthlyIncomeList?.clear();
           }
         });
-
+    return response;
     // }
   }
 }

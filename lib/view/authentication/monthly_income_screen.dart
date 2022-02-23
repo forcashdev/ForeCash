@@ -45,7 +45,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
     // callAPI();
     super.initState();
     // GetIncomeController.to.monthlyIncomeList?.clear();
-    GetIncomeController.to.callIncome(income_outgoing: 1);
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
   }
 
   @override
@@ -626,7 +626,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
           child: SwipeActionCell(
             isDraggable: constraints!.maxWidth > 1000 ? false : true,
             backgroundColor: Colors.transparent,
-            // isDraggable: false,
             trailingActions: [
               SwipeAction(
                 backgroundRadius: 5,

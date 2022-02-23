@@ -334,6 +334,7 @@ const String mLogIn = 'auth/login';
 const String mRegister = 'auth/register';
 const String mGetIncome = 'app/getincome';
 const String mAddIncome = 'app/addincome';
+const String mUpsertIncome = 'app/upsertincome';
 const String mDeleteIncomeExpense = 'app/deleteincome';
 const String rEmail = 'email';
 const String rPassword = 'password';

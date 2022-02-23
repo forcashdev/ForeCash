@@ -4,7 +4,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:fore_cash/app_theme/app_theme.dart';
@@ -16,6 +15,7 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/page_view_common_widget.dart';
+import 'package:fore_cash/controller/create_income_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/getx/add_monthly_expense_showtext_controller.dart';
 import 'package:fore_cash/getx/add_monthly_income_controller.dart';
@@ -49,12 +49,8 @@ import 'package:fore_cash/getx/weekly_budget_expansion_visibility_controller.dar
 import 'package:fore_cash/getx/weekly_income_edit_mode_controller.dart';
 import 'package:fore_cash/getx/weekly_income_expansion_visibility_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
-import 'package:fore_cash/model/monthly_expenses_model.dart';
-import 'package:fore_cash/model/monthly_income_model.dart';
 import 'package:fore_cash/model/one_time_expense_model.dart';
 import 'package:fore_cash/model/one_time_income_model.dart';
-import 'package:fore_cash/model/weekly_budget_model.dart';
-import 'package:fore_cash/model/weekly_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -75,6 +71,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final checkBoxController = Get.put(CheckBoxController());
 
   RxList<DataModel>? tempMonthlyIncomeList = <DataModel>[].obs;
+  RxList<DataModel>? tempWeeklyIncomeList = <DataModel>[].obs;
+  RxList<DataModel>? tempMonthlyExpenseList = <DataModel>[].obs;
+  RxList<DataModel>? tempWeeklyBudgetList = <DataModel>[].obs;
   final monthlyIncomeEditMode = Get.put(MonthlyIncomeEditModeController());
   final oneTimeIncomeEditMode = Get.put(OneTimeIncomeEditModeController());
   final oneTimeExpenseEditMode = Get.put(OneTimeExpenseEditModeController());
@@ -108,12 +107,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   void initState() {
     super.initState();
-    GetIncomeController.to.callIncome(income_outgoing: 1);
-    GetIncomeController.to.callIncome(income_outgoing: 2);
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"});
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"});
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"});
+    // GetIncomeController.to.callIncome(income_outgoing: 2);
   }
 
   @override
   Widget build(BuildContext context) {
+    // tempMonthlyIncomeList?.addAll(GetIncomeController.to.monthlyIncomeList!.toList());
     final visibilityController = Get.put(DashBoardVisibilityController());
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -129,17 +132,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
                 ));
         List<PageController> weeklyIncomePageControllerList = List.generate(
-            WeeklyIncomeModel.weeklyIncomeList.length,
+            4,
+            // WeeklyIncomeModel.weeklyIncomeList.length,
             (index) => PageController(
                   viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
                 ));
         List<PageController> monthlyExpensePageControllerList = List.generate(
-            MonthlyExpensesModel.monthlyExpensesListOld.length,
+            4,
+            // MonthlyExpensesModel.monthlyExpensesListOld.length,
             (index) => PageController(
                   viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
                 ));
         List<PageController> weeklyBudgetPageControllerList = List.generate(
-            WeeklyBudgetModel.weeklyBudgetModel.length,
+            4,
+            // WeeklyBudgetModel.weeklyBudgetModel.length,
             (index) => PageController(
                   viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
                 ));
@@ -224,11 +230,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 Icons.keyboard_arrow_down,
                                 color: Colors.black,
                               )
-                              // Image.asset(
-                              //   'assets/image/png/arrow_Down.png',
-                              //   width: 20,
-                              //   fit: BoxFit.cover,
-                              // )
                             ],
                           ),
                         ),
@@ -431,82 +432,78 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                           bottom: maxWidth ? BorderSide.none : const BorderSide(color: borderColor),
                                           top: maxWidth ? BorderSide.none : const BorderSide(color: borderColor),
                                         )),
-                                        child: Column(
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
-                                            Row(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                monthlyIncomeData(boolValue: monthlyIncomeController.visibilityIncome, constraints: constraints, visibilityValue: monthlyIncomeController.visibility),
-                                                Expanded(
-                                                  flex: monthlyIncomeController.visibilityIncome == true
-                                                      ? 2
-                                                      : constraints.maxWidth < 1000
-                                                          ? 0
-                                                          : 2,
-                                                  child: GetBuilder<SaveDataTextController>(
-                                                    builder: (controller) {
-                                                      return Visibility(
-                                                        visible: constraints.maxWidth < 1000 ? monthlyIncomeController.visibilityIncome : true,
-                                                        child: GetBuilder<MonthlyIncomeEditModeController>(
-                                                          builder: (MonthlyEditModeController) {
-                                                            return Padding(
-                                                              padding: EdgeInsets.only(
-                                                                bottom: maxWidth
-                                                                    ? controller.showTextWeb == false
-                                                                        ? 62
-                                                                        : controller.showTextWeb == true && MonthlyEditModeController.editMode == false
-                                                                            ? Get.height * 0.042
-                                                                            : 0.0
-                                                                    : 0.0,
-                                                              ),
-                                                              child: scrollableWidget(
-                                                                  height: monthlyIncomeEditMode.editMode == true && maxWidth
-                                                                      ? Get.height * 0.041
-                                                                      : maxWidth
-                                                                          ? Get.height * 0.019
-                                                                          : Get.height * 0.018,
-                                                                  editMode: monthlyIncomeEditMode.editMode,
-                                                                  text: incomes,
-                                                                  listViewItemCount: monthlyIncomepageControllerList.length,
-                                                                  constraints: constraints,
-                                                                  controller: monthlyIncomepageControllerList,
-                                                                  pageViewItemCount: incomes.length,
-                                                                  onPageChanged: (value) {
-                                                                    List.generate(
-                                                                        weeklyIncomePageControllerList.length,
-                                                                        (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                    List.generate(
-                                                                        monthlyExpensePageControllerList.length,
-                                                                        (index) => monthlyExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        weeklyBudgetPageControllerList.length,
-                                                                        (index) => weeklyBudgetPageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        oneTimeIncomePageControllerList.length,
-                                                                        (index) => oneTimeIncomePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        oneTimeExpensePageControllerList.length,
-                                                                        (index) => oneTimeExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    // _pageController2.jumpToPage(value);
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                  }),
-                                                            );
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                                            monthlyIncomeData(boolValue: monthlyIncomeController.visibilityIncome, constraints: constraints, visibilityValue: monthlyIncomeController.visibility),
+                                            Expanded(
+                                              flex: monthlyIncomeController.visibilityIncome == true
+                                                  ? 2
+                                                  : constraints.maxWidth < 1000
+                                                      ? 0
+                                                      : 2,
+                                              child: GetBuilder<SaveDataTextController>(
+                                                builder: (controller) {
+                                                  return Visibility(
+                                                    visible: constraints.maxWidth < 1000 ? monthlyIncomeController.visibilityIncome : true,
+                                                    child: GetBuilder<MonthlyIncomeEditModeController>(
+                                                      builder: (MonthlyEditModeController) {
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(
+                                                            bottom: maxWidth
+                                                                ? controller.showTextWeb == false
+                                                                    ? 62
+                                                                    : controller.showTextWeb == true && MonthlyEditModeController.editMode == false
+                                                                        ? Get.height * 0.042
+                                                                        : 0.0
+                                                                : 0.0,
+                                                          ),
+                                                          child: scrollableWidget(
+                                                              height: monthlyIncomeEditMode.editMode == true && maxWidth
+                                                                  ? Get.height * 0.041
+                                                                  : maxWidth
+                                                                      ? Get.height * 0.019
+                                                                      : Get.height * 0.018,
+                                                              editMode: monthlyIncomeEditMode.editMode,
+                                                              text: incomes,
+                                                              listViewItemCount: monthlyIncomepageControllerList.length,
+                                                              constraints: constraints,
+                                                              controller: monthlyIncomepageControllerList,
+                                                              pageViewItemCount: incomes.length,
+                                                              onPageChanged: (value) {
+                                                                List.generate(
+                                                                    weeklyIncomePageControllerList.length,
+                                                                    (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                                        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                                List.generate(
+                                                                    monthlyExpensePageControllerList.length,
+                                                                    (index) => monthlyExpensePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    weeklyBudgetPageControllerList.length,
+                                                                    (index) => weeklyBudgetPageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    oneTimeIncomePageControllerList.length,
+                                                                    (index) => oneTimeIncomePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    oneTimeExpensePageControllerList.length,
+                                                                    (index) => oneTimeExpensePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                // _pageController2.jumpToPage(value);
+                                                                _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                              }),
+                                                        );
+                                                      },
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            )
                                           ],
                                         ),
                                       );
@@ -553,112 +550,78 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         )),
                                         child: GetBuilder<WeeklyIncomeEditModeController>(
                                           builder: (weeklyIncomeEditModeController) {
-                                            return Column(
+                                            return Row(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
-                                                // weeklyIncomeDataController.weeklyDataVisibility == false && weeklyIncomeDataController.incomeListVisibility == true
-                                                //     ? Column()
-                                                //     : Table(
-                                                //         columnWidths: <int, TableColumnWidth>{
-                                                //           0: FlexColumnWidth(weeklyIncomeEditModeController.weeklyIncomeEditMode == true ? 3.3 : 3.25),
-                                                //           1: FlexColumnWidth(weeklyIncomeEditModeController.weeklyIncomeEditMode == true ? 2.25 : 2.25),
-                                                //           2: FlexColumnWidth(weeklyIncomeEditModeController.weeklyIncomeEditMode == true ? 2.2 : 2.2),
-                                                //           3: FlexColumnWidth(weeklyIncomeEditModeController.weeklyIncomeEditMode == true ? 1.5 : 1.5),
-                                                //         },
-                                                //         children: [
-                                                //           TableRow(children: [
-                                                //             Text(
-                                                //               incomeName,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //             Text(
-                                                //               paidOn,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //             Text(
-                                                //               every,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //             Text(
-                                                //               amount,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //           ]),
-                                                //         ],
-                                                //       ),
-                                                Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    weeklyIncomeData(
-                                                        boolValue: weeklyIncomeDataController.incomeListVisibility,
-                                                        constraints: constraints,
-                                                        visibilityValue: weeklyIncomeDataController.weeklyDataVisibility),
-                                                    Expanded(
-                                                      flex: weeklyIncomeDataController.incomeListVisibility == true
-                                                          ? 2
-                                                          : constraints.maxWidth < 1000
-                                                              ? 0
-                                                              : 2,
-                                                      child: GetBuilder<ShowWeeklyIncomeSaveDataTextController>(
-                                                        builder: (controller) {
-                                                          return Visibility(
-                                                            visible: constraints.maxWidth < 1000 ? weeklyIncomeDataController.incomeListVisibility : true,
-                                                            child: Padding(
-                                                              padding: EdgeInsets.only(
-                                                                bottom: maxWidth
-                                                                    ? controller.weeklyIncomeShowTextWeb == false
-                                                                        ? 62.0
-                                                                        : controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false
-                                                                            ? Get.height * 0.042
-                                                                            : 0.0
-                                                                    : 0.0,
-                                                              ),
-                                                              child: scrollableWidget(
-                                                                  height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
-                                                                      ? Get.height * 0.041
-                                                                      : maxWidth
-                                                                          ? Get.height * 0.019
-                                                                          : Get.height * 0.018,
-                                                                  text: incomes,
-                                                                  listViewItemCount: weeklyIncomePageControllerList.length,
-                                                                  constraints: constraints,
-                                                                  controller: weeklyIncomePageControllerList,
-                                                                  pageViewItemCount: incomes.length,
-                                                                  onPageChanged: (value) {
-                                                                    List.generate(
-                                                                        monthlyIncomepageControllerList.length,
-                                                                        (index) => monthlyIncomepageControllerList[index].animateToPage(value,
-                                                                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                    List.generate(
-                                                                        monthlyExpensePageControllerList.length,
-                                                                        (index) => monthlyExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                weeklyIncomeData(
+                                                    boolValue: weeklyIncomeDataController.incomeListVisibility,
+                                                    constraints: constraints,
+                                                    visibilityValue: weeklyIncomeDataController.weeklyDataVisibility),
+                                                Expanded(
+                                                  flex: weeklyIncomeDataController.incomeListVisibility == true
+                                                      ? 2
+                                                      : constraints.maxWidth < 1000
+                                                          ? 0
+                                                          : 2,
+                                                  child: GetBuilder<ShowWeeklyIncomeSaveDataTextController>(
+                                                    builder: (controller) {
+                                                      return Visibility(
+                                                        visible: constraints.maxWidth < 1000 ? weeklyIncomeDataController.incomeListVisibility : true,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(
+                                                            bottom: maxWidth
+                                                                ? controller.weeklyIncomeShowTextWeb == false
+                                                                    ? 62.0
+                                                                    : controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false
+                                                                        ? Get.height * 0.042
+                                                                        : 0.0
+                                                                : 0.0,
+                                                          ),
+                                                          child: scrollableWidget(
+                                                              height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
+                                                                  ? Get.height * 0.041
+                                                                  : maxWidth
+                                                                      ? Get.height * 0.019
+                                                                      : Get.height * 0.018,
+                                                              text: incomes,
+                                                              listViewItemCount: weeklyIncomePageControllerList.length,
+                                                              constraints: constraints,
+                                                              controller: weeklyIncomePageControllerList,
+                                                              pageViewItemCount: incomes.length,
+                                                              onPageChanged: (value) {
+                                                                List.generate(
+                                                                    monthlyIncomepageControllerList.length,
+                                                                    (index) => monthlyIncomepageControllerList[index].animateToPage(value,
+                                                                        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                                List.generate(
+                                                                    monthlyExpensePageControllerList.length,
+                                                                    (index) => monthlyExpensePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
 
-                                                                    List.generate(
-                                                                        weeklyBudgetPageControllerList.length,
-                                                                        (index) => weeklyBudgetPageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        oneTimeIncomePageControllerList.length,
-                                                                        (index) => oneTimeIncomePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    weeklyBudgetPageControllerList.length,
+                                                                    (index) => weeklyBudgetPageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    oneTimeIncomePageControllerList.length,
+                                                                    (index) => oneTimeIncomePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
 
-                                                                    List.generate(
-                                                                        oneTimeExpensePageControllerList.length,
-                                                                        (index) => oneTimeExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                  }),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
+                                                                List.generate(
+                                                                    oneTimeExpensePageControllerList.length,
+                                                                    (index) => oneTimeExpensePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                              }),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                )
                                               ],
                                             );
                                           },
@@ -707,108 +670,74 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         )),
                                         child: GetBuilder<MonthlyExpenseEditModeController>(
                                           builder: (monthlyExpenseEditModeController) {
-                                            return Column(
+                                            return Row(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
-                                                // monthlyExpenseDataController.monthlyExpenseDataVisibility == false && monthlyExpenseDataController.monthlyExpenseListVisibility == true
-                                                //     ? Column()
-                                                //     : Table(
-                                                //         columnWidths: <int, TableColumnWidth>{
-                                                //           0: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3.3 : 3.25),
-                                                //           1: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.3 : 2.25),
-                                                //           2: const FlexColumnWidth(2.2),
-                                                //           3: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 1.5 : 1.45),
-                                                //         },
-                                                //         children: [
-                                                //           TableRow(children: [
-                                                //             Text(
-                                                //               expenseName,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //             Text(
-                                                //               dueOn,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //             Text(
-                                                //               every,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //             Text(
-                                                //               amount,
-                                                //               style: columnNameListStyle,
-                                                //             ),
-                                                //           ]),
-                                                //         ],
-                                                //       ),
-                                                Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    monthlyExpenseData(
-                                                        boolValue: monthlyExpenseDataController.monthlyExpenseListVisibility,
-                                                        constraints: constraints,
-                                                        visibilityValue: monthlyExpenseDataController.monthlyExpenseDataVisibility),
-                                                    Expanded(
-                                                      flex: monthlyExpenseDataController.monthlyExpenseListVisibility == true
-                                                          ? 2
-                                                          : constraints.maxWidth < 1000
-                                                              ? 0
-                                                              : 2,
-                                                      child: GetBuilder<ShowMonthlyExpenseSaveDataTextController>(
-                                                        builder: (controller) {
-                                                          return Visibility(
-                                                            visible: constraints.maxWidth < 1000 ? monthlyExpenseDataController.monthlyExpenseListVisibility : true,
-                                                            child: Padding(
-                                                              padding: EdgeInsets.only(
-                                                                bottom: maxWidth
-                                                                    ? controller.monthlyExpenseShowTextWeb == false
-                                                                        ? 62.0
-                                                                        : controller.monthlyExpenseShowTextWeb == true && monthlyExpenseEditModeController.monthlyExpenseEditMode == false
-                                                                            ? 35.0
-                                                                            : 0.0
-                                                                    : 0.0,
-                                                              ),
-                                                              child: scrollableWidget(
-                                                                  height: monthlyExpenseEditModeController.monthlyExpenseEditMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
-                                                                  text: incomes,
-                                                                  listViewItemCount: monthlyExpensePageControllerList.length,
-                                                                  constraints: constraints,
-                                                                  controller: monthlyExpensePageControllerList,
-                                                                  pageViewItemCount: incomes.length,
-                                                                  onPageChanged: (value) {
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    List.generate(
-                                                                        weeklyIncomePageControllerList.length,
-                                                                        (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                    List.generate(
-                                                                        monthlyIncomepageControllerList.length,
-                                                                        (index) => monthlyIncomepageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        weeklyBudgetPageControllerList.length,
-                                                                        (index) => weeklyBudgetPageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                monthlyExpenseData(
+                                                    boolValue: monthlyExpenseDataController.monthlyExpenseListVisibility,
+                                                    constraints: constraints,
+                                                    visibilityValue: monthlyExpenseDataController.monthlyExpenseDataVisibility),
+                                                Expanded(
+                                                  flex: monthlyExpenseDataController.monthlyExpenseListVisibility == true
+                                                      ? 2
+                                                      : constraints.maxWidth < 1000
+                                                          ? 0
+                                                          : 2,
+                                                  child: GetBuilder<ShowMonthlyExpenseSaveDataTextController>(
+                                                    builder: (controller) {
+                                                      return Visibility(
+                                                        visible: constraints.maxWidth < 1000 ? monthlyExpenseDataController.monthlyExpenseListVisibility : true,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(
+                                                            bottom: maxWidth
+                                                                ? controller.monthlyExpenseShowTextWeb == false
+                                                                    ? 62.0
+                                                                    : controller.monthlyExpenseShowTextWeb == true && monthlyExpenseEditModeController.monthlyExpenseEditMode == false
+                                                                        ? 35.0
+                                                                        : 0.0
+                                                                : 0.0,
+                                                          ),
+                                                          child: scrollableWidget(
+                                                              height: monthlyExpenseEditModeController.monthlyExpenseEditMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
+                                                              text: incomes,
+                                                              listViewItemCount: monthlyExpensePageControllerList.length,
+                                                              constraints: constraints,
+                                                              controller: monthlyExpensePageControllerList,
+                                                              pageViewItemCount: incomes.length,
+                                                              onPageChanged: (value) {
+                                                                _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                List.generate(
+                                                                    weeklyIncomePageControllerList.length,
+                                                                    (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                                        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                                List.generate(
+                                                                    monthlyIncomepageControllerList.length,
+                                                                    (index) => monthlyIncomepageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    weeklyBudgetPageControllerList.length,
+                                                                    (index) => weeklyBudgetPageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
 
-                                                                    List.generate(
-                                                                        oneTimeIncomePageControllerList.length,
-                                                                        (index) => oneTimeIncomePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        oneTimeExpensePageControllerList.length,
-                                                                        (index) => oneTimeExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    oneTimeIncomePageControllerList.length,
+                                                                    (index) => oneTimeIncomePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    oneTimeExpensePageControllerList.length,
+                                                                    (index) => oneTimeExpensePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
 
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                  }),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
+                                                                _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                              }),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                )
                                               ],
                                             );
                                           },
@@ -860,108 +789,74 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         )),
                                         child: GetBuilder<WeeklyBudgetEditModeController>(
                                           builder: (weeklyBudgetEditModeController) {
-                                            return Column(
+                                            return Row(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
-                                                weeklyBudgetController.weeklyBudgetVisibility == false && weeklyBudgetController.weeklyBudgetVisibilityIncome == true
-                                                    ? Column()
-                                                    : Table(
-                                                        columnWidths: <int, TableColumnWidth>{
-                                                          0: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3.3 : 3.45),
-                                                          1: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.3 : 2.25),
-                                                          2: const FlexColumnWidth(2.2),
-                                                          3: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 1.5 : 1.45),
-                                                        },
-                                                        children: [
-                                                          TableRow(children: [
-                                                            Text(
-                                                              expenseName,
-                                                              style: columnNameListStyle,
-                                                            ),
-                                                            Text(
-                                                              resetOn,
-                                                              style: columnNameListStyle,
-                                                            ),
-                                                            Text(
-                                                              every,
-                                                              style: columnNameListStyle,
-                                                            ),
-                                                            Text(
-                                                              amount,
-                                                              style: columnNameListStyle,
-                                                            ),
-                                                          ]),
-                                                        ],
-                                                      ),
-                                                Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    weeklyBudgetData(
-                                                      boolValue: weeklyBudgetController.weeklyBudgetVisibilityIncome,
-                                                      constraints: constraints,
-                                                      visibilityValue: weeklyBudgetController.weeklyBudgetVisibility,
-                                                    ),
-                                                    Expanded(
-                                                      flex: weeklyBudgetController.weeklyBudgetVisibilityIncome == true
-                                                          ? 2
-                                                          : constraints.maxWidth < 1000
-                                                              ? 0
-                                                              : 2,
-                                                      child: GetBuilder<ShowWeeklyBudgetSaveDataTextController>(
-                                                        builder: (controller) {
-                                                          return Visibility(
-                                                            visible: constraints.maxWidth < 1000 ? weeklyBudgetController.weeklyBudgetVisibilityIncome : true,
-                                                            child: Padding(
-                                                              padding: EdgeInsets.only(
-                                                                bottom: maxWidth
-                                                                    ? controller.weeklyBudgetShowTextWeb == false
-                                                                        ? 62.0
-                                                                        : controller.weeklyBudgetShowTextWeb == true && weeklyBudgetEditModeController.weeklyBudgetEditMode == false
-                                                                            ? 35.0
-                                                                            : 0.0
-                                                                    : 0.0,
-                                                              ),
-                                                              child: scrollableWidget(
-                                                                  height: weeklyBudgetEditModeController.weeklyBudgetEditMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
-                                                                  listViewItemCount: weeklyBudgetPageControllerList.length,
-                                                                  text: incomes,
-                                                                  constraints: constraints,
-                                                                  controller: weeklyBudgetPageControllerList,
-                                                                  pageViewItemCount: incomes.length,
-                                                                  onPageChanged: (value) {
-                                                                    List.generate(
-                                                                        monthlyIncomepageControllerList.length,
-                                                                        (index) => monthlyIncomepageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        weeklyIncomePageControllerList.length,
-                                                                        (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                    List.generate(
-                                                                        monthlyExpensePageControllerList.length,
-                                                                        (index) => monthlyExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-
-                                                                    List.generate(
-                                                                        oneTimeIncomePageControllerList.length,
-                                                                        (index) => oneTimeIncomePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    List.generate(
-                                                                        oneTimeExpensePageControllerList.length,
-                                                                        (index) => oneTimeExpensePageControllerList[index]
-                                                                            .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                    // _pageController2.jumpToPage(value);
-                                                                    _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                    _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                  }),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
+                                                weeklyBudgetData(
+                                                  boolValue: weeklyBudgetController.weeklyBudgetVisibilityIncome,
+                                                  constraints: constraints,
+                                                  visibilityValue: weeklyBudgetController.weeklyBudgetVisibility,
                                                 ),
+                                                Expanded(
+                                                  flex: weeklyBudgetController.weeklyBudgetVisibilityIncome == true
+                                                      ? 2
+                                                      : constraints.maxWidth < 1000
+                                                          ? 0
+                                                          : 2,
+                                                  child: GetBuilder<ShowWeeklyBudgetSaveDataTextController>(
+                                                    builder: (controller) {
+                                                      return Visibility(
+                                                        visible: constraints.maxWidth < 1000 ? weeklyBudgetController.weeklyBudgetVisibilityIncome : true,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(
+                                                            bottom: maxWidth
+                                                                ? controller.weeklyBudgetShowTextWeb == false
+                                                                    ? 62.0
+                                                                    : controller.weeklyBudgetShowTextWeb == true && weeklyBudgetEditModeController.weeklyBudgetEditMode == false
+                                                                        ? 35.0
+                                                                        : 0.0
+                                                                : 0.0,
+                                                          ),
+                                                          child: scrollableWidget(
+                                                              height: weeklyBudgetEditModeController.weeklyBudgetEditMode == true && maxWidth ? Get.height * 0.04 : Get.height * 0.019,
+                                                              listViewItemCount: weeklyBudgetPageControllerList.length,
+                                                              text: incomes,
+                                                              constraints: constraints,
+                                                              controller: weeklyBudgetPageControllerList,
+                                                              pageViewItemCount: incomes.length,
+                                                              onPageChanged: (value) {
+                                                                List.generate(
+                                                                    monthlyIncomepageControllerList.length,
+                                                                    (index) => monthlyIncomepageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    weeklyIncomePageControllerList.length,
+                                                                    (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                                        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                                List.generate(
+                                                                    monthlyExpensePageControllerList.length,
+                                                                    (index) => monthlyExpensePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+
+                                                                List.generate(
+                                                                    oneTimeIncomePageControllerList.length,
+                                                                    (index) => oneTimeIncomePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                List.generate(
+                                                                    oneTimeExpensePageControllerList.length,
+                                                                    (index) => oneTimeExpensePageControllerList[index]
+                                                                        .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                                // _pageController2.jumpToPage(value);
+                                                                _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                                _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                              }),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                )
                                               ],
                                             );
                                           },
@@ -2105,6 +2000,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   monthlyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
+    // tempMonthlyIncomeList?.addAll(GetIncomeController.to.monthlyIncomeList!.toList());
+    // tempMonthlyIncomeList?.refresh();
     tempMonthlyIncomeList = GetIncomeController.to.monthlyIncomeList;
     final dropDownController = Get.put(SelectedDropDownItem());
     TextEditingController _monthlyIncomeNameController = TextEditingController();
@@ -2115,11 +2012,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           : constraints!.maxWidth > 1000
               ? 2
               : 4,
-      child: GetBuilder<MonthlyIncomeEditModeController>(
-        builder: (editModeController) {
-          return StreamBuilder(
-              stream: GetIncomeController.to.monthlyIncomeList?.stream,
-              builder: (context, snapshot) {
+      child: StreamBuilder(
+          stream: GetIncomeController.to.monthlyIncomeList?.stream,
+          builder: (context, snapshot) {
+            return GetBuilder<MonthlyIncomeEditModeController>(
+              builder: (editModeController) {
                 return Stack(
                   overflow: Overflow.visible,
                   fit: StackFit.loose,
@@ -2197,313 +2094,310 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   ],
                                 )
                               : Column(),
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: GetIncomeController.to.monthlyIncomeList?.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: Get.height * 0.015,
-                                  top: index == 0 ? Get.height * 0.01 : 0.0,
-                                ),
-                                child: SwipeActionCell(
-                                  backgroundColor: Colors.transparent,
-                                  isDraggable: constraints.maxWidth > 1000 ? false : true,
-                                  trailingActions: [
-                                    SwipeAction(
-                                      backgroundRadius: 5,
-                                      widthSpace: 50,
-                                      color: colorsFFEBEB,
-                                      icon: Image.asset(
-                                        deleteImage,
-                                        height: Get.height * 0.025,
+                          StreamBuilder(
+                              stream: tempMonthlyIncomeList?.stream,
+                              builder: (context, snapshot) {
+                                return ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: editModeController.editMode == true ? tempMonthlyIncomeList?.length : GetIncomeController.to.monthlyIncomeList?.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: Get.height * 0.015,
+                                        top: index == 0 ? Get.height * 0.01 : 0.0,
                                       ),
-                                      onTap: (p0) {
-                                        showCommonDialog(
-                                            context: context,
-                                            headerTitle: sureToDelete,
-                                            descriptionTitle: sureToDeleteSubTitle,
-                                            buttonColor: Colors.white,
-                                            saveButtonBorderColor: colorsEE4242,
-                                            noButtonTextStyle: noButtonTextStyle,
-                                            saveButtonTextStyle: yesButtonTextStyle,
-                                            noButtonColor: Colors.black,
-                                            onPressYes: () {
-                                              GetIncomeController.to.monthlyIncomeList?.removeAt(index);
-                                              // GetIncomeController.to.monthlyIncomeList?.refresh();
-                                              Get.back();
+                                      child: SwipeActionCell(
+                                        backgroundColor: Colors.transparent,
+                                        isDraggable: constraints.maxWidth > 1000 ? false : true,
+                                        trailingActions: [
+                                          SwipeAction(
+                                            backgroundRadius: 5,
+                                            widthSpace: 50,
+                                            color: colorsFFEBEB,
+                                            icon: Image.asset(
+                                              deleteImage,
+                                              height: Get.height * 0.025,
+                                            ),
+                                            onTap: (p0) {
+                                              showCommonDialog(
+                                                  context: context,
+                                                  headerTitle: sureToDelete,
+                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                  buttonColor: Colors.white,
+                                                  saveButtonBorderColor: colorsEE4242,
+                                                  noButtonTextStyle: noButtonTextStyle,
+                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                  noButtonColor: Colors.black,
+                                                  onPressYes: () {
+                                                    // tempMonthlyIncomeList?.removeAt(index);
+                                                    // GetIncomeController.to.monthlyIncomeList?.refresh();
+                                                    Get.back();
+                                                  },
+                                                  onPressNo: () {
+                                                    Get.back();
+                                                  });
                                             },
-                                            onPressNo: () {
-                                              Get.back();
-                                            });
-                                      },
-                                    ),
-                                  ],
-                                  key: UniqueKey(),
-                                  child: boolValue == true && constraints.maxWidth < 1000
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(left: 10),
-                                          child: Text(
-                                            '${GetIncomeController.to.monthlyIncomeList?[index].name}',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: blackMontserrat10W500,
                                           ),
-                                        )
-                                      : Table(
-                                          columnWidths: <int, TableColumnWidth>{
-                                            0: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 3.5 : 3.3),
-                                            1: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 3 : 2.2),
-                                            2: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 3 : 2.2),
-                                            3: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 2.5 : 1.4),
-                                            4: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 2.3 : 2.2),
-                                            5: const FlexColumnWidth(1.1),
-                                          },
-                                          children: [
-                                            TableRow(
-                                              children: [
-                                                TableCell(
-                                                  // verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: SizedBox(
-                                                    height: editModeController.editMode ? Get.height * 0.044 : Get.height * 0.02,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02,
-                                                          left: editModeController.editMode == true && constraints.maxWidth < 1000
-                                                              ? 5
-                                                              : constraints.maxWidth < 1000
-                                                                  ? 10.0
-                                                                  : 0.0),
-                                                      child: editModeController.editMode == false
-                                                          ? Text(
-                                                              '${GetIncomeController.to.monthlyIncomeList?[index].name}',
-                                                              maxLines: 1,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: blackMontserrat10W500,
-                                                            )
-                                                          : commonTextFormField(
-                                                              keyboardType: TextInputType.text,
-                                                              inputAction: TextInputAction.next,
-                                                              inputFormatter: [characterInputFormatter()],
-                                                              contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                              textEditingController: TextEditingController(text: tempMonthlyIncomeList?[index].name),
-                                                              onChangedFunction: (value) {
-                                                                // _monthlyIncomeName?.value[index].text = value;
-                                                                tempMonthlyIncomeList?[index].name = value;
-                                                                // GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
-                                                              }),
-                                                    ),
-                                                  ),
+                                        ],
+                                        key: UniqueKey(),
+                                        child: boolValue == true && constraints.maxWidth < 1000
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(left: 10),
+                                                child: Text(
+                                                  '${GetIncomeController.to.monthlyIncomeList?[index].name}',
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: blackMontserrat10W500,
                                                 ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: editModeController.editMode == true ? 5 : 0.0),
-                                                    // width: editModeController.editMode == true
-                                                    //     ? constraints.maxWidth < 1000
-                                                    //         ? Get.width * 0.18
-                                                    //         : Get.width * 0.06
-                                                    //     : null,
-                                                    // height: editModeController.editMode == true ? Get.height * 0.04 : null,
-                                                    // alignment: Alignment.centerLeft,
-                                                    child: editModeController.editMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              return commonDropDown(
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  value: '${tempMonthlyIncomeList?[index].paidOn ?? 1}th'
+                                              )
+                                            : Table(
+                                                columnWidths: <int, TableColumnWidth>{
+                                                  0: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 3.5 : 3.3),
+                                                  1: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 3 : 2.2),
+                                                  2: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 3 : 2.2),
+                                                  3: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 2.5 : 1.4),
+                                                  4: FlexColumnWidth(constraints.maxWidth > 1000 && editModeController.editMode == true ? 2.3 : 2.2),
+                                                  5: const FlexColumnWidth(1.1),
+                                                },
+                                                children: [
+                                                  TableRow(
+                                                    children: [
+                                                      TableCell(
+                                                        // verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: SizedBox(
+                                                          height: editModeController.editMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(
+                                                                right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02,
+                                                                left: editModeController.editMode == true && constraints.maxWidth < 1000
+                                                                    ? 5
+                                                                    : constraints.maxWidth < 1000
+                                                                        ? 10.0
+                                                                        : 0.0),
+                                                            child: editModeController.editMode == false
+                                                                ? Text(
+                                                                    '${index == 1 ? 'Janmesh' : GetIncomeController.to.monthlyIncomeList?[index].name}',
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    style: blackMontserrat10W500,
+                                                                  )
+                                                                : commonTextFormField(
+                                                                    keyboardType: TextInputType.text,
+                                                                    inputAction: TextInputAction.next,
+                                                                    inputFormatter: [characterInputFormatter()],
+                                                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                                    textEditingController: TextEditingController(text: tempMonthlyIncomeList?[index].name),
+                                                                    onChangedFunction: (value) {
+                                                                      // _monthlyIncomeName?.value[index].text = value;
+                                                                      tempMonthlyIncomeList?[index].name = value;
+                                                                      // GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
+                                                                    }),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: editModeController.editMode == true ? 5 : 0.0),
+                                                          child: editModeController.editMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    return commonDropDown(
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        value: '${tempMonthlyIncomeList?[index].paidOn ?? 1}th'
+                                                                            .replaceAllMapped('1th', (match) => '1st')
+                                                                            .replaceAllMapped('2th', (match) => '2nd')
+                                                                            .replaceAllMapped('3th', (match) => '3rd')
+                                                                            .replaceAllMapped('11st', (match) => '11th')
+                                                                            .replaceAllMapped('12nd', (match) => '12th')
+                                                                            .replaceAllMapped('13rd', (match) => '13th'),
+                                                                        // value: controller1.selectedMonthlyIncomeDateList[index],
+                                                                        itemList: dateList,
+                                                                        onChanged: (item) {
+                                                                          // controller1.changeDate(item: item, index: index);
+                                                                          tempMonthlyIncomeList?[index].paidOn =
+                                                                              int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
+                                                                          tempMonthlyIncomeList?.refresh();
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.monthlyIncomeList?[index].paidOn ?? 1}th'
                                                                       .replaceAllMapped('1th', (match) => '1st')
                                                                       .replaceAllMapped('2th', (match) => '2nd')
                                                                       .replaceAllMapped('3th', (match) => '3rd')
                                                                       .replaceAllMapped('11st', (match) => '11th')
                                                                       .replaceAllMapped('12nd', (match) => '12th')
                                                                       .replaceAllMapped('13rd', (match) => '13th'),
-                                                                  // value: controller1.selectedMonthlyIncomeDateList[index],
-                                                                  itemList: dateList,
-                                                                  onChanged: (item) {
-                                                                    // controller1.changeDate(item: item, index: index);
-                                                                    tempMonthlyIncomeList?[index].paidOn =
-                                                                        int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
-                                                                    tempMonthlyIncomeList?.refresh();
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.monthlyIncomeList?[index].paidOn ?? 1}th'
-                                                                .replaceAllMapped('1th', (match) => '1st')
-                                                                .replaceAllMapped('2th', (match) => '2nd')
-                                                                .replaceAllMapped('3th', (match) => '3rd')
-                                                                .replaceAllMapped('11st', (match) => '11th')
-                                                                .replaceAllMapped('12nd', (match) => '12th')
-                                                                .replaceAllMapped('13rd', (match) => '13th'),
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? Get.width * 0.04
-                                                            : editModeController.editMode == true
-                                                                ? Get.width * 0.02
-                                                                : Get.width * 0.045),
-                                                    decoration:
-                                                        BoxDecoration(color: editModeController.editMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: editModeController.editMode == true ? 5 : 0.0),
-                                                    // width: editModeController.editMode == true
-                                                    //     ? constraints.maxWidth < 1000
-                                                    //         ? Get.width * 0.18
-                                                    //         : Get.width * 0.06
-                                                    //     : null,
-                                                    // height: editModeController.editMode == true ? Get.height * 0.04 : null,
-                                                    // alignment: Alignment.centerLeft,
-                                                    child: editModeController.editMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              return commonDropDown(
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  value: '${tempMonthlyIncomeList?[index].every ?? 1} mon',
-                                                                  // value: controller1.selectedMonthlyIncomeMonthList[index],
-                                                                  itemList: months,
-                                                                  onChanged: (item) {
-                                                                    // controller1.changeItem(item: item, index: index);
-                                                                    tempMonthlyIncomeList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
-                                                                    tempMonthlyIncomeList?.refresh();
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 1} mon',
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? editModeController.editMode == false
-                                                                ? Get.width * 0.0
-                                                                : Get.width * 0.04
-                                                            : Get.width * 0.02),
-                                                    decoration:
-                                                        BoxDecoration(color: editModeController.editMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
-                                                    child: editModeController.editMode == false
-                                                        ? Text(
-                                                            '${GetIncomeController.to.monthlyIncomeList?[index].amount}',
-                                                            style: blackMontserrat10W500,
-                                                            maxLines: 1,
-                                                          )
-                                                        : commonTextFormField(
-                                                            prefixText: '\$',
-                                                            prefixstyle: blackMontserrat10W500,
-                                                            keyboardType: TextInputType.phone,
-                                                            inputAction: TextInputAction.done,
-                                                            inputFormatter: [digitInputFormatter()],
-                                                            //contentPadding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
-                                                            contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                            // textStyle: incomeNameStyle,
-                                                            textEditingController: TextEditingController(text: tempMonthlyIncomeList?[index].amount.toString()),
-                                                            onChangedFunction: (value) {
-                                                              tempMonthlyIncomeList?[index].amount = int.parse(value);
-                                                              // GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
-                                                            }),
-                                                    // : commonTextFormField(
-                                                    //     prefixText: '\$',
-                                                    //     prefixstyle: blackMontserrat10W500,
-                                                    //     inputFormatter: [digitInputFormatter()],
-                                                    //     contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                    //     textEditingController: TextEditingController(text: MonthlyIncomeModelOld.monthlyIncomeList[index].amount)),
-                                                  ),
-                                                ),
-                                                if (editModeController.editMode == true && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.fill,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        _selectDate(context: context);
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
-                                                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                          width: Get.width * 0.080,
-                                                          height: Get.height * 0.04,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Flexible(
-                                                                child: Text(
-                                                                  DateFormat('dd-MM-yyyy').format(DateTime.parse(tempMonthlyIncomeList![index].date.toString())),
-                                                                  // '${GetIncomeController.to.monthlyIncomeList?[index].date}',
                                                                   style: blackMontserrat10W500,
-                                                                  overflow: TextOverflow.ellipsis,
                                                                 ),
-                                                              ),
-                                                              Image.asset(
-                                                                calendarImage2,
-                                                                height: Get.height * 0.02,
-                                                                width: Get.width * 0.010,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ),
-                                                  ),
-                                                if (editModeController.editMode && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.middle,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        showCommonDialog(
-                                                            context: context,
-                                                            headerTitle: sureToDelete,
-                                                            descriptionTitle: sureToDeleteSubTitle,
-                                                            buttonColor: Colors.white,
-                                                            saveButtonBorderColor: colorsEE4242,
-                                                            noButtonTextStyle: noButtonTextStyle,
-                                                            saveButtonTextStyle: yesButtonTextStyle,
-                                                            noButtonColor: Colors.black,
-                                                            onPressYes: () {
-                                                              tempMonthlyIncomeList?.removeAt(index);
-                                                              // GetIncomeController.to.monthlyIncomeList?.refresh();
-                                                              Get.back();
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? Get.width * 0.04
+                                                                  : editModeController.editMode == true
+                                                                      ? Get.width * 0.02
+                                                                      : Get.width * 0.045),
+                                                          decoration:
+                                                              BoxDecoration(color: editModeController.editMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: editModeController.editMode == true ? 5 : 0.0),
+                                                          // width: editModeController.editMode == true
+                                                          //     ? constraints.maxWidth < 1000
+                                                          //         ? Get.width * 0.18
+                                                          //         : Get.width * 0.06
+                                                          //     : null,
+                                                          // height: editModeController.editMode == true ? Get.height * 0.04 : null,
+                                                          // alignment: Alignment.centerLeft,
+                                                          child: editModeController.editMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    return commonDropDown(
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        value: '${tempMonthlyIncomeList?[index].every ?? 1} mon',
+                                                                        // value: controller1.selectedMonthlyIncomeMonthList[index],
+                                                                        itemList: months,
+                                                                        onChanged: (item) {
+                                                                          // controller1.changeItem(item: item, index: index);
+                                                                          tempMonthlyIncomeList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                                                                          tempMonthlyIncomeList?.refresh();
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 1} mon',
+                                                                  style: blackMontserrat10W500,
+                                                                ),
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? editModeController.editMode == false
+                                                                      ? Get.width * 0.0
+                                                                      : Get.width * 0.04
+                                                                  : Get.width * 0.02),
+                                                          decoration:
+                                                              BoxDecoration(color: editModeController.editMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
+                                                          child: editModeController.editMode == false
+                                                              ? Text(
+                                                                  '${GetIncomeController.to.monthlyIncomeList?[index].amount}',
+                                                                  style: blackMontserrat10W500,
+                                                                  maxLines: 1,
+                                                                )
+                                                              : commonTextFormField(
+                                                                  prefixText: '\$',
+                                                                  prefixstyle: blackMontserrat10W500,
+                                                                  keyboardType: TextInputType.phone,
+                                                                  inputAction: TextInputAction.done,
+                                                                  inputFormatter: [digitInputFormatter()],
+                                                                  //contentPadding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
+                                                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                                  // textStyle: incomeNameStyle,
+                                                                  textEditingController: TextEditingController(text: tempMonthlyIncomeList?[index].amount.toString()),
+                                                                  onChangedFunction: (value) {
+                                                                    tempMonthlyIncomeList?[index].amount = int.parse(value);
+                                                                    // GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
+                                                                  }),
+                                                          // : commonTextFormField(
+                                                          //     prefixText: '\$',
+                                                          //     prefixstyle: blackMontserrat10W500,
+                                                          //     inputFormatter: [digitInputFormatter()],
+                                                          //     contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                          //     textEditingController: TextEditingController(text: MonthlyIncomeModelOld.monthlyIncomeList[index].amount)),
+                                                        ),
+                                                      ),
+                                                      if (editModeController.editMode == true && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.fill,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              _selectDate(context: context);
                                                             },
-                                                            onPressNo: () {
-                                                              Get.back();
-                                                            });
-                                                        // setState(() {
-                                                        //   MonthlyIncomeModelOld.monthlyIncomeList.removeAt(index);
-                                                        // });
-                                                        // GetIncomeController.to.monthlyIncomeList?.removeAt(index);
-                                                        // GetIncomeController.to.monthlyIncomeList?.refresh();
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                                                          margin: const EdgeInsets.only(left: 10.0),
-                                                          width: Get.width * 0.015,
-                                                          height: Get.height * 0.03,
-                                                          child: Image.asset(
-                                                            deleteImage,
-                                                            height: Get.height * 0.01,
-                                                            // width: 30.0,
-                                                          )),
-                                                    ),
+                                                            child: Container(
+                                                                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
+                                                                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                                width: Get.width * 0.080,
+                                                                height: Get.height * 0.04,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Flexible(
+                                                                      child: Text(
+                                                                        tempMonthlyIncomeList![index].date.toString(),
+                                                                        // '${GetIncomeController.to.monthlyIncomeList?[index].date}',
+                                                                        style: blackMontserrat10W500,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ),
+                                                                    Image.asset(
+                                                                      calendarImage2,
+                                                                      height: Get.height * 0.02,
+                                                                      width: Get.width * 0.010,
+                                                                    )
+                                                                  ],
+                                                                )),
+                                                          ),
+                                                        ),
+                                                      if (editModeController.editMode && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.middle,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              showCommonDialog(
+                                                                  context: context,
+                                                                  headerTitle: sureToDelete,
+                                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                                  buttonColor: Colors.white,
+                                                                  saveButtonBorderColor: colorsEE4242,
+                                                                  noButtonTextStyle: noButtonTextStyle,
+                                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                                  noButtonColor: Colors.black,
+                                                                  onPressYes: () {
+                                                                    // tempMonthlyIncomeList?.removeAt(index);
+                                                                    // GetIncomeController.to.monthlyIncomeList?.refresh();
+                                                                    Get.back();
+                                                                  },
+                                                                  onPressNo: () {
+                                                                    Get.back();
+                                                                  });
+                                                              // setState(() {
+                                                              //   MonthlyIncomeModelOld.monthlyIncomeList.removeAt(index);
+                                                              // });
+                                                              // GetIncomeController.to.monthlyIncomeList?.removeAt(index);
+                                                              // GetIncomeController.to.monthlyIncomeList?.refresh();
+                                                            },
+                                                            child: Container(
+                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                                                                margin: const EdgeInsets.only(left: 10.0),
+                                                                width: Get.width * 0.015,
+                                                                height: Get.height * 0.03,
+                                                                child: Image.asset(
+                                                                  deleteImage,
+                                                                  height: Get.height * 0.01,
+                                                                  // width: 30.0,
+                                                                )),
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                ),
-                              );
-                            },
-                          ),
+                                                ],
+                                              ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
                           Visibility(
                             visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : editModeController.editMode,
                             child: GetBuilder<SaveDataTextController>(
@@ -2557,10 +2451,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                 selectedItemTextStyle: blackMontserrat10W500,
                                                                 hintTextStyle: blackMontserrat10W500,
                                                                 hintText: chooseDate,
-                                                                value: dropDownController.selectedSingleMonthlyExpenseDate,
+                                                                value: dropDownController.selectedDate,
                                                                 itemList: dateList,
                                                                 onChanged: (item) {
-                                                                  dropDownController.changeSingleDate(item: item);
+                                                                  dropDownController.changeMonthlyIncomeDate(item: item);
                                                                 });
                                                           },
                                                         ),
@@ -2586,10 +2480,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                 valueTextStyle: blackMontserrat10W500,
                                                                 hintText: chooseMonth,
                                                                 hintTextStyle: blackMontserrat10W500,
-                                                                value: monthDropDownController.selectedSingleMonthlyExpenseMonth,
+                                                                value: monthDropDownController.selectedMonth,
                                                                 itemList: months,
                                                                 onChanged: (item) {
-                                                                  monthDropDownController.changeSingleMonth(item: item);
+                                                                  monthDropDownController.changeMonthlyIncomeMonth(item: item);
                                                                 });
                                                           },
                                                         ),
@@ -2619,19 +2513,57 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : showSaveTextController.showText,
                                       replacement: Row(
                                         children: [
-                                          // SizedBox(
-                                          //   width: Get.width * 0.01,
-                                          // ),
+                                          SizedBox(
+                                            width: Get.width * 0.01,
+                                          ),
                                           InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                final controller = Get.put(SelectedDropDownItem());
-                                                MonthlyIncomeModelOld.monthlyIncomeList
-                                                    .add(MonthlyIncomeModelOld(expenseName: _monthlyIncomeNameController.text, amount: _monthlyAmountController.text));
-                                                controller.selectedMonthlyIncomeDateList.add(controller.selectedSingleMonthlyExpenseDate as Object);
-                                                controller.selectedMonthlyIncomeMonthList.add(controller.selectedSingleMonthlyExpenseMonth as Object);
-                                                // checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
-                                              });
+                                            onTap: () async {
+                                              // setState(() {
+                                              final controller = Get.put(SelectedDropDownItem());
+                                              if (constraints.maxWidth < 1000) {
+                                                tempMonthlyIncomeList?.add(DataModel(
+                                                  name: _monthlyIncomeNameController.text,
+                                                  amount: int.parse(_monthlyAmountController.text),
+                                                  every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                  paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                  weekMonth: 2,
+                                                  incomeOutgoing: 1,
+                                                ));
+                                                // tempMonthlyIncomeList?.refresh();
+                                              } else {
+                                                var response = await CreateIncomeController.to.createIncome(parameter: {
+                                                  'income': [
+                                                    DataModel(
+                                                      name: _monthlyIncomeNameController.text,
+                                                      amount: int.parse(_monthlyAmountController.text),
+                                                      every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                      paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                      weekMonth: 2,
+                                                      incomeOutgoing: 1,
+                                                    )
+                                                  ]
+                                                });
+                                                print("{{{{{{{{{{{{{{{{$response");
+                                                if (response["success"] == true) {
+                                                  GetIncomeController.to.monthlyIncomeList?.add(DataModel(
+                                                    name: _monthlyIncomeNameController.text,
+                                                    amount: int.parse(_monthlyAmountController.text),
+                                                    every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                    paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                    weekMonth: 2,
+                                                    incomeOutgoing: 1,
+                                                  ));
+                                                  GetIncomeController.to.monthlyIncomeList?.refresh();
+                                                }
+                                              }
+                                              _monthlyAmountController.clear();
+                                              _monthlyIncomeNameController.clear();
+                                              // MonthlyIncomeModelOld.monthlyIncomeList
+                                              //     .add(MonthlyIncomeModelOld(expenseName: _monthlyIncomeNameController.text, amount: _monthlyAmountController.text));
+                                              // controller.selectedMonthlyIncomeDateList.add(controller.selectedSingleMonthlyExpenseDate as Object);
+                                              // controller.selectedMonthlyIncomeMonthList.add(controller.selectedSingleMonthlyExpenseMonth as Object);
+                                              // checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
+                                              // });
                                               constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
                                             },
                                             child: Text(
@@ -2711,13 +2643,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     ),
                   ],
                 );
-              });
-        },
-      ),
+              },
+            );
+          }),
     );
   }
 
   weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
+    tempWeeklyIncomeList = GetIncomeController.to.weeklyIncomesList;
     final dropDownController = Get.put(SelectedDropDownItem());
     TextEditingController _weeklyIncomeNameController = TextEditingController();
     TextEditingController _weeklyAmountController = TextEditingController();
@@ -2727,183 +2660,211 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           : constraints!.maxWidth > 1000
               ? 2
               : 4,
-      child: GetBuilder<WeeklyIncomeEditModeController>(
-        builder: (weeklyEditModeController) {
-          return Stack(
-            overflow: Overflow.visible,
-            fit: StackFit.loose,
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                    right: weeklyIncomeDataVisibilityController.weeklyDataVisibility == false && constraints!.maxWidth < 1000 ? 13 : 0.0,
-                    left: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
-                padding: EdgeInsets.only(right: weeklyEditModeController.weeklyIncomeEditMode == false ? 0.0 : Get.width * 0.003),
-                decoration: BoxDecoration(
-                    border: Border(
-                        right: weeklyIncomeDataVisibilityController.weeklyDataVisibility == true && constraints!.maxWidth < 1000 && weeklyEditModeController.weeklyIncomeEditMode == true
-                            ? BorderSide.none
-                            : const BorderSide(color: borderColor))),
-                child: Column(
+      child: StreamBuilder(
+          stream: GetIncomeController.to.weeklyIncomesList?.stream,
+          builder: (context, snapshot) {
+            return GetBuilder<WeeklyIncomeEditModeController>(
+              builder: (weeklyEditModeController) {
+                return Stack(
+                  overflow: Overflow.visible,
+                  fit: StackFit.loose,
                   children: [
-                    constraints!.maxWidth > 1000 || weeklyIncomeDataVisibilityController.weeklyDataVisibility == true && weeklyIncomeDataVisibilityController.incomeListVisibility == false
-                        ? Table(
-                            columnWidths: <int, TableColumnWidth>{
-                              0: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
-                                  ? 3.5
-                                  : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
-                                      ? 3.4
-                                      : 3.25),
-                              1: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
-                                  ? 3
-                                  : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
-                                      ? 2.3
-                                      : 2.2),
-                              2: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000 ? 3 : 2.2),
-                              3: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
-                                  ? 2.5
-                                  : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
-                                      ? 1.5
-                                      : 1.4),
-                              4: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true ? 2.3 : 2.2),
-                              5: const FlexColumnWidth(1),
-                            },
-                            children: [
-                              TableRow(children: [
-                                Text(
-                                  incomeName,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  paidOn,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  every,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  amount,
-                                  style: columnNameListStyle,
-                                ),
-                                if (weeklyEditModeController.weeklyIncomeEditMode && constraints.maxWidth > 1000)
-                                  Text(
-                                    effectiveDate,
-                                    style: columnNameListStyle,
-                                  ),
-                                if (weeklyEditModeController.weeklyIncomeEditMode && constraints.maxWidth > 1000)
-                                  Text(
-                                    action,
-                                    style: columnNameListStyle,
-                                  )
-                              ]),
-                            ],
-                          )
-                        : Column(),
-                    StreamBuilder(
-                        stream: GetIncomeController.to.weeklyIncomesList?.stream,
-                        builder: (context, snapshot) {
-                          return ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: GetIncomeController.to.weeklyIncomesList?.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
-                                child: SwipeActionCell(
-                                  backgroundColor: Colors.transparent,
-                                  isDraggable: constraints.maxWidth > 1000 ? false : true,
-                                  trailingActions: [
-                                    SwipeAction(
-                                      backgroundRadius: 5,
-                                      widthSpace: 50,
-                                      color: colorsFFEBEB,
-                                      icon: Image.asset(
-                                        deleteImage,
-                                        height: Get.height * 0.025,
+                    Container(
+                      margin: EdgeInsets.only(
+                          right: weeklyIncomeDataVisibilityController.weeklyDataVisibility == false && constraints!.maxWidth < 1000 ? 13 : 0.0,
+                          left: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
+                      padding: EdgeInsets.only(right: weeklyEditModeController.weeklyIncomeEditMode == false ? 0.0 : Get.width * 0.003),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              right: weeklyIncomeDataVisibilityController.weeklyDataVisibility == true && constraints!.maxWidth < 1000 && weeklyEditModeController.weeklyIncomeEditMode == true
+                                  ? BorderSide.none
+                                  : const BorderSide(color: borderColor))),
+                      child: Column(
+                        children: [
+                          constraints!.maxWidth > 1000 || weeklyIncomeDataVisibilityController.weeklyDataVisibility == true && weeklyIncomeDataVisibilityController.incomeListVisibility == false
+                              ? Table(
+                                  columnWidths: <int, TableColumnWidth>{
+                                    0: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
+                                        ? 3.5
+                                        : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
+                                            ? 3.4
+                                            : 3.25),
+                                    1: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
+                                        ? 3
+                                        : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
+                                            ? 2.3
+                                            : 2.2),
+                                    2: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000 ? 3 : 2.2),
+                                    3: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
+                                        ? 2.5
+                                        : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
+                                            ? 1.5
+                                            : 1.4),
+                                    4: FlexColumnWidth(weeklyEditModeController.weeklyIncomeEditMode == true ? 2.3 : 2.2),
+                                    5: const FlexColumnWidth(1),
+                                  },
+                                  children: [
+                                    TableRow(children: [
+                                      Text(
+                                        incomeName,
+                                        style: columnNameListStyle,
                                       ),
-                                      onTap: (p0) {
-                                        showCommonDialog(
-                                            context: context,
-                                            headerTitle: sureToDelete,
-                                            descriptionTitle: sureToDeleteSubTitle,
-                                            buttonColor: Colors.white,
-                                            saveButtonBorderColor: colorsEE4242,
-                                            noButtonTextStyle: noButtonTextStyle,
-                                            saveButtonTextStyle: yesButtonTextStyle,
-                                            noButtonColor: Colors.black,
-                                            onPressYes: () {
-                                              GetIncomeController.to.weeklyIncomesList?.removeAt(index);
-                                              // GetIncomeController.to.monthlyIncomeList?.refresh();
-                                              Get.back();
-                                            },
-                                            onPressNo: () {
-                                              Get.back();
-                                            });
-                                      },
-                                    ),
-                                  ],
-                                  key: UniqueKey(),
-                                  child: boolValue == true && constraints.maxWidth < 1000
-                                      ? Text(
-                                          '${GetIncomeController.to.weeklyIncomesList?[index].name}',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: blackMontserrat10W500,
-                                          // textAlign: TextAlign.center,
+                                      Text(
+                                        paidOn,
+                                        style: columnNameListStyle,
+                                      ),
+                                      Text(
+                                        every,
+                                        style: columnNameListStyle,
+                                      ),
+                                      Text(
+                                        amount,
+                                        style: columnNameListStyle,
+                                      ),
+                                      if (weeklyEditModeController.weeklyIncomeEditMode && constraints.maxWidth > 1000)
+                                        Text(
+                                          effectiveDate,
+                                          style: columnNameListStyle,
+                                        ),
+                                      if (weeklyEditModeController.weeklyIncomeEditMode && constraints.maxWidth > 1000)
+                                        Text(
+                                          action,
+                                          style: columnNameListStyle,
                                         )
-                                      : Table(
-                                          columnWidths: <int, TableColumnWidth>{
-                                            0: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 3.5 : 3.3),
-                                            1: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 3 : 2.2),
-                                            2: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 3 : 2.2),
-                                            3: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 2.5 : 1.4),
-                                            4: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 2.3 : 2.2),
-                                            5: const FlexColumnWidth(1.1),
-                                          },
-                                          children: [
-                                            TableRow(
-                                              children: [
-                                                TableCell(
-                                                  // verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: SizedBox(
-                                                    height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                                      child: weeklyEditModeController.weeklyIncomeEditMode == false
-                                                          ? Text(
-                                                              '${GetIncomeController.to.weeklyIncomesList?[index].name}',
-                                                              maxLines: 1,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: blackMontserrat10W500,
-                                                              // textAlign: TextAlign.center,
-                                                            )
-                                                          : commonTextFormField(
-                                                              inputAction: TextInputAction.next,
-                                                              keyboardType: TextInputType.text,
-                                                              inputFormatter: [characterInputFormatter()],
-                                                              contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                              textStyle: blackMontserrat10W500,
-                                                              textEditingController: TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].name),
-                                                              onChangedFunction: (value) {
-                                                                GetIncomeController.to.weeklyIncomesList?[index].name = value;
-                                                                // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
-                                                              },
-                                                            ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
-                                                    alignment: Alignment.centerLeft,
-                                                    child: weeklyEditModeController.weeklyIncomeEditMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              return commonDropDown(
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  value: '${GetIncomeController.to.weeklyIncomesList?[index].paidOn ?? 1}'
+                                    ]),
+                                  ],
+                                )
+                              : Column(),
+                          StreamBuilder(
+                              stream: tempWeeklyIncomeList?.stream,
+                              builder: (context, snapshot) {
+                                return ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: GetIncomeController.to.weeklyIncomesList?.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
+                                      child: SwipeActionCell(
+                                        backgroundColor: Colors.transparent,
+                                        isDraggable: constraints.maxWidth > 1000 ? false : true,
+                                        trailingActions: [
+                                          SwipeAction(
+                                            backgroundRadius: 5,
+                                            widthSpace: 50,
+                                            color: colorsFFEBEB,
+                                            icon: Image.asset(
+                                              deleteImage,
+                                              height: Get.height * 0.025,
+                                            ),
+                                            onTap: (p0) {
+                                              showCommonDialog(
+                                                  context: context,
+                                                  headerTitle: sureToDelete,
+                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                  buttonColor: Colors.white,
+                                                  saveButtonBorderColor: colorsEE4242,
+                                                  noButtonTextStyle: noButtonTextStyle,
+                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                  noButtonColor: Colors.black,
+                                                  onPressYes: () {
+                                                    GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                                                    // GetIncomeController.to.monthlyIncomeList?.refresh();
+                                                    Get.back();
+                                                  },
+                                                  onPressNo: () {
+                                                    Get.back();
+                                                  });
+                                            },
+                                          ),
+                                        ],
+                                        key: UniqueKey(),
+                                        child: boolValue == true && constraints.maxWidth < 1000
+                                            ? Text(
+                                                '${GetIncomeController.to.weeklyIncomesList?[index].name}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: blackMontserrat10W500,
+                                                // textAlign: TextAlign.center,
+                                              )
+                                            : Table(
+                                                columnWidths: <int, TableColumnWidth>{
+                                                  0: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 3.5 : 3.3),
+                                                  1: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 3 : 2.2),
+                                                  2: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 3 : 2.2),
+                                                  3: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 2.5 : 1.4),
+                                                  4: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true ? 2.3 : 2.2),
+                                                  5: const FlexColumnWidth(1.1),
+                                                },
+                                                children: [
+                                                  TableRow(
+                                                    children: [
+                                                      TableCell(
+                                                        // verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: SizedBox(
+                                                          height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                            child: weeklyEditModeController.weeklyIncomeEditMode == false
+                                                                ? Text(
+                                                                    '${GetIncomeController.to.weeklyIncomesList?[index].name}',
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    style: blackMontserrat10W500,
+                                                                    // textAlign: TextAlign.center,
+                                                                  )
+                                                                : commonTextFormField(
+                                                                    inputAction: TextInputAction.next,
+                                                                    keyboardType: TextInputType.text,
+                                                                    inputFormatter: [characterInputFormatter()],
+                                                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                                    textStyle: blackMontserrat10W500,
+                                                                    textEditingController: TextEditingController(text: tempWeeklyIncomeList?[index].name),
+                                                                    onChangedFunction: (value) {
+                                                                      tempWeeklyIncomeList?[index].name = value;
+                                                                      // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                                                    },
+                                                                  ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
+                                                          alignment: Alignment.centerLeft,
+                                                          child: weeklyEditModeController.weeklyIncomeEditMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    return commonDropDown(
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        value: '${tempWeeklyIncomeList?[index].paidOn ?? 1}'
+                                                                            .toString()
+                                                                            .replaceAll('1', 'Sun')
+                                                                            .replaceAll('2', 'Mon')
+                                                                            .replaceAll('3', 'Tue')
+                                                                            .replaceAll('4', 'Wed')
+                                                                            .replaceAll('5', 'Thu')
+                                                                            .replaceAll('6', 'Fri')
+                                                                            .replaceAll('7', 'Sat'),
+                                                                        itemList: days,
+                                                                        onChanged: (item) {
+                                                                          // controller1.changeDate(item: item, index: index);
+                                                                          tempWeeklyIncomeList?[index].paidOn = int.parse(item
+                                                                              .replaceAll('Sun', '1')
+                                                                              .replaceAll('Mon', '2')
+                                                                              .replaceAll('Tue', '3')
+                                                                              .replaceAll('Wed', '4')
+                                                                              .replaceAll('Thu', '5')
+                                                                              .replaceAll('Fri', '6')
+                                                                              .replaceAll('Sat', '7'));
+                                                                          tempWeeklyIncomeList?.refresh();
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.weeklyIncomesList?[index].paidOn}'
                                                                       .toString()
                                                                       .replaceAll('1', 'Sun')
                                                                       .replaceAll('2', 'Mon')
@@ -2912,387 +2873,454 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                       .replaceAll('5', 'Thu')
                                                                       .replaceAll('6', 'Fri')
                                                                       .replaceAll('7', 'Sat'),
-                                                                  itemList: days,
-                                                                  onChanged: (item) {
-                                                                    // controller1.changeDate(item: item, index: index);
-                                                                    GetIncomeController.to.weeklyIncomesList?[index].paidOn = int.parse(item
-                                                                        .replaceAll('Sun', '1')
-                                                                        .replaceAll('Mon', '2')
-                                                                        .replaceAll('Tue', '3')
-                                                                        .replaceAll('Wed', '4')
-                                                                        .replaceAll('Thu', '5')
-                                                                        .replaceAll('Fri', '6')
-                                                                        .replaceAll('Sat', '7'));
-                                                                    GetIncomeController.to.weeklyIncomesList?.refresh();
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.weeklyIncomesList?[index].paidOn}'
-                                                                .toString()
-                                                                .replaceAll('1', 'Sun')
-                                                                .replaceAll('2', 'Mon')
-                                                                .replaceAll('3', 'Tue')
-                                                                .replaceAll('4', 'Wed')
-                                                                .replaceAll('5', 'Thu')
-                                                                .replaceAll('6', 'Fri')
-                                                                .replaceAll('7', 'Sat'),
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? Get.width * 0.04
-                                                            : weeklyEditModeController.weeklyIncomeEditMode == true
-                                                                ? Get.width * 0.02
-                                                                : Get.width * 0.045),
-                                                    decoration: BoxDecoration(
-                                                        color: weeklyEditModeController.weeklyIncomeEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
-                                                    alignment: Alignment.centerLeft,
-                                                    child: weeklyEditModeController.weeklyIncomeEditMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              return commonDropDown(
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  // value: controller1.selectWeekDropDown[index],
-                                                                  value: '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
-                                                                  itemList: weeks,
-                                                                  onChanged: (item) {
-                                                                    // controller1.changeItem(item: item, index: index);
-                                                                    GetIncomeController.to.weeklyIncomesList?[index].every = int.parse(item.replaceAll('W', ''));
-                                                                    GetIncomeController.to.weeklyIncomesList?.refresh();
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? weeklyEditModeController.weeklyIncomeEditMode == false
-                                                                ? Get.width * 0.0
-                                                                : Get.width * 0.04
-                                                            : Get.width * 0.02),
-                                                    decoration: BoxDecoration(
-                                                        color: weeklyEditModeController.weeklyIncomeEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
-                                                    child: weeklyEditModeController.weeklyIncomeEditMode == false
-                                                        ? Text(
-                                                            '${GetIncomeController.to.weeklyIncomesList?[index].amount}'.toString(),
-                                                            style: blackMontserrat10W500,
-                                                            maxLines: 1,
-                                                          )
-                                                        : commonTextFormField(
-                                                            inputAction: TextInputAction.done,
-                                                            keyboardType: TextInputType.phone,
-                                                            inputFormatter: [digitInputFormatter()],
-                                                            contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                            textStyle: blackMontserrat10W500,
-                                                            prefixText: '\$',
-                                                            prefixstyle: blackMontserrat10W500,
-                                                            textEditingController: TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString()),
-                                                            onChangedFunction: (value) {
-                                                              GetIncomeController.to.weeklyIncomesList?[index].amount = int.parse(value);
-                                                              // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
-                                                            },
-                                                          ),
-                                                  ),
-                                                ),
-                                                if (weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.fill,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        _selectDate(context: context);
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
-                                                          margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                          width: Get.width * 0.080,
-                                                          height: Get.height * 0.04,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Flexible(
-                                                                child: Text(
-                                                                  DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyIncomesList![index].date.toString())),
                                                                   style: blackMontserrat10W500,
-                                                                  overflow: TextOverflow.ellipsis,
                                                                 ),
-                                                              ),
-                                                              Image.asset(
-                                                                calendarImage2,
-                                                                height: Get.height * 0.02,
-                                                                width: Get.width * 0.010,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ),
-                                                  ),
-                                                if (weeklyEditModeController.weeklyIncomeEditMode && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.middle,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        showCommonDialog(
-                                                            context: context,
-                                                            headerTitle: sureToDelete,
-                                                            descriptionTitle: sureToDeleteSubTitle,
-                                                            buttonColor: Colors.white,
-                                                            saveButtonBorderColor: colorsEE4242,
-                                                            noButtonTextStyle: noButtonTextStyle,
-                                                            saveButtonTextStyle: yesButtonTextStyle,
-                                                            noButtonColor: Colors.black,
-                                                            onPressYes: () {
-                                                              GetIncomeController.to.weeklyIncomesList?.removeAt(index);
-                                                              // GetIncomeController.to.monthlyIncomeList?.refresh();
-                                                              Get.back();
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? Get.width * 0.04
+                                                                  : weeklyEditModeController.weeklyIncomeEditMode == true
+                                                                      ? Get.width * 0.02
+                                                                      : Get.width * 0.045),
+                                                          decoration: BoxDecoration(
+                                                              color: weeklyEditModeController.weeklyIncomeEditMode == true ? backGroundColor : Colors.transparent,
+                                                              borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
+                                                          alignment: Alignment.centerLeft,
+                                                          child: weeklyEditModeController.weeklyIncomeEditMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    return commonDropDown(
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        // value: controller1.selectWeekDropDown[index],
+                                                                        value: '${tempWeeklyIncomeList?[index].every ?? 1}W',
+                                                                        itemList: weeks,
+                                                                        onChanged: (item) {
+                                                                          // controller1.changeItem(item: item, index: index);
+                                                                          tempWeeklyIncomeList?[index].every = int.parse(item.replaceAll('W', ''));
+                                                                          tempWeeklyIncomeList?.refresh();
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
+                                                                  style: blackMontserrat10W500,
+                                                                ),
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? weeklyEditModeController.weeklyIncomeEditMode == false
+                                                                      ? Get.width * 0.0
+                                                                      : Get.width * 0.04
+                                                                  : Get.width * 0.02),
+                                                          decoration: BoxDecoration(
+                                                              color: weeklyEditModeController.weeklyIncomeEditMode == true ? backGroundColor : Colors.transparent,
+                                                              borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
+                                                          child: weeklyEditModeController.weeklyIncomeEditMode == false
+                                                              ? Text(
+                                                                  '${GetIncomeController.to.weeklyIncomesList?[index].amount}'.toString(),
+                                                                  style: blackMontserrat10W500,
+                                                                  maxLines: 1,
+                                                                )
+                                                              : commonTextFormField(
+                                                                  inputAction: TextInputAction.done,
+                                                                  keyboardType: TextInputType.phone,
+                                                                  inputFormatter: [digitInputFormatter()],
+                                                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                                  textStyle: blackMontserrat10W500,
+                                                                  prefixText: '\$',
+                                                                  prefixstyle: blackMontserrat10W500,
+                                                                  textEditingController: TextEditingController(text: tempWeeklyIncomeList?[index].amount.toString()),
+                                                                  onChangedFunction: (value) {
+                                                                    tempWeeklyIncomeList?[index].amount = int.parse(value);
+                                                                    // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                                                  },
+                                                                ),
+                                                        ),
+                                                      ),
+                                                      if (weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.fill,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              _selectDate(context: context);
                                                             },
-                                                            onPressNo: () {
-                                                              Get.back();
-                                                            });
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                                                          // margin: const EdgeInsets.only(left: 10.0),
-                                                          width: Get.width * 0.015,
-                                                          height: Get.height * 0.03,
-                                                          child: Image.asset(
-                                                            deleteImage,
-                                                            // height: Get.height * 0.02,
-                                                            // width: 30.0,
-                                                          )),
-                                                    ),
+                                                            child: Container(
+                                                                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
+                                                                margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                                width: Get.width * 0.080,
+                                                                height: Get.height * 0.04,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Flexible(
+                                                                      child: Text(
+                                                                        DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyIncomesList![index].date.toString())),
+                                                                        style: blackMontserrat10W500,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ),
+                                                                    Image.asset(
+                                                                      calendarImage2,
+                                                                      height: Get.height * 0.02,
+                                                                      width: Get.width * 0.010,
+                                                                    )
+                                                                  ],
+                                                                )),
+                                                          ),
+                                                        ),
+                                                      if (weeklyEditModeController.weeklyIncomeEditMode && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.middle,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              showCommonDialog(
+                                                                  context: context,
+                                                                  headerTitle: sureToDelete,
+                                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                                  buttonColor: Colors.white,
+                                                                  saveButtonBorderColor: colorsEE4242,
+                                                                  noButtonTextStyle: noButtonTextStyle,
+                                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                                  noButtonColor: Colors.black,
+                                                                  onPressYes: () {
+                                                                    GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                                                                    // GetIncomeController.to.monthlyIncomeList?.refresh();
+                                                                    Get.back();
+                                                                  },
+                                                                  onPressNo: () {
+                                                                    Get.back();
+                                                                  });
+                                                            },
+                                                            child: Container(
+                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                                                                // margin: const EdgeInsets.only(left: 10.0),
+                                                                width: Get.width * 0.015,
+                                                                height: Get.height * 0.03,
+                                                                child: Image.asset(
+                                                                  deleteImage,
+                                                                  // height: Get.height * 0.02,
+                                                                  // width: 30.0,
+                                                                )),
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
+                                                ],
+                                              ),
+                                      ),
+                                    );
+                                    // } else {
+                                    //   return ;
+                                    // }
+                                  },
+                                );
+                              }),
+                          Visibility(
+                            visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : weeklyEditModeController.weeklyIncomeEditMode,
+                            child: GetBuilder<ShowWeeklyIncomeSaveDataTextController>(
+                              builder: (showWeeklyIncomeSaveTextController) {
+                                return Column(
+                                  children: [
+                                    showWeeklyIncomeSaveTextController.weeklyIncomeShowTextWeb == false || showWeeklyIncomeSaveTextController.weeklyIncomeShowText == false
+                                        ? Padding(
+                                            padding: EdgeInsets.only(right: editModeController.editMode == false && constraints.maxWidth < 1000 ? 0.0 : 10.0),
+                                            child: Table(
+                                              columnWidths: <int, TableColumnWidth>{
+                                                0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
+                                                1: const FlexColumnWidth(2.2),
+                                                2: const FlexColumnWidth(2.2),
+                                                3: const FlexColumnWidth(1.4),
+                                              },
+                                              children: [
+                                                TableRow(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: Get.height * 0.044,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.073),
+                                                        child: commonTextFormField(
+                                                            hintText: incomeName,
+                                                            hintStyle: blackMontserrat10W500,
+                                                            keyboardType: TextInputType.text,
+                                                            inputAction: TextInputAction.next,
+                                                            inputFormatter: [characterInputFormatter()],
+                                                            contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                            textEditingController: _weeklyIncomeNameController),
+                                                      ),
+                                                    ),
+                                                    TableCell(
+                                                      verticalAlignment: TableCellVerticalAlignment.fill,
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(
+                                                          horizontal: 5,
+                                                        ),
+
+                                                        // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
+                                                        // height: Get.height * 0.04,
+                                                        alignment: Alignment.center,
+                                                        child: GetBuilder<SelectedDropDownItem>(
+                                                          builder: (dropDownController) {
+                                                            return commonDropDown(
+                                                                valueTextStyle: blackMontserrat10W500,
+                                                                selectedItemTextStyle: blackMontserrat10W500,
+                                                                hintTextStyle: blackMontserrat10W500,
+                                                                hintText: day,
+                                                                value: dropDownController.selectedSingleWeeklyIncomeDay,
+                                                                itemList: days,
+                                                                onChanged: (item) {
+                                                                  dropDownController.changeSingleDay(item: item);
+                                                                });
+                                                          },
+                                                        ),
+                                                        // child: dropDownDayGetBuilder(dropDownList: dateList),
+                                                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.05),
+                                                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                                      ),
+                                                    ),
+                                                    TableCell(
+                                                      verticalAlignment: TableCellVerticalAlignment.fill,
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+
+                                                        // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
+                                                        // height: Get.height * 0.04,
+                                                        alignment: Alignment.center,
+                                                        child: GetBuilder<SelectedDropDownItem>(
+                                                          builder: (weeklyDropDownController) {
+                                                            return commonDropDown(
+                                                                selectedItemTextStyle: blackMontserrat10W500,
+                                                                valueTextStyle: blackMontserrat10W500,
+                                                                hintText: week,
+                                                                hintTextStyle: blackMontserrat10W500,
+                                                                value: weeklyDropDownController.selectedSingleWeeklyIncomeWeek,
+                                                                itemList: weeks,
+                                                                onChanged: (item) {
+                                                                  weeklyDropDownController.changeSingleWeek(item: item);
+                                                                });
+                                                          },
+                                                        ),
+                                                        // child: dropDownWeekGetBuilder(dropDownList: months),
+                                                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                                      ),
+                                                    ),
+                                                    TableCell(
+                                                      verticalAlignment: TableCellVerticalAlignment.fill,
+                                                      child: commonTextFormField(
+                                                          prefixText: '\$',
+                                                          prefixstyle: blackMontserrat10W500,
+                                                          keyboardType: TextInputType.phone,
+                                                          inputAction: TextInputAction.done,
+                                                          inputFormatter: [digitInputFormatter()],
+                                                          contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                          textEditingController: _weeklyAmountController),
+                                                    ),
+                                                  ],
+                                                ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                ),
-                              );
-                              // } else {
-                              //   return ;
-                              // }
-                            },
-                          );
-                        }),
-                    Visibility(
-                      visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : weeklyEditModeController.weeklyIncomeEditMode,
-                      child: GetBuilder<ShowWeeklyIncomeSaveDataTextController>(
-                        builder: (showWeeklyIncomeSaveTextController) {
-                          return Column(
-                            children: [
-                              showWeeklyIncomeSaveTextController.weeklyIncomeShowTextWeb == false || showWeeklyIncomeSaveTextController.weeklyIncomeShowText == false
-                                  ? Padding(
-                                      padding: EdgeInsets.only(right: editModeController.editMode == false && constraints.maxWidth < 1000 ? 0.0 : 10.0),
-                                      child: Table(
-                                        columnWidths: <int, TableColumnWidth>{
-                                          0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
-                                          1: const FlexColumnWidth(2.2),
-                                          2: const FlexColumnWidth(2.2),
-                                          3: const FlexColumnWidth(1.4),
-                                        },
+                                          )
+                                        : Container(),
+                                    Visibility(
+                                      visible: constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.weeklyIncomeShowTextWeb : showWeeklyIncomeSaveTextController.weeklyIncomeShowText,
+                                      replacement: Row(
                                         children: [
-                                          TableRow(
-                                            children: [
-                                              SizedBox(
-                                                height: Get.height * 0.044,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.073),
-                                                  child: commonTextFormField(
-                                                      hintText: incomeName,
-                                                      hintStyle: blackMontserrat10W500,
-                                                      keyboardType: TextInputType.text,
-                                                      inputAction: TextInputAction.next,
-                                                      inputFormatter: [characterInputFormatter()],
-                                                      contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                      textEditingController: _weeklyIncomeNameController),
-                                                ),
-                                              ),
-                                              TableCell(
-                                                verticalAlignment: TableCellVerticalAlignment.fill,
-                                                child: Container(
-                                                  padding: const EdgeInsets.symmetric(
-                                                    horizontal: 5,
-                                                  ),
+                                          InkWell(
+                                            onTap: () async {
+                                              final controller = Get.put(SelectedDropDownItem());
 
-                                                  // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
-                                                  // height: Get.height * 0.04,
-                                                  alignment: Alignment.center,
-                                                  child: GetBuilder<SelectedDropDownItem>(
-                                                    builder: (dropDownController) {
-                                                      return commonDropDown(
-                                                          valueTextStyle: blackMontserrat10W500,
-                                                          selectedItemTextStyle: blackMontserrat10W500,
-                                                          hintTextStyle: blackMontserrat10W500,
-                                                          hintText: day,
-                                                          value: dropDownController.selectedSingleWeeklyIncomeDay,
-                                                          itemList: days,
-                                                          onChanged: (item) {
-                                                            dropDownController.changeSingleDay(item: item);
-                                                          });
-                                                    },
-                                                  ),
-                                                  // child: dropDownDayGetBuilder(dropDownList: dateList),
-                                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.05),
-                                                  decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                                ),
-                                              ),
-                                              TableCell(
-                                                verticalAlignment: TableCellVerticalAlignment.fill,
-                                                child: Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                              if (constraints.maxWidth < 1000) {
+                                                tempWeeklyIncomeList?.add(DataModel(
+                                                  name: _weeklyIncomeNameController.text,
+                                                  amount: int.parse(_weeklyAmountController.text),
+                                                  paidOn: 1,
+                                                  // paidOn: int.parse(
+                                                  //   controller.selectedSingleWeeklyIncomeDay!
+                                                  //       .toString()
+                                                  //       .replaceAll('1', 'Sun')
+                                                  //       .replaceAll('2', 'Mon')
+                                                  //       .replaceAll('3', 'Tue')
+                                                  //       .replaceAll('4', 'Wed')
+                                                  //       .replaceAll('5', 'Thu')
+                                                  //       .replaceAll('6', 'Fri')
+                                                  //       .replaceAll('7', 'Sat'),
+                                                  // ),
+                                                  every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
+                                                  weekMonth: 1,
+                                                  incomeOutgoing: 1,
+                                                ));
+                                                // tempWeeklyIncomeList?.refresh();
+                                              } else {
+                                                var response = await CreateIncomeController.to.createIncome(parameter: {
+                                                  'income': [
+                                                    DataModel(
+                                                      name: _weeklyIncomeNameController.text,
+                                                      amount: int.parse(_weeklyAmountController.text),
+                                                      // paidOn: int.parse(
+                                                      //   controller.selectedSingleWeeklyIncomeDay!
+                                                      //       .toString()
+                                                      //       .replaceAll('1', 'Sun')
+                                                      //       .replaceAll('2', 'Mon')
+                                                      //       .replaceAll('3', 'Tue')
+                                                      //       .replaceAll('4', 'Wed')
+                                                      //       .replaceAll('5', 'Thu')
+                                                      //       .replaceAll('6', 'Fri')
+                                                      //       .replaceAll('7', 'Sat'),
+                                                      // ),
+                                                      paidOn: 1,
+                                                      every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
+                                                      weekMonth: 1,
+                                                      incomeOutgoing: 1,
+                                                    )
+                                                  ]
+                                                });
+                                                print("{{{{{{{{{{{{{{{{$response");
+                                                if (response["success"] == true) {
+                                                  GetIncomeController.to.weeklyIncomesList?.add(DataModel(
+                                                    name: _weeklyIncomeNameController.text,
+                                                    amount: int.parse(_weeklyAmountController.text),
+                                                    paidOn: 1,
+                                                    // paidOn: int.parse(
+                                                    //   controller.selectedSingleWeeklyIncomeDay!
+                                                    //       .toString()
+                                                    //       .replaceAll('1', 'Sun')
+                                                    //       .replaceAll('2', 'Mon')
+                                                    //       .replaceAll('3', 'Tue')
+                                                    //       .replaceAll('4', 'Wed')
+                                                    //       .replaceAll('5', 'Thu')
+                                                    //       .replaceAll('6', 'Fri')
+                                                    //       .replaceAll('7', 'Sat'),
+                                                    // ),
+                                                    every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
+                                                    weekMonth: 1,
+                                                    incomeOutgoing: 1,
+                                                  ));
+                                                  GetIncomeController.to.weeklyIncomesList?.refresh();
+                                                }
+                                              }
+                                              // tempWeeklyIncomeList?.add(DataModel(
+                                              //   name: _weeklyIncomeNameController.text,
+                                              //   amount: int.parse(_weeklyAmountController.text),
+                                              //   every: int.parse(
+                                              //     controller.selectedSingleWeeklyIncomeDay!
+                                              //         .toString()
+                                              //         .replaceAll('1', 'Sun')
+                                              //         .replaceAll('2', 'Mon')
+                                              //         .replaceAll('3', 'Tue')
+                                              //         .replaceAll('4', 'Wed')
+                                              //         .replaceAll('5', 'Thu')
+                                              //         .replaceAll('6', 'Fri')
+                                              //         .replaceAll('7', 'Sat'),
+                                              //   ),
+                                              //   paidOn: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
+                                              //   weekMonth: 1,
+                                              //   incomeOutgoing: 1,
+                                              // ));
+                                              tempWeeklyIncomeList?.refresh();
+                                              // WeeklyIncomeModel.weeklyIncomeList.add(WeeklyIncomeModel(incomeName: _weeklyIncomeNameController.text, amount: _weeklyAmountController.text));
+                                              // controller.selectDayDropDown.add(controller.selectedSingleWeeklyIncomeDay as Object);
+                                              // controller.selectWeekDropDown.add(controller.selectedSingleWeeklyIncomeDay as Object);
+                                              // checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
 
-                                                  // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
-                                                  // height: Get.height * 0.04,
-                                                  alignment: Alignment.center,
-                                                  child: GetBuilder<SelectedDropDownItem>(
-                                                    builder: (weeklyDropDownController) {
-                                                      return commonDropDown(
-                                                          selectedItemTextStyle: blackMontserrat10W500,
-                                                          valueTextStyle: blackMontserrat10W500,
-                                                          hintText: week,
-                                                          hintTextStyle: blackMontserrat10W500,
-                                                          value: weeklyDropDownController.selectedSingleWeeklyIncomeWeek,
-                                                          itemList: weeks,
-                                                          onChanged: (item) {
-                                                            weeklyDropDownController.changeSingleWeek(item: item);
-                                                          });
-                                                    },
-                                                  ),
-                                                  // child: dropDownWeekGetBuilder(dropDownList: months),
-                                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                                  decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                                ),
-                                              ),
-                                              TableCell(
-                                                verticalAlignment: TableCellVerticalAlignment.fill,
-                                                child: commonTextFormField(
-                                                    prefixText: '\$',
-                                                    prefixstyle: blackMontserrat10W500,
-                                                    keyboardType: TextInputType.phone,
-                                                    inputAction: TextInputAction.done,
-                                                    inputFormatter: [digitInputFormatter()],
-                                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                    textEditingController: _weeklyAmountController),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              Visibility(
-                                visible: constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.weeklyIncomeShowTextWeb : showWeeklyIncomeSaveTextController.weeklyIncomeShowText,
-                                replacement: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          final controller = Get.put(SelectedDropDownItem());
-                                          WeeklyIncomeModel.weeklyIncomeList.add(WeeklyIncomeModel(incomeName: _weeklyIncomeNameController.text, amount: _weeklyAmountController.text));
-                                          controller.selectDayDropDown.add(controller.selectedSingleWeeklyIncomeDay as Object);
-                                          controller.selectWeekDropDown.add(controller.selectedSingleWeeklyIncomeWeek as Object);
-                                          // checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
-                                        });
-                                        constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
-                                      },
-                                      child: Text(
-                                        save,
-                                        style: greenMontserrat11W500,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        cancel,
-                                        style: redMontserrat11W500,
-                                      ),
-                                      onPressed: () {
-                                        constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
-                                        _weeklyAmountController.clear();
-                                        _weeklyIncomeNameController.clear();
-                                      },
-                                    )
-                                  ],
-                                ),
-                                child: constraints.maxWidth > 1000 && weeklyIncomeEditMode.weeklyIncomeEditMode == true
-                                    ? Container()
-                                    : Padding(
-                                        padding: EdgeInsets.only(bottom: Get.height * 0.01, top: Get.height * 0.01),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
-                                          },
-                                          child: Align(
-                                            alignment: const FractionalOffset(0.0, 0.0),
+                                              constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
+                                            },
                                             child: Text(
-                                              addWeeklyIncome,
-                                              style: addWeekIncomeStyle,
+                                              save,
+                                              style: greenMontserrat11W500,
                                             ),
                                           ),
+                                          TextButton(
+                                            child: Text(
+                                              cancel,
+                                              style: redMontserrat11W500,
+                                            ),
+                                            onPressed: () {
+                                              constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
+                                              _weeklyAmountController.clear();
+                                              _weeklyIncomeNameController.clear();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      child: constraints.maxWidth > 1000 && weeklyIncomeEditMode.weeklyIncomeEditMode == true
+                                          ? Container()
+                                          : Padding(
+                                              padding: EdgeInsets.only(bottom: Get.height * 0.01, top: Get.height * 0.01),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
+                                                },
+                                                child: Align(
+                                                  alignment: const FractionalOffset(0.0, 0.0),
+                                                  child: Text(
+                                                    addWeeklyIncome,
+                                                    style: addWeekIncomeStyle,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    constraints.maxWidth > 1000
+                        ? Container()
+                        : GetBuilder<WeeklyIncomeEditModeController>(
+                            builder: (weeklyCircleVisibilityController) {
+                              return Visibility(
+                                  visible: weeklyCircleVisibilityController.weeklyCircleAvatarVisibility,
+                                  child: Positioned(
+                                    right: 0,
+                                    top: 1,
+                                    bottom: 1,
+                                    // left: 0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        weeklyIncomeDataVisibilityController.changeVisibility();
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 12,
+                                        backgroundColor: const Color(0xffF2F2F2),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
+                                          child: Icon(
+                                            weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                                            color: Colors.black,
+                                            size: 14.sp,
+                                          ),
                                         ),
                                       ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              constraints.maxWidth > 1000
-                  ? Container()
-                  : GetBuilder<WeeklyIncomeEditModeController>(
-                      builder: (weeklyCircleVisibilityController) {
-                        return Visibility(
-                            visible: weeklyCircleVisibilityController.weeklyCircleAvatarVisibility,
-                            child: Positioned(
-                              right: 0,
-                              top: 1,
-                              bottom: 1,
-                              // left: 0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  weeklyIncomeDataVisibilityController.changeVisibility();
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: const Color(0xffF2F2F2),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
-                                    child: Icon(
-                                      weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                                      color: Colors.black,
-                                      size: 14.sp,
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ));
-                      },
-                    )
-            ],
-          );
-        },
-      ),
+                                  ));
+                            },
+                          )
+                  ],
+                );
+              },
+            );
+          }),
     );
   }
 
   monthlyExpenseData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
+    tempMonthlyExpenseList = GetIncomeController.to.monthlyExpenseList;
     final dropDownController = Get.put(SelectedDropDownItem());
     TextEditingController _monthlyExpenseNameController = TextEditingController();
     TextEditingController _monthlyExpenseAmountController = TextEditingController();
@@ -3302,760 +3330,823 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           : constraints!.maxWidth > 1000
               ? 2
               : 4,
-      child: GetBuilder<MonthlyExpenseEditModeController>(
-        builder: (monthlyExpenseEditModeController) {
-          return Stack(
-            overflow: Overflow.visible,
-            fit: StackFit.loose,
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                  right: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == false && constraints!.maxWidth < 1000 ? 13 : 0.0,
-                ),
-                padding: EdgeInsets.only(right: monthlyExpenseEditModeController.monthlyExpenseEditMode == false ? 0.0 : Get.width * 0.005),
-                decoration: BoxDecoration(
-                    border: Border(
-                        right: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == true &&
-                                constraints!.maxWidth < 1000 &&
-                                monthlyExpenseEditModeController.monthlyExpenseEditMode == false
-                            ? BorderSide.none
-                            : const BorderSide(color: borderColor))),
-                child: Column(
+      child: StreamBuilder(
+          stream: GetIncomeController.to.monthlyExpenseList?.stream,
+          builder: (context, snapshot) {
+            return GetBuilder<MonthlyExpenseEditModeController>(
+              builder: (monthlyExpenseEditModeController) {
+                return Stack(
+                  overflow: Overflow.visible,
+                  fit: StackFit.loose,
                   children: [
-                    constraints!.maxWidth > 1000 ||
-                            monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == true && monthlyExpenseDataVisibilityController.monthlyExpenseListVisibility == false
-                        ? Table(
-                            columnWidths: <int, TableColumnWidth>{
-                              0: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
-                                  ? 3.5
-                                  : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
-                                      ? 3.4
-                                      : 3.25),
-                              1: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
-                                  ? 3
-                                  : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
-                                      ? 2.3
-                                      : 2.2),
-                              2: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000 ? 3 : 2.2),
-                              3: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
-                                  ? 2.5
-                                  : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
-                                      ? 1.5
-                                      : 1.4),
-                              4: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.3 : 2.2),
-                              5: const FlexColumnWidth(1),
-                            },
-                            children: [
-                              TableRow(children: [
-                                Text(
-                                  expenseName,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  dueOn,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  every,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  amount,
-                                  style: columnNameListStyle,
-                                ),
-                                if (monthlyExpenseEditModeController.monthlyExpenseEditMode && constraints.maxWidth > 1000)
-                                  Text(
-                                    effectiveDate,
-                                    style: columnNameListStyle,
-                                  ),
-                                if (monthlyExpenseEditModeController.monthlyExpenseEditMode && constraints.maxWidth > 1000)
-                                  Text(
-                                    action,
-                                    style: columnNameListStyle,
-                                  )
-                              ]),
-                            ],
-                          )
-                        : Column(),
-                    StreamBuilder(
-                        stream: GetIncomeController.to.monthlyExpenseList?.stream,
-                        builder: (context, snapshot) {
-                          return ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: GetIncomeController.to.monthlyExpenseList?.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
-                                child: SwipeActionCell(
-                                  backgroundColor: Colors.transparent,
-                                  isDraggable: constraints.maxWidth > 1000 ? false : true,
-                                  trailingActions: [
-                                    SwipeAction(
-                                      backgroundRadius: 5,
-                                      widthSpace: 50,
-                                      color: colorsFFEBEB,
-                                      icon: Image.asset(
-                                        deleteImage,
-                                        height: Get.height * 0.025,
+                    Container(
+                      margin: EdgeInsets.only(
+                        right: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == false && constraints!.maxWidth < 1000 ? 13 : 0.0,
+                      ),
+                      padding: EdgeInsets.only(right: monthlyExpenseEditModeController.monthlyExpenseEditMode == false ? 0.0 : Get.width * 0.003),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              right: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == true &&
+                                      constraints!.maxWidth < 1000 &&
+                                      monthlyExpenseEditModeController.monthlyExpenseEditMode == false
+                                  ? BorderSide.none
+                                  : const BorderSide(color: borderColor))),
+                      child: Column(
+                        children: [
+                          constraints!.maxWidth > 1000 ||
+                                  monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == true && monthlyExpenseDataVisibilityController.monthlyExpenseListVisibility == false
+                              ? Table(
+                                  columnWidths: <int, TableColumnWidth>{
+                                    0: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
+                                        ? 3.5
+                                        : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
+                                            ? 3.4
+                                            : 3.25),
+                                    1: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
+                                        ? 3
+                                        : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
+                                            ? 2.3
+                                            : 2.2),
+                                    2: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000 ? 3 : 2.2),
+                                    3: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
+                                        ? 2.5
+                                        : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
+                                            ? 1.5
+                                            : 1.4),
+                                    4: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.3 : 2.2),
+                                    5: const FlexColumnWidth(1),
+                                  },
+                                  children: [
+                                    TableRow(children: [
+                                      Text(
+                                        expenseName,
+                                        style: columnNameListStyle,
                                       ),
-                                      onTap: (p0) {
-                                        showCommonDialog(
-                                            context: context,
-                                            headerTitle: sureToDelete,
-                                            descriptionTitle: sureToDeleteSubTitle,
-                                            buttonColor: Colors.white,
-                                            saveButtonBorderColor: colorsEE4242,
-                                            noButtonTextStyle: noButtonTextStyle,
-                                            saveButtonTextStyle: yesButtonTextStyle,
-                                            noButtonColor: Colors.black,
-                                            onPressYes: () {
-                                              GetIncomeController.to.monthlyExpenseList?.removeAt(index);
-
-                                              Get.back();
-                                            },
-                                            onPressNo: () {
-                                              Get.back();
-                                            });
-                                      },
-                                    ),
-                                  ],
-                                  key: UniqueKey(),
-                                  child: boolValue == true && constraints.maxWidth < 1000
-                                      ? Text(
-                                          '${GetIncomeController.to.monthlyExpenseList?[index].name ?? ''}',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: blackMontserrat10W500,
-                                          // textAlign: TextAlign.center,
+                                      Text(
+                                        dueOn,
+                                        style: columnNameListStyle,
+                                      ),
+                                      Text(
+                                        every,
+                                        style: columnNameListStyle,
+                                      ),
+                                      Text(
+                                        amount,
+                                        style: columnNameListStyle,
+                                      ),
+                                      if (monthlyExpenseEditModeController.monthlyExpenseEditMode && constraints.maxWidth > 1000)
+                                        Text(
+                                          effectiveDate,
+                                          style: columnNameListStyle,
+                                        ),
+                                      if (monthlyExpenseEditModeController.monthlyExpenseEditMode && constraints.maxWidth > 1000)
+                                        Text(
+                                          action,
+                                          style: columnNameListStyle,
                                         )
-                                      : Table(
-                                          columnWidths: <int, TableColumnWidth>{
-                                            0: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3.5 : 3.3),
-                                            1: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3 : 2.2),
-                                            2: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3 : 2.2),
-                                            3: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.5 : 1.4),
-                                            4: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.3 : 2.2),
-                                            5: const FlexColumnWidth(1.1),
-                                          },
-                                          children: [
-                                            TableRow(
-                                              children: [
-                                                SizedBox(
-                                                  height: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.height * 0.044 : Get.height * 0.02,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                                    child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
-                                                        ? Text(
-                                                            GetIncomeController.to.monthlyExpenseList?[index].name ?? "",
-                                                            maxLines: 1,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style: blackMontserrat10W500,
-                                                          )
-                                                        : commonTextFormField(
-                                                            keyboardType: TextInputType.text,
-                                                            inputAction: TextInputAction.next,
-                                                            inputFormatter: [characterInputFormatter()],
-                                                            contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                            textStyle: blackMontserrat10W500,
-                                                            textEditingController: TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? ''),
-                                                            onChangedFunction: (value) {
-                                                              GetIncomeController.to.monthlyExpenseList?[index].name = value;
-                                                              // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
-                                                            },
-                                                          ),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: monthlyExpenseEditModeController.monthlyExpenseEditMode ? 5 : 0.0),
-                                                    // width: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
-                                                    //     ? constraints.maxWidth < 1000
-                                                    //         ? Get.width * 0.18
-                                                    //         : Get.width * 0.06
-                                                    //     : null,
-                                                    // height: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? Get.height * 0.04 : null,
-                                                    alignment: Alignment.centerLeft,
-                                                    child: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              return commonDropDown(
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn ?? 1}th'
+                                    ]),
+                                  ],
+                                )
+                              : Column(),
+                          StreamBuilder(
+                              stream: tempWeeklyIncomeList?.stream,
+                              builder: (context, snapshot) {
+                                return ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? tempMonthlyExpenseList?.length : GetIncomeController.to.monthlyExpenseList?.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
+                                      child: SwipeActionCell(
+                                        backgroundColor: Colors.transparent,
+                                        isDraggable: constraints.maxWidth > 1000 ? false : true,
+                                        trailingActions: [
+                                          SwipeAction(
+                                            backgroundRadius: 5,
+                                            widthSpace: 50,
+                                            color: colorsFFEBEB,
+                                            icon: Image.asset(
+                                              deleteImage,
+                                              height: Get.height * 0.025,
+                                            ),
+                                            onTap: (p0) {
+                                              showCommonDialog(
+                                                  context: context,
+                                                  headerTitle: sureToDelete,
+                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                  buttonColor: Colors.white,
+                                                  saveButtonBorderColor: colorsEE4242,
+                                                  noButtonTextStyle: noButtonTextStyle,
+                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                  noButtonColor: Colors.black,
+                                                  onPressYes: () {
+                                                    tempMonthlyExpenseList?.removeAt(index);
+
+                                                    Get.back();
+                                                  },
+                                                  onPressNo: () {
+                                                    Get.back();
+                                                  });
+                                            },
+                                          ),
+                                        ],
+                                        key: UniqueKey(),
+                                        child: boolValue == true && constraints.maxWidth < 1000
+                                            ? Text(
+                                                GetIncomeController.to.monthlyExpenseList?[index].name ?? '',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: blackMontserrat10W500,
+                                                // textAlign: TextAlign.center,
+                                              )
+                                            : Table(
+                                                columnWidths: <int, TableColumnWidth>{
+                                                  0: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3.5 : 3.3),
+                                                  1: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3 : 2.2),
+                                                  2: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3 : 2.2),
+                                                  3: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.5 : 1.4),
+                                                  4: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.3 : 2.2),
+                                                  5: const FlexColumnWidth(1.1),
+                                                },
+                                                children: [
+                                                  TableRow(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                          child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
+                                                              ? Text(
+                                                                  GetIncomeController.to.monthlyExpenseList?[index].name ?? "",
+                                                                  maxLines: 1,
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  style: blackMontserrat10W500,
+                                                                )
+                                                              : commonTextFormField(
+                                                                  keyboardType: TextInputType.text,
+                                                                  inputAction: TextInputAction.next,
+                                                                  inputFormatter: [characterInputFormatter()],
+                                                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                                  textStyle: blackMontserrat10W500,
+                                                                  textEditingController: TextEditingController(text: tempMonthlyExpenseList?[index].name ?? ''),
+                                                                  onChangedFunction: (value) {
+                                                                    tempMonthlyExpenseList?[index].name = value;
+                                                                    // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                                                  },
+                                                                ),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: monthlyExpenseEditModeController.monthlyExpenseEditMode ? 5 : 0.0),
+                                                          // width: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
+                                                          //     ? constraints.maxWidth < 1000
+                                                          //         ? Get.width * 0.18
+                                                          //         : Get.width * 0.06
+                                                          //     : null,
+                                                          // height: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? Get.height * 0.04 : null,
+                                                          alignment: Alignment.centerLeft,
+                                                          child: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    return commonDropDown(
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        value: '${tempMonthlyExpenseList?[index].paidOn ?? 1}th'
+                                                                            .replaceAllMapped('1th', (match) => '1st')
+                                                                            .replaceAllMapped('2th', (match) => '2nd')
+                                                                            .replaceAllMapped('3th', (match) => '3rd')
+                                                                            .replaceAllMapped('11st', (match) => '11th')
+                                                                            .replaceAllMapped('12nd', (match) => '12th')
+                                                                            .replaceAllMapped('13rd', (match) => '13th'),
+                                                                        itemList: dateList,
+                                                                        onChanged: (item) {
+                                                                          // controller1.changeDate(item: item, index: index);
+                                                                          tempMonthlyExpenseList?[index].paidOn =
+                                                                              int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
+                                                                          tempWeeklyIncomeList?.refresh();
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.monthlyExpenseList?[index].paidOn ?? 1}th'
                                                                       .replaceAllMapped('1th', (match) => '1st')
                                                                       .replaceAllMapped('2th', (match) => '2nd')
                                                                       .replaceAllMapped('3th', (match) => '3rd')
                                                                       .replaceAllMapped('11st', (match) => '11th')
                                                                       .replaceAllMapped('12nd', (match) => '12th')
                                                                       .replaceAllMapped('13rd', (match) => '13th'),
-                                                                  itemList: dateList,
-                                                                  onChanged: (item) {
-                                                                    // controller1.changeDate(item: item, index: index);
-                                                                    GetIncomeController.to.monthlyExpenseList?[index].paidOn =
-                                                                        int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
-                                                                    GetIncomeController.to.monthlyExpenseList?.refresh();
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.monthlyExpenseList?[index].paidOn ?? 1}th'
-                                                                .replaceAllMapped('1th', (match) => '1st')
-                                                                .replaceAllMapped('2th', (match) => '2nd')
-                                                                .replaceAllMapped('3th', (match) => '3rd')
-                                                                .replaceAllMapped('11st', (match) => '11th')
-                                                                .replaceAllMapped('12nd', (match) => '12th')
-                                                                .replaceAllMapped('13rd', (match) => '13th'),
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? Get.width * 0.04
-                                                            : monthlyExpenseEditModeController.monthlyExpenseEditMode == true
-                                                                ? Get.width * 0.02
-                                                                : Get.width * 0.045),
-                                                    decoration: BoxDecoration(
-                                                        color: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? backGroundColor : Colors.transparent,
-                                                        borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: monthlyExpenseEditModeController.monthlyExpenseEditMode ? 5 : 0.0),
-                                                    // width: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
-                                                    //     ? constraints.maxWidth < 1000
-                                                    //         ? Get.width * 0.18
-                                                    //         : Get.width * 0.06
-                                                    //     : null,
-                                                    // height: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? Get.height * 0.04 : null,
-                                                    alignment: Alignment.centerLeft,
-                                                    child: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              return commonDropDown(
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  value: '${GetIncomeController.to.monthlyExpenseList?[index].every ?? 1} mon',
-                                                                  // value: controller1.selectedMonthlyExpenseMonth[index],
-                                                                  itemList: months,
-                                                                  onChanged: (item) {
-                                                                    GetIncomeController.to.monthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
-                                                                    GetIncomeController.to.monthlyExpenseList?.refresh();
-                                                                    // controller1.changeItem(item: item, index: index);
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.monthlyExpenseList?[index].every ?? 1} mon',
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? monthlyExpenseEditModeController.monthlyExpenseEditMode == false
-                                                                ? Get.width * 0.0
-                                                                : Get.width * 0.04
-                                                            : Get.width * 0.02),
-                                                    decoration: BoxDecoration(
-                                                        color: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? backGroundColor : Colors.transparent,
-                                                        borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
-                                                    child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
-                                                        ? Text(
-                                                            '${GetIncomeController.to.monthlyExpenseList?[index].amount ?? 1}',
-                                                            style: blackMontserrat10W500,
-                                                            maxLines: 1,
-                                                          )
-                                                        : commonTextFormField(
-                                                            textEditingController: TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString()),
-                                                            prefixText: '\$',
-                                                            keyboardType: TextInputType.phone,
-                                                            prefixstyle: blackMontserrat10W500,
-                                                            inputAction: TextInputAction.done,
-                                                            onChangedFunction: (value) {
-                                                              GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(value);
-                                                            },
-                                                            inputFormatter: [digitInputFormatter()],
-                                                            contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
-                                                            textStyle: blackMontserrat10W500,
-                                                          ),
-                                                  ),
-                                                ),
-                                                if (monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.fill,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        _selectDate(context: context);
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
-                                                          margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                          width: Get.width * 0.081,
-                                                          height: Get.height * 0.04,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Flexible(
-                                                                child: Text(
-                                                                  DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
                                                                   style: blackMontserrat10W500,
-                                                                  overflow: TextOverflow.ellipsis,
                                                                 ),
-                                                              ),
-                                                              Image.asset(
-                                                                calendarImage2,
-                                                                height: Get.height * 0.02,
-                                                                width: Get.width * 0.010,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ),
-                                                  ),
-                                                if (monthlyExpenseEditModeController.monthlyExpenseEditMode && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.middle,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        showCommonDialog(
-                                                            context: context,
-                                                            headerTitle: sureToDelete,
-                                                            descriptionTitle: sureToDeleteSubTitle,
-                                                            buttonColor: Colors.white,
-                                                            saveButtonBorderColor: colorsEE4242,
-                                                            noButtonTextStyle: noButtonTextStyle,
-                                                            saveButtonTextStyle: yesButtonTextStyle,
-                                                            noButtonColor: Colors.black,
-                                                            onPressYes: () {
-                                                              GetIncomeController.to.monthlyExpenseList?.removeAt(index);
-                                                              Get.back();
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? Get.width * 0.04
+                                                                  : monthlyExpenseEditModeController.monthlyExpenseEditMode == true
+                                                                      ? Get.width * 0.02
+                                                                      : Get.width * 0.045),
+                                                          decoration: BoxDecoration(
+                                                              color: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? backGroundColor : Colors.transparent,
+                                                              borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: monthlyExpenseEditModeController.monthlyExpenseEditMode ? 5 : 0.0),
+                                                          alignment: Alignment.centerLeft,
+                                                          child: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    return commonDropDown(
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        value: '${tempMonthlyExpenseList?[index].every ?? 1} mon',
+                                                                        // value: controller1.selectedMonthlyExpenseMonth[index],
+                                                                        itemList: months,
+                                                                        onChanged: (item) {
+                                                                          tempMonthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                                                                          tempWeeklyIncomeList?.refresh();
+                                                                          // controller1.changeItem(item: item, index: index);
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.monthlyExpenseList?[index].every ?? 1} mon',
+                                                                  style: blackMontserrat10W500,
+                                                                ),
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? monthlyExpenseEditModeController.monthlyExpenseEditMode == false
+                                                                      ? Get.width * 0.0
+                                                                      : Get.width * 0.04
+                                                                  : Get.width * 0.02),
+                                                          decoration: BoxDecoration(
+                                                              color: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? backGroundColor : Colors.transparent,
+                                                              borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
+                                                          child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
+                                                              ? Text(
+                                                                  '${GetIncomeController.to.monthlyExpenseList?[index].amount ?? 1}',
+                                                                  style: blackMontserrat10W500,
+                                                                  maxLines: 1,
+                                                                )
+                                                              : commonTextFormField(
+                                                                  textEditingController: TextEditingController(text: tempMonthlyExpenseList?[index].amount.toString() ?? ''),
+                                                                  prefixText: '\$',
+                                                                  keyboardType: TextInputType.phone,
+                                                                  prefixstyle: blackMontserrat10W500,
+                                                                  inputAction: TextInputAction.done,
+                                                                  onChangedFunction: (value) {
+                                                                    tempMonthlyExpenseList?[index].amount = int.parse(value);
+                                                                  },
+                                                                  inputFormatter: [digitInputFormatter()],
+                                                                  contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
+                                                                  textStyle: blackMontserrat10W500,
+                                                                ),
+                                                        ),
+                                                      ),
+                                                      if (monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.fill,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              _selectDate(context: context);
                                                             },
-                                                            onPressNo: () {
-                                                              Get.back();
-                                                            });
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                                                          // margin: const EdgeInsets.only(left: 10.0),
-                                                          width: Get.width * 0.015,
-                                                          height: Get.height * 0.03,
-                                                          child: Image.asset(
-                                                            deleteImage,
-                                                            // height: Get.height * 0.02,
-                                                            // width: 30.0,
-                                                          )),
-                                                    ),
+                                                            child: Container(
+                                                                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
+                                                                margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                                width: Get.width * 0.081,
+                                                                height: Get.height * 0.04,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Flexible(
+                                                                      child: Text(
+                                                                        DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
+                                                                        style: blackMontserrat10W500,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ),
+                                                                    Image.asset(
+                                                                      calendarImage2,
+                                                                      height: Get.height * 0.02,
+                                                                      width: Get.width * 0.010,
+                                                                    )
+                                                                  ],
+                                                                )),
+                                                          ),
+                                                        ),
+                                                      if (monthlyExpenseEditModeController.monthlyExpenseEditMode && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.middle,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              showCommonDialog(
+                                                                  context: context,
+                                                                  headerTitle: sureToDelete,
+                                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                                  buttonColor: Colors.white,
+                                                                  saveButtonBorderColor: colorsEE4242,
+                                                                  noButtonTextStyle: noButtonTextStyle,
+                                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                                  noButtonColor: Colors.black,
+                                                                  onPressYes: () {
+                                                                    GetIncomeController.to.monthlyExpenseList?.removeAt(index);
+                                                                    Get.back();
+                                                                  },
+                                                                  onPressNo: () {
+                                                                    Get.back();
+                                                                  });
+                                                            },
+                                                            child: Container(
+                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                                                                // margin: const EdgeInsets.only(left: 10.0),
+                                                                width: Get.width * 0.015,
+                                                                height: Get.height * 0.03,
+                                                                child: Image.asset(
+                                                                  deleteImage,
+                                                                  // height: Get.height * 0.02,
+                                                                  // width: 30.0,
+                                                                )),
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
+                                                ],
+                                              ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
+                          Visibility(
+                            visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : monthlyExpenseEditModeController.monthlyExpenseEditMode,
+                            child: GetBuilder<ShowMonthlyExpenseSaveDataTextController>(
+                              builder: (showMonthlyExpenseSaveTextController) {
+                                return Column(
+                                  children: [
+                                    showMonthlyExpenseSaveTextController.monthlyExpenseShowTextWeb == false || showMonthlyExpenseSaveTextController.monthlyExpenseShowText == false
+                                        ? Padding(
+                                            padding: EdgeInsets.only(right: monthlyExpenseEditModeController.monthlyExpenseEditMode == false && constraints.maxWidth < 1000 ? 0.0 : 0.0),
+                                            child: Table(
+                                              columnWidths: <int, TableColumnWidth>{
+                                                0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
+                                                1: const FlexColumnWidth(2.2),
+                                                2: const FlexColumnWidth(2.2),
+                                                3: const FlexColumnWidth(1.4),
+                                              },
+                                              children: [
+                                                TableRow(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: Get.height * 0.044,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.073),
+                                                        child: commonTextFormField(
+                                                            hintText: expenseName,
+                                                            hintStyle: blackMontserrat10W500,
+                                                            keyboardType: TextInputType.text,
+                                                            inputAction: TextInputAction.next,
+                                                            inputFormatter: [characterInputFormatter()],
+                                                            contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                            textEditingController: _monthlyExpenseNameController),
+                                                      ),
+                                                    ),
+                                                    TableCell(
+                                                      verticalAlignment: TableCellVerticalAlignment.fill,
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(
+                                                          horizontal: 5,
+                                                        ),
+
+                                                        // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
+                                                        //
+                                                        // height: Get.height * 0.04,
+
+                                                        alignment: Alignment.center,
+                                                        child: GetBuilder<SelectedDropDownItem>(
+                                                          builder: (dropDownController) {
+                                                            return commonDropDown(
+                                                                valueTextStyle: blackMontserrat10W500,
+                                                                selectedItemTextStyle: blackMontserrat10W500,
+                                                                hintTextStyle: blackMontserrat10W500,
+                                                                hintText: chooseDate,
+                                                                value: dropDownController.selectedSingleMonthlyExpenseDate,
+                                                                itemList: dateList,
+                                                                onChanged: (item) {
+                                                                  dropDownController.changeSingleDate(item: item);
+                                                                });
+                                                          },
+                                                        ),
+                                                        // child: dropDownDayGetBuilder(dropDownList: dateList),
+                                                        margin: EdgeInsets.only(right: constraints.maxWidth < 1300 ? Get.width * 0.04 : Get.width * 0.05),
+                                                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                                      ),
+                                                    ),
+                                                    TableCell(
+                                                      verticalAlignment: TableCellVerticalAlignment.fill,
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                        alignment: Alignment.center,
+                                                        child: GetBuilder<SelectedDropDownItem>(
+                                                          builder: (monthDropDownController) {
+                                                            return commonDropDown(
+                                                                selectedItemTextStyle: blackMontserrat10W500,
+                                                                valueTextStyle: blackMontserrat10W500,
+                                                                hintText: chooseMonth,
+                                                                hintTextStyle: blackMontserrat10W500,
+                                                                value: monthDropDownController.selectedSingleMonthlyExpenseMonth,
+                                                                itemList: months,
+                                                                onChanged: (item) {
+                                                                  monthDropDownController.changeSingleMonth(item: item);
+                                                                });
+                                                          },
+                                                        ),
+                                                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                        decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                                      ),
+                                                    ),
+                                                    TableCell(
+                                                      verticalAlignment: TableCellVerticalAlignment.fill,
+                                                      child: commonTextFormField(
+                                                          prefixText: '\$',
+                                                          prefixstyle: blackMontserrat10W500,
+                                                          keyboardType: TextInputType.phone,
+                                                          inputAction: TextInputAction.done,
+                                                          inputFormatter: [digitInputFormatter()],
+                                                          contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                          textEditingController: _monthlyExpenseAmountController),
+                                                    ),
+                                                  ],
+                                                ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                ),
-                              );
-                              // } else {
-                              //   return ;
-                              // }
-                            },
-                          );
-                        }),
-                    Visibility(
-                      visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : monthlyExpenseEditModeController.monthlyExpenseEditMode,
-                      child: GetBuilder<ShowMonthlyExpenseSaveDataTextController>(
-                        builder: (showMonthlyExpenseSaveTextController) {
-                          return Column(
-                            children: [
-                              showMonthlyExpenseSaveTextController.monthlyExpenseShowTextWeb == false || showMonthlyExpenseSaveTextController.monthlyExpenseShowText == false
-                                  ? Padding(
-                                      padding: EdgeInsets.only(right: monthlyExpenseEditModeController.monthlyExpenseEditMode == false && constraints.maxWidth < 1000 ? 0.0 : 0.0),
-                                      child: Table(
-                                        columnWidths: <int, TableColumnWidth>{
-                                          0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
-                                          1: const FlexColumnWidth(2.2),
-                                          2: const FlexColumnWidth(2.2),
-                                          3: const FlexColumnWidth(1.4),
-                                        },
+                                          )
+                                        : Container(),
+                                    Visibility(
+                                      visible:
+                                          constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.monthlyExpenseShowTextWeb : showMonthlyExpenseSaveTextController.monthlyExpenseShowText,
+                                      replacement: Row(
                                         children: [
-                                          TableRow(
-                                            children: [
-                                              SizedBox(
-                                                height: Get.height * 0.044,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.073),
-                                                  child: commonTextFormField(
-                                                      hintText: expenseName,
-                                                      hintStyle: blackMontserrat10W500,
-                                                      keyboardType: TextInputType.text,
-                                                      inputAction: TextInputAction.next,
-                                                      inputFormatter: [characterInputFormatter()],
-                                                      contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                      textEditingController: _monthlyExpenseNameController),
-                                                ),
-                                              ),
-                                              TableCell(
-                                                verticalAlignment: TableCellVerticalAlignment.fill,
-                                                child: Container(
-                                                  padding: const EdgeInsets.symmetric(
-                                                    horizontal: 5,
-                                                  ),
-
-                                                  // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
-                                                  //
-                                                  // height: Get.height * 0.04,
-
-                                                  alignment: Alignment.center,
-                                                  child: GetBuilder<SelectedDropDownItem>(
-                                                    builder: (dropDownController) {
-                                                      return commonDropDown(
-                                                          valueTextStyle: blackMontserrat10W500,
-                                                          selectedItemTextStyle: blackMontserrat10W500,
-                                                          hintTextStyle: blackMontserrat10W500,
-                                                          hintText: chooseDate,
-                                                          value: dropDownController.selectedSingleMonthlyExpenseDate,
-                                                          itemList: dateList,
-                                                          onChanged: (item) {
-                                                            dropDownController.changeSingleDate(item: item);
-                                                          });
-                                                    },
-                                                  ),
-                                                  // child: dropDownDayGetBuilder(dropDownList: dateList),
-                                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1300 ? Get.width * 0.04 : Get.width * 0.05),
-                                                  decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                                ),
-                                              ),
-                                              TableCell(
-                                                verticalAlignment: TableCellVerticalAlignment.fill,
-                                                child: Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                                                  alignment: Alignment.center,
-                                                  child: GetBuilder<SelectedDropDownItem>(
-                                                    builder: (monthDropDownController) {
-                                                      return commonDropDown(
-                                                          selectedItemTextStyle: blackMontserrat10W500,
-                                                          valueTextStyle: blackMontserrat10W500,
-                                                          hintText: chooseMonth,
-                                                          hintTextStyle: blackMontserrat10W500,
-                                                          value: monthDropDownController.selectedSingleMonthlyExpenseMonth,
-                                                          itemList: months,
-                                                          onChanged: (item) {
-                                                            monthDropDownController.changeSingleMonth(item: item);
-                                                          });
-                                                    },
-                                                  ),
-                                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                                  decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                                ),
-                                              ),
-                                              TableCell(
-                                                verticalAlignment: TableCellVerticalAlignment.fill,
-                                                child: commonTextFormField(
-                                                    prefixText: '\$',
-                                                    prefixstyle: blackMontserrat10W500,
-                                                    keyboardType: TextInputType.phone,
-                                                    inputAction: TextInputAction.done,
-                                                    inputFormatter: [digitInputFormatter()],
-                                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                    textEditingController: _monthlyExpenseAmountController),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              Visibility(
-                                visible: constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.monthlyExpenseShowTextWeb : showMonthlyExpenseSaveTextController.monthlyExpenseShowText,
-                                replacement: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          final controller = Get.put(SelectedDropDownItem());
-                                          MonthlyExpensesModel.monthlyExpensesListOld
-                                              .add(MonthlyExpensesModel(expenseName: _monthlyExpenseNameController.text, amount: _monthlyExpenseAmountController.text));
-                                          controller.selectedMonthlyExpenseDate.add(controller.selectedSingleMonthlyExpenseDate as Object);
-                                          controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonthlyExpenseMonth as Object);
-                                        });
-                                        constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.changeVisibilityForWeb() : showMonthlyExpenseSaveTextController.changeVisibility();
-                                      },
-                                      child: Text(
-                                        save,
-                                        style: greenMontserrat11W500,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        cancel,
-                                        style: redMontserrat11W500,
-                                      ),
-                                      onPressed: () {
-                                        constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.changeVisibilityForWeb() : showMonthlyExpenseSaveTextController.changeVisibility();
-                                        // _weeklyAmountController.clear();
-                                        // _weeklyIncomeNameController.clear();
-                                      },
-                                    )
-                                  ],
-                                ),
-                                child: constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true
-                                    ? Container()
-                                    : Padding(
-                                        padding: EdgeInsets.only(bottom: Get.height * 0.01, top: Get.height * 0.01),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.changeVisibilityForWeb() : showMonthlyExpenseSaveTextController.changeVisibility();
-                                          },
-                                          child: Align(
-                                            alignment: const FractionalOffset(0.0, 0.0),
+                                          InkWell(
+                                            onTap: () async {
+                                              final controller = Get.put(SelectedDropDownItem());
+                                              if (constraints.maxWidth < 1000) {
+                                                tempMonthlyExpenseList?.add(DataModel(
+                                                  name: _monthlyExpenseNameController.text,
+                                                  amount: int.parse(_monthlyExpenseAmountController.text),
+                                                  every: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                  paidOn: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                  weekMonth: 2,
+                                                  incomeOutgoing: 2,
+                                                ));
+                                                // tempMonthlyIncomeList?.refresh();
+                                              } else {
+                                                var response = await CreateIncomeController.to.createIncome(parameter: {
+                                                  'income': [
+                                                    DataModel(
+                                                      name: _monthlyExpenseNameController.text,
+                                                      amount: int.parse(_monthlyExpenseAmountController.text),
+                                                      every: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                      paidOn:
+                                                          int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                      weekMonth: 2,
+                                                      incomeOutgoing: 2,
+                                                    )
+                                                  ]
+                                                });
+                                                print("{{{{{{{{{{{{{{{{$response");
+                                                if (response["success"] == true) {
+                                                  GetIncomeController.to.monthlyExpenseList?.add(DataModel(
+                                                    name: _monthlyExpenseNameController.text,
+                                                    amount: int.parse(_monthlyExpenseAmountController.text),
+                                                    every: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                    paidOn: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                    weekMonth: 2,
+                                                    incomeOutgoing: 2,
+                                                  ));
+                                                  GetIncomeController.to.monthlyExpenseList?.refresh();
+                                                }
+                                              }
+                                              _monthlyExpenseNameController.clear();
+                                              _monthlyExpenseAmountController.clear();
+                                              // setState(() {
+                                              //   final controller = Get.put(SelectedDropDownItem());
+                                              //   MonthlyExpensesModel.monthlyExpensesListOld
+                                              //       .add(MonthlyExpensesModel(expenseName: _monthlyExpenseNameController.text, amount: _monthlyExpenseAmountController.text));
+                                              //   controller.selectedMonthlyExpenseDate.add(controller.selectedSingleMonthlyExpenseDate as Object);
+                                              //   controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonthlyExpenseDate as Object);
+                                              // });
+                                              constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.changeVisibilityForWeb() : showMonthlyExpenseSaveTextController.changeVisibility();
+                                            },
                                             child: Text(
-                                              addWeeklyIncome,
-                                              style: addWeekIncomeStyle,
+                                              save,
+                                              style: greenMontserrat11W500,
                                             ),
                                           ),
+                                          TextButton(
+                                            child: Text(
+                                              cancel,
+                                              style: redMontserrat11W500,
+                                            ),
+                                            onPressed: () {
+                                              constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.changeVisibilityForWeb() : showMonthlyExpenseSaveTextController.changeVisibility();
+                                              // _weeklyAmountController.clear();
+                                              // _weeklyIncomeNameController.clear();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      child: constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true
+                                          ? Container()
+                                          : Padding(
+                                              padding: EdgeInsets.only(bottom: Get.height * 0.01, top: Get.height * 0.01),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.changeVisibilityForWeb() : showMonthlyExpenseSaveTextController.changeVisibility();
+                                                },
+                                                child: Align(
+                                                  alignment: const FractionalOffset(0.0, 0.0),
+                                                  child: Text(
+                                                    addWeeklyIncome,
+                                                    style: addWeekIncomeStyle,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    constraints.maxWidth > 1000
+                        ? Container()
+                        : GetBuilder<MonthlyExpenseEditModeController>(
+                            builder: (monthlyExpenseCircleVisibilityController) {
+                              return Visibility(
+                                  visible: monthlyExpenseCircleVisibilityController.monthlyExpenseCircleAvatarVisibility,
+                                  child: Positioned(
+                                    right: 0,
+                                    top: 1,
+                                    bottom: 1,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        monthlyExpenseDataVisibilityController.changeVisibility();
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 12,
+                                        backgroundColor: const Color(0xffF2F2F2),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
+                                          child: Icon(
+                                            monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                                            color: Colors.black,
+                                            size: 14.sp,
+                                          ),
                                         ),
                                       ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              constraints.maxWidth > 1000
-                  ? Container()
-                  : GetBuilder<MonthlyExpenseEditModeController>(
-                      builder: (monthlyExpenseCircleVisibilityController) {
-                        return Visibility(
-                            visible: monthlyExpenseCircleVisibilityController.monthlyExpenseCircleAvatarVisibility,
-                            child: Positioned(
-                              right: 0,
-                              top: 1,
-                              bottom: 1,
-                              child: GestureDetector(
-                                onTap: () {
-                                  monthlyExpenseDataVisibilityController.changeVisibility();
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: const Color(0xffF2F2F2),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
-                                    child: Icon(
-                                      monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                                      color: Colors.black,
-                                      size: 14.sp,
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ));
-                      },
-                    )
-            ],
-          );
-        },
-      ),
+                                  ));
+                            },
+                          )
+                  ],
+                );
+              },
+            );
+          }),
     );
   }
 
   weeklyBudgetData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
+    tempWeeklyBudgetList = GetIncomeController.to.weeklyBudgetList;
     final dropDownController = Get.put(SelectedDropDownItem());
-    TextEditingController _monthlyIncomeNameController = TextEditingController();
-    TextEditingController _monthlyAmountController = TextEditingController();
+    TextEditingController _weeklyBudgetNameController = TextEditingController();
+    TextEditingController _weeklyBudgetAmountController = TextEditingController();
     return Expanded(
       flex: boolValue == true
           ? 2
           : constraints!.maxWidth > 1000
               ? 2
               : 4,
-      child: GetBuilder<WeeklyBudgetEditModeController>(
-        builder: (editModeController) {
-          return Stack(
-            overflow: Overflow.visible,
-            fit: StackFit.loose,
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                  right: weeklyBudgetVisibilityController.weeklyBudgetVisibility == false && constraints!.maxWidth < 1000 ? 13 : 0.0,
-                ),
-                padding: EdgeInsets.only(right: editModeController.weeklyBudgetEditMode == false ? 0.0 : Get.width * 0.005),
-                decoration: BoxDecoration(
-                    border: Border(
-                        right: weeklyBudgetVisibilityController.weeklyBudgetVisibility == true && constraints!.maxWidth < 1000 && editModeController.weeklyBudgetEditMode == false
-                            ? BorderSide.none
-                            : const BorderSide(color: borderColor))),
-                child: Column(
+      child: StreamBuilder(
+          stream: GetIncomeController.to.weeklyBudgetList?.stream,
+          builder: (context, snapshot) {
+            return GetBuilder<WeeklyBudgetEditModeController>(
+              builder: (editModeController) {
+                return Stack(
+                  overflow: Overflow.visible,
+                  fit: StackFit.loose,
                   children: [
-                    constraints!.maxWidth > 1000 || weeklyBudgetVisibilityController.weeklyBudgetVisibility == false && weeklyBudgetVisibilityController.weeklyBudgetVisibilityIncome == true
-                        ? Table(
-                            columnWidths: <int, TableColumnWidth>{
-                              0: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3.5 : 3.4),
-                              1: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3 : 2.2),
-                              2: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3 : 2.3),
-                              3: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.5 : 1.33),
-                              4: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.3 : 2.2),
-                              5: const FlexColumnWidth(1),
-
-                              // 0: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3.3 : 3.45),
-                              // 1: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.3 : 2.25),
-                              // 2: const FlexColumnWidth(2.2),
-                              // 3: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 1.5 : 1.45),
-                            },
-
-                            // columnWidths: <int, TableColumnWidth>{
-                            //   0: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
-                            //       ? 3.5
-                            //       : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
-                            //       ? 3.4
-                            //       : 3.25),
-                            //   1: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
-                            //       ? 3
-                            //       : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
-                            //       ? 2.3
-                            //       : 2.2),
-                            //   2: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000 ? 3 : 2.2),
-                            //   3: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
-                            //       ? 2.5
-                            //       : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
-                            //       ? 1.5
-                            //       : 1.4),
-                            //   4: FlexColumnWidth(monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.3 : 2.2),
-                            //   5: const FlexColumnWidth(1),
-                            // },
-                            children: [
-                              TableRow(children: [
-                                Text(
-                                  expenseName,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  resetOn,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  every,
-                                  style: columnNameListStyle,
-                                ),
-                                Text(
-                                  amount,
-                                  style: columnNameListStyle,
-                                ),
-                                if (editModeController.weeklyBudgetEditMode && constraints.maxWidth > 1000)
-                                  Text(
-                                    effectiveDate,
-                                    style: columnNameListStyle,
-                                  ),
-                                if (editModeController.weeklyBudgetEditMode && constraints.maxWidth > 1000)
-                                  Text(
-                                    action,
-                                    style: columnNameListStyle,
-                                  )
-                              ]),
-                            ],
-                          )
-                        : Column(),
-                    StreamBuilder(
-                        stream: GetIncomeController.to.weeklyBudgetList?.stream,
-                        builder: (context, snapshot) {
-                          return ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: GetIncomeController.to.weeklyBudgetList?.length,
-                            itemBuilder: (context, index) {
-                              // if (index < MonthlyIncomeModelOld.monthlyIncomeList.length) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: Get.height * 0.015,
-                                  top: index == 0 ? Get.height * 0.01 : 0.0,
-                                ),
-                                child: Slidable(
-                                  enabled: constraints.maxWidth > 1000 ? false : editModeController.weeklyBudgetEditMode,
-                                  // closeOnScroll: false,
-                                  actionPane: const SlidableDrawerActionPane(),
-                                  actionExtentRatio: 0.13,
-                                  secondaryActions: [
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          GetIncomeController.to.weeklyBudgetList?.removeAt(index);
-                                        });
-                                      },
-                                      child: Container(
-                                          decoration: BoxDecoration(color: colorsFFEBEB, borderRadius: BorderRadius.circular(5)),
-                                          margin: const EdgeInsets.symmetric(horizontal: 7.0),
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Image.asset(
-                                            deleteImage,
-                                            height: Get.height * 0.04,
-                                            // width: 30.0,
-                                          )),
-                                    ),
-                                  ],
-                                  child: boolValue == true && constraints.maxWidth < 1000
-                                      ? Text(
-                                          '${GetIncomeController.to.weeklyBudgetList?[index].name}',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: blackMontserrat10W500,
+                    Container(
+                      margin: EdgeInsets.only(
+                        right: weeklyBudgetVisibilityController.weeklyBudgetVisibility == false && constraints!.maxWidth < 1000 ? 13 : 0.0,
+                      ),
+                      padding: EdgeInsets.only(right: editModeController.weeklyBudgetEditMode == false ? 0.0 : Get.width * 0.003),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              right: weeklyBudgetVisibilityController.weeklyBudgetVisibility == true && constraints!.maxWidth < 1000 && editModeController.weeklyBudgetEditMode == false
+                                  ? BorderSide.none
+                                  : const BorderSide(color: borderColor))),
+                      child: Column(
+                        children: [
+                          constraints!.maxWidth > 1000 || weeklyBudgetVisibilityController.weeklyBudgetVisibility == true && weeklyBudgetVisibilityController.weeklyBudgetVisibilityIncome == false
+                              ? Table(
+                                  columnWidths: <int, TableColumnWidth>{
+                                    0: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true && constraints.maxWidth > 1000
+                                        ? 3.5
+                                        : weeklyBudgetEditModeController.weeklyBudgetEditMode == true && constraints.maxWidth < 1000
+                                            ? 3.4
+                                            : 3.25),
+                                    1: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true && constraints.maxWidth > 1000
+                                        ? 3
+                                        : weeklyBudgetEditModeController.weeklyBudgetEditMode == true && constraints.maxWidth < 1000
+                                            ? 2.3
+                                            : 2.2),
+                                    2: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true && constraints.maxWidth > 1000 ? 3 : 2.2),
+                                    3: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true && constraints.maxWidth > 1000
+                                        ? 2.5
+                                        : weeklyBudgetEditModeController.weeklyBudgetEditMode == true && constraints.maxWidth < 1000
+                                            ? 1.5
+                                            : 1.4),
+                                    4: FlexColumnWidth(weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.3 : 2.2),
+                                    5: const FlexColumnWidth(1),
+                                  },
+                                  children: [
+                                    TableRow(children: [
+                                      Text(
+                                        expenseName,
+                                        style: columnNameListStyle,
+                                      ),
+                                      Text(
+                                        resetOn,
+                                        style: columnNameListStyle,
+                                      ),
+                                      Text(
+                                        every,
+                                        style: columnNameListStyle,
+                                      ),
+                                      Text(
+                                        amount,
+                                        style: columnNameListStyle,
+                                      ),
+                                      if (editModeController.weeklyBudgetEditMode && constraints.maxWidth > 1000)
+                                        Text(
+                                          effectiveDate,
+                                          style: columnNameListStyle,
+                                        ),
+                                      if (editModeController.weeklyBudgetEditMode && constraints.maxWidth > 1000)
+                                        Text(
+                                          action,
+                                          style: columnNameListStyle,
                                         )
-                                      : Table(
-                                          columnWidths: <int, TableColumnWidth>{
-                                            0: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3.5 : 3.3),
-                                            1: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3 : 2.2),
-                                            2: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3 : 2.2),
-                                            3: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.5 : 1.4),
-                                            4: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.3 : 2.2),
-                                            5: const FlexColumnWidth(1.1),
-                                          },
-                                          children: [
-                                            TableRow(
-                                              children: [
-                                                TableCell(
-                                                  child: SizedBox(
-                                                    height: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.height * 0.044 : Get.height * 0.02,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
-                                                      child: editModeController.weeklyBudgetEditMode == false
-                                                          ? Text(
-                                                              '${GetIncomeController.to.weeklyBudgetList?[index].name}',
-                                                              maxLines: 1,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: blackMontserrat10W500,
-                                                            )
-                                                          : commonTextFormField(
-                                                              keyboardType: TextInputType.text,
-                                                              inputAction: TextInputAction.next,
-                                                              inputFormatter: [characterInputFormatter()],
-                                                              contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                              textStyle: blackMontserrat10W500,
-                                                              textEditingController: TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].name ?? ''),
-                                                              onChangedFunction: (value) {
-                                                                GetIncomeController.to.weeklyBudgetList?[index].name = value;
-                                                                // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
-                                                              },
-                                                            ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: const EdgeInsets.only(left: 6),
-                                                    alignment: Alignment.centerLeft,
-                                                    child: editModeController.weeklyBudgetEditMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              return commonDropDown(
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  value: '${GetIncomeController.to.weeklyBudgetList?[index].paidOn ?? 1}'
+                                    ]),
+                                  ],
+                                )
+                              : Column(),
+                          StreamBuilder(
+                              stream: tempWeeklyBudgetList?.stream,
+                              builder: (context, snapshot) {
+                                return ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: editModeController.weeklyBudgetEditMode ? tempWeeklyBudgetList?.length : GetIncomeController.to.weeklyBudgetList?.length,
+                                  itemBuilder: (context, index) {
+                                    // if (index < MonthlyIncomeModelOld.monthlyIncomeList.length) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: Get.height * 0.015,
+                                        top: index == 0 ? Get.height * 0.01 : 0.0,
+                                      ),
+                                      child: SwipeActionCell(
+                                        backgroundColor: Colors.transparent,
+                                        isDraggable: constraints.maxWidth > 1000 ? false : true,
+                                        trailingActions: [
+                                          SwipeAction(
+                                            backgroundRadius: 5,
+                                            widthSpace: 50,
+                                            color: colorsFFEBEB,
+                                            icon: Image.asset(
+                                              deleteImage,
+                                              height: Get.height * 0.025,
+                                            ),
+                                            onTap: (p0) {
+                                              showCommonDialog(
+                                                  context: context,
+                                                  headerTitle: sureToDelete,
+                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                  buttonColor: Colors.white,
+                                                  saveButtonBorderColor: colorsEE4242,
+                                                  noButtonTextStyle: noButtonTextStyle,
+                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                  noButtonColor: Colors.black,
+                                                  onPressYes: () {
+                                                    tempWeeklyBudgetList?.removeAt(index);
+
+                                                    Get.back();
+                                                  },
+                                                  onPressNo: () {
+                                                    Get.back();
+                                                  });
+                                            },
+                                          ),
+                                        ],
+                                        key: UniqueKey(),
+                                        child: boolValue == true && constraints.maxWidth < 1000
+                                            ? Text(
+                                                '${GetIncomeController.to.weeklyBudgetList?[index].name}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: blackMontserrat10W500,
+                                              )
+                                            : Table(
+                                                columnWidths: <int, TableColumnWidth>{
+                                                  0: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3.5 : 3.3),
+                                                  1: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3 : 2.2),
+                                                  2: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 3 : 2.2),
+                                                  3: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.5 : 1.4),
+                                                  4: FlexColumnWidth(constraints.maxWidth > 1000 && weeklyBudgetEditModeController.weeklyBudgetEditMode == true ? 2.3 : 2.2),
+                                                  5: const FlexColumnWidth(1.1),
+                                                },
+                                                children: [
+                                                  TableRow(
+                                                    children: [
+                                                      TableCell(
+                                                        child: SizedBox(
+                                                          height: weeklyBudgetEditModeController.weeklyBudgetEditMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.02),
+                                                            child: editModeController.weeklyBudgetEditMode == false
+                                                                ? Text(
+                                                                    '${GetIncomeController.to.weeklyBudgetList?[index].name}',
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    style: blackMontserrat10W500,
+                                                                  )
+                                                                : commonTextFormField(
+                                                                    keyboardType: TextInputType.text,
+                                                                    inputAction: TextInputAction.next,
+                                                                    inputFormatter: [characterInputFormatter()],
+                                                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                                    textStyle: blackMontserrat10W500,
+                                                                    textEditingController: TextEditingController(text: tempWeeklyBudgetList?[index].name ?? ''),
+                                                                    onChangedFunction: (value) {
+                                                                      tempWeeklyBudgetList?[index].name = value;
+                                                                      // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                                                    },
+                                                                  ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: weeklyBudgetEditModeController.weeklyBudgetEditMode ? 4 : 0.0),
+                                                          alignment: Alignment.centerLeft,
+                                                          child: editModeController.weeklyBudgetEditMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    return commonDropDown(
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        value: '${tempWeeklyBudgetList?[index].paidOn ?? 1}'
+                                                                            .toString()
+                                                                            .replaceAll('1', 'Sun')
+                                                                            .replaceAll('2', 'Mon')
+                                                                            .replaceAll('3', 'Tue')
+                                                                            .replaceAll('4', 'Wed')
+                                                                            .replaceAll('5', 'Thu')
+                                                                            .replaceAll('6', 'Fri')
+                                                                            .replaceAll('7', 'Sat'),
+                                                                        // value: controller1.weeklyBudgetDayDropDownList[index],
+                                                                        itemList: days,
+                                                                        onChanged: (item) {
+                                                                          tempWeeklyBudgetList?[index].paidOn = int.parse(item
+                                                                              .replaceAll('Sun', '1')
+                                                                              .replaceAll('Mon', '2')
+                                                                              .replaceAll('Tue', '3')
+                                                                              .replaceAll('Wed', '4')
+                                                                              .replaceAll('Thu', '5')
+                                                                              .replaceAll('Fri', '6')
+                                                                              .replaceAll('Sat', '7'));
+                                                                          tempWeeklyBudgetList?.refresh();
+                                                                          // controller1.changeWeeklyBudgetDayList(item: item, index: index);
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.weeklyBudgetList?[index].paidOn ?? 1}'
                                                                       .toString()
                                                                       .replaceAll('1', 'Sun')
                                                                       .replaceAll('2', 'Mon')
@@ -4064,387 +4155,437 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                       .replaceAll('5', 'Thu')
                                                                       .replaceAll('6', 'Fri')
                                                                       .replaceAll('7', 'Sat'),
-                                                                  // value: controller1.weeklyBudgetDayDropDownList[index],
-                                                                  itemList: days,
-                                                                  onChanged: (item) {
-                                                                    GetIncomeController.to.weeklyBudgetList?[index].paidOn = int.parse(item
-                                                                        .replaceAll('Sun', '1')
-                                                                        .replaceAll('Mon', '2')
-                                                                        .replaceAll('Tue', '3')
-                                                                        .replaceAll('Wed', '4')
-                                                                        .replaceAll('Thu', '5')
-                                                                        .replaceAll('Fri', '6')
-                                                                        .replaceAll('Sat', '7'));
-                                                                    GetIncomeController.to.weeklyBudgetList?.refresh();
-                                                                    // controller1.changeWeeklyBudgetDayList(item: item, index: index);
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.weeklyBudgetList?[index].paidOn ?? 1}'
-                                                                .toString()
-                                                                .replaceAll('1', 'Sun')
-                                                                .replaceAll('2', 'Mon')
-                                                                .replaceAll('3', 'Tue')
-                                                                .replaceAll('4', 'Wed')
-                                                                .replaceAll('5', 'Thu')
-                                                                .replaceAll('6', 'Fri')
-                                                                .replaceAll('7', 'Sat'),
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? Get.width * 0.04
-                                                            : editModeController.weeklyBudgetEditMode == true
-                                                                ? Get.width * 0.02
-                                                                : Get.width * 0.045),
-                                                    decoration: BoxDecoration(
-                                                        color: editModeController.weeklyBudgetEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Container(
-                                                    padding: const EdgeInsets.only(
-                                                      left: 6,
-                                                    ),
-                                                    alignment: Alignment.centerLeft,
-                                                    child: editModeController.weeklyBudgetEditMode == true
-                                                        ? GetBuilder<SelectedDropDownItem>(
-                                                            builder: (controller1) {
-                                                              // return commonDropDown(itemList: dateList, value: controller.selectedDateItemValueList[index]);
-                                                              return commonDropDown(
-                                                                  selectedItemTextStyle: blackMontserrat10W500,
-                                                                  valueTextStyle: blackMontserrat10W500,
-                                                                  value: '${GetIncomeController.to.weeklyBudgetList?[index].every ?? 1}W',
-                                                                  // value: controller1.weeklyBudgetWeekDropDownList[index],
-                                                                  itemList: weeks,
-                                                                  onChanged: (item) {
-                                                                    GetIncomeController.to.weeklyBudgetList?[index].every = int.parse(item.replaceAll('W', ''));
-                                                                    GetIncomeController.to.weeklyBudgetList?.refresh();
-                                                                    // controller1.changeWeeklyBudgetWeekList(item: item, index: index);
-                                                                  });
-                                                            },
-                                                          )
-                                                        : Text(
-                                                            '${GetIncomeController.to.weeklyBudgetList?[index].every ?? 1}W',
-                                                            style: blackMontserrat10W500,
-                                                          ),
-                                                    margin: EdgeInsets.only(
-                                                        right: constraints.maxWidth < 1000
-                                                            ? editModeController.weeklyBudgetEditMode == false
-                                                                ? Get.width * 0.0
-                                                                : Get.width * 0.04
-                                                            : Get.width * 0.02),
-                                                    decoration: BoxDecoration(
-                                                        color: editModeController.weeklyBudgetEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                  ),
-                                                ),
-                                                TableCell(
-                                                  verticalAlignment: TableCellVerticalAlignment.fill,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
-                                                    child: editModeController.weeklyBudgetEditMode == false
-                                                        ? Text(
-                                                            '${GetIncomeController.to.monthlyExpenseList?[index].amount}',
-                                                            style: blackMontserrat10W500,
-                                                            maxLines: 1,
-                                                          )
-                                                        : commonTextFormField(
-                                                            textEditingController: TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString()),
-                                                            prefixText: '\$',
-                                                            keyboardType: TextInputType.phone,
-                                                            prefixstyle: blackMontserrat10W500,
-                                                            inputAction: TextInputAction.done,
-                                                            onChangedFunction: (value) {
-                                                              GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(value);
-                                                            },
-                                                            inputFormatter: [digitInputFormatter()],
-                                                            contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
-                                                            textStyle: blackMontserrat10W500,
-                                                          ),
-                                                  ),
-                                                ),
-                                                if (editModeController.weeklyBudgetEditMode == true && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.fill,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        _selectDate(context: context);
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
-                                                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                          // width: Get.width * 0.080,
-                                                          // height: Get.height * 0.04,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Flexible(
-                                                                child: Text(
-                                                                  DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
-                                                                  style: TextStyle(fontSize: 10.sp),
-                                                                  overflow: TextOverflow.ellipsis,
+                                                                  style: blackMontserrat10W500,
                                                                 ),
-                                                              ),
-                                                              Image.asset(
-                                                                calendarImage2,
-                                                                height: Get.height * 0.02,
-                                                                width: Get.width * 0.010,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ),
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? Get.width * 0.04
+                                                                  : editModeController.weeklyBudgetEditMode == true
+                                                                      ? Get.width * 0.02
+                                                                      : Get.width * 0.045),
+                                                          decoration: BoxDecoration(
+                                                              color: editModeController.weeklyBudgetEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: weeklyBudgetEditModeController.weeklyBudgetEditMode ? 4 : 0.0),
+                                                          alignment: Alignment.centerLeft,
+                                                          child: editModeController.weeklyBudgetEditMode == true
+                                                              ? GetBuilder<SelectedDropDownItem>(
+                                                                  builder: (controller1) {
+                                                                    // return commonDropDown(itemList: dateList, value: controller.selectedDateItemValueList[index]);
+                                                                    return commonDropDown(
+                                                                        selectedItemTextStyle: blackMontserrat10W500,
+                                                                        valueTextStyle: blackMontserrat10W500,
+                                                                        value: '${tempWeeklyBudgetList?[index].every ?? 1}W',
+                                                                        // value: controller1.weeklyBudgetWeekDropDownList[index],
+                                                                        itemList: weeks,
+                                                                        onChanged: (item) {
+                                                                          tempWeeklyBudgetList?[index].every = int.parse(item.replaceAll('W', ''));
+                                                                          tempWeeklyBudgetList?.refresh();
+                                                                          // controller1.changeWeeklyBudgetWeekList(item: item, index: index);
+                                                                        });
+                                                                  },
+                                                                )
+                                                              : Text(
+                                                                  '${GetIncomeController.to.weeklyBudgetList?[index].every ?? 1}W',
+                                                                  style: blackMontserrat10W500,
+                                                                ),
+                                                          margin: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000
+                                                                  ? editModeController.weeklyBudgetEditMode == false
+                                                                      ? Get.width * 0.0
+                                                                      : Get.width * 0.04
+                                                                  : Get.width * 0.02),
+                                                          decoration: BoxDecoration(
+                                                              color: editModeController.weeklyBudgetEditMode == true ? backGroundColor : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
+                                                          child: editModeController.weeklyBudgetEditMode == false
+                                                              ? Text(
+                                                                  '${GetIncomeController.to.monthlyExpenseList?[index].amount}',
+                                                                  style: blackMontserrat10W500,
+                                                                  maxLines: 1,
+                                                                )
+                                                              : commonTextFormField(
+                                                                  textEditingController: TextEditingController(text: tempWeeklyBudgetList?[index].amount.toString()),
+                                                                  prefixText: '\$',
+                                                                  keyboardType: TextInputType.phone,
+                                                                  prefixstyle: blackMontserrat10W500,
+                                                                  inputAction: TextInputAction.done,
+                                                                  onChangedFunction: (value) {
+                                                                    tempWeeklyBudgetList?[index].amount = int.parse(value);
+                                                                  },
+                                                                  inputFormatter: [digitInputFormatter()],
+                                                                  contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
+                                                                  textStyle: blackMontserrat10W500,
+                                                                ),
+                                                        ),
+                                                      ),
+                                                      if (editModeController.weeklyBudgetEditMode == true && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.fill,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              _selectDate(context: context);
+                                                            },
+                                                            child: Container(
+                                                                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(5)),
+                                                                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                                // width: Get.width * 0.080,
+                                                                // height: Get.height * 0.04,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Flexible(
+                                                                      child: Text(
+                                                                        DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
+                                                                        style: blackMontserrat10W500,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ),
+                                                                    Image.asset(
+                                                                      calendarImage2,
+                                                                      height: Get.height * 0.02,
+                                                                      width: Get.width * 0.010,
+                                                                    )
+                                                                  ],
+                                                                )),
+                                                          ),
+                                                        ),
+                                                      if (editModeController.weeklyBudgetEditMode && constraints.maxWidth > 1000)
+                                                        TableCell(
+                                                          verticalAlignment: TableCellVerticalAlignment.middle,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              showCommonDialog(
+                                                                  context: context,
+                                                                  headerTitle: sureToDelete,
+                                                                  descriptionTitle: sureToDeleteSubTitle,
+                                                                  buttonColor: Colors.white,
+                                                                  saveButtonBorderColor: colorsEE4242,
+                                                                  noButtonTextStyle: noButtonTextStyle,
+                                                                  saveButtonTextStyle: yesButtonTextStyle,
+                                                                  noButtonColor: Colors.black,
+                                                                  onPressYes: () {
+                                                                    tempWeeklyBudgetList?.removeAt(index);
+                                                                    Get.back();
+                                                                  },
+                                                                  onPressNo: () {
+                                                                    Get.back();
+                                                                  });
+                                                            },
+                                                            child: Container(
+                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                                                                // margin: const EdgeInsets.only(left: 10.0),
+                                                                width: Get.width * 0.015,
+                                                                height: Get.height * 0.03,
+                                                                child: Image.asset(
+                                                                  deleteImage,
+                                                                  // height: Get.height * 0.02,
+                                                                  // width: 30.0,
+                                                                )),
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
-                                                if (editModeController.weeklyBudgetEditMode && constraints.maxWidth > 1000)
-                                                  TableCell(
-                                                    verticalAlignment: TableCellVerticalAlignment.middle,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        GetIncomeController.to.monthlyExpenseList?.removeAt(index);
-                                                      },
-                                                      child: Container(
-                                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                                                          // margin: const EdgeInsets.only(left: 10.0),
-                                                          width: Get.width * 0.015,
-                                                          height: Get.height * 0.03,
-                                                          child: Image.asset(
-                                                            deleteImage,
-                                                            // height: Get.height * 0.02,
-                                                            // width: 30.0,
-                                                          )),
+                                                ],
+                                              ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
+                          Visibility(
+                            visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : editModeController.weeklyBudgetEditMode,
+                            child: GetBuilder<ShowWeeklyBudgetSaveDataTextController>(
+                              builder: (showSaveTextController) {
+                                return Column(
+                                  children: [
+                                    showSaveTextController.weeklyBudgetShowTextWeb == false || showSaveTextController.weeklyBudgetShowText == false
+                                        ? Padding(
+                                            padding: EdgeInsets.only(right: editModeController.weeklyBudgetEditMode == true ? 0.0 : 10.0),
+                                            child: Table(
+                                              columnWidths: <int, TableColumnWidth>{
+                                                0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
+                                                1: const FlexColumnWidth(2.2),
+                                                2: const FlexColumnWidth(2.2),
+                                                3: FlexColumnWidth(constraints.maxWidth > 1000 ? 1.2 : 1.4),
+                                              },
+                                              children: [
+                                                TableRow(
+                                                  children: [
+                                                    Container(
+                                                      padding: const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                      ),
+                                                      width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
+                                                      height: Get.height * 0.04,
+                                                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.04),
+                                                      child: CommonDataTextField.commonTextField(
+                                                        inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
+                                                        hintText: expenseName,
+                                                        hintStyle: blackMontserrat10W500,
+                                                        controller: _weeklyBudgetNameController,
+                                                        contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                                        textStyle: blackMontserrat10W500,
+                                                      ),
+                                                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
                                                     ),
-                                                  ),
+                                                    Container(
+                                                      padding: const EdgeInsets.symmetric(
+                                                        horizontal: 5,
+                                                      ),
+
+                                                      width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
+                                                      height: Get.height * 0.04,
+                                                      alignment: Alignment.center,
+                                                      child: GetBuilder<SelectedDropDownItem>(
+                                                        builder: (dropDownController) {
+                                                          return commonDropDown(
+                                                              valueTextStyle: blackMontserrat10W500,
+                                                              selectedItemTextStyle: blackMontserrat10W500,
+                                                              hintTextStyle: blackMontserrat10W500,
+                                                              hintText: day,
+                                                              value: dropDownController.weeklyBudgetDay,
+                                                              itemList: days,
+                                                              onChanged: (item) {
+                                                                dropDownController.changeWeeklyBudgetSingleDay(item: item);
+                                                              });
+                                                        },
+                                                      ),
+                                                      // child: dropDownDayGetBuilder(dropDownList: dateList),
+                                                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.05),
+                                                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                                    ),
+                                                    Container(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                      // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                                                      // height: Get.height * 0.04,
+                                                      width:
+                                                          // editModeController.editMode == true
+                                                          //     ?
+                                                          constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
+                                                      // : null,
+                                                      height:
+                                                          // editModeController.editMode == true ?
+                                                          Get.height * 0.04,
+                                                      // : null,
+                                                      alignment: Alignment.center,
+                                                      child: GetBuilder<SelectedDropDownItem>(
+                                                        builder: (monthDropDownController) {
+                                                          return commonDropDown(
+                                                              selectedItemTextStyle: blackMontserrat10W500,
+                                                              valueTextStyle: blackMontserrat10W500,
+                                                              hintText: week,
+                                                              hintTextStyle: blackMontserrat10W500,
+                                                              value: monthDropDownController.weeklyBudgetWeek,
+                                                              itemList: weeks,
+                                                              onChanged: (item) {
+                                                                monthDropDownController.changeWeeklyBudgetSingleWeek(item: item);
+                                                              });
+                                                        },
+                                                      ),
+
+                                                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.05),
+                                                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                                    ),
+                                                    Container(
+                                                      width: constraints.maxWidth < 1000 ? Get.width * 0.15 : Get.width * 0.065,
+                                                      height: Get.height * 0.04,
+                                                      alignment: Alignment.center,
+                                                      padding: const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                      ),
+                                                      child: CommonDataTextField.commonTextField(
+                                                        inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
+                                                        controller: _weeklyBudgetAmountController,
+                                                        contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
+                                                        prefixStyle: blackMontserrat10W500,
+                                                        prefixText: '\$',
+                                                        textStyle: blackMontserrat10W500,
+                                                      ),
+                                                      decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                                    ),
+                                                  ],
+                                                ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                ),
-                              );
-                            },
-                          );
-                        }),
-                    Visibility(
-                      visible: constraints.maxWidth > 1000 ? showSaveTextController.showTextWeb : editModeController.weeklyBudgetEditMode,
-                      child: GetBuilder<ShowWeeklyBudgetSaveDataTextController>(
-                        builder: (showSaveTextController) {
-                          return Column(
-                            children: [
-                              showSaveTextController.weeklyBudgetShowTextWeb == false || showSaveTextController.weeklyBudgetShowText == false
-                                  ? Padding(
-                                      padding: EdgeInsets.only(right: editModeController.weeklyBudgetEditMode == true ? 0.0 : 10.0),
-                                      child: Table(
-                                        columnWidths: <int, TableColumnWidth>{
-                                          0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
-                                          1: const FlexColumnWidth(2.2),
-                                          2: const FlexColumnWidth(2.2),
-                                          3: FlexColumnWidth(constraints.maxWidth > 1000 ? 1.2 : 1.4),
-                                        },
+                                          )
+                                        : Container(),
+                                    Visibility(
+                                      visible: constraints.maxWidth > 1000 ? showSaveTextController.weeklyBudgetShowTextWeb : showSaveTextController.weeklyBudgetShowText,
+                                      replacement: Row(
                                         children: [
-                                          TableRow(
-                                            children: [
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                ),
-                                                width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
-                                                height: Get.height * 0.04,
-                                                margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.04),
-                                                child: CommonDataTextField.commonTextField(
-                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
-                                                  hintText: expenseName,
-                                                  hintStyle: blackMontserrat10W500,
-                                                  controller: _monthlyIncomeNameController,
-                                                  contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
-                                                  textStyle: blackMontserrat10W500,
-                                                ),
-                                                decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                              ),
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 5,
-                                                ),
-
-                                                width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
-                                                height: Get.height * 0.04,
-                                                alignment: Alignment.center,
-                                                child: GetBuilder<SelectedDropDownItem>(
-                                                  builder: (dropDownController) {
-                                                    return commonDropDown(
-                                                        valueTextStyle: blackMontserrat10W500,
-                                                        selectedItemTextStyle: blackMontserrat10W500,
-                                                        hintTextStyle: blackMontserrat10W500,
-                                                        hintText: day,
-                                                        value: dropDownController.weeklyBudgetDay,
-                                                        itemList: days,
-                                                        onChanged: (item) {
-                                                          dropDownController.changeWeeklyBudgetSingleDay(item: item);
-                                                        });
-                                                  },
-                                                ),
-                                                // child: dropDownDayGetBuilder(dropDownList: dateList),
-                                                margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.05),
-                                                decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                              ),
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 5),
-                                                // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                                                // height: Get.height * 0.04,
-                                                width:
-                                                    // editModeController.editMode == true
-                                                    //     ?
-                                                    constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.08,
-                                                // : null,
-                                                height:
-                                                    // editModeController.editMode == true ?
-                                                    Get.height * 0.04,
-                                                // : null,
-                                                alignment: Alignment.center,
-                                                child: GetBuilder<SelectedDropDownItem>(
-                                                  builder: (monthDropDownController) {
-                                                    return commonDropDown(
-                                                        selectedItemTextStyle: blackMontserrat10W500,
-                                                        valueTextStyle: blackMontserrat10W500,
-                                                        hintText: week,
-                                                        hintTextStyle: blackMontserrat10W500,
-                                                        value: monthDropDownController.weeklyBudgetWeek,
-                                                        itemList: weeks,
-                                                        onChanged: (item) {
-                                                          monthDropDownController.changeWeeklyBudgetSingleWeek(item: item);
-                                                        });
-                                                  },
-                                                ),
-
-                                                margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.05),
-                                                decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                              ),
-                                              Container(
-                                                width: constraints.maxWidth < 1000 ? Get.width * 0.15 : Get.width * 0.065,
-                                                height: Get.height * 0.04,
-                                                alignment: Alignment.center,
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                ),
-                                                child: CommonDataTextField.commonTextField(
-                                                  inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
-                                                  controller: _monthlyAmountController,
-                                                  contentPadding: EdgeInsets.only(bottom: Get.height * 0.018),
-                                                  prefixStyle: blackMontserrat10W500,
-                                                  prefixText: '\$',
-                                                  textStyle: blackMontserrat10W500,
-                                                ),
-                                                decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                                              ),
-                                              // Expanded(
-                                              //     child: Row(
-                                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              //   children: [
-                                              //
-                                              //   ],
-                                              // ))
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              Visibility(
-                                visible: constraints.maxWidth > 1000 ? showSaveTextController.weeklyBudgetShowTextWeb : showSaveTextController.weeklyBudgetShowText,
-                                replacement: Row(
-                                  children: [
-                                    // SizedBox(
-                                    //   width: Get.width * 0.01,
-                                    // ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          final controller = Get.put(SelectedDropDownItem());
-                                          WeeklyBudgetModel.weeklyBudgetModel.add(WeeklyBudgetModel(expenseName: _monthlyIncomeNameController.text, amount: _monthlyAmountController.text));
-                                          controller.weeklyBudgetDayDropDownList.add(controller.weeklyBudgetDay as Object);
-                                          controller.weeklyBudgetWeekDropDownList.add(controller.weeklyBudgetWeek as Object);
-                                        });
-                                        constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
-                                      },
-                                      child: Text(
-                                        save,
-                                        style: greenMontserrat11W500,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        cancel,
-                                        style: redMontserrat11W500,
-                                      ),
-                                      onPressed: () {
-                                        constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
-                                        _monthlyAmountController.clear();
-                                        _monthlyIncomeNameController.clear();
-                                      },
-                                    )
-                                  ],
-                                ),
-                                child: constraints.maxWidth > 1000 && editModeController.weeklyBudgetEditMode == true
-                                    ? Container()
-                                    : Padding(
-                                        padding: EdgeInsets.only(bottom: Get.height * 0.01, top: Get.height * 0.01),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
-                                          },
-                                          child: Align(
-                                            alignment: const FractionalOffset(0.0, 0.0),
+                                          // SizedBox(
+                                          //   width: Get.width * 0.01,
+                                          // ),
+                                          InkWell(
+                                            onTap: () async {
+                                              final controller = Get.put(SelectedDropDownItem());
+                                              if (constraints.maxWidth < 1000) {
+                                                tempMonthlyExpenseList?.add(DataModel(
+                                                  name: _weeklyBudgetNameController.text,
+                                                  amount: int.parse(_weeklyBudgetAmountController.text),
+                                                  every: int.parse(controller.weeklyBudgetWeek!.replaceAll('W', '')),
+                                                  paidOn: int.parse(
+                                                    controller.weeklyBudgetDay!
+                                                        .toString()
+                                                        .replaceAll('1', 'Sun')
+                                                        .replaceAll('2', 'Mon')
+                                                        .replaceAll('3', 'Tue')
+                                                        .replaceAll('4', 'Wed')
+                                                        .replaceAll('5', 'Thu')
+                                                        .replaceAll('6', 'Fri')
+                                                        .replaceAll('7', 'Sat'),
+                                                  ),
+                                                  weekMonth: 1,
+                                                  incomeOutgoing: 2,
+                                                ));
+                                                // tempMonthlyIncomeList?.refresh();
+                                              } else {
+                                                var response = await CreateIncomeController.to.createIncome(parameter: {
+                                                  'income': [
+                                                    DataModel(
+                                                      name: _weeklyBudgetNameController.text,
+                                                      amount: int.parse(_weeklyBudgetAmountController.text),
+                                                      every: int.parse(controller.weeklyBudgetWeek!.replaceAll('W', '')),
+                                                      paidOn: int.parse(
+                                                        controller.weeklyBudgetDay
+                                                            .toString()
+                                                            .replaceAll('1', 'Sun')
+                                                            .replaceAll('2', 'Mon')
+                                                            .replaceAll('3', 'Tue')
+                                                            .replaceAll('4', 'Wed')
+                                                            .replaceAll('5', 'Thu')
+                                                            .replaceAll('6', 'Fri')
+                                                            .replaceAll('7', 'Sat'),
+                                                      ),
+                                                      weekMonth: 1,
+                                                      incomeOutgoing: 2,
+                                                    )
+                                                  ]
+                                                });
+                                                print("{{{{{{{{{{{{{{{{$response");
+                                                if (response["success"] == true) {
+                                                  GetIncomeController.to.weeklyBudgetList?.add(DataModel(
+                                                    name: _weeklyBudgetNameController.text,
+                                                    amount: int.parse(_weeklyBudgetAmountController.text),
+                                                    every: int.parse(controller.weeklyBudgetWeek!.replaceAll('W', '')),
+                                                    paidOn: int.parse(
+                                                      controller.weeklyBudgetDay!
+                                                          .toString()
+                                                          .replaceAll('1', 'Sun')
+                                                          .replaceAll('2', 'Mon')
+                                                          .replaceAll('3', 'Tue')
+                                                          .replaceAll('4', 'Wed')
+                                                          .replaceAll('5', 'Thu')
+                                                          .replaceAll('6', 'Fri')
+                                                          .replaceAll('7', 'Sat'),
+                                                    ),
+                                                    weekMonth: 2,
+                                                    incomeOutgoing: 2,
+                                                  ));
+                                                  GetIncomeController.to.weeklyBudgetList?.refresh();
+                                                }
+                                              }
+                                              _weeklyBudgetNameController.clear();
+                                              _weeklyBudgetAmountController.clear();
+                                              // setState(() {
+                                              //   final controller = Get.put(SelectedDropDownItem());
+                                              //   WeeklyBudgetModel.weeklyBudgetModel.add(WeeklyBudgetModel(expenseName: _monthlyIncomeNameController.text, amount: _monthlyAmountController.text));
+                                              //   controller.weeklyBudgetDayDropDownList.add(controller.weeklyBudgetDay as Object);
+                                              //   controller.weeklyBudgetWeekDropDownList.add(controller.weeklyBudgetWeek as Object);
+                                              // });
+                                              constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
+                                            },
                                             child: Text(
-                                              addWeeklyBudget,
-                                              style: addWeekIncomeStyle,
+                                              save,
+                                              style: greenMontserrat11W500,
                                             ),
                                           ),
+                                          TextButton(
+                                            child: Text(
+                                              cancel,
+                                              style: redMontserrat11W500,
+                                            ),
+                                            onPressed: () {
+                                              constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
+                                              _weeklyBudgetAmountController.clear();
+                                              _weeklyBudgetNameController.clear();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      child: constraints.maxWidth > 1000 && editModeController.weeklyBudgetEditMode == true
+                                          ? Container()
+                                          : Padding(
+                                              padding: EdgeInsets.only(bottom: Get.height * 0.01, top: Get.height * 0.01),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
+                                                },
+                                                child: Align(
+                                                  alignment: const FractionalOffset(0.0, 0.0),
+                                                  child: Text(
+                                                    addWeeklyBudget,
+                                                    style: addWeekIncomeStyle,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    constraints.maxWidth > 1000
+                        ? Container()
+                        : GetBuilder<WeeklyBudgetEditModeController>(
+                            builder: (circleVisibilityController) {
+                              return Visibility(
+                                  visible: circleVisibilityController.weeklyBudgetCircleAvatarVisibility,
+                                  child: Positioned(
+                                    right: 0,
+                                    top: 1,
+                                    bottom: 1,
+                                    // left: 0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        weeklyBudgetVisibilityController.changeVisibility();
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 12,
+                                        backgroundColor: const Color(0xffF2F2F2),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: weeklyBudgetVisibilityController.weeklyBudgetVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
+                                          child: Icon(
+                                            weeklyBudgetVisibilityController.weeklyBudgetVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                                            color: Colors.black,
+                                            size: 14.sp,
+                                          ),
                                         ),
                                       ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              constraints.maxWidth > 1000
-                  ? Container()
-                  : GetBuilder<WeeklyBudgetEditModeController>(
-                      builder: (circleVisibilityController) {
-                        return Visibility(
-                            visible: circleVisibilityController.weeklyBudgetCircleAvatarVisibility,
-                            child: Positioned(
-                              right: 0,
-                              top: 1,
-                              bottom: 1,
-                              // left: 0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  weeklyBudgetVisibilityController.changeVisibility();
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: const Color(0xffF2F2F2),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: weeklyBudgetVisibilityController.weeklyBudgetVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
-                                    child: Icon(
-                                      weeklyBudgetVisibilityController.weeklyBudgetVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                                      color: Colors.black,
-                                      size: 14.sp,
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ));
-                      },
-                    )
-            ],
-          );
-        },
-      ),
+                                  ));
+                            },
+                          )
+                  ],
+                );
+              },
+            );
+          }),
     );
   }
 
@@ -5155,6 +5296,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       onTap: () {
                         final monthlyIncomeVisibilityController = Get.put(MonthlyIncomeVisibilityController());
                         monthlyIncomeEditMode.showEditMode();
+
+                        // if (monthlyIncomeEditMode.editMode) {
+                        //   tempMonthlyIncomeList = GetIncomeController.to.monthlyIncomeList;
+                        //   print(List.generate(tempMonthlyIncomeList!.length, (index) {
+                        //     print(tempMonthlyIncomeList?[index].name);
+                        //   }));
+                        // } else {
+                        //   tempMonthlyIncomeList?.clear();
+                        // }
                         // if (monthlyIncomeVisibilityController.visibility == false) {
                         //   monthlyIncomeVisibilityController.changeVisibility();
                         // }
@@ -5174,7 +5324,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           monthlyIncomeEditMode.showEditMode();
-                          GetIncomeController.to.monthlyIncomeList = tempMonthlyIncomeList;
+                          CreateIncomeController.to.createIncome(parameter: {'income': tempMonthlyIncomeList});
+                          // GetIncomeController.to.monthlyIncomeList?.clear();
                         },
                         child: Text(
                           save,
@@ -5188,17 +5339,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         ),
                         onPressed: () {
                           monthlyIncomeEditMode.showEditMode();
+                          print('>>>>>>>>>>>>>>>>>>>>>>>>monthly${monthlyIncomeEditMode.editMode}');
                           // tempMonthlyIncomeList?.clear();
-                          // GetIncomeController.to.monthlyIncomeList?.firstRebuild;
+                          // GetIncomeController.to.monthlyIncomeList?.refresh();
                         },
                       )
                     ],
                   ),
-            // constraints!.maxWidth > 1000
-            //     ? SizedBox(
-            //         width: Get.width * 0.17,
-            //       )
-            //     :
             const Spacer(),
             GetBuilder<MonthlyIncomeExpansionChange>(
               builder: (controller) {
@@ -5245,6 +5392,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           controller.showEditMode();
+                          CreateIncomeController.to.createIncome(parameter: {'income': tempWeeklyIncomeList});
                         },
                         child: Text(
                           save,
@@ -5313,6 +5461,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           controller.showEditMode();
+                          CreateIncomeController.to.createIncome(parameter: {'income': tempMonthlyExpenseList});
                         },
                         child: Text(
                           save,
@@ -5326,6 +5475,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         ),
                         onPressed: () {
                           controller.showEditMode();
+                          GetIncomeController.to.monthlyExpenseList?.refresh();
                         },
                       )
                     ],

@@ -62,9 +62,9 @@ class Api {
       Map<String, dynamic> headerParameters;
       headerParameters = {
         "authorization": storage.read("loginToken") != null
-            ? "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMGY2MjJlYzVkYWNkMDE2OWE4NGI5ZiIsImlhdCI6MTY0NTQxOTE0OCwiZXhwIjoxNjQ1NDU1MTQ4fQ.VPvaP3QretIxy1SW1P-_47rR3uLbPPQQF0jH1ki2k2s"
+            ? "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NTUyODYwNCwiZXhwIjoxNjQ1NTY0NjA0fQ.QyTViYkoegogpp3_sCBsWZFP_faC6zQGgjKLzD9lTOs"
             // ? "Bearer " + storage.read("loginToken")
-            : "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMGY2MjJlYzVkYWNkMDE2OWE4NGI5ZiIsImlhdCI6MTY0NTQxOTE0OCwiZXhwIjoxNjQ1NDU1MTQ4fQ.VPvaP3QretIxy1SW1P-_47rR3uLbPPQQF0jH1ki2k2s",
+            : "Bearer" + " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMGY2MjJlYzVkYWNkMDE2OWE4NGI5ZiIsImlhdCI6MTY0NTUwMzIzOSwiZXhwIjoxNjQ1NTM5MjM5fQ.8wWY0HWTlCD0mLFyJAaBhgEqTCyzR9Lm2USWn5C07Aw",
         // : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NDY1NDU4NCwiZXhwIjoxNjQ0NjkwNTg0fQ.3E1N11Kz8ciOKz6uXUEUZLjt05OUBvRtt2FLOfNBI_I",
         // 'Authorization':
         //     'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDFmYTBjOWM2ZTkxMDNlMTVkM2Q3YSIsImlhdCI6MTY0NDY1NDU4NCwiZXhwIjoxNjQ0NjkwNTg0fQ.3E1N11Kz8ciOKz6uXUEUZLjt05OUBvRtt2FLOfNBI_I',

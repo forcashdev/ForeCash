@@ -13,11 +13,13 @@ class GetIncomeController extends GetxController {
   RxList<DataModel>? monthlyExpenseList = <DataModel>[].obs;
   RxList<DataModel>? weeklyBudgetList = <DataModel>[].obs;
 
-  callIncome({int? income_outgoing}) {
+  callIncome({int? income_outgoing, dynamic parameter}) {
+    var response;
     Api().call(
         url: mGetIncome,
-        params: {"income_outgoing": income_outgoing},
+        params: parameter,
         success: (data) {
+          print('>>>>>>>>>>>>>>>>$data');
           getIncomeModel.value = GetIncomeModel.fromJson(data);
           getIncomeModel.value.toJson();
           // final checkBoxController = Get.put(CheckBoxController());
@@ -36,18 +38,18 @@ class GetIncomeController extends GetxController {
               CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
             }
           }
-          if (monthlyIncomeList!.isEmpty) {
-            getMonthlyIncomeList();
-          }
-          if (weeklyIncomesList!.isEmpty) {
-            getWeeklyIncomeList();
-          }
-          if (monthlyExpenseList!.isEmpty) {
-            getMonthlyExpenseList();
-          }
-          if (weeklyBudgetList!.isEmpty) {
-            getWeeklyBudgetList();
-          }
+          // if (monthlyIncomeList!.isEmpty) {
+          //   getMonthlyIncomeList();
+          // }
+          // if (weeklyIncomesList!.isEmpty) {
+          //   getWeeklyIncomeList();
+          // }
+          // if (monthlyExpenseList!.isEmpty) {
+          //   getMonthlyExpenseList();
+          // }
+          // if (weeklyBudgetList!.isEmpty) {
+          //   getWeeklyBudgetList();
+          // }
         });
   }
 

@@ -44,7 +44,10 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
   @override
   void initState() {
     super.initState();
-    GetIncomeController.to.callIncome(income_outgoing: 2);
+    GetIncomeController.to.callIncome(parameter: {
+      "income_outgoing": "2",
+      "week_month": "2"
+    });
   }
 
   @override

@@ -5,8 +5,6 @@ import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:get/get.dart';
 
-import 'common_input_formatter.dart';
-
 OutlineInputBorder textFieldBorderStyle = OutlineInputBorder(
   borderSide: const BorderSide(color: commonTextFieldColor),
   borderRadius: BorderRadius.circular(4.0),
@@ -96,7 +94,7 @@ commonTextFormField(
       obscureText: passwordVisible,
       textInputAction: inputAction ?? TextInputAction.next,
       style: textStyle ?? blackMontserrat10W500,
-      inputFormatters: inputFormatter ?? [characterInputFormatter()],
+      inputFormatters: inputFormatter,
       //expands: true,
 
       decoration: InputDecoration(

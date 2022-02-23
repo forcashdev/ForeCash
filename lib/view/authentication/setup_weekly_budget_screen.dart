@@ -43,7 +43,9 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   @override
   void initState() {
     super.initState();
-    GetIncomeController.to.callIncome(income_outgoing: 2);
+    GetIncomeController.to.callIncome(
+      parameter: {"income_outgoing": "2", "week_month": "1"},
+    );
   }
 
   @override
