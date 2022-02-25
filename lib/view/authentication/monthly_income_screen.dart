@@ -37,12 +37,12 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   final getIncomeController = Get.put(GetIncomeController());
   final addMonthlyIncomeTextVisibility = Get.put(AddMonthlyIncomeVisibilityController());
   final GlobalKey<FormState> _formKeyValidator = GlobalKey<FormState>();
-
   DateTime currentDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
+    // GetIncomeController.to.monthlyIncomeList?.clear();
     GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
       if (GetIncomeController.to.monthlyIncomeList!.isEmpty) {
         GetIncomeController.to.getMonthlyIncomeList();
@@ -484,7 +484,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
     final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
     if (pickedDate != null && pickedDate != currentDate) {
       currentDate = pickedDate;
-
       GetIncomeController.to.monthlyIncomeList?[index!].date = currentDate.toString();
       GetIncomeController.to.monthlyIncomeList?.refresh();
     }
@@ -598,7 +597,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
               checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) {
                 if (value) {
                   print(value);
-                  tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList!.value[index]);
+                  tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList![index]);
                 }
               });
               CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': tempMonthlyIncome});

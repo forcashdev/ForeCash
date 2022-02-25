@@ -69,8 +69,8 @@ class ScreenProgressIndicator extends StatelessWidget {
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontFamily: AppTheme.fontName,
-                                              fontWeight: index <= screenIndexController.screensIndexes ? FontWeight.w600 : FontWeight.w500,
-                                              color: index <= screenIndexController.screensIndexes ? indicatorColor : indicatorColor2),
+                                              fontWeight: index <= screenIndexController.screensIndexes! ? FontWeight.w600 : FontWeight.w500,
+                                              color: index <= screenIndexController.screensIndexes! ? indicatorColor : indicatorColor2),
                                           //color: screenIndexController.screensIndexes == index && screenIndexController.screensIndexes >= index ? indicatorColor : indicatorColor2),
                                         ),
                                       );
@@ -122,7 +122,7 @@ class ScreenProgressIndicator extends StatelessWidget {
                                                                 : Get.width * 0.99
                                                             : 0.0,
                                 child: Text(
-                                  '$step${screenIndexController.screensIndexes + 1}$step2',
+                                  '$step${screenIndexController.screensIndexes! + 1}$step2',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -134,13 +134,10 @@ class ScreenProgressIndicator extends StatelessWidget {
                         },
                       )
                     : Container(),
-                // SizedBox(
-                //   height: constraints.maxWidth > 1000 ? Get.height * 0.0 : 0.0,
-                // ),
                 Flexible(
                   child: GetBuilder<ScreenIndexController>(
                     builder: (controller) {
-                      return screensList[controller.screensIndexes];
+                      return screensList[controller.screensIndexes!];
                     },
                   ),
                 ),

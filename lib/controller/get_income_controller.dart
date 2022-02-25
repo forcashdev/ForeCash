@@ -12,10 +12,10 @@ class GetIncomeController extends GetxController {
   RxList<DataModel>? weeklyIncomesList = <DataModel>[].obs;
   RxList<DataModel>? monthlyExpenseList = <DataModel>[].obs;
   RxList<DataModel>? weeklyBudgetList = <DataModel>[].obs;
+  RxList? tempMonthlyIncomeList = [].obs;
 
-  Future<dynamic> callIncome({dynamic parameter}) async {
-    var response;
-    response = await Api().call(
+  Future callIncome({dynamic parameter}) async {
+    await Api().call(
         url: mGetIncome,
         params: parameter,
         success: (data) {
@@ -25,6 +25,7 @@ class GetIncomeController extends GetxController {
           for (int i = 0; i < getIncomeModel.value.data!.length; i++) {
             if (getIncomeModel.value.data?[i].incomeOutgoing == 1 && getIncomeModel.value.data?[i].weekMonth == 2) {
               monthlyIncomeList?.add(getIncomeModel.value.data![i]);
+              tempMonthlyIncomeList?.add(getIncomeModel.value.data![i]);
               CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
             } else if (getIncomeModel.value.data?[i].incomeOutgoing == 1 && getIncomeModel.value.data?[i].weekMonth == 1) {
               weeklyIncomesList?.add(getIncomeModel.value.data![i]);
@@ -50,7 +51,6 @@ class GetIncomeController extends GetxController {
           //   getWeeklyBudgetList();
           // }
         });
-    // return response;
   }
 
   getMonthlyIncomeList() {
@@ -160,7 +160,7 @@ class GetIncomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // monthlyIncomeList!.clear();
+    monthlyIncomeList!.clear();
     // weeklyIncomesList!.clear();
     // weeklyBudgetList!.clear();
     // monthlyExpenseList!.clear();
@@ -170,8 +170,12 @@ class GetIncomeController extends GetxController {
   void dispose() {
     super.dispose();
     monthlyIncomeList!.clear();
+    monthlyIncomeList!.refresh();
     weeklyIncomesList!.clear();
+    weeklyIncomesList!.refresh();
     weeklyBudgetList!.clear();
+    weeklyBudgetList!.refresh();
     monthlyExpenseList!.clear();
+    monthlyExpenseList!.refresh();
   }
 }

@@ -258,7 +258,7 @@ List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyI
 String cancel = 'Cancel';
 List<String> dataDateList = [
   "Sep, 1",
-  "Dec, 1",
+  "Sep, 2",
   "Jun, 15",
   "May, 15",
   "Mar, 6",

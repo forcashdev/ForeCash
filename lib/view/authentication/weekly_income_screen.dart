@@ -61,6 +61,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
           // GetIncomeController.to.weeklyIncomesList?.clear();
           GetIncomeController.to.monthlyIncomeList?.clear();
           GetIncomeController.to.monthlyIncomeList?.refresh();
+          CheckBoxController.to.monthlyIncomeCheckBoxValueList.clear();
           return false;
         },
         child: StreamBuilder(
@@ -475,6 +476,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                       // GetIncomeController.to.weeklyIncomesList?.clear();
                       GetIncomeController.to.monthlyIncomeList?.clear();
                       GetIncomeController.to.monthlyIncomeList?.refresh();
+                      CheckBoxController.to.monthlyIncomeCheckBoxValueList.clear();
                       // Navigator.pop(context);
                     },
                     icon: const Icon(
@@ -508,6 +510,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                       // GetIncomeController.to.weeklyIncomesList?.clear();
                       GetIncomeController.to.monthlyIncomeList?.clear();
                       GetIncomeController.to.monthlyIncomeList?.refresh();
+                      CheckBoxController.to.monthlyIncomeCheckBoxValueList.clear();
                       // Navigator.pop(context);
                     },
                     child: Text(
