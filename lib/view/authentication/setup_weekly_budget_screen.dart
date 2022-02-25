@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
@@ -303,221 +302,245 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
       builder: (controller1) {
         RxBool whenErrorShowRedBorder = false.obs;
         RxBool whenErrorShowRedBorderAmount = false.obs;
-        return Visibility(
-          visible: controller1.visibility,
-          replacement: Padding(
-            padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
-            child: GestureDetector(
-              onTap: () {
-                controller1.changeVisibility();
-              },
-              child: Align(
-                alignment: const FractionalOffset(0.015, 0.0),
-                child: Text(
-                  addWeeklyIncome,
-                  style: addWeekIncomeStyle,
-                ),
+        return Padding(
+          padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
+          child: GestureDetector(
+            onTap: () {
+              GetIncomeController.to.weeklyBudgetList?.add(DataModel(
+                name: '',
+                amount: 0,
+                date: DateTime.now().toString(),
+                incomeOutgoing: 2,
+                weekMonth: 1,
+              ));
+              checkBoxController.weeklyBudgetCheckBoxValueList.add(true);
+              GetIncomeController.to.weeklyBudgetList?.refresh();
+              // controller1.changeVisibility();
+            },
+            child: Align(
+              alignment: const FractionalOffset(0.015, 0.0),
+              child: Text(
+                addWeeklyIncome,
+                style: addWeekIncomeStyle,
               ),
             ),
           ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: Get.height * 0.019,
-            ),
-            child: Column(
-              children: [
-                Table(
-                  columnWidths: const <int, TableColumnWidth>{
-                    0: FlexColumnWidth(0.35),
-                    1: FlexColumnWidth(3),
-                    2: FlexColumnWidth(2),
-                    3: FlexColumnWidth(2),
-                    4: FlexColumnWidth(2),
-                    5: FlexColumnWidth(2),
-                  },
-                  children: [
-                    TableRow(
-                      children: [
-                        SizedBox(height: Get.height * 0.044),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.fill,
-                          child: StreamBuilder(
-                              stream: whenErrorShowRedBorder.stream,
-                              builder: (context, snapshot) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                                  child: commonTextFormField(
-                                      hintText: addExpense,
-                                      hintStyle: incomeNameStyle,
-                                      inputAction: TextInputAction.next,
-                                      enabledBorder: whenErrorShowRedBorder.value
-                                          ? OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.red),
-                                              borderRadius: BorderRadius.circular(4.0),
-                                            )
-                                          : null,
-                                      validationFunction: (value) {
-                                        if (whenErrorShowRedBorder.value != value.isEmpty) {
-                                          whenErrorShowRedBorder.value = value.isEmpty;
-                                          print(whenErrorShowRedBorder.value);
-                                          whenErrorShowRedBorder.refresh();
-                                        }
-                                        return null;
-                                      },
-                                      inputFormatter: [characterInputFormatter()],
-                                      contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                      textStyle: incomeNameStyle,
-                                      textEditingController: _expenseName2),
-                                );
-                              }),
-                        ),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.fill,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                            ),
-                            // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                            // height: Get.height * 0.044,
-                            // alignment: Alignment.center,
-                            child: dropDownDayGetBuilder(dropDownList: days),
-                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                            decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                          ),
-                        ),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.fill,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
-                            // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                            // height: Get.height * 0.044,
-                            // alignment: Alignment.center,
-                            child: dropDownWeekGetBuilder(dropDownList: weeks),
-                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                            decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                          ),
-                        ),
-                        TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: GestureDetector(
-                              onTap: () {
-                                _selectDate(context: context);
-                              },
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                                  style: dateStyle,
-                                  maxLines: 1,
-                                ),
-                                margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                                decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                              ),
-                            )),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.fill,
-                          child: StreamBuilder(
-                              stream: whenErrorShowRedBorderAmount.stream,
-                              builder: (context, snapshot) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: Get.width * 0.02),
-                                  child: commonTextFormField(
-                                      prefixText: '\$',
-                                      prefixstyle: incomeNameStyle,
-                                      enabledBorder: whenErrorShowRedBorderAmount.value
-                                          ? OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.red),
-                                              borderRadius: BorderRadius.circular(4.0),
-                                            )
-                                          : null,
-                                      validationFunction: (value) {
-                                        if (whenErrorShowRedBorderAmount.value != value.isEmpty) {
-                                          whenErrorShowRedBorderAmount.value = value.isEmpty;
-                                          print(whenErrorShowRedBorderAmount.value);
-                                          whenErrorShowRedBorderAmount.refresh();
-                                        }
-                                        return null;
-                                      },
-                                      keyboardType: TextInputType.phone,
-                                      inputAction: TextInputAction.done,
-                                      inputFormatter: [digitInputFormatter()],
-                                      contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                      textStyle: incomeNameStyle,
-                                      textEditingController: _amount2),
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: Get.height * 0.01, left: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.028),
-                  child: Row(
-                    children: [
-                      // SizedBox(
-                      //   width: Get.width * 0.01,
-                      // ),
-                      InkWell(
-                        onTap: () {
-                          if (controller.weeklyBudgetDay == null || controller.weeklyBudgetWeek == null) {
-                            Fluttertoast.showToast(
-                                webPosition: 'center',
-                                msg: "Select DropDown",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                // webBgColor: Colors.black.withOpacity(0.5), // also possible "TOP" and "CENTER"
-                                // backgroundColor: Colors.black.withOpacity(0.5),
-                                textColor: const Color(0xffffffff));
-                          } else if (_formKey.currentState!.validate()) {
-                            GetIncomeController.to.weeklyBudgetList?.add(DataModel(
-                                name: _expenseName2.text,
-                                amount: int.parse(_amount2.text),
-                                incomeOutgoing: 2,
-                                weekMonth: 1,
-                                paidOn: int.parse(controller.weeklyBudgetDay
-                                    .toString()
-                                    .replaceAll('Sun', '1')
-                                    .replaceAll('Mon', '2')
-                                    .replaceAll('Tue', '3')
-                                    .replaceAll('Wed', '4')
-                                    .replaceAll('Thu', '5')
-                                    .replaceAll('Fri', '6')
-                                    .replaceAll('Sat', '7')),
-                                // every: controller.selectedSingleWeeklyIncomeDay!.replaceAll('Sun', int.parse('1'.toString()).toInt()),
-                                every: int.parse(controller.weeklyBudgetWeek!.replaceAll('W', '')),
-                                date: currentDate.toString()));
-                            checkBoxController.weeklyBudgetCheckBoxValueList.add(true);
-                            controller1.changeVisibility();
-                            _expenseName2.clear();
-                            _amount2.clear();
-                          }
-                        },
-                        child: Text(
-                          save,
-                          style: greenMontserrat11W500,
-                        ),
-                      ),
-                      SizedBox(
-                        width: Get.width * 0.017,
-                      ),
-                      InkWell(
-                        child: Text(
-                          cancel,
-                          style: redMontserrat11W500,
-                        ),
-                        onTap: () {
-                          controller1.changeVisibility();
-                          // monthlyIncomeEditMode.showEditMode();
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
         );
+        //   Visibility(
+        //   visible: controller1.visibility,
+        //   replacement: Padding(
+        //     padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
+        //     child: GestureDetector(
+        //       onTap: () {
+        //         controller1.changeVisibility();
+        //       },
+        //       child: Align(
+        //         alignment: const FractionalOffset(0.015, 0.0),
+        //         child: Text(
+        //           addWeeklyIncome,
+        //           style: addWeekIncomeStyle,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        //   child: Padding(
+        //     padding: EdgeInsets.only(
+        //       bottom: Get.height * 0.019,
+        //     ),
+        //     child: Column(
+        //       children: [
+        //         Table(
+        //           columnWidths: const <int, TableColumnWidth>{
+        //             0: FlexColumnWidth(0.35),
+        //             1: FlexColumnWidth(3),
+        //             2: FlexColumnWidth(2),
+        //             3: FlexColumnWidth(2),
+        //             4: FlexColumnWidth(2),
+        //             5: FlexColumnWidth(2),
+        //           },
+        //           children: [
+        //             TableRow(
+        //               children: [
+        //                 SizedBox(height: Get.height * 0.044),
+        //                 TableCell(
+        //                   verticalAlignment: TableCellVerticalAlignment.fill,
+        //                   child: StreamBuilder(
+        //                       stream: whenErrorShowRedBorder.stream,
+        //                       builder: (context, snapshot) {
+        //                         return Padding(
+        //                           padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+        //                           child: commonTextFormField(
+        //                               hintText: addExpense,
+        //                               hintStyle: incomeNameStyle,
+        //                               inputAction: TextInputAction.next,
+        //                               enabledBorder: whenErrorShowRedBorder.value
+        //                                   ? OutlineInputBorder(
+        //                                       borderSide: const BorderSide(color: Colors.red),
+        //                                       borderRadius: BorderRadius.circular(4.0),
+        //                                     )
+        //                                   : null,
+        //                               validationFunction: (value) {
+        //                                 if (whenErrorShowRedBorder.value != value.isEmpty) {
+        //                                   whenErrorShowRedBorder.value = value.isEmpty;
+        //                                   print(whenErrorShowRedBorder.value);
+        //                                   whenErrorShowRedBorder.refresh();
+        //                                 }
+        //                                 return null;
+        //                               },
+        //                               inputFormatter: [characterInputFormatter()],
+        //                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+        //                               textStyle: incomeNameStyle,
+        //                               textEditingController: _expenseName2),
+        //                         );
+        //                       }),
+        //                 ),
+        //                 TableCell(
+        //                   verticalAlignment: TableCellVerticalAlignment.fill,
+        //                   child: Container(
+        //                     padding: const EdgeInsets.symmetric(
+        //                       horizontal: 6,
+        //                     ),
+        //                     // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+        //                     // height: Get.height * 0.044,
+        //                     // alignment: Alignment.center,
+        //                     child: dropDownDayGetBuilder(dropDownList: days),
+        //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+        //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+        //                   ),
+        //                 ),
+        //                 TableCell(
+        //                   verticalAlignment: TableCellVerticalAlignment.fill,
+        //                   child: Container(
+        //                     padding: const EdgeInsets.symmetric(horizontal: 6),
+        //                     // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+        //                     // height: Get.height * 0.044,
+        //                     // alignment: Alignment.center,
+        //                     child: dropDownWeekGetBuilder(dropDownList: weeks),
+        //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+        //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+        //                   ),
+        //                 ),
+        //                 TableCell(
+        //                     verticalAlignment: TableCellVerticalAlignment.fill,
+        //                     child: GestureDetector(
+        //                       onTap: () {
+        //                         _selectDate(context: context);
+        //                       },
+        //                       child: Container(
+        //                         alignment: Alignment.centerLeft,
+        //                         child: Text(
+        //                           '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+        //                           style: dateStyle,
+        //                           maxLines: 1,
+        //                         ),
+        //                         margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+        //                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+        //                       ),
+        //                     )),
+        //                 TableCell(
+        //                   verticalAlignment: TableCellVerticalAlignment.fill,
+        //                   child: StreamBuilder(
+        //                       stream: whenErrorShowRedBorderAmount.stream,
+        //                       builder: (context, snapshot) {
+        //                         return Padding(
+        //                           padding: EdgeInsets.only(right: Get.width * 0.02),
+        //                           child: commonTextFormField(
+        //                               prefixText: '\$',
+        //                               prefixstyle: incomeNameStyle,
+        //                               enabledBorder: whenErrorShowRedBorderAmount.value
+        //                                   ? OutlineInputBorder(
+        //                                       borderSide: const BorderSide(color: Colors.red),
+        //                                       borderRadius: BorderRadius.circular(4.0),
+        //                                     )
+        //                                   : null,
+        //                               validationFunction: (value) {
+        //                                 if (whenErrorShowRedBorderAmount.value != value.isEmpty) {
+        //                                   whenErrorShowRedBorderAmount.value = value.isEmpty;
+        //                                   print(whenErrorShowRedBorderAmount.value);
+        //                                   whenErrorShowRedBorderAmount.refresh();
+        //                                 }
+        //                                 return null;
+        //                               },
+        //                               keyboardType: TextInputType.phone,
+        //                               inputAction: TextInputAction.done,
+        //                               inputFormatter: [digitInputFormatter()],
+        //                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+        //                               textStyle: incomeNameStyle,
+        //                               textEditingController: _amount2),
+        //                         );
+        //                       }),
+        //                 ),
+        //               ],
+        //             ),
+        //           ],
+        //         ),
+        //         Padding(
+        //           padding: EdgeInsets.only(top: Get.height * 0.01, left: constraints.maxWidth < 1000 ? Get.width * 0.04 : Get.width * 0.028),
+        //           child: Row(
+        //             children: [
+        //               // SizedBox(
+        //               //   width: Get.width * 0.01,
+        //               // ),
+        //               InkWell(
+        //                 onTap: () {
+        //                   if (controller.weeklyBudgetDay == null || controller.weeklyBudgetWeek == null) {
+        //                     Fluttertoast.showToast(
+        //                         webPosition: 'center',
+        //                         msg: "Select DropDown",
+        //                         toastLength: Toast.LENGTH_SHORT,
+        //                         gravity: ToastGravity.BOTTOM,
+        //                         // webBgColor: Colors.black.withOpacity(0.5), // also possible "TOP" and "CENTER"
+        //                         // backgroundColor: Colors.black.withOpacity(0.5),
+        //                         textColor: const Color(0xffffffff));
+        //                   } else if (_formKey.currentState!.validate()) {
+        //                     GetIncomeController.to.weeklyBudgetList?.add(DataModel(
+        //                         name: _expenseName2.text,
+        //                         amount: int.parse(_amount2.text),
+        //                         incomeOutgoing: 2,
+        //                         weekMonth: 1,
+        //                         paidOn: int.parse(controller.weeklyBudgetDay
+        //                             .toString()
+        //                             .replaceAll('Sun', '1')
+        //                             .replaceAll('Mon', '2')
+        //                             .replaceAll('Tue', '3')
+        //                             .replaceAll('Wed', '4')
+        //                             .replaceAll('Thu', '5')
+        //                             .replaceAll('Fri', '6')
+        //                             .replaceAll('Sat', '7')),
+        //                         // every: controller.selectedSingleWeeklyIncomeDay!.replaceAll('Sun', int.parse('1'.toString()).toInt()),
+        //                         every: int.parse(controller.weeklyBudgetWeek!.replaceAll('W', '')),
+        //                         date: currentDate.toString()));
+        //                     checkBoxController.weeklyBudgetCheckBoxValueList.add(true);
+        //                     controller1.changeVisibility();
+        //                     _expenseName2.clear();
+        //                     _amount2.clear();
+        //                   }
+        //                 },
+        //                 child: Text(
+        //                   save,
+        //                   style: greenMontserrat11W500,
+        //                 ),
+        //               ),
+        //               SizedBox(
+        //                 width: Get.width * 0.017,
+        //               ),
+        //               InkWell(
+        //                 child: Text(
+        //                   cancel,
+        //                   style: redMontserrat11W500,
+        //                 ),
+        //                 onTap: () {
+        //                   controller1.changeVisibility();
+        //                   // monthlyIncomeEditMode.showEditMode();
+        //                 },
+        //               ),
+        //             ],
+        //           ),
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // );
       },
     );
   }
@@ -630,7 +653,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         : SizedBox(
                             height: Get.height * 0.044,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 5),
+                              padding: const EdgeInsets.only(left: 5),
                               child: GetBuilder<CheckBoxController>(
                                 builder: (controller) {
                                   return Checkbox(
@@ -651,7 +674,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                           stream: whenErrorOnlyShowRedBorder.stream,
                           builder: (context, snapshot) {
                             return Padding(
-                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                              padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                               child: commonTextFormField(
                                   inputAction: TextInputAction.next,
                                   inputFormatter: [characterInputFormatter()],
@@ -713,7 +736,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                               // controller.changeWeeklyBudgetDayList(item: item, index: index);
                               print(item);
                             }),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
                       ),
                     ),
                     TableCell(
@@ -735,7 +758,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                               // controller.changeWeeklyBudgetWeekList(item: item, index: index);
                               print(item);
                             }),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
@@ -746,15 +769,15 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                             _selectDate(context: context, index: index);
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${GetIncomeController.to.weeklyBudgetList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
+                              DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyBudgetList![index].date.toString())),
                               // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                               style: dateStyle,
                               maxLines: 1,
                             ),
-                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                            margin: EdgeInsets.only(right: Get.width * 0.02),
                             decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                           ),
                         )),

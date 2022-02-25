@@ -18,17 +18,6 @@ pageViewCommonWidget({int? itemCount, PageController? pageController, dynamic te
     },
     onPageChanged: (value) {
       onPageChanged!(value);
-      // List.generate(monthlyIncomepageControllerList.length, (index) => monthlyIncomepageControllerList[index].jumpToPage(value));
-      // List.generate(weeklyIncomePageControllerList.length, (index) => weeklyIncomePageControllerList[index].jumpToPage(value));
-      // List.generate(weeklyBudgetPageControllerList.length, (index) => weeklyBudgetPageControllerList[index].jumpToPage(value));
-      // List.generate(oneTimeIncomePageControllerList.length, (index) => oneTimeIncomePageControllerList[index].jumpToPage(value));
-      // List.generate(oneTimeExpensePageControllerList.length, (index) => oneTimeExpensePageControllerList[index].jumpToPage(value));
-      // List.generate(monthlyExpensePageControllerList.length, (index) => monthlyExpensePageControllerList[index].jumpToPage(value)); // _pageController2.jumpToPage(value);
-      // _previousWeekBalancePageController.jumpToPage(value);
-      // _totalWeeklyExpensePageController.jumpToPage(value);
-      // _totalWeeklyIncomePageController.jumpToPage(value);
-
-      // print(value);
     },
   );
 }

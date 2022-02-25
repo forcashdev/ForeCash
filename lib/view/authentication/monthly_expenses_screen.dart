@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
@@ -374,7 +373,6 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
         _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? '');
         _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString() ?? '');
-        print('Check bob leangth=> ${checkBoxController.monthlyExpenseCheckBoxValueList.length}');
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
           child: SwipeActionCell(
@@ -454,7 +452,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                           stream: whenErrorOnlyShowRedBorder.stream,
                           builder: (context, snapshot) {
                             return Padding(
-                                padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                                padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                                 child: commonTextFormField(
                                     hintText: expenseName,
                                     hintStyle: incomeNameStyle,
@@ -506,7 +504,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               // controller.changeMonthlyExpenseDate(item: item, index: index);
                               print(item);
                             }),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
@@ -529,7 +527,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               // controller.changeMonthlyExpenseMonth(item: item, index: index);
                               print(item);
                             }),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
@@ -540,15 +538,15 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             _selectDate(context: context, index: index);
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${GetIncomeController.to.monthlyExpenseList?[index].date ?? DateTime.now()}'.replaceAll('T00:00:00.000Z', ''),
+                              DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
                               // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                               style: dateStyle,
                               maxLines: 1,
                             ),
-                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                            margin: EdgeInsets.only(right: Get.width * 0.02),
                             decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                           ),
                         )),
@@ -618,212 +616,236 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         builder: (controller1) {
           RxBool whenErrorShowRedBorder = false.obs;
           RxBool whenErrorShowRedBorderAmount = false.obs;
-          return Visibility(
-            visible: controller1.visibility,
-            replacement: Padding(
-              padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
-              child: GestureDetector(
-                onTap: () {
-                  visibilityController.changeVisibility();
-                },
-                child: Align(
-                  alignment: const FractionalOffset(0.015, 0.0),
-                  child: Text(
-                    addWeeklyIncome,
-                    style: addWeekIncomeStyle,
-                  ),
+          return Padding(
+            padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
+            child: GestureDetector(
+              onTap: () {
+                GetIncomeController.to.monthlyExpenseList?.add(DataModel(
+                  name: '',
+                  amount: 0,
+                  date: DateTime.now().toString(),
+                  weekMonth: 2,
+                  incomeOutgoing: 2,
+                ));
+                checkBoxController.monthlyExpenseCheckBoxValueList.add(true);
+                GetIncomeController.to.monthlyExpenseList?.refresh();
+                // visibilityController.changeVisibility();
+              },
+              child: Align(
+                alignment: const FractionalOffset(0.015, 0.0),
+                child: Text(
+                  addWeeklyIncome,
+                  style: addWeekIncomeStyle,
                 ),
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: Get.height * 0.019,
-              ),
-              child: Column(
-                children: [
-                  Table(
-                    columnWidths: const <int, TableColumnWidth>{
-                      0: FlexColumnWidth(0.35),
-                      1: FlexColumnWidth(3),
-                      2: FlexColumnWidth(2),
-                      3: FlexColumnWidth(2),
-                      4: FlexColumnWidth(2),
-                      5: FlexColumnWidth(2),
-                    },
-                    children: [
-                      TableRow(
-                        children: [
-                          SizedBox(height: Get.height * 0.044),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: StreamBuilder(
-                                stream: whenErrorShowRedBorder.stream,
-                                builder: (context, snapshot) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                                    child: commonTextFormField(
-                                        hintText: addExpense,
-                                        hintStyle: incomeNameStyle,
-                                        enabledBorder: whenErrorShowRedBorder.value
-                                            ? OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.red),
-                                                borderRadius: BorderRadius.circular(4.0),
-                                              )
-                                            : null,
-                                        validationFunction: (value) {
-                                          if (whenErrorShowRedBorder.value != value.isEmpty) {
-                                            whenErrorShowRedBorder.value = value.isEmpty;
-                                            print(whenErrorShowRedBorder.value);
-                                            whenErrorShowRedBorder.refresh();
-                                          }
-                                          return null;
-                                        },
-                                        inputAction: TextInputAction.next,
-                                        inputFormatter: [characterInputFormatter()],
-                                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                        textStyle: incomeNameStyle,
-                                        textEditingController: _expenseName2),
-                                  );
-                                }),
-                          ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                              ),
-                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                              // height: Get.height * 0.044,
-                              // alignment: Alignment.center,
-                              child: dropDownDayGetBuilder(dropDownList: dateList),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
-                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                              // height: Get.height * 0.044,
-                              // alignment: Alignment.center,
-                              child: dropDownWeekGetBuilder(dropDownList: months),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.fill,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _selectDate(context: context);
-                                },
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                                    style: dateStyle,
-                                    maxLines: 1,
-                                  ),
-                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                                ),
-                              )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: StreamBuilder(
-                                stream: whenErrorShowRedBorderAmount.stream,
-                                builder: (context, snapshot) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(right: Get.width * 0.02),
-                                    child: commonTextFormField(
-                                        prefixText: '\$',
-                                        enabledBorder: whenErrorShowRedBorderAmount.value
-                                            ? OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.red),
-                                                borderRadius: BorderRadius.circular(4.0),
-                                              )
-                                            : null,
-                                        validationFunction: (value) {
-                                          if (whenErrorShowRedBorderAmount.value != value.isEmpty) {
-                                            whenErrorShowRedBorderAmount.value = value.isEmpty;
-                                            print(whenErrorShowRedBorderAmount.value);
-                                            whenErrorShowRedBorderAmount.refresh();
-                                          }
-                                          return null;
-                                        },
-                                        keyboardType: TextInputType.phone,
-                                        prefixstyle: incomeNameStyle,
-                                        inputAction: TextInputAction.done,
-                                        inputFormatter: [digitInputFormatter()],
-                                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                        textStyle: incomeNameStyle,
-                                        textEditingController: _expenseAmount2),
-                                  );
-                                }),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: Get.height * 0.01, left: constraints.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.018),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: Get.width * 0.01,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            if (controller.selectedSingleMonthlyExpenseMonth == null || controller.selectedSingleMonthlyExpenseDate == null) {
-                              Fluttertoast.showToast(
-                                  webPosition: 'center',
-                                  msg: "Select DropDown",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  // webBgColor: Colors.black.withOpacity(0.5), // also possible "TOP" and "CENTER"
-                                  // backgroundColor: Colors.black.withOpacity(0.5),
-                                  textColor: const Color(0xffffffff));
-                            } else if (_formKey.currentState!.validate()) {
-                              GetIncomeController.to.monthlyExpenseList?.add(DataModel(
-                                  name: _expenseName2.text,
-                                  amount: int.parse(_expenseAmount2.text),
-                                  incomeOutgoing: 2,
-                                  weekMonth: 2,
-                                  every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
-                                  paidOn: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                                  date: DateFormat('yyyy-MM-dd').format(currentDate)));
-                              checkBoxController.monthlyExpenseCheckBoxValueList.add(true);
-                              controller1.changeVisibility();
-                              _expenseName2.clear();
-                              _expenseAmount2.clear();
-                            }
-                          },
-                          child: Text(
-                            save,
-                            style: greenMontserrat11W500,
-                          ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.017,
-                        ),
-                        InkWell(
-                          child: Text(
-                            cancel,
-                            style: redMontserrat11W500,
-                          ),
-                          onTap: () {
-                            controller1.changeVisibility();
-                            // monthlyIncomeEditMode.showEditMode();
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
           );
+          //   Visibility(
+          //   visible: controller1.visibility,
+          //   replacement: Padding(
+          //     padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
+          //     child: GestureDetector(
+          //       onTap: () {
+          //         visibilityController.changeVisibility();
+          //       },
+          //       child: Align(
+          //         alignment: const FractionalOffset(0.015, 0.0),
+          //         child: Text(
+          //           addWeeklyIncome,
+          //           style: addWeekIncomeStyle,
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          //   child: Padding(
+          //     padding: EdgeInsets.only(
+          //       bottom: Get.height * 0.019,
+          //     ),
+          //     child: Column(
+          //       children: [
+          //         Table(
+          //           columnWidths: const <int, TableColumnWidth>{
+          //             0: FlexColumnWidth(0.35),
+          //             1: FlexColumnWidth(3),
+          //             2: FlexColumnWidth(2),
+          //             3: FlexColumnWidth(2),
+          //             4: FlexColumnWidth(2),
+          //             5: FlexColumnWidth(2),
+          //           },
+          //           children: [
+          //             TableRow(
+          //               children: [
+          //                 SizedBox(height: Get.height * 0.044),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: StreamBuilder(
+          //                       stream: whenErrorShowRedBorder.stream,
+          //                       builder: (context, snapshot) {
+          //                         return Padding(
+          //                           padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+          //                           child: commonTextFormField(
+          //                               hintText: addExpense,
+          //                               hintStyle: incomeNameStyle,
+          //                               enabledBorder: whenErrorShowRedBorder.value
+          //                                   ? OutlineInputBorder(
+          //                                       borderSide: const BorderSide(color: Colors.red),
+          //                                       borderRadius: BorderRadius.circular(4.0),
+          //                                     )
+          //                                   : null,
+          //                               validationFunction: (value) {
+          //                                 if (whenErrorShowRedBorder.value != value.isEmpty) {
+          //                                   whenErrorShowRedBorder.value = value.isEmpty;
+          //                                   print(whenErrorShowRedBorder.value);
+          //                                   whenErrorShowRedBorder.refresh();
+          //                                 }
+          //                                 return null;
+          //                               },
+          //                               inputAction: TextInputAction.next,
+          //                               inputFormatter: [characterInputFormatter()],
+          //                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+          //                               textStyle: incomeNameStyle,
+          //                               textEditingController: _expenseName2),
+          //                         );
+          //                       }),
+          //                 ),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: Container(
+          //                     padding: const EdgeInsets.symmetric(
+          //                       horizontal: 4,
+          //                     ),
+          //                     // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+          //                     // height: Get.height * 0.044,
+          //                     // alignment: Alignment.center,
+          //                     child: dropDownDayGetBuilder(dropDownList: dateList),
+          //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                   ),
+          //                 ),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: Container(
+          //                     padding: const EdgeInsets.symmetric(horizontal: 4),
+          //                     // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+          //                     // height: Get.height * 0.044,
+          //                     // alignment: Alignment.center,
+          //                     child: dropDownWeekGetBuilder(dropDownList: months),
+          //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                   ),
+          //                 ),
+          //                 TableCell(
+          //                     verticalAlignment: TableCellVerticalAlignment.fill,
+          //                     child: GestureDetector(
+          //                       onTap: () {
+          //                         _selectDate(context: context);
+          //                       },
+          //                       child: Container(
+          //                         alignment: Alignment.centerLeft,
+          //                         child: Text(
+          //                           '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+          //                           style: dateStyle,
+          //                           maxLines: 1,
+          //                         ),
+          //                         margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+          //                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+          //                       ),
+          //                     )),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: StreamBuilder(
+          //                       stream: whenErrorShowRedBorderAmount.stream,
+          //                       builder: (context, snapshot) {
+          //                         return Padding(
+          //                           padding: EdgeInsets.only(right: Get.width * 0.02),
+          //                           child: commonTextFormField(
+          //                               prefixText: '\$',
+          //                               enabledBorder: whenErrorShowRedBorderAmount.value
+          //                                   ? OutlineInputBorder(
+          //                                       borderSide: const BorderSide(color: Colors.red),
+          //                                       borderRadius: BorderRadius.circular(4.0),
+          //                                     )
+          //                                   : null,
+          //                               validationFunction: (value) {
+          //                                 if (whenErrorShowRedBorderAmount.value != value.isEmpty) {
+          //                                   whenErrorShowRedBorderAmount.value = value.isEmpty;
+          //                                   print(whenErrorShowRedBorderAmount.value);
+          //                                   whenErrorShowRedBorderAmount.refresh();
+          //                                 }
+          //                                 return null;
+          //                               },
+          //                               keyboardType: TextInputType.phone,
+          //                               prefixstyle: incomeNameStyle,
+          //                               inputAction: TextInputAction.done,
+          //                               inputFormatter: [digitInputFormatter()],
+          //                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+          //                               textStyle: incomeNameStyle,
+          //                               textEditingController: _expenseAmount2),
+          //                         );
+          //                       }),
+          //                 ),
+          //               ],
+          //             ),
+          //           ],
+          //         ),
+          //         Padding(
+          //           padding: EdgeInsets.only(top: Get.height * 0.01, left: constraints.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.018),
+          //           child: Row(
+          //             children: [
+          //               SizedBox(
+          //                 width: Get.width * 0.01,
+          //               ),
+          //               InkWell(
+          //                 onTap: () {
+          //                   if (controller.selectedSingleMonthlyExpenseMonth == null || controller.selectedSingleMonthlyExpenseDate == null) {
+          //                     Fluttertoast.showToast(
+          //                         webPosition: 'center',
+          //                         msg: "Select DropDown",
+          //                         toastLength: Toast.LENGTH_SHORT,
+          //                         gravity: ToastGravity.BOTTOM,
+          //                         // webBgColor: Colors.black.withOpacity(0.5), // also possible "TOP" and "CENTER"
+          //                         // backgroundColor: Colors.black.withOpacity(0.5),
+          //                         textColor: const Color(0xffffffff));
+          //                   } else if (_formKey.currentState!.validate()) {
+          //                     GetIncomeController.to.monthlyExpenseList?.add(DataModel(
+          //                         name: _expenseName2.text,
+          //                         amount: int.parse(_expenseAmount2.text),
+          //                         incomeOutgoing: 2,
+          //                         weekMonth: 2,
+          //                         every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+          //                         paidOn: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+          //                         date: DateFormat('yyyy-MM-dd').format(currentDate)));
+          //                     checkBoxController.monthlyExpenseCheckBoxValueList.add(true);
+          //                     controller1.changeVisibility();
+          //                     _expenseName2.clear();
+          //                     _expenseAmount2.clear();
+          //                   }
+          //                 },
+          //                 child: Text(
+          //                   save,
+          //                   style: greenMontserrat11W500,
+          //                 ),
+          //               ),
+          //               SizedBox(
+          //                 width: Get.width * 0.017,
+          //               ),
+          //               InkWell(
+          //                 child: Text(
+          //                   cancel,
+          //                   style: redMontserrat11W500,
+          //                 ),
+          //                 onTap: () {
+          //                   controller1.changeVisibility();
+          //                   // monthlyIncomeEditMode.showEditMode();
+          //                 },
+          //               )
+          //             ],
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // );
         },
       ),
     );

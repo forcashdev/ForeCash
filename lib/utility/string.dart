@@ -326,6 +326,7 @@ const String saveYourChanges = 'Do you want to save your Changes ?';
 const String description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ';
 const String yes = 'Yes';
 const String no = 'No';
+const String saveChanges = 'Save Changes';
 
 ///Api Config
 

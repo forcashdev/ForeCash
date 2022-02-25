@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
-import 'package:fore_cash/app_theme/app_theme.dart';
 import 'package:fore_cash/common_widget/common_add_data_textfield.dart';
+import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_income_scrollable_widget.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
@@ -69,10 +69,6 @@ class DashBoardScreen extends StatefulWidget {
 class _DashBoardScreenState extends State<DashBoardScreen> {
   DateTime currentDate = DateTime.now();
   final checkBoxController = Get.put(CheckBoxController());
-
-  RxList<DataModel>? tempWeeklyIncomeList = <DataModel>[].obs;
-  RxList<DataModel>? tempMonthlyExpenseList = <DataModel>[].obs;
-  RxList<DataModel>? tempWeeklyBudgetList = <DataModel>[].obs;
   final dropDownController = Get.put(SelectedDropDownItem());
   final monthlyIncomeEditMode = Get.put(MonthlyIncomeEditModeController());
   final oneTimeIncomeEditMode = Get.put(OneTimeIncomeEditModeController());
@@ -126,8 +122,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       // if (scrollController2.position.pixels == scrollController.position.maxScrollExtent) {
       // scrollController.jumpTo(scrollWidth++);
       // scrollController2.jumpTo(scrollWidth++);
-      scrollController2.animateTo(scrollController.offset, duration: const Duration(milliseconds: 300), curve: Curves.linear);
-      scrollController3.animateTo(scrollController.offset, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+      // if (monthlyIncomeExpansion == true) {
+      scrollController2.animateTo(scrollController.offset, duration: const Duration(milliseconds: 50), curve: Curves.linear);
+      scrollController3.animateTo(scrollController.offset, duration: const Duration(milliseconds: 50), curve: Curves.linear);
       // }
       // scrollController;
       // scrollController.jumpTo(
@@ -136,14 +133,30 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
     // scrollController2;
     scrollController2.addListener(() {
-      if (scrollController.position.hasPixels == scrollController.position.maxScrollExtent) {
-        scrollController.animateTo(scrollController2.offset, duration: const Duration(milliseconds: 300), curve: Curves.linear);
-        // scrollController2.jumpTo(scrollWidth++);
-        // scrollController.jumpTo(scrollController2.offset);
+      // Future.delayed(
+      //   Duration(milliseconds: 50),
+      // ).then((value) {
+      //   if (scrollController.offset <= scrollController2.position.pixels) {
+      //     scrollController.animateTo(scrollController2.offset, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+      //     // scrollController2.jumpTo(scrollWidth++);
+      //     // scrollController.jumpTo(scrollController2.offset);
+      //   }
+      // });
+      if (scrollController.offset < scrollController2.offset || scrollController.offset > scrollController2.offset) {
+        scrollController.animateTo(scrollController2.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      }
+      if (scrollController3.offset < scrollController2.offset || scrollController3.offset > scrollController2.offset) {
+        scrollController3.animateTo(scrollController2.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
     });
     scrollController3.addListener(() {
-      scrollController3;
+      // scrollController3;
+      if (scrollController.offset < scrollController3.offset || scrollController.offset > scrollController3.offset) {
+        scrollController.animateTo(scrollController3.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      }
+      if (scrollController3.offset < scrollController3.offset || scrollController3.offset > scrollController3.offset) {
+        scrollController2.animateTo(scrollController3.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      }
     });
     super.initState();
   }
@@ -151,7 +164,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   void dispose() {
     scrollController.dispose();
-    scrollController.dispose();
+    scrollController2.dispose();
+    scrollController3.dispose();
     super.dispose();
   }
 
@@ -281,7 +295,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 SizedBox(
                   height: Get.height * 0.015,
                 ),
-                maxWidth ? webHeaderRow() : mobileHeaderColumn(),
+                maxWidth ? webHeaderRow(constraints: constraints) : mobileHeaderColumn(),
                 Stack(
                   children: [
                     Container(
@@ -293,7 +307,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          maxWidth ? Container() : _mobileSimulateModeRow(),
+                          maxWidth ? Container() : _mobileSimulateModeRow(constraints: constraints),
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: maxWidth ? 10 : 5),
                             width: double.infinity,
@@ -499,7 +513,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   // }
                                   if (value) {
                                     Future.delayed(Duration(milliseconds: 50), () {
-                                      scrollController2.jumpTo(scrollController.position.pixels);
+                                      scrollController2.jumpTo(
+                                        scrollController.position.pixels,
+                                      );
                                     });
                                   }
                                   // scrollController2.reactive;
@@ -568,28 +584,43 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                 : 0.0,
                                                           ),
                                                           child: SizedBox(
-                                                            height: monthlyIncomeEditMode.editMode == true && maxWidth
-                                                                ? Get.height * 0.041
-                                                                : maxWidth
-                                                                    ? Get.height * 0.019
-                                                                    : Get.height * 0.018,
+                                                            // color: Colors.red, margin: EdgeInsets.only(bottom: 10),
+                                                            // height: monthlyIncomeEditMode.editMode == true && maxWidth
+                                                            //     ? Get.height * 0.041
+                                                            //     : maxWidth
+                                                            //         ? Get.height * 0.019
+                                                            //         : Get.height * 0.018,
+                                                            // height: Get.height * 0.5,
+                                                            // width: double.infinity,
                                                             child: SingleChildScrollView(
                                                               controller: scrollController2,
                                                               scrollDirection: Axis.horizontal,
-                                                              child: ListView(
-                                                                // controller: scrollController2,
-                                                                physics: NeverScrollableScrollPhysics(),
-                                                                shrinkWrap: true,
-                                                                scrollDirection: Axis.horizontal,
+                                                              physics: ClampingScrollPhysics(),
+                                                              child: Column(
+                                                                // direction: Axis.vertical,
+                                                                // mainAxisSize: MainAxisSize.min,
                                                                 children: List.generate(
-                                                                    incomes.length,
-                                                                    (index) => SizedBox(
-                                                                          width: 60,
-                                                                          child: Text(
-                                                                            incomes[index],
-                                                                            style: greyDateTexStyle10W400,
-                                                                            textAlign: TextAlign.end,
-                                                                          ),
+                                                                    5,
+                                                                    (index) => Row(
+                                                                          // controller: scrollController2,
+                                                                          // physics: const NeverScrollableScrollPhysics(),
+                                                                          // shrinkWrap: true,
+                                                                          // scrollDirection: Axis.horizontal,
+                                                                          children: List.generate(
+                                                                              incomes.length,
+                                                                              (index) => SizedBox(
+                                                                                    width: 60,
+                                                                                    height: monthlyIncomeEditMode.editMode == true && maxWidth
+                                                                                        ? Get.height * 0.041
+                                                                                        : maxWidth
+                                                                                            ? Get.height * 0.019
+                                                                                            : Get.height * 0.018,
+                                                                                    child: Text(
+                                                                                      incomes[index],
+                                                                                      style: greyDateTexStyle10W400,
+                                                                                      textAlign: TextAlign.end,
+                                                                                    ),
+                                                                                  )),
                                                                         )),
                                                               ),
                                                             ),
@@ -663,7 +694,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   weeklyIncomeExpansionValue.changeExpansionValue();
                                   if (value) {
                                     Future.delayed(Duration(milliseconds: 50), () {
-                                      scrollController3.jumpTo(scrollController.position.pixels);
+                                      scrollController3.jumpTo(
+                                        scrollController.position.pixels,
+                                      );
                                     });
                                   }
                                 },
@@ -718,29 +751,61 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                         : 0.0
                                                                 : 0.0,
                                                           ),
-                                                          child: SizedBox(
-                                                            height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
-                                                                ? Get.height * 0.041
-                                                                : maxWidth
-                                                                    ? Get.height * 0.019
-                                                                    : Get.height * 0.018,
-                                                            child: ListView(
-                                                              controller: scrollController3,
-                                                              // physics: NeverScrollableScrollPhysics(),
-                                                              shrinkWrap: true,
-                                                              scrollDirection: Axis.horizontal,
+                                                          child: SingleChildScrollView(
+                                                            controller: scrollController3,
+                                                            scrollDirection: Axis.horizontal,
+                                                            physics: const ClampingScrollPhysics(),
+                                                            child: Column(
+                                                              // direction: Axis.vertical,
+                                                              // mainAxisSize: MainAxisSize.min,
                                                               children: List.generate(
-                                                                  incomes.length,
-                                                                  (index) => SizedBox(
-                                                                        width: 60,
-                                                                        child: Text(
-                                                                          incomes[index],
-                                                                          style: greyDateTexStyle10W400,
-                                                                          textAlign: TextAlign.end,
-                                                                        ),
+                                                                  5,
+                                                                  (index) => Row(
+                                                                        // controller: scrollController2,
+                                                                        // physics: const NeverScrollableScrollPhysics(),
+                                                                        // shrinkWrap: true,
+                                                                        // scrollDirection: Axis.horizontal,
+                                                                        children: List.generate(
+                                                                            incomes.length,
+                                                                            (index) => SizedBox(
+                                                                                  width: 60,
+                                                                                  height: monthlyIncomeEditMode.editMode == true && maxWidth
+                                                                                      ? Get.height * 0.041
+                                                                                      : maxWidth
+                                                                                          ? Get.height * 0.019
+                                                                                          : Get.height * 0.018,
+                                                                                  child: Text(
+                                                                                    incomes[index],
+                                                                                    style: greyDateTexStyle10W400,
+                                                                                    textAlign: TextAlign.end,
+                                                                                  ),
+                                                                                )),
                                                                       )),
                                                             ),
                                                           ),
+                                                          // child: SizedBox(
+                                                          //   height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
+                                                          //       ? Get.height * 0.041
+                                                          //       : maxWidth
+                                                          //           ? Get.height * 0.019
+                                                          //           : Get.height * 0.018,
+                                                          //   child: ListView(
+                                                          //     controller: scrollController3,
+                                                          //     // physics: NeverScrollableScrollPhysics(),
+                                                          //     shrinkWrap: true,
+                                                          //     scrollDirection: Axis.horizontal,
+                                                          //     children: List.generate(
+                                                          //         incomes.length,
+                                                          //         (index) => SizedBox(
+                                                          //               width: 60,
+                                                          //               child: Text(
+                                                          //                 incomes[index],
+                                                          //                 style: greyDateTexStyle10W400,
+                                                          //                 textAlign: TextAlign.end,
+                                                          //               ),
+                                                          //             )),
+                                                          //   ),
+                                                          // ),
                                                           // child: scrollableWidget(
                                                           //     height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
                                                           //         ? Get.height * 0.041
@@ -1745,6 +1810,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     ),
                                   ],
                                 ),
+                          GetBuilder<SwitchController>(
+                            builder: (controller) {
+                              return controller.switchValue == true && constraints.maxWidth < 1000
+                                  ? Align(
+                                      alignment: const FractionalOffset(0.5, 0.0),
+                                      child: _saveChangesButton(constraints: constraints),
+                                    )
+                                  : Container();
+                            },
+                          )
                         ],
                       ),
                     ),
@@ -1876,7 +1951,52 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-  Widget webHeaderRow() {
+  _saveChangesButton({BoxConstraints? constraints}) {
+    return commonButton(
+      textStyle: whiteMontserrat11W500,
+      height: 50,
+      width: constraints!.maxWidth > 1000 ? Get.width * 0.13 : Get.width * 0.85,
+      text: saveChanges,
+      bgColor: containerColor,
+      onPress: () async {
+        switchController.changeSwitchValue(value: false);
+        if (monthlyIncomeEditMode.editMode == true) {
+          monthlyIncomeEditMode.showEditMode();
+        }
+        if (weeklyIncomeEditMode.weeklyIncomeEditMode == true) {
+          weeklyIncomeEditMode.showEditMode();
+        }
+        if (monthlyExpenseEditModeController.monthlyExpenseEditMode == true) {
+          monthlyExpenseEditModeController.showEditMode();
+        }
+        if (weeklyBudgetEditModeController.weeklyBudgetEditMode == true) {
+          weeklyBudgetEditModeController.showEditMode();
+        }
+        CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyIncomeList}).whenComplete(() {
+          GetIncomeController.to.monthlyIncomeList?.clear();
+          GetIncomeController.to.tempMonthlyIncomeList?.clear();
+          GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
+        });
+        CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyIncomeList}).whenComplete(() {
+          GetIncomeController.to.weeklyIncomesList?.clear();
+          GetIncomeController.to.tempWeeklyIncomeList?.clear();
+          GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"});
+        });
+        CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyExpenseList}).whenComplete(() {
+          GetIncomeController.to.monthlyExpenseList?.clear();
+          GetIncomeController.to.tempMonthlyExpenseList?.clear();
+          GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"});
+        });
+        CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyBudgetList}).whenComplete(() {
+          GetIncomeController.to.weeklyBudgetList?.clear();
+          GetIncomeController.to.tempWeeklyBudgetList?.clear();
+          GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"});
+        });
+      },
+    );
+  }
+
+  Widget webHeaderRow({BoxConstraints? constraints}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
@@ -1981,23 +2101,35 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             builder: (controller) {
               return Row(
                 children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: Get.width * 0.01),
+                    child: Visibility(visible: controller.switchValue, child: _saveChangesButton(constraints: constraints)),
+                  ),
                   Text(
                     controller.switchValue == true ? simulateModeOn : simulateModeOff,
-                    style: TextStyle(fontFamily: AppTheme.fontName, color: switchController.switchValue == true ? commonButtonColor : commonGreyColor, fontWeight: FontWeight.w500, fontSize: 10.sp),
+                    style: switchController.switchValue ? simulateModeOnTextStyle : simulateModeOffTextStyle,
                   ),
-                  Switch(
-                    // onChanged: toggleSwitch,
-                    // value: isSwitched,
-                    activeColor: commonButtonColor,
-                    activeTrackColor: Colors.white,
-                    inactiveThumbColor: commonTextColor2,
-                    // thumbColor: commonTextColor2,
-                    inactiveTrackColor: Colors.white,
-                    value: switchController.switchValue,
-                    onChanged: (bool value) {
-                      switchController.changeSwitchValue(value: value);
-                    },
-                  ),
+                  _simulateModeSwitch(constraints: constraints)
+                  // Switch(
+                  //   // onChanged: toggleSwitch,
+                  //   // value: isSwitched,
+                  //   activeColor: commonButtonColor,
+                  //   activeTrackColor: Colors.white,
+                  //   inactiveThumbColor: commonTextColor2,
+                  //   // thumbColor: commonTextColor2,
+                  //   inactiveTrackColor: Colors.white,
+                  //   value: switchController.switchValue,
+                  //   onChanged: (bool value) {
+                  //     switchController.changeSwitchValue(value: value);
+                  //     if (value) {
+                  //       if (monthlyIncomeEditMode.editMode == false) {
+                  //         // Future.delayed(const Duration(milliseconds: 1), () {
+                  //         monthlyIncomeEditMode.showEditMode();
+                  //         // });
+                  //       }
+                  //     }
+                  //   },
+                  // ),
                 ],
               );
             },
@@ -2107,7 +2239,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-  _mobileSimulateModeRow() {
+  _mobileSimulateModeRow({BoxConstraints? constraints}) {
     return Row(
       children: [
         Padding(
@@ -2138,39 +2270,87 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           builder: (controller) {
             return Row(
               children: [
-                Text(
-                  controller.switchValue == true ? simulateModeOn : simulateModeOff,
-                  style: TextStyle(fontFamily: AppTheme.fontName, color: switchController.switchValue == true ? commonButtonColor : commonGreyColor, fontWeight: FontWeight.w500, fontSize: 11.sp),
-                ),
-                Switch(
-                  // onChanged: toggleSwitch,
-                  // value: isSwitched,
-                  activeColor: commonButtonColor,
-                  activeTrackColor: Colors.grey.withOpacity(0.3),
-                  inactiveThumbColor: commonTextColor2,
-                  // thumbColor: commonTextColor2,
-                  inactiveTrackColor: Colors.grey.withOpacity(0.3),
-                  value: switchController.switchValue,
-                  onChanged: (bool value) {
-                    switchController.changeSwitchValue(value: value);
-                    if (value) {
-                      if (monthlyIncomeEditMode.editMode == false) {
-                        Future.delayed(const Duration(milliseconds: 50), () {
-                          monthlyIncomeEditMode.showEditMode();
-                        });
-                      } else if (value == false) {
-                        Future.delayed(const Duration(milliseconds: 50), () {
-                          monthlyIncomeEditMode.showEditMode();
-                        });
-                      }
-                    }
-                  },
-                ),
+                Text(controller.switchValue == true ? simulateModeOn : simulateModeOff, style: switchController.switchValue ? simulateModeOnTextStyle : simulateModeOffTextStyle),
+                _simulateModeSwitch(constraints: constraints)
               ],
             );
           },
         )
       ],
+    );
+  }
+
+  _simulateModeSwitch({BoxConstraints? constraints}) {
+    return Switch(
+      activeColor: commonButtonColor,
+      activeTrackColor: Colors.grey.withOpacity(0.3),
+      inactiveThumbColor: commonTextColor2,
+      inactiveTrackColor: Colors.grey.withOpacity(0.3),
+      value: switchController.switchValue,
+      onChanged: (bool value) {
+        switchController.changeSwitchValue(value: value);
+        if (value) {
+          if (constraints!.maxWidth < 1000) {
+            if (monthlyIncomeEditMode.circleAvatarVisibility == true) {
+              monthlyIncomeEditMode.showEditMode();
+            }
+            if (weeklyIncomeEditMode.weeklyCircleAvatarVisibility == true) {
+              weeklyIncomeEditMode.showEditMode();
+            }
+            if (monthlyExpenseEditModeController.monthlyExpenseCircleAvatarVisibility == true) {
+              monthlyExpenseEditModeController.showEditMode();
+            }
+            if (weeklyBudgetEditModeController.weeklyBudgetCircleAvatarVisibility == true) {
+              weeklyBudgetEditModeController.showEditMode();
+            }
+            if (monthlyIncomeVisibilityController.visibilityIncome == true) {
+              monthlyIncomeVisibilityController.changeVisibility();
+            }
+            if (weeklyIncomeDataVisibilityController.incomeListVisibility == true) {
+              weeklyIncomeDataVisibilityController.changeVisibility();
+            }
+            if (monthlyExpenseDataVisibilityController.monthlyExpenseListVisibility == true) {
+              monthlyExpenseDataVisibilityController.changeVisibility();
+            }
+            if (weeklyBudgetVisibilityController.weeklyBudgetVisibilityIncome == true) {
+              weeklyBudgetVisibilityController.changeVisibility();
+            }
+            // if (monthlyIncomeEditMode.editMode == false) {
+            //   // Future.delayed(const Duration(milliseconds: 1), () {
+            //   monthlyIncomeEditMode.showEditMode();
+            //   // });
+            // }
+          } else {
+            if (monthlyIncomeEditMode.editMode == false) {
+              monthlyIncomeEditMode.showEditMode();
+            }
+            if (weeklyIncomeEditMode.weeklyIncomeEditMode == false) {
+              weeklyIncomeEditMode.showEditMode();
+            }
+            if (monthlyExpenseEditModeController.monthlyExpenseEditMode == false) {
+              monthlyExpenseEditModeController.showEditMode();
+            }
+            if (weeklyBudgetEditModeController.weeklyBudgetEditMode == false) {
+              weeklyBudgetEditModeController.showEditMode();
+            }
+          }
+        } else if (value == false) {
+          // Future.delayed(const Duration(milliseconds: 1), () {
+          if (monthlyIncomeEditMode.editMode == true) {
+            monthlyIncomeEditMode.showEditMode();
+          }
+          if (weeklyIncomeEditMode.weeklyIncomeEditMode == true) {
+            weeklyIncomeEditMode.showEditMode();
+          }
+          if (monthlyExpenseEditModeController.monthlyExpenseEditMode == true) {
+            monthlyExpenseEditModeController.showEditMode();
+          }
+          if (weeklyBudgetEditModeController.weeklyBudgetEditMode == true) {
+            weeklyBudgetEditModeController.showEditMode();
+          }
+          // });
+        }
+      },
     );
   }
 
@@ -2311,7 +2491,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             ? Padding(
                                                 padding: const EdgeInsets.only(left: 10),
                                                 child: Text(
-                                                  '${GetIncomeController.to.monthlyIncomeList?[index].name ?? ''}',
+                                                  GetIncomeController.to.monthlyIncomeList?[index].name ?? '',
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: blackMontserrat10W500,
@@ -2472,7 +2652,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                 children: [
                                                                   Flexible(
                                                                     child: Text(
-                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())),
+                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(editModeController.editMode == true
+                                                                          ? GetIncomeController.to.tempMonthlyIncomeList![index].date
+                                                                          : GetIncomeController.to.monthlyIncomeList![index].date.toString())),
                                                                       // tempMonthlyIncomeList![index].date.toString().replaceAll('T10:16:38.185Z', ''),
                                                                       // '${GetIncomeController.to.monthlyIncomeList?[index].date}',
                                                                       style: blackMontserrat10W500,
@@ -2688,6 +2870,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 TableCell(
                                                   verticalAlignment: TableCellVerticalAlignment.fill,
                                                   child: commonTextFormField(
+                                                      hintText: amount,
+                                                      hintStyle: blackMontserrat10W500,
                                                       keyboardType: TextInputType.phone,
                                                       inputAction: TextInputAction.done,
                                                       prefixText: '\$',
@@ -2736,22 +2920,28 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                         incomeOutgoing: 1,
                                                         date: currentDate.toString())
                                                   ]
+                                                }).whenComplete(() {
+                                                  GetIncomeController.to.monthlyIncomeList?.clear();
+                                                  GetIncomeController.to.tempMonthlyIncomeList?.clear();
+                                                  GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
                                                 });
                                                 print("{{{{{{{{{{{{{{{{$response");
-                                                if (response["success"] == true) {
-                                                  GetIncomeController.to.monthlyIncomeList?.add(DataModel(
-                                                      name: _monthlyIncomeNameController.text,
-                                                      amount: int.parse(_monthlyIncomeAmountController.text),
-                                                      every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
-                                                      paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                                                      weekMonth: 2,
-                                                      incomeOutgoing: 1,
-                                                      date: currentDate.toString()));
-                                                  GetIncomeController.to.monthlyIncomeList?.refresh();
-                                                }
+                                                // if (response["success"] == true) {
+                                                //   GetIncomeController.to.monthlyIncomeList?.add(DataModel(
+                                                //       name: _monthlyIncomeNameController.text,
+                                                //       amount: int.parse(_monthlyIncomeAmountController.text),
+                                                //       every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                //       paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                //       weekMonth: 2,
+                                                //       incomeOutgoing: 1,
+                                                //       date: currentDate.toString()));
+                                                //   GetIncomeController.to.monthlyIncomeList?.refresh();
+                                                // }
                                               }
                                               _monthlyIncomeAmountController.clear();
                                               _monthlyIncomeNameController.clear();
+                                              controller.selectedMonth = null;
+                                              controller.selectedDate = null;
                                               // MonthlyIncomeModelOld.monthlyIncomeList
                                               //     .add(MonthlyIncomeModelOld(expenseName: _monthlyIncomeNameController.text, amount: _monthlyAmountController.text));
                                               // controller.selectedMonthlyIncomeDateList.add(controller.selectedSingleMonthlyExpenseDate as Object);
@@ -2774,6 +2964,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
                                               _monthlyIncomeAmountController.clear();
                                               _monthlyIncomeNameController.clear();
+                                              dropDownController.selectedMonth = null;
+                                              dropDownController.selectedDate = null;
                                             },
                                           )
                                         ],
@@ -2844,7 +3036,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
-    tempWeeklyIncomeList = GetIncomeController.to.weeklyIncomesList;
+    // tempWeeklyIncomeList = GetIncomeController.to.weeklyIncomesList;
     final dropDownController = Get.put(SelectedDropDownItem());
     TextEditingController _weeklyIncomeNameController = TextEditingController();
     TextEditingController _weeklyAmountController = TextEditingController();
@@ -2919,12 +3111,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 )
                               : Column(),
                           StreamBuilder(
-                              stream: tempWeeklyIncomeList?.stream,
+                              stream: GetIncomeController.to.tempWeeklyIncomeList?.stream,
                               builder: (context, snapshot) {
                                 return ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  itemCount: GetIncomeController.to.weeklyIncomesList?.length,
+                                  itemCount: weeklyEditModeController.weeklyIncomeEditMode ? GetIncomeController.to.tempWeeklyIncomeList?.length : GetIncomeController.to.weeklyIncomesList?.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
@@ -2955,8 +3147,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                   noButtonColor: Colors.black,
                                                   onPressYes: () {
-                                                    tempWeeklyIncomeList?.removeAt(index);
-                                                    tempWeeklyIncomeList?.refresh();
+                                                    GetIncomeController.to.tempWeeklyIncomeList?.removeAt(index);
+                                                    GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                     // GetIncomeController.to.monthlyIncomeList?.refresh();
                                                     Get.back();
                                                   },
@@ -2969,7 +3161,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         key: UniqueKey(),
                                         child: boolValue == true && constraints.maxWidth < 1000
                                             ? Text(
-                                                '${GetIncomeController.to.weeklyIncomesList?[index].name ?? ''}',
+                                                GetIncomeController.to.weeklyIncomesList?[index].name ?? '',
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: blackMontserrat10W500,
@@ -2995,7 +3187,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                             padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
                                                             child: weeklyEditModeController.weeklyIncomeEditMode == false
                                                                 ? Text(
-                                                                    '${GetIncomeController.to.weeklyIncomesList?[index].name ?? ''}',
+                                                                    GetIncomeController.to.weeklyIncomesList?[index].name ?? '',
                                                                     maxLines: 1,
                                                                     overflow: TextOverflow.ellipsis,
                                                                     style: blackMontserrat10W500,
@@ -3007,9 +3199,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     inputFormatter: [characterInputFormatter()],
                                                                     contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                                                     textStyle: blackMontserrat10W500,
-                                                                    textEditingController: TextEditingController(text: tempWeeklyIncomeList?[index].name ?? ''),
+                                                                    textEditingController: TextEditingController(text: GetIncomeController.to.tempWeeklyIncomeList?[index].name ?? ''),
                                                                     onChangedFunction: (value) {
-                                                                      tempWeeklyIncomeList?[index].name = value;
+                                                                      GetIncomeController.to.tempWeeklyIncomeList?[index].name = value;
                                                                       // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
                                                                     },
                                                                   ),
@@ -3027,7 +3219,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     return commonDropDown(
                                                                         valueTextStyle: blackMontserrat10W500,
                                                                         selectedItemTextStyle: blackMontserrat10W500,
-                                                                        value: '${tempWeeklyIncomeList?[index].paidOn ?? 1}'
+                                                                        value: '${GetIncomeController.to.tempWeeklyIncomeList?[index].paidOn ?? 1}'
                                                                             .toString()
                                                                             .replaceAll('1', 'Sun')
                                                                             .replaceAll('2', 'Mon')
@@ -3039,7 +3231,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                         itemList: days,
                                                                         onChanged: (item) {
                                                                           // controller1.changeDate(item: item, index: index);
-                                                                          tempWeeklyIncomeList?[index].paidOn = int.parse(item
+                                                                          GetIncomeController.to.tempWeeklyIncomeList?[index].paidOn = int.parse(item
                                                                               .replaceAll('Sun', '1')
                                                                               .replaceAll('Mon', '2')
                                                                               .replaceAll('Tue', '3')
@@ -3047,7 +3239,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                               .replaceAll('Thu', '5')
                                                                               .replaceAll('Fri', '6')
                                                                               .replaceAll('Sat', '7'));
-                                                                          tempWeeklyIncomeList?.refresh();
+                                                                          GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                                         });
                                                                   },
                                                                 )
@@ -3081,12 +3273,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                         selectedItemTextStyle: blackMontserrat10W500,
                                                                         valueTextStyle: blackMontserrat10W500,
                                                                         // value: controller1.selectWeekDropDown[index],
-                                                                        value: '${tempWeeklyIncomeList?[index].every ?? 1}W',
+                                                                        value: '${GetIncomeController.to.tempWeeklyIncomeList?[index].every ?? 1}W',
                                                                         itemList: weeks,
                                                                         onChanged: (item) {
                                                                           // controller1.changeItem(item: item, index: index);
-                                                                          tempWeeklyIncomeList?[index].every = int.parse(item.replaceAll('W', ''));
-                                                                          tempWeeklyIncomeList?.refresh();
+                                                                          GetIncomeController.to.tempWeeklyIncomeList?[index].every = int.parse(item.replaceAll('W', ''));
+                                                                          GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                                         });
                                                                   },
                                                                 )
@@ -3122,7 +3314,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                 children: [
                                                                   Flexible(
                                                                     child: Text(
-                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyIncomesList![index].date.toString())),
+                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(weeklyEditModeController.weeklyIncomeEditMode
+                                                                          ? GetIncomeController.to.tempWeeklyIncomeList![index].date.toString()
+                                                                          : GetIncomeController.to.weeklyIncomesList![index].date.toString())),
                                                                       style: blackMontserrat10W500,
                                                                       overflow: TextOverflow.ellipsis,
                                                                     ),
@@ -3156,9 +3350,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   textStyle: blackMontserrat10W500,
                                                                   prefixText: '\$',
                                                                   prefixstyle: blackMontserrat10W500,
-                                                                  textEditingController: TextEditingController(text: tempWeeklyIncomeList?[index].amount.toString() ?? ''),
+                                                                  textEditingController: TextEditingController(text: GetIncomeController.to.tempWeeklyIncomeList?[index].amount.toString() ?? ''),
                                                                   onChangedFunction: (value) {
-                                                                    tempWeeklyIncomeList?[index].amount = int.parse(value);
+                                                                    GetIncomeController.to.tempWeeklyIncomeList?[index].amount = int.parse(value);
                                                                     // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
                                                                   },
                                                                 ),
@@ -3179,8 +3373,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                                   noButtonColor: Colors.black,
                                                                   onPressYes: () {
-                                                                    tempWeeklyIncomeList?.removeAt(index);
-                                                                    tempWeeklyIncomeList?.refresh();
+                                                                    GetIncomeController.to.tempWeeklyIncomeList?.removeAt(index);
+                                                                    GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                                     // GetIncomeController.to.monthlyIncomeList?.refresh();
                                                                     Get.back();
                                                                   },
@@ -3219,12 +3413,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         ? Padding(
                                             padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? 0.0 : 10.0),
                                             child: Table(
-                                              // columnWidths: <int, TableColumnWidth>{
-                                              //   0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
-                                              //   1: const FlexColumnWidth(2.2),
-                                              //   2: const FlexColumnWidth(2.2),
-                                              //   3: const FlexColumnWidth(1.4),
-                                              // },
                                               columnWidths: <int, TableColumnWidth>{
                                                 0: const FlexColumnWidth(3),
                                                 1: const FlexColumnWidth(2),
@@ -3331,6 +3519,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     TableCell(
                                                       verticalAlignment: TableCellVerticalAlignment.fill,
                                                       child: commonTextFormField(
+                                                          hintText: amount,
+                                                          hintStyle: blackMontserrat10W500,
                                                           prefixText: '\$',
                                                           prefixstyle: blackMontserrat10W500,
                                                           keyboardType: TextInputType.phone,
@@ -3353,7 +3543,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             onTap: () async {
                                               final controller = Get.put(SelectedDropDownItem());
                                               if (constraints.maxWidth < 1000) {
-                                                tempWeeklyIncomeList?.add(DataModel(
+                                                GetIncomeController.to.tempWeeklyIncomeList?.add(DataModel(
                                                     name: _weeklyIncomeNameController.text,
                                                     amount: int.parse(_weeklyAmountController.text),
                                                     paidOn: int.parse(controller.selectedSingleWeeklyIncomeDay
@@ -3412,7 +3602,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   GetIncomeController.to.weeklyIncomesList?.refresh();
                                                 }
                                               }
-                                              tempWeeklyIncomeList?.refresh();
+                                              GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                               _weeklyIncomeNameController.clear();
                                               _weeklyAmountController.clear();
                                               controller.selectedSingleWeeklyIncomeWeek = null;
@@ -3433,6 +3623,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
                                               _weeklyAmountController.clear();
                                               _weeklyIncomeNameController.clear();
+                                              dropDownController.selectedSingleWeeklyIncomeWeek = null;
+                                              dropDownController.selectedSingleWeeklyIncomeDay = null;
                                             },
                                           )
                                         ],
@@ -3503,7 +3695,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   monthlyExpenseData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
-    tempMonthlyExpenseList = GetIncomeController.to.monthlyExpenseList;
     final dropDownController = Get.put(SelectedDropDownItem());
     TextEditingController _monthlyExpenseNameController = TextEditingController();
     TextEditingController _monthlyExpenseAmountController = TextEditingController();
@@ -3581,12 +3772,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 )
                               : Column(),
                           StreamBuilder(
-                              stream: tempWeeklyIncomeList?.stream,
+                              stream: GetIncomeController.to.tempWeeklyIncomeList?.stream,
                               builder: (context, snapshot) {
                                 return ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  itemCount: monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? tempMonthlyExpenseList?.length : GetIncomeController.to.monthlyExpenseList?.length,
+                                  itemCount: monthlyExpenseEditModeController.monthlyExpenseEditMode == true
+                                      ? GetIncomeController.to.tempMonthlyExpenseList?.length
+                                      : GetIncomeController.to.monthlyExpenseList?.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
@@ -3617,7 +3810,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                   noButtonColor: Colors.black,
                                                   onPressYes: () {
-                                                    tempMonthlyExpenseList?.removeAt(index);
+                                                    GetIncomeController.to.tempMonthlyExpenseList?.removeAt(index);
 
                                                     Get.back();
                                                   },
@@ -3637,14 +3830,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 // textAlign: TextAlign.center,
                                               )
                                             : Table(
-                                                // columnWidths: <int, TableColumnWidth>{
-                                                //   0: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3.5 : 3.3),
-                                                //   1: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3 : 2.2),
-                                                //   2: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 3 : 2.2),
-                                                //   3: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.5 : 1.4),
-                                                //   4: FlexColumnWidth(constraints.maxWidth > 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true ? 2.3 : 2.2),
-                                                //   5: const FlexColumnWidth(1.1),
-                                                // },
                                                 columnWidths: const <int, TableColumnWidth>{
                                                   0: FlexColumnWidth(3),
                                                   1: FlexColumnWidth(2),
@@ -3673,9 +3858,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   inputFormatter: [characterInputFormatter()],
                                                                   contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                                                   textStyle: blackMontserrat10W500,
-                                                                  textEditingController: TextEditingController(text: tempMonthlyExpenseList?[index].name ?? ''),
+                                                                  textEditingController: TextEditingController(text: GetIncomeController.to.tempMonthlyExpenseList?[index].name ?? ''),
                                                                   onChangedFunction: (value) {
-                                                                    tempMonthlyExpenseList?[index].name = value;
+                                                                    GetIncomeController.to.tempMonthlyExpenseList?[index].name = value;
                                                                     // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
                                                                   },
                                                                 ),
@@ -3692,7 +3877,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     return commonDropDown(
                                                                         valueTextStyle: blackMontserrat10W500,
                                                                         selectedItemTextStyle: blackMontserrat10W500,
-                                                                        value: '${tempMonthlyExpenseList?[index].paidOn ?? 1}th'
+                                                                        value: '${GetIncomeController.to.tempMonthlyExpenseList?[index].paidOn ?? 1}th'
                                                                             .replaceAllMapped('1th', (match) => '1st')
                                                                             .replaceAllMapped('2th', (match) => '2nd')
                                                                             .replaceAllMapped('3th', (match) => '3rd')
@@ -3702,9 +3887,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                         itemList: dateList,
                                                                         onChanged: (item) {
                                                                           // controller1.changeDate(item: item, index: index);
-                                                                          tempMonthlyExpenseList?[index].paidOn =
+                                                                          GetIncomeController.to.tempMonthlyExpenseList?[index].paidOn =
                                                                               int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
-                                                                          tempWeeklyIncomeList?.refresh();
+                                                                          GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                                         });
                                                                   },
                                                                 )
@@ -3735,12 +3920,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     return commonDropDown(
                                                                         selectedItemTextStyle: blackMontserrat10W500,
                                                                         valueTextStyle: blackMontserrat10W500,
-                                                                        value: '${tempMonthlyExpenseList?[index].every ?? 1} mon',
+                                                                        value: '${GetIncomeController.to.tempMonthlyExpenseList?[index].every ?? 1} mon',
                                                                         // value: controller1.selectedMonthlyExpenseMonth[index],
                                                                         itemList: months,
                                                                         onChanged: (item) {
-                                                                          tempMonthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
-                                                                          tempWeeklyIncomeList?.refresh();
+                                                                          GetIncomeController.to.tempMonthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                                                                          GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                                           // controller1.changeItem(item: item, index: index);
                                                                         });
                                                                   },
@@ -3780,7 +3965,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                 children: [
                                                                   Flexible(
                                                                     child: Text(
-                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
+                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(monthlyExpenseEditModeController.monthlyExpenseEditMode
+                                                                          ? GetIncomeController.to.tempMonthlyExpenseList![index].date.toString()
+                                                                          : GetIncomeController.to.monthlyExpenseList![index].date.toString())),
                                                                       // tempMonthlyIncomeList![index].date.toString().replaceAll('T10:16:38.185Z', ''),
                                                                       // '${GetIncomeController.to.monthlyIncomeList?[index].date}',
                                                                       style: blackMontserrat10W500,
@@ -3809,13 +3996,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   maxLines: 1,
                                                                 )
                                                               : commonTextFormField(
-                                                                  textEditingController: TextEditingController(text: tempMonthlyExpenseList?[index].amount.toString() ?? ''),
+                                                                  textEditingController: TextEditingController(text: GetIncomeController.to.tempMonthlyExpenseList?[index].amount.toString() ?? ''),
                                                                   prefixText: '\$',
                                                                   keyboardType: TextInputType.phone,
                                                                   prefixstyle: blackMontserrat10W500,
                                                                   inputAction: TextInputAction.done,
                                                                   onChangedFunction: (value) {
-                                                                    tempMonthlyExpenseList?[index].amount = int.parse(value);
+                                                                    GetIncomeController.to.tempMonthlyExpenseList?[index].amount = int.parse(value);
                                                                   },
                                                                   inputFormatter: [digitInputFormatter()],
                                                                   contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
@@ -3876,12 +4063,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         ? Padding(
                                             padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? 0.0 : 10.0),
                                             child: Table(
-                                              // columnWidths: <int, TableColumnWidth>{
-                                              //   0: FlexColumnWidth(constraints.maxWidth > 1000 ? 3.25 : 3.3),
-                                              //   1: const FlexColumnWidth(2.2),
-                                              //   2: const FlexColumnWidth(2.2),
-                                              //   3: const FlexColumnWidth(1.4),
-                                              // },
                                               columnWidths: <int, TableColumnWidth>{
                                                 0: const FlexColumnWidth(3),
                                                 1: const FlexColumnWidth(2),
@@ -3981,6 +4162,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     TableCell(
                                                       verticalAlignment: TableCellVerticalAlignment.fill,
                                                       child: commonTextFormField(
+                                                          hintText: amount,
+                                                          hintStyle: blackMontserrat10W500,
                                                           prefixText: '\$',
                                                           prefixstyle: blackMontserrat10W500,
                                                           keyboardType: TextInputType.phone,
@@ -4004,7 +4187,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             onTap: () async {
                                               final controller = Get.put(SelectedDropDownItem());
                                               if (constraints.maxWidth < 1000) {
-                                                tempMonthlyExpenseList?.add(DataModel(
+                                                GetIncomeController.to.tempMonthlyExpenseList?.add(DataModel(
                                                     name: _monthlyExpenseNameController.text,
                                                     amount: int.parse(_monthlyExpenseAmountController.text),
                                                     every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
@@ -4043,6 +4226,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               }
                                               _monthlyExpenseNameController.clear();
                                               _monthlyExpenseAmountController.clear();
+                                              controller.selectedSingleMonthlyExpenseMonth = null;
+                                              controller.selectedSingleMonthlyExpenseDate = null;
                                               // setState(() {
                                               //   final controller = Get.put(SelectedDropDownItem());
                                               //   MonthlyExpensesModel.monthlyExpensesListOld
@@ -4064,8 +4249,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             ),
                                             onPressed: () {
                                               constraints.maxWidth > 1000 ? showMonthlyExpenseSaveTextController.changeVisibilityForWeb() : showMonthlyExpenseSaveTextController.changeVisibility();
-                                              // _weeklyAmountController.clear();
-                                              // _weeklyIncomeNameController.clear();
+                                              _monthlyExpenseAmountController.clear();
+                                              _monthlyExpenseNameController.clear();
+                                              dropDownController.selectedSingleMonthlyExpenseMonth = null;
+                                              dropDownController.selectedSingleMonthlyExpenseDate = null;
                                             },
                                           )
                                         ],
@@ -4135,7 +4322,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   weeklyBudgetData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
-    tempWeeklyBudgetList = GetIncomeController.to.weeklyBudgetList;
     final dropDownController = Get.put(SelectedDropDownItem());
     TextEditingController _weeklyBudgetNameController = TextEditingController();
     TextEditingController _weeklyBudgetAmountController = TextEditingController();
@@ -4210,12 +4396,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 )
                               : Column(),
                           StreamBuilder(
-                              stream: tempWeeklyBudgetList?.stream,
+                              stream: GetIncomeController.to.tempWeeklyBudgetList?.stream,
                               builder: (context, snapshot) {
                                 return ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  itemCount: editModeController.weeklyBudgetEditMode == true ? tempWeeklyBudgetList?.length : GetIncomeController.to.weeklyBudgetList?.length,
+                                  itemCount: editModeController.weeklyBudgetEditMode == true ? GetIncomeController.to.tempWeeklyBudgetList?.length : GetIncomeController.to.weeklyBudgetList?.length,
                                   itemBuilder: (context, index) {
                                     // if (index < MonthlyIncomeModelOld.monthlyIncomeList.length) {
                                     return Padding(
@@ -4250,7 +4436,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                   noButtonColor: Colors.black,
                                                   onPressYes: () {
-                                                    tempWeeklyBudgetList?.removeAt(index);
+                                                    GetIncomeController.to.tempWeeklyBudgetList?.removeAt(index);
 
                                                     Get.back();
                                                   },
@@ -4306,9 +4492,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     inputFormatter: [characterInputFormatter()],
                                                                     contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                                                     textStyle: blackMontserrat10W500,
-                                                                    textEditingController: TextEditingController(text: tempWeeklyBudgetList?[index].name ?? ''),
+                                                                    textEditingController: TextEditingController(text: GetIncomeController.to.tempWeeklyBudgetList?[index].name ?? ''),
                                                                     onChangedFunction: (value) {
-                                                                      tempWeeklyBudgetList?[index].name = value;
+                                                                      GetIncomeController.to.tempWeeklyBudgetList?[index].name = value;
                                                                       // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
                                                                     },
                                                                   ),
@@ -4326,7 +4512,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     return commonDropDown(
                                                                         valueTextStyle: blackMontserrat10W500,
                                                                         selectedItemTextStyle: blackMontserrat10W500,
-                                                                        value: '${tempWeeklyBudgetList?[index].paidOn ?? 1}'
+                                                                        value: '${GetIncomeController.to.tempWeeklyBudgetList?[index].paidOn ?? 1}'
                                                                             .toString()
                                                                             .replaceAll('1', 'Sun')
                                                                             .replaceAll('2', 'Mon')
@@ -4338,7 +4524,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                         // value: controller1.weeklyBudgetDayDropDownList[index],
                                                                         itemList: days,
                                                                         onChanged: (item) {
-                                                                          tempWeeklyBudgetList?[index].paidOn = int.parse(item
+                                                                          GetIncomeController.to.tempWeeklyBudgetList?[index].paidOn = int.parse(item
                                                                               .replaceAll('Sun', '1')
                                                                               .replaceAll('Mon', '2')
                                                                               .replaceAll('Tue', '3')
@@ -4346,7 +4532,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                               .replaceAll('Thu', '5')
                                                                               .replaceAll('Fri', '6')
                                                                               .replaceAll('Sat', '7'));
-                                                                          tempWeeklyBudgetList?.refresh();
+                                                                          GetIncomeController.to.tempWeeklyBudgetList?.refresh();
                                                                           // controller1.changeWeeklyBudgetDayList(item: item, index: index);
                                                                         });
                                                                   },
@@ -4380,12 +4566,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                     return commonDropDown(
                                                                         selectedItemTextStyle: blackMontserrat10W500,
                                                                         valueTextStyle: blackMontserrat10W500,
-                                                                        value: '${tempWeeklyBudgetList?[index].every ?? 1}W',
+                                                                        value: '${GetIncomeController.to.tempWeeklyBudgetList?[index].every ?? 1}W',
                                                                         // value: controller1.weeklyBudgetWeekDropDownList[index],
                                                                         itemList: weeks,
                                                                         onChanged: (item) {
-                                                                          tempWeeklyBudgetList?[index].every = int.parse(item.replaceAll('W', ''));
-                                                                          tempWeeklyBudgetList?.refresh();
+                                                                          GetIncomeController.to.tempWeeklyBudgetList?[index].every = int.parse(item.replaceAll('W', ''));
+                                                                          GetIncomeController.to.tempWeeklyBudgetList?.refresh();
                                                                           // controller1.changeWeeklyBudgetWeekList(item: item, index: index);
                                                                         });
                                                                   },
@@ -4423,7 +4609,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                 children: [
                                                                   Flexible(
                                                                     child: Text(
-                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(tempWeeklyBudgetList![index].date.toString())),
+                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(editModeController.weeklyBudgetEditMode
+                                                                          ? GetIncomeController.to.tempWeeklyBudgetList![index].date.toString()
+                                                                          : GetIncomeController.to.weeklyBudgetList![index].date.toString())),
                                                                       // tempMonthlyIncomeList![index].date.toString().replaceAll('T10:16:38.185Z', ''),
                                                                       // '${GetIncomeController.to.monthlyIncomeList?[index].date}',
                                                                       style: blackMontserrat10W500,
@@ -4452,13 +4640,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   maxLines: 1,
                                                                 )
                                                               : commonTextFormField(
-                                                                  textEditingController: TextEditingController(text: tempWeeklyBudgetList?[index].amount.toString() ?? ''),
+                                                                  textEditingController: TextEditingController(text: GetIncomeController.to.tempWeeklyBudgetList?[index].amount.toString() ?? ''),
                                                                   prefixText: '\$',
                                                                   keyboardType: TextInputType.phone,
                                                                   prefixstyle: blackMontserrat10W500,
                                                                   inputAction: TextInputAction.done,
                                                                   onChangedFunction: (value) {
-                                                                    tempWeeklyBudgetList?[index].amount = int.parse(value);
+                                                                    GetIncomeController.to.tempWeeklyBudgetList?[index].amount = int.parse(value);
                                                                   },
                                                                   inputFormatter: [digitInputFormatter()],
                                                                   contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
@@ -4481,7 +4669,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                                   noButtonColor: Colors.black,
                                                                   onPressYes: () {
-                                                                    tempWeeklyBudgetList?.removeAt(index);
+                                                                    GetIncomeController.to.tempWeeklyBudgetList?.removeAt(index);
                                                                     Get.back();
                                                                   },
                                                                   onPressNo: () {
@@ -4621,6 +4809,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     TableCell(
                                                       verticalAlignment: TableCellVerticalAlignment.fill,
                                                       child: commonTextFormField(
+                                                          hintText: amount,
+                                                          hintStyle: blackMontserrat10W500,
                                                           prefixText: '\$',
                                                           prefixstyle: blackMontserrat10W500,
                                                           keyboardType: TextInputType.phone,
@@ -4646,7 +4836,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             onTap: () async {
                                               final controller = Get.put(SelectedDropDownItem());
                                               if (constraints.maxWidth < 1000) {
-                                                tempWeeklyBudgetList?.add(DataModel(
+                                                GetIncomeController.to.tempWeeklyBudgetList?.add(DataModel(
                                                     name: _weeklyBudgetNameController.text,
                                                     amount: int.parse(_weeklyBudgetAmountController.text),
                                                     paidOn: int.parse(controller.weeklyBudgetDay
@@ -4662,7 +4852,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     weekMonth: 1,
                                                     incomeOutgoing: 2,
                                                     date: currentDate.toString()));
-                                                tempWeeklyBudgetList?.refresh();
                                               } else {
                                                 var response = await CreateIncomeController.to.createIncome(parameter: {
                                                   'income': [
@@ -4705,7 +4894,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   GetIncomeController.to.weeklyBudgetList?.refresh();
                                                 }
                                               }
-                                              tempWeeklyBudgetList?.refresh();
+                                              GetIncomeController.to.tempWeeklyBudgetList?.refresh();
                                               _weeklyBudgetNameController.clear();
                                               _weeklyBudgetAmountController.clear();
                                               controller.weeklyBudgetDay = null;
@@ -4726,6 +4915,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
                                               _weeklyBudgetAmountController.clear();
                                               _weeklyBudgetNameController.clear();
+                                              dropDownController.weeklyBudgetDay = null;
+                                              dropDownController.weeklyBudgetWeek = null;
                                             },
                                           )
                                         ],
@@ -5531,19 +5722,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         onPressed: () async {
                           final DownController = Get.put(SelectedDropDownItem());
                           monthlyIncomeEditMode.showEditMode();
-                          var response = await CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyIncomeList});
+                          var response = await CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyIncomeList}).whenComplete(() {
+                            GetIncomeController.to.monthlyIncomeList?.clear();
+                            GetIncomeController.to.tempMonthlyIncomeList?.clear();
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
+                          });
                           // GetIncomeController.to.monthlyIncomeList?.clear();
-                          if (response["success"] == true) {
-                            GetIncomeController.to.monthlyIncomeList?.add(DataModel(
-                                name: _monthlyIncomeNameController.text,
-                                amount: int.parse(_monthlyIncomeAmountController.text),
-                                every: int.parse(DownController.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
-                                paidOn: int.parse(DownController.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                                weekMonth: 2,
-                                incomeOutgoing: 1,
-                                date: currentDate.toString()));
-                            GetIncomeController.to.monthlyIncomeList?.refresh();
-                          }
+                          // if (response["success"] == true) {
+                          //   GetIncomeController.to.monthlyIncomeList?.add(DataModel(
+                          //       name: _monthlyIncomeNameController.text,
+                          //       amount: int.parse(_monthlyIncomeAmountController.text),
+                          //       every: int.parse(DownController.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                          //       paidOn: int.parse(DownController.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                          //       weekMonth: 2,
+                          //       incomeOutgoing: 1,
+                          //       date: currentDate.toString()));
+                          //   GetIncomeController.to.monthlyIncomeList?.refresh();
+                          // }
                         },
                         child: Text(
                           save,
@@ -5557,9 +5752,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         ),
                         onPressed: () {
                           monthlyIncomeEditMode.showEditMode();
-                          GetIncomeController.to.monthlyIncomeList?.clear();
-                          GetIncomeController.to.tempMonthlyIncomeList?.clear();
-                          GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
+                          // GetIncomeController.to.monthlyIncomeList?.clear();
+                          // GetIncomeController.to.tempMonthlyIncomeList?.clear();
+                          // GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
                         },
                       )
                     ],
@@ -5608,9 +5803,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         width: Get.width * 0.01,
                       ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           controller.showEditMode();
-                          CreateIncomeController.to.createIncome(parameter: {'income': tempWeeklyIncomeList});
+                          // CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyIncomeList});
+                          var response = await CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyIncomeList}).whenComplete(() {
+                            GetIncomeController.to.weeklyIncomesList?.clear();
+                            GetIncomeController.to.tempWeeklyIncomeList?.clear();
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"});
+                          });
                         },
                         child: Text(
                           save,
@@ -5674,7 +5874,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           controller.showEditMode();
-                          CreateIncomeController.to.createIncome(parameter: {'income': tempMonthlyExpenseList});
+                          // CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyExpenseList});
+                          CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyExpenseList}).whenComplete(() {
+                            GetIncomeController.to.monthlyExpenseList?.clear();
+                            GetIncomeController.to.tempMonthlyExpenseList?.clear();
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"});
+                          });
                         },
                         child: Text(
                           save,
@@ -5739,7 +5944,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           weeklyBudgetController.showEditMode();
-                          CreateIncomeController.to.createIncome(parameter: {'income': tempWeeklyBudgetList});
+                          // CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyBudgetList});
+                          CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyBudgetList}).whenComplete(() {
+                            GetIncomeController.to.weeklyBudgetList?.clear();
+                            GetIncomeController.to.tempWeeklyBudgetList?.clear();
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"});
+                          });
                         },
                         child: Text(
                           save,
@@ -5901,9 +6111,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   Future<void> _selectDate({BuildContext? context, int? index}) async {
     final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
     if (pickedDate != null && pickedDate != currentDate) {
-      setState(() {
-        currentDate = pickedDate;
-      });
+      // setState(() {
+      currentDate = pickedDate;
+      // });
     }
   }
 

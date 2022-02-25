@@ -53,7 +53,7 @@ scrollableWidget({double? height, bool? editMode, int? listViewItemCount, BoxCon
       return Container(
         margin: EdgeInsets.only(bottom: Get.height * 0.014),
         // color: Colors.red,
-        height: height != null ? height : Get.height * 0.018,
+        height: height ?? Get.height * 0.018,
         child: PageView.builder(
           // scrollDirection: Axis.horizontal,
           onPageChanged: (value) {

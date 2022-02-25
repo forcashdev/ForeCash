@@ -43,7 +43,8 @@ TextStyle textSpanStyle1 = TextStyle(
   color: Color(0xFF777C90),
   fontFamily: AppTheme.fontName,
 );
-
+TextStyle simulateModeOffTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: commonGreyColor, fontWeight: FontWeight.w500, fontSize: 10.sp);
+TextStyle simulateModeOnTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: commonButtonColor, fontWeight: FontWeight.w500, fontSize: 10.sp);
 TextStyle textSpanStyle2 = TextStyle(
   fontWeight: FontWeight.w700,
   fontSize: 12.sp,
