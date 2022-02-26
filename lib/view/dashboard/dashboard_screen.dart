@@ -57,6 +57,7 @@ import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/notifications/notifications_screen.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -67,6 +68,73 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
+  final _currentDate = DateTime.now();
+  final DateFormat formatter = DateFormat('MMM, dd');
+  final datesList = [];
+
+  calculateFutureDates() {
+    for (int i = 0; i < 15; i++) {
+      final date = formatter.format(_currentDate.add(Duration(days: i)));
+      datesList.add(date);
+      print(datesList[i]);
+    }
+    // print('{{{{{{{{{{{${datesList.length}');
+    // List.generate(datesList.length, (index) {
+    //   print(datesList[index]);
+    // });
+    // print(datesList);
+  }
+
+  Future<dynamic>? calculatePastDates({DateTime? startDate, DateTime? endDate}) {
+    // print(':::::::::::');
+    // // print(int.parse(DateTime.now().toString()));
+    // int j = 0;
+    // for (int i = -15; i >= 0; i--) {
+    //   print(i + 1);
+    //   final date = _currentDate.add(Duration(days: i + 1));
+    //   print(date);
+    //   // datesList.add(formatter.format(date));
+    //   // print(datesList[i]);
+    //   // print(';;;;;;;;;;');
+    // }
+
+    // var toDate = DateTime.now().toUtc(); // see note below
+    // var fromDate = toDate.subtract(Duration(days: 1));
+    // for (var i = 0; i <= 15; i++) {
+    //   // put them into a string
+    //   final fromDateString = '${fromDate.year}-${fromDate.month.toString().padLeft(2, '0')}-${fromDate.day.toString().padLeft(2, '0')}';
+    //   final toDateString = '${toDate.year}-${toDate.month.toString().padLeft(2, '0')}-${toDate.day.toString().padLeft(2, '0')}';
+    //   // buld the url
+    //   final url = 'https://api?start=$fromDateString&end=$toDateString';
+    //   print(url);
+    //   print(fromDateString);
+    //   // update the dates for the next loop
+    //   fromDate = fromDate.subtract(Duration(days: 1));
+    //   toDate = toDate.subtract(Duration(days: 1));
+    // }
+
+    // final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+    // final DateTime today = DateTime.now();
+
+    for (int i = 0; i < 15; i++) {
+      // Get start date
+      final DateTime startDate = _currentDate.subtract(Duration(days: i + 1));
+
+      // Parse as string
+      final String start = formatter.format(startDate);
+      // final date = _currentDate.add(Duration(days: i));
+      // Get end date
+      final DateTime endDate = _currentDate.subtract(Duration(days: i));
+
+      // Parse as string
+      final String end = formatter.format(endDate);
+      datesList.add(start);
+      final String apiUrl = 'https://api?start=$start&end=$end';
+      // print('====${datesList[i]}');
+    }
+  }
+
   DateTime currentDate = DateTime.now();
   final checkBoxController = Get.put(CheckBoxController());
   final dropDownController = Get.put(SelectedDropDownItem());
@@ -102,12 +170,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   late ScrollController scrollController;
   late ScrollController scrollController2;
   ScrollController scrollController3 = ScrollController();
-  TextEditingController _monthlyIncomeNameController = TextEditingController();
-  TextEditingController _monthlyIncomeAmountController = TextEditingController();
-  double scrollWidth = 60;
+  final TextEditingController _monthlyIncomeNameController = TextEditingController();
+  final TextEditingController _monthlyIncomeAmountController = TextEditingController();
+
   RxBool monthlyIncomeExpansion = false.obs;
+
   @override
   void initState() {
+    calculatePastDates();
+    calculateFutureDates();
+    datesList.sort();
     GetIncomeController.to.monthlyIncomeList?.clear();
     GetIncomeController.to.weeklyIncomesList?.clear();
     GetIncomeController.to.monthlyExpenseList?.clear();
@@ -154,12 +226,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       if (scrollController.offset < scrollController3.offset || scrollController.offset > scrollController3.offset) {
         scrollController.animateTo(scrollController3.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
-      if (scrollController3.offset < scrollController3.offset || scrollController3.offset > scrollController3.offset) {
+      if (scrollController2.offset < scrollController3.offset || scrollController2.offset > scrollController3.offset) {
         scrollController2.animateTo(scrollController3.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
     });
     super.initState();
   }
+
+  monthlyIncomeLogicMethod({Box}) {}
 
   @override
   void dispose() {
@@ -169,12 +243,63 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     super.dispose();
   }
 
+  forLoopLogic({BoxConstraints? constraints}) {
+    print('ffffffff');
+    for (int i = 0; i < GetIncomeController.to.monthlyIncomeList!.length; i++) {
+      // print('iiiiiiiiii$i');
+      for (int j = 0; j < datesList.length; j++) {
+        // print(GetIncomeController.to.monthlyIncomeList![i].date);
+        // print('jjjjjjj$j');
+        if (formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![i].date.toString())) == datesList[j]) {
+          print(
+            'jjjjjjjjjjj$j',
+          );
+          print(
+            'iiiiiiiii$i',
+          );
+          // print(
+          //   '${GetIncomeController.to.monthlyIncomeList![i].name}',
+          // );
+          // print(
+          //   '${GetIncomeController.to.monthlyIncomeList![i].date}',
+          // );
+          Text('${GetIncomeController.to.monthlyIncomeList?[i].amount}');
+
+          // return SizedBox(
+          //   // color: Colors.red,
+          //   width: constraints!.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+          //   child: Text(
+          //     '${GetIncomeController.to.monthlyIncomeList![i].amount}',
+          //     // '${datesList[index] == formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())) ? GetIncomeController.to.monthlyIncomeList![index].amount : '-'}',
+          //     style: greyDateTexStyle10W400,
+          //     textAlign: TextAlign.center,
+          //   ),
+          // );
+        } else {
+          Text('-');
+          // print('-');
+          // return SizedBox(
+          //   // color: Colors.red,
+          //   width: constraints!.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+          //   child: Text(
+          //     '-',
+          //     // '${datesList[index] == formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())) ? GetIncomeController.to.monthlyIncomeList![index].amount : '-'}',
+          //     style: greyDateTexStyle10W400,
+          //     textAlign: TextAlign.center,
+          //   ),
+          // );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final visibilityController = Get.put(DashBoardVisibilityController());
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth > 1000;
+        double scrollWidth = maxWidth ? Get.width * 0.067 : Get.width * 0.14;
         PageController _pageController = PageController(viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1);
         PageController _previousWeekBalancePageController = PageController(viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1);
         PageController _totalWeeklyIncomePageController = PageController(viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1);
@@ -292,6 +417,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: [
+                // Row(
+                //   children: datesList?.map((e) => Text(e)).toList(),
+                // ),
                 SizedBox(
                   height: Get.height * 0.015,
                 ),
@@ -313,42 +441,45 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                             width: double.infinity,
                             margin: EdgeInsets.symmetric(horizontal: maxWidth ? 8 : 0),
                             decoration: BoxDecoration(color: maxWidth ? Colors.white : commonTextFieldColor, borderRadius: BorderRadius.circular(maxWidth ? 5 : 0)),
-                            height: 45,
+                            // height: 0,
                             child: Row(
                               // mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Expanded(
                                   flex: 2,
-                                  child: Row(
+                                  child: Stack(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.asset(
-                                          calendarImage,
-                                          height: 30,
-                                          width: 30,
-                                          fit: BoxFit.cover,
+                                      Container(
+                                        color: Colors.red,
+                                        child: Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(5),
+                                              child: Image.asset(
+                                                calendarImage,
+                                                height: 30,
+                                                width: 30,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              calendar,
+                                              style: blackCalendarStyle11W500,
+                                            )
+                                          ],
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        calendar,
-                                        style: blackCalendarStyle11W500,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                    flex: 2,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        InkWell(
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        bottom: 0,
+                                        child: InkWell(
                                           onTap: () {
+                                            forLoopLogic(constraints: constraints);
                                             // if (scrollWidth < scrollController.position.minScrollExtent - 80) {
                                             scrollController.jumpTo(
                                               scrollController.position.pixels - scrollWidth--,
@@ -385,115 +516,170 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             // size: 20,
                                           ),
                                         ),
-                                        Flexible(child: GetBuilder<PageViewPageIndex>(
-                                          builder: (controller) {
-                                            return SizedBox(
-                                              height: Get.height * 0.03,
-                                              child: SingleChildScrollView(
-                                                controller: scrollController,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      // Container(
+                                      //   color: Colors.yellowAccent,
+                                      //   child: InkWell(
+                                      //     onTap: () {
+                                      //       // if (scrollWidth < scrollController.position.minScrollExtent - 80) {
+                                      //       scrollController.jumpTo(
+                                      //         scrollController.position.pixels - scrollWidth--,
+                                      //       );
+                                      //       // }
+                                      //       if (monthlyIncomeExpansion == true) {
+                                      //         scrollController2.jumpTo(
+                                      //           scrollController.offset,
+                                      //         );
+                                      //       }
+                                      //       scrollController3.jumpTo(
+                                      //         scrollController.offset,
+                                      //       );
+                                      //       // _pageController.previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                      //       //
+                                      //       // List.generate(monthlyIncomepageControllerList.length,
+                                      //       //     (index) => monthlyIncomepageControllerList[index].previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                      //       // List.generate(weeklyIncomePageControllerList.length,
+                                      //       //     (index) => weeklyIncomePageControllerList[index].previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                      //       // List.generate(weeklyBudgetPageControllerList.length,
+                                      //       //     (index) => weeklyBudgetPageControllerList[index].previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                      //       // List.generate(monthlyExpensePageControllerList.length,
+                                      //       //     (index) => monthlyExpensePageControllerList[index].previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                      //       // List.generate(oneTimeIncomePageControllerList.length,
+                                      //       //     (index) => oneTimeIncomePageControllerList[index].previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                      //       // List.generate(oneTimeExpensePageControllerList.length,
+                                      //       //     (index) => oneTimeExpensePageControllerList[index].previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                      //       // _totalWeeklyIncomePageController.previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                      //       // _totalWeeklyExpensePageController.previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                      //       // _previousWeekBalancePageController.previousPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                      //     },
+                                      //     child: Icon(
+                                      //       Icons.arrow_back_ios, color: Colors.black, size: 12.sp,
+                                      //       // size: 20,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      Flexible(child: GetBuilder<PageViewPageIndex>(
+                                        builder: (controller) {
+                                          return Container(
+                                            height: Get.height * 0.022,
+                                            // margin: EdgeInsets.only(left: maxWidth ? 5 : 0.0),
+                                            child: SingleChildScrollView(
+                                              controller: scrollController,
+                                              scrollDirection: Axis.horizontal,
+                                              child: ListView(
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                // controller: scrollController,
+                                                shrinkWrap: true,
                                                 scrollDirection: Axis.horizontal,
-                                                child: ListView(
-                                                  physics: const NeverScrollableScrollPhysics(),
-                                                  // controller: scrollController,
-                                                  shrinkWrap: true,
-                                                  scrollDirection: Axis.horizontal,
-                                                  children: List.generate(
-                                                      dataDateList.length,
-                                                      (index) => SizedBox(
-                                                            width: 60,
-                                                            child: Text(
-                                                              dataDateList[index],
-                                                              style: greyDateTexStyle10W400,
-                                                              textAlign: TextAlign.end,
-                                                            ),
-                                                          )),
-                                                ),
+                                                children: List.generate(
+                                                    datesList.length,
+                                                    (index) => Container(
+                                                          color: Colors.red,
+                                                          width: maxWidth ? Get.width * 0.067 : Get.width * 0.15,
+                                                          // margin: EdgeInsets.only(right: 1),
+                                                          child: Text(
+                                                            datesList[index],
+                                                            style: greyDateTexStyle10W400,
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                        )),
                                               ),
-                                              // child: PageView.builder(
-                                              //   itemCount: dataDateList.length,
-                                              //   scrollDirection: Axis.horizontal,
-                                              //   controller: _pageController,
-                                              //   itemBuilder: (context, index) {
-                                              //     return Align(
-                                              //       alignment: const FractionalOffset(0.3, 0.5),
-                                              //       child: Text(
-                                              //         dataDateList[index],
-                                              //         style: greyDateTexStyle10W400,
-                                              //         textAlign: TextAlign.end,
-                                              //       ),
-                                              //     );
-                                              //   },
-                                              //   onPageChanged: (value) {
-                                              //     if (monthlyIncomeExpansion == true) {
-                                              //       List.generate(monthlyIncomepageControllerList.length, (index) => monthlyIncomepageControllerList[index].jumpToPage(value));
-                                              //     }
-                                              //     List.generate(weeklyIncomePageControllerList.length, (index) => weeklyIncomePageControllerList[index].jumpToPage(value));
-                                              //     List.generate(weeklyBudgetPageControllerList.length, (index) => weeklyBudgetPageControllerList[index].jumpToPage(value));
-                                              //     List.generate(oneTimeIncomePageControllerList.length, (index) => oneTimeIncomePageControllerList[index].jumpToPage(value));
-                                              //     List.generate(oneTimeExpensePageControllerList.length, (index) => oneTimeExpensePageControllerList[index].jumpToPage(value));
-                                              //     List.generate(monthlyExpensePageControllerList.length,
-                                              //         (index) => monthlyExpensePageControllerList[index].jumpToPage(value)); // _pageController2.jumpToPage(value);
-                                              //     _previousWeekBalancePageController.jumpToPage(value);
-                                              //     _totalWeeklyExpensePageController.jumpToPage(value);
-                                              //     _totalWeeklyIncomePageController.jumpToPage(value);
-                                              //
-                                              //     // print(value);
-                                              //   },
-                                              // ),
-                                            );
-                                          },
-                                        )),
-                                        InkWell(
-                                          onTap: () {
-                                            print(scrollController.position);
-                                            // if (scrollController.position.hasPixels == scrollController.position.minScrollExtent) {
-                                            scrollController.jumpTo(
-                                              scrollController.position.pixels + scrollWidth++,
-                                            );
+                                            ),
+                                            // child: PageView.builder(
+                                            //   itemCount: dataDateList.length,
+                                            //   scrollDirection: Axis.horizontal,
+                                            //   controller: _pageController,
+                                            //   itemBuilder: (context, index) {
+                                            //     return Align(
+                                            //       alignment: const FractionalOffset(0.3, 0.5),
+                                            //       child: Text(
+                                            //         dataDateList[index],
+                                            //         style: greyDateTexStyle10W400,
+                                            //         textAlign: TextAlign.end,
+                                            //       ),
+                                            //     );
+                                            //   },
+                                            //   onPageChanged: (value) {
+                                            //     if (monthlyIncomeExpansion == true) {
+                                            //       List.generate(monthlyIncomepageControllerList.length, (index) => monthlyIncomepageControllerList[index].jumpToPage(value));
+                                            //     }
+                                            //     List.generate(weeklyIncomePageControllerList.length, (index) => weeklyIncomePageControllerList[index].jumpToPage(value));
+                                            //     List.generate(weeklyBudgetPageControllerList.length, (index) => weeklyBudgetPageControllerList[index].jumpToPage(value));
+                                            //     List.generate(oneTimeIncomePageControllerList.length, (index) => oneTimeIncomePageControllerList[index].jumpToPage(value));
+                                            //     List.generate(oneTimeExpensePageControllerList.length, (index) => oneTimeExpensePageControllerList[index].jumpToPage(value));
+                                            //     List.generate(monthlyExpensePageControllerList.length,
+                                            //         (index) => monthlyExpensePageControllerList[index].jumpToPage(value)); // _pageController2.jumpToPage(value);
+                                            //     _previousWeekBalancePageController.jumpToPage(value);
+                                            //     _totalWeeklyExpensePageController.jumpToPage(value);
+                                            //     _totalWeeklyIncomePageController.jumpToPage(value);
+                                            //
+                                            //     // print(value);
+                                            //   },
+                                            // ),
+                                          );
+                                        },
+                                      )),
+                                      InkWell(
+                                        onTap: () {
+                                          print(scrollController.position);
+                                          // if (scrollController.position.hasPixels == scrollController.position.minScrollExtent) {
+                                          scrollController.jumpTo(
+                                            scrollController.position.pixels + scrollWidth++,
+                                          );
 
-                                            if (monthlyIncomeExpansion == true) {
-                                              scrollController2.jumpTo(
-                                                scrollController.offset,
-                                              );
-                                            }
-                                            scrollController3.jumpTo(
+                                          if (monthlyIncomeExpansion == true) {
+                                            scrollController2.jumpTo(
                                               scrollController.offset,
                                             );
-                                          },
-                                          // print('>>>>>>>>>>${_pageController.position}');
-                                          // print(_pageController.page);
-                                          //
-                                          // _pageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // if (monthlyIncomeExpansion == true) {
-                                          //   // _pageController2.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          //   List.generate(monthlyIncomepageControllerList.length,
-                                          //       (index) => monthlyIncomepageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // }
-                                          // List.generate(weeklyIncomePageControllerList.length,
-                                          //     (index) => weeklyIncomePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(monthlyExpensePageControllerList.length,
-                                          //     (index) => monthlyExpensePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(weeklyBudgetPageControllerList.length,
-                                          //     (index) => weeklyBudgetPageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(oneTimeExpensePageControllerList.length,
-                                          //     (index) => oneTimeExpensePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(oneTimeIncomePageControllerList.length,
-                                          //     (index) => oneTimeIncomePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // _previousWeekBalancePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // _totalWeeklyExpensePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // _totalWeeklyIncomePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // _singleMonthlyPageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                          }
+                                          scrollController3.jumpTo(
+                                            scrollController.offset,
+                                          );
+                                        },
+                                        // print('>>>>>>>>>>${_pageController.position}');
+                                        // print(_pageController.page);
+                                        //
+                                        // _pageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                        // if (monthlyIncomeExpansion == true) {
+                                        //   // _pageController2.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                        //   List.generate(monthlyIncomepageControllerList.length,
+                                        //       (index) => monthlyIncomepageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                        // }
+                                        // List.generate(weeklyIncomePageControllerList.length,
+                                        //     (index) => weeklyIncomePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                        // List.generate(monthlyExpensePageControllerList.length,
+                                        //     (index) => monthlyExpensePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                        // List.generate(weeklyBudgetPageControllerList.length,
+                                        //     (index) => weeklyBudgetPageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                        // List.generate(oneTimeExpensePageControllerList.length,
+                                        //     (index) => oneTimeExpensePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                        // List.generate(oneTimeIncomePageControllerList.length,
+                                        //     (index) => oneTimeIncomePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                        // _previousWeekBalancePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                        // _totalWeeklyExpensePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                        // _totalWeeklyIncomePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                        // _singleMonthlyPageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
 
-                                          // }
-                                          // },
-                                          child: Icon(
-                                            Icons.arrow_forward_ios,
-                                            size: 12.sp, color: Colors.black,
-                                            // size: 20,
-                                          ),
+                                        // }
+                                        // },
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 12.sp, color: Colors.black,
+                                          // size: 20,
                                         ),
-                                      ],
-                                    ))
+                                      ),
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -550,7 +736,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   GetBuilder<MonthlyIncomeVisibilityController>(
                                     builder: (monthlyIncomeController) {
                                       return Container(
-                                        padding: EdgeInsets.only(left: maxWidth ? 14 : 0, right: maxWidth ? 0 : 5),
+                                        padding: EdgeInsets.only(
+                                            left: maxWidth ? 14 : 0,
+                                            right: maxWidth
+                                                ? 27
+                                                : monthlyIncomeController.visibilityIncome == true
+                                                    ? 20
+                                                    : 0.0),
                                         decoration: BoxDecoration(
                                             // color: Colors.red,
                                             border: Border(
@@ -558,7 +750,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                           top: maxWidth ? BorderSide.none : const BorderSide(color: borderColor),
                                         )),
                                         child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          crossAxisAlignment: maxWidth ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                                           children: [
                                             monthlyIncomeData(boolValue: monthlyIncomeController.visibilityIncome, constraints: constraints, visibilityValue: monthlyIncomeController.visibility),
                                             Expanded(
@@ -567,108 +759,165 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   : constraints.maxWidth < 1000
                                                       ? 0
                                                       : 2,
-                                              child: GetBuilder<SaveDataTextController>(
-                                                builder: (controller) {
-                                                  return Visibility(
-                                                    visible: constraints.maxWidth < 1000 ? monthlyIncomeController.visibilityIncome : true,
-                                                    child: GetBuilder<MonthlyIncomeEditModeController>(
-                                                      builder: (MonthlyEditModeController) {
-                                                        return Padding(
-                                                          padding: EdgeInsets.only(
-                                                            bottom: maxWidth
-                                                                ? controller.showTextWeb == false
-                                                                    ? 62
-                                                                    : controller.showTextWeb == true && MonthlyEditModeController.editMode == false
-                                                                        ? Get.height * 0.042
-                                                                        : 0.0
-                                                                : 0.0,
-                                                          ),
-                                                          child: SizedBox(
-                                                            // color: Colors.red, margin: EdgeInsets.only(bottom: 10),
-                                                            // height: monthlyIncomeEditMode.editMode == true && maxWidth
-                                                            //     ? Get.height * 0.041
-                                                            //     : maxWidth
-                                                            //         ? Get.height * 0.019
-                                                            //         : Get.height * 0.018,
-                                                            // height: Get.height * 0.5,
-                                                            // width: double.infinity,
+                                              child: Container(
+                                                // color: Colors.red,
+                                                child: GetBuilder<SaveDataTextController>(
+                                                  builder: (controller) {
+                                                    return Visibility(
+                                                      visible: constraints.maxWidth < 1000 ? monthlyIncomeController.visibilityIncome : true,
+                                                      child: GetBuilder<MonthlyIncomeEditModeController>(
+                                                        builder: (MonthlyEditModeController) {
+                                                          return Padding(
+                                                            padding: EdgeInsets.only(
+                                                              left: constraints.maxWidth > 1000 ? 8.0 : 13.0,
+                                                              // right: 13,
+                                                              bottom: maxWidth
+                                                                  ? controller.showTextWeb == false
+                                                                      ? 62
+                                                                      : controller.showTextWeb == true && MonthlyEditModeController.editMode == false
+                                                                          ? Get.height * 0.051
+                                                                          : Get.height * 0.01
+                                                                  : 0.0,
+                                                            ),
                                                             child: SingleChildScrollView(
                                                               controller: scrollController2,
                                                               scrollDirection: Axis.horizontal,
-                                                              physics: ClampingScrollPhysics(),
+                                                              physics: const ClampingScrollPhysics(),
                                                               child: Column(
-                                                                // direction: Axis.vertical,
-                                                                // mainAxisSize: MainAxisSize.min,
-                                                                children: List.generate(
-                                                                    5,
-                                                                    (index) => Row(
-                                                                          // controller: scrollController2,
-                                                                          // physics: const NeverScrollableScrollPhysics(),
-                                                                          // shrinkWrap: true,
-                                                                          // scrollDirection: Axis.horizontal,
-                                                                          children: List.generate(
-                                                                              incomes.length,
-                                                                              (index) => SizedBox(
-                                                                                    width: 60,
-                                                                                    height: monthlyIncomeEditMode.editMode == true && maxWidth
-                                                                                        ? Get.height * 0.041
-                                                                                        : maxWidth
-                                                                                            ? Get.height * 0.019
-                                                                                            : Get.height * 0.018,
-                                                                                    child: Text(
-                                                                                      incomes[index],
-                                                                                      style: greyDateTexStyle10W400,
-                                                                                      textAlign: TextAlign.end,
-                                                                                    ),
-                                                                                  )),
-                                                                        )),
-                                                              ),
+                                                                  // direction: Axis.vertical,
+                                                                  // mainAxisSize: MainAxisSize.min,
+                                                                  children: List.generate(
+                                                                GetIncomeController.to.monthlyIncomeList!.length,
+                                                                (index) => SizedBox(
+                                                                  height: MonthlyEditModeController.editMode
+                                                                      ? Get.height * 0.059
+                                                                      : maxWidth
+                                                                          ? Get.height * 0.035
+                                                                          : Get.height * 0.032,
+                                                                  child: Row(
+                                                                    // controller: scrollController2,
+                                                                    // physics: const NeverScrollableScrollPhysics(),
+                                                                    // shrinkWrap: true,
+                                                                    // scrollDirection: Axis.horizontal,
+                                                                    children: [
+                                                                      for (int i = 0; i < GetIncomeController.to.monthlyIncomeList!.length; i++)
+                                                                        // print('iiiiiiiiii$i');
+                                                                        for (int j = 0; j < datesList.length; j++)
+                                                                          // print(GetIncomeController.to.monthlyIncomeList![i].date);
+                                                                          // print('jjjjjjj$j');
+                                                                          formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![i].date.toString())) == datesList[j]
+
+                                                                              // print(
+                                                                              //   '${GetIncomeController.to.monthlyIncomeList![i].amount}',
+                                                                              // );
+                                                                              // print(
+                                                                              //   '${GetIncomeController.to.monthlyIncomeList![i].name}',
+                                                                              // );
+                                                                              // print(
+                                                                              //   '${GetIncomeController.to.monthlyIncomeList![i].date}',
+                                                                              // );
+                                                                              ? SizedBox(
+                                                                                  width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                  child: Text(
+                                                                                    '${index >= i ? GetIncomeController.to.monthlyIncomeList![i].amount : '-'}',
+                                                                                    style: greyDateTexStyle10W400,
+                                                                                    textAlign: TextAlign.center,
+                                                                                  ))
+                                                                              :
+
+                                                                              // return SizedBox(
+                                                                              //   // color: Colors.red,
+                                                                              //   width: constraints!.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                              //   child: Text(
+                                                                              //     '${GetIncomeController.to.monthlyIncomeList![i].amount}',
+                                                                              //     // '${datesList[index] == formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())) ? GetIncomeController.to.monthlyIncomeList![index].amount : '-'}',
+                                                                              //     style: greyDateTexStyle10W400,
+                                                                              //     textAlign: TextAlign.center,
+                                                                              //   ),
+                                                                              // );
+
+                                                                              SizedBox(
+                                                                                  width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                  child: Text(
+                                                                                    '-',
+                                                                                    style: greyDateTexStyle10W400,
+                                                                                    textAlign: TextAlign.center,
+                                                                                  ))
+                                                                      // print('-');
+                                                                      // return SizedBox(
+                                                                      //   // color: Colors.red,
+                                                                      //   width: constraints!.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                      //   child: Text(
+                                                                      //     '-',
+                                                                      //     // '${datesList[index] == formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())) ? GetIncomeController.to.monthlyIncomeList![index].amount : '-'}',
+                                                                      //     style: greyDateTexStyle10W400,
+                                                                      //     textAlign: TextAlign.center,
+                                                                      //   ),
+                                                                      // );
+
+                                                                      // return Container();
+                                                                    ],
+                                                                    // Text('${forLoopLogic(constraints: constraints)}')
+
+                                                                    // SizedBox(
+                                                                    //   // color: Colors.red,
+                                                                    //   width: maxWidth ? Get.width * 0.067 : Get.width * 0.15,
+                                                                    //   child: Text(
+                                                                    //     '${datesList[index] == formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())) ? GetIncomeController.to.monthlyIncomeList![index].amount : '-'}',
+                                                                    //     style: greyDateTexStyle10W400,
+                                                                    //     textAlign: TextAlign.center,
+                                                                    //   ),
+                                                                    // )
+                                                                  ),
+                                                                ),
+                                                              )),
                                                             ),
-                                                          ),
-                                                          // child: scrollableWidget(
-                                                          //     height: monthlyIncomeEditMode.editMode == true && maxWidth
-                                                          //         ? Get.height * 0.041
-                                                          //         : maxWidth
-                                                          //             ? Get.height * 0.019
-                                                          //             : Get.height * 0.018,
-                                                          //     editMode: monthlyIncomeEditMode.editMode,
-                                                          //     text: incomes,
-                                                          //     listViewItemCount: monthlyIncomepageControllerList.length,
-                                                          //     constraints: constraints,
-                                                          //     controller: monthlyIncomepageControllerList,
-                                                          //     pageViewItemCount: incomes.length,
-                                                          //     onPageChanged: (value) {
-                                                          //       List.generate(
-                                                          //           weeklyIncomePageControllerList.length,
-                                                          //           (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                          //               duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                          //       List.generate(
-                                                          //           monthlyExpensePageControllerList.length,
-                                                          //           (index) => monthlyExpensePageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //       List.generate(
-                                                          //           weeklyBudgetPageControllerList.length,
-                                                          //           (index) => weeklyBudgetPageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //       List.generate(
-                                                          //           oneTimeIncomePageControllerList.length,
-                                                          //           (index) => oneTimeIncomePageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //       List.generate(
-                                                          //           oneTimeExpensePageControllerList.length,
-                                                          //           (index) => oneTimeExpensePageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //       // _pageController2.jumpToPage(value);
-                                                          //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //       _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //       _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //     }),
-                                                        );
-                                                      },
-                                                    ),
-                                                  );
-                                                },
+
+                                                            // child: scrollableWidget(
+                                                            //     height: monthlyIncomeEditMode.editMode == true && maxWidth
+                                                            //         ? Get.height * 0.041
+                                                            //         : maxWidth
+                                                            //             ? Get.height * 0.019
+                                                            //             : Get.height * 0.018,
+                                                            //     editMode: monthlyIncomeEditMode.editMode,
+                                                            //     text: incomes,
+                                                            //     listViewItemCount: monthlyIncomepageControllerList.length,
+                                                            //     constraints: constraints,
+                                                            //     controller: monthlyIncomepageControllerList,
+                                                            //     pageViewItemCount: incomes.length,
+                                                            //     onPageChanged: (value) {
+                                                            //       List.generate(
+                                                            //           weeklyIncomePageControllerList.length,
+                                                            //           (index) => weeklyIncomePageControllerList[index].animateToPage(value,
+                                                            //               duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                            //       List.generate(
+                                                            //           monthlyExpensePageControllerList.length,
+                                                            //           (index) => monthlyExpensePageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //       List.generate(
+                                                            //           weeklyBudgetPageControllerList.length,
+                                                            //           (index) => weeklyBudgetPageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //       List.generate(
+                                                            //           oneTimeIncomePageControllerList.length,
+                                                            //           (index) => oneTimeIncomePageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //       List.generate(
+                                                            //           oneTimeExpensePageControllerList.length,
+                                                            //           (index) => oneTimeExpensePageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //       // _pageController2.jumpToPage(value);
+                                                            //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //       _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //       _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //     }),
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
                                               ),
                                             )
                                           ],
@@ -715,7 +964,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   GetBuilder<WeeklyIncomeDataVisibilityController>(
                                     builder: (weeklyIncomeDataController) {
                                       return Container(
-                                        padding: EdgeInsets.only(left: maxWidth ? 14 : 10, right: maxWidth ? 0 : 2),
+                                        padding: EdgeInsets.only(left: maxWidth ? 14 : 0, right: maxWidth ? 27 : 20),
+                                        // padding: EdgeInsets.only(left: maxWidth ? 14 : 10, right: maxWidth ? 0 : 2),
                                         decoration: BoxDecoration(
                                             // color: Colors.red,
                                             border: Border(
@@ -725,7 +975,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         child: GetBuilder<WeeklyIncomeEditModeController>(
                                           builder: (weeklyIncomeEditModeController) {
                                             return Row(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 weeklyIncomeData(
                                                     boolValue: weeklyIncomeDataController.incomeListVisibility,
@@ -737,118 +987,117 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                       : constraints.maxWidth < 1000
                                                           ? 0
                                                           : 2,
-                                                  child: GetBuilder<ShowWeeklyIncomeSaveDataTextController>(
-                                                    builder: (controller) {
-                                                      return Visibility(
-                                                        visible: constraints.maxWidth < 1000 ? weeklyIncomeDataController.incomeListVisibility : true,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(
-                                                            bottom: maxWidth
-                                                                ? controller.weeklyIncomeShowTextWeb == false
-                                                                    ? 62.0
-                                                                    : controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false
-                                                                        ? Get.height * 0.042
-                                                                        : 0.0
-                                                                : 0.0,
-                                                          ),
-                                                          child: SingleChildScrollView(
-                                                            controller: scrollController3,
-                                                            scrollDirection: Axis.horizontal,
-                                                            physics: const ClampingScrollPhysics(),
-                                                            child: Column(
-                                                              // direction: Axis.vertical,
-                                                              // mainAxisSize: MainAxisSize.min,
-                                                              children: List.generate(
-                                                                  5,
-                                                                  (index) => Row(
-                                                                        // controller: scrollController2,
-                                                                        // physics: const NeverScrollableScrollPhysics(),
-                                                                        // shrinkWrap: true,
-                                                                        // scrollDirection: Axis.horizontal,
-                                                                        children: List.generate(
-                                                                            incomes.length,
-                                                                            (index) => SizedBox(
-                                                                                  width: 60,
-                                                                                  height: monthlyIncomeEditMode.editMode == true && maxWidth
-                                                                                      ? Get.height * 0.041
-                                                                                      : maxWidth
-                                                                                          ? Get.height * 0.019
-                                                                                          : Get.height * 0.018,
-                                                                                  child: Text(
-                                                                                    incomes[index],
-                                                                                    style: greyDateTexStyle10W400,
-                                                                                    textAlign: TextAlign.end,
-                                                                                  ),
-                                                                                )),
-                                                                      )),
+                                                  child: Container(
+                                                    color: Colors.red,
+                                                    child: GetBuilder<ShowWeeklyIncomeSaveDataTextController>(
+                                                      builder: (controller) {
+                                                        return Visibility(
+                                                          visible: constraints.maxWidth < 1000 ? weeklyIncomeDataController.incomeListVisibility : true,
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(
+                                                              left: maxWidth ? 2.0 : 0.0,
+                                                              // bottom: maxWidth
+                                                              //     ? controller.weeklyIncomeShowTextWeb == false
+                                                              //         ? 62.0
+                                                              //         : controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false
+                                                              //             ? Get.height * 0.042
+                                                              //             : 0.0
+                                                              //     : 0.0,
                                                             ),
+                                                            child: SingleChildScrollView(
+                                                              controller: scrollController3,
+                                                              scrollDirection: Axis.horizontal,
+                                                              physics: const ClampingScrollPhysics(),
+                                                              child: Column(
+                                                                // direction: Axis.vertical,
+                                                                // mainAxisSize: MainAxisSize.min,
+                                                                children: List.generate(
+                                                                    5,
+                                                                    (index) => Row(
+                                                                          // controller: scrollController2,
+                                                                          // physics: const NeverScrollableScrollPhysics(),
+                                                                          // shrinkWrap: true,
+                                                                          // scrollDirection: Axis.horizontal,
+                                                                          children: List.generate(
+                                                                              incomes.length,
+                                                                              (index) => SizedBox(
+                                                                                    width: maxWidth ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                    child: Text(
+                                                                                      incomes[index],
+                                                                                      style: greyDateTexStyle10W400,
+                                                                                      textAlign: TextAlign.center,
+                                                                                    ),
+                                                                                  )),
+                                                                        )),
+                                                              ),
+                                                            ),
+                                                            // child: SizedBox(
+                                                            //   height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
+                                                            //       ? Get.height * 0.041
+                                                            //       : maxWidth
+                                                            //           ? Get.height * 0.019
+                                                            //           : Get.height * 0.018,
+                                                            //   child: ListView(
+                                                            //     controller: scrollController3,
+                                                            //     // physics: NeverScrollableScrollPhysics(),
+                                                            //     shrinkWrap: true,
+                                                            //     scrollDirection: Axis.horizontal,
+                                                            //     children: List.generate(
+                                                            //         incomes.length,
+                                                            //         (index) => SizedBox(
+                                                            //               width: 60,
+                                                            //               child: Text(
+                                                            //                 incomes[index],
+                                                            //                 style: greyDateTexStyle10W400,
+                                                            //                 textAlign: TextAlign.end,
+                                                            //               ),
+                                                            //             )),
+                                                            //   ),
+                                                            // ),
+                                                            // child: scrollableWidget(
+                                                            //     height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
+                                                            //         ? Get.height * 0.041
+                                                            //         : maxWidth
+                                                            //             ? Get.height * 0.019
+                                                            //             : Get.height * 0.018,
+                                                            //     text: incomes,
+                                                            //     listViewItemCount: weeklyIncomePageControllerList.length,
+                                                            //     constraints: constraints,
+                                                            //     controller: weeklyIncomePageControllerList,
+                                                            //     pageViewItemCount: incomes.length,
+                                                            //     onPageChanged: (value) {
+                                                            //       List.generate(
+                                                            //           monthlyIncomepageControllerList.length,
+                                                            //           (index) => monthlyIncomepageControllerList[index].animateToPage(value,
+                                                            //               duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                                            //       List.generate(
+                                                            //           monthlyExpensePageControllerList.length,
+                                                            //           (index) => monthlyExpensePageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //
+                                                            //       List.generate(
+                                                            //           weeklyBudgetPageControllerList.length,
+                                                            //           (index) => weeklyBudgetPageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //       List.generate(
+                                                            //           oneTimeIncomePageControllerList.length,
+                                                            //           (index) => oneTimeIncomePageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //
+                                                            //       List.generate(
+                                                            //           oneTimeExpensePageControllerList.length,
+                                                            //           (index) => oneTimeExpensePageControllerList[index]
+                                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                                            //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //       _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //       _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                                            //     }),
                                                           ),
-                                                          // child: SizedBox(
-                                                          //   height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
-                                                          //       ? Get.height * 0.041
-                                                          //       : maxWidth
-                                                          //           ? Get.height * 0.019
-                                                          //           : Get.height * 0.018,
-                                                          //   child: ListView(
-                                                          //     controller: scrollController3,
-                                                          //     // physics: NeverScrollableScrollPhysics(),
-                                                          //     shrinkWrap: true,
-                                                          //     scrollDirection: Axis.horizontal,
-                                                          //     children: List.generate(
-                                                          //         incomes.length,
-                                                          //         (index) => SizedBox(
-                                                          //               width: 60,
-                                                          //               child: Text(
-                                                          //                 incomes[index],
-                                                          //                 style: greyDateTexStyle10W400,
-                                                          //                 textAlign: TextAlign.end,
-                                                          //               ),
-                                                          //             )),
-                                                          //   ),
-                                                          // ),
-                                                          // child: scrollableWidget(
-                                                          //     height: weeklyIncomeEditModeController.weeklyIncomeEditMode == true && maxWidth
-                                                          //         ? Get.height * 0.041
-                                                          //         : maxWidth
-                                                          //             ? Get.height * 0.019
-                                                          //             : Get.height * 0.018,
-                                                          //     text: incomes,
-                                                          //     listViewItemCount: weeklyIncomePageControllerList.length,
-                                                          //     constraints: constraints,
-                                                          //     controller: weeklyIncomePageControllerList,
-                                                          //     pageViewItemCount: incomes.length,
-                                                          //     onPageChanged: (value) {
-                                                          //       List.generate(
-                                                          //           monthlyIncomepageControllerList.length,
-                                                          //           (index) => monthlyIncomepageControllerList[index].animateToPage(value,
-                                                          //               duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                          //       List.generate(
-                                                          //           monthlyExpensePageControllerList.length,
-                                                          //           (index) => monthlyExpensePageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //
-                                                          //       List.generate(
-                                                          //           weeklyBudgetPageControllerList.length,
-                                                          //           (index) => weeklyBudgetPageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //       List.generate(
-                                                          //           oneTimeIncomePageControllerList.length,
-                                                          //           (index) => oneTimeIncomePageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //
-                                                          //       List.generate(
-                                                          //           oneTimeExpensePageControllerList.length,
-                                                          //           (index) => oneTimeExpensePageControllerList[index]
-                                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                          //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //       _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //       _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                          //     }),
-                                                        ),
-                                                      );
-                                                    },
+                                                        );
+                                                      },
+                                                    ),
                                                   ),
                                                 )
                                               ],
@@ -2447,7 +2696,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     return Padding(
                                       padding: EdgeInsets.only(
                                         bottom: Get.height * 0.015,
-                                        top: index == 0 ? Get.height * 0.01 : 0.0,
+                                        top: index == 0 ? Get.height * 0.009 : 0.0,
                                       ),
                                       child: SwipeActionCell(
                                         backgroundColor: Colors.transparent,
@@ -2488,13 +2737,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         ],
                                         key: UniqueKey(),
                                         child: boolValue == true && constraints.maxWidth < 1000
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(left: 10),
-                                                child: Text(
-                                                  GetIncomeController.to.monthlyIncomeList?[index].name ?? '',
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: blackMontserrat10W500,
+                                            ? SizedBox(
+                                                height: Get.height * 0.017,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(left: 10),
+                                                  child: Text(
+                                                    GetIncomeController.to.monthlyIncomeList?[index].name ?? '',
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: blackMontserrat10W500,
+                                                  ),
                                                 ),
                                               )
                                             : Table(
@@ -2523,7 +2775,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                         : 0.0),
                                                             child: editModeController.editMode == false
                                                                 ? Text(
-                                                                    '${GetIncomeController.to.monthlyIncomeList?[index].name ?? ''}',
+                                                                    GetIncomeController.to.monthlyIncomeList?[index].name ?? '',
                                                                     maxLines: 1,
                                                                     overflow: TextOverflow.ellipsis,
                                                                     style: blackMontserrat10W500,
