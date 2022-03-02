@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
-import 'package:fore_cash/common_widget/common_textfield.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -17,8 +17,7 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  bool isObscureNewPass = true;
-  bool isObscureNewPassCon = true;
+  final FocusNode _confirmPasswordFocus = FocusNode();
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -38,164 +37,186 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               decoration: BoxDecoration(color: constraints.maxWidth > 1000 ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
               width: constraints.maxWidth > 1000 ? 600 : null,
               height: constraints.maxWidth > 1000 ? 450 : null,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: maxWidth ? 0.0 : Get.height * 0.02,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        maxWidth
-                            ? SizedBox()
-                            : IconButton(
-                                splashRadius: 0.1,
-                                onPressed: () {
-                                  Get.back();
-                                },
-                                icon: const Icon(
-                                  Icons.chevron_left,
-                                )),
-                        maxWidth
-                            ? Container()
-                            : Text(
-                                resetPass,
-                                style: mobileAppBarStyle,
-                              ),
-                        SizedBox(
-                          width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
-                        )
-                      ],
-                    ),
-                    maxWidth ? Container() : commonDivider(),
-                    SizedBox(
-                      height: maxWidth ? Get.height * 0.03 : 0.0,
-                    ),
-                    maxWidth
-                        ? Padding(
-                            padding: EdgeInsets.only(
-                              left: Get.width * 0.03,
-                            ),
-                            child: Text(
-                              backButton,
-                              style: backButtonStyle,
-                            ),
-                          )
-                        : Container(),
-                    maxWidth
-                        ? Align(
-                            alignment: FractionalOffset(0.5, 0.0),
-                            child: Text(
-                              forgotPass2,
-                              style: mobileAppBarStyle,
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(
-                      height: maxWidth ? Get.height * 0.015 : Get.height * 0.03,
-                    ),
-                    Align(
-                      alignment: FractionalOffset(0.5, 0.0),
-                      child: Text(
-                        createNewPass,
-                        style: textSpanStyle1,
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: maxWidth ? 0.0 : Get.height * 0.02,
                       ),
-                    ),
-                    SizedBox(
-                      height: Get.height * 0.045,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
-                          right: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
-                          bottom: _keyboardVisibility == 0
-                              ? maxWidth
-                                  ? Get.height * 0.05
-                                  : Get.height * 0.44
-                              : Get.height * 0.12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(newPassword, style: fullNameHintStyle),
+                          maxWidth
+                              ? SizedBox()
+                              : IconButton(
+                                  splashRadius: 0.1,
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  icon: const Icon(
+                                    Icons.chevron_left,
+                                  )),
+                          maxWidth
+                              ? Container()
+                              : Text(
+                                  resetPass,
+                                  style: mobileAppBarStyle,
+                                ),
                           SizedBox(
-                            height: Get.height * 0.01,
-                          ),
-                          commonTextField(
-                            contentPadding: EdgeInsets.only(left: 13),
-                            hint: password,
-                            // controller: _newPassword,
-                            suffixIcon: IconButton(
-                              // splashRadius: 0.1,
-                              icon: isObscureNewPass == true
-                                  ? const Icon(
-                                      Icons.visibility,
-                                      color: commonTextColor2,
-                                    )
-                                  : const Icon(Icons.visibility_off, color: commonTextColor2),
-                              onPressed: () {
-                                setState(() {
-                                  isObscureNewPass = !isObscureNewPass;
-                                });
-                              },
-                            ),
-                            obscureText: isObscureNewPass,
-                            errorTextStyle: const TextStyle(color: commonTextColor),
-                            validator: (value) {
-                              if (_newPassword.text.length < 6) {
-                                return minimumCharacter;
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: Get.height * 0.03,
-                          ),
-                          Text(confirmNewPass, style: fullNameHintStyle),
-                          SizedBox(
-                            height: Get.height * 0.01,
-                          ),
-                          commonTextField(
-                            contentPadding: const EdgeInsets.only(left: 13),
-                            hint: password,
-                            // controller: _newPasswordConfirm,
-                            suffixIcon: IconButton(
-                              splashRadius: 0.1,
-                              icon: isObscureNewPassCon == true
-                                  ? const Icon(
-                                      Icons.visibility,
-                                      color: commonTextColor2,
-                                    )
-                                  : const Icon(Icons.visibility_off, color: commonTextColor2),
-                              onPressed: () {
-                                setState(() {
-                                  isObscureNewPassCon = !isObscureNewPassCon;
-                                });
-                              },
-                            ),
-                            obscureText: isObscureNewPassCon,
-                            errorTextStyle: const TextStyle(color: commonTextColor),
-                            validator: (value) {
-                              // if (_password.text.length < 6) {
-                              //   return minimumCharacter;
-                              // }
-                            },
-                          ),
+                            width: context.isTablet ? Get.width * 0.0 : Get.width * 0.1,
+                          )
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
+                      maxWidth ? Container() : commonDivider(),
+                      SizedBox(
+                        height: maxWidth ? Get.height * 0.03 : 0.0,
                       ),
-                      child: commonButton(
-                        onPress: () {},
-                        text: send,
-                        height: 50,
+                      maxWidth
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                left: Get.width * 0.03,
+                              ),
+                              child: Text(
+                                backButton,
+                                style: backButtonStyle,
+                              ),
+                            )
+                          : Container(),
+                      maxWidth
+                          ? Align(
+                              alignment: FractionalOffset(0.5, 0.0),
+                              child: Text(
+                                forgotPass2,
+                                style: mobileAppBarStyle,
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: maxWidth ? Get.height * 0.015 : Get.height * 0.03,
                       ),
-                    )
-                  ],
+                      Align(
+                        alignment: FractionalOffset(0.5, 0.0),
+                        child: Text(
+                          createNewPass,
+                          style: textSpanStyle1,
+                        ),
+                      ),
+                      SizedBox(
+                        height: Get.height * 0.045,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
+                            right: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
+                            bottom: _keyboardVisibility == 0
+                                ? maxWidth
+                                    ? Get.height * 0.05
+                                    : Get.height * 0.44
+                                : Get.height * 0.12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(newPassword, style: fullNameHintStyle),
+                            SizedBox(
+                              height: Get.height * 0.01,
+                            ),
+                            commonTextFormField(
+                              onFieldSubmit: (String value) {
+                                FocusScope.of(context).requestFocus(_confirmPasswordFocus);
+                              },
+                              inputAction: TextInputAction.next,
+                              hintText: password,
+                              textStyle: textFieldStyle,
+                              hintStyle: textFieldHintStyle,
+                              textEditingController: _newPassword,
+                              isPassword: true,
+                              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                              validationFunction: (value) {
+                                if (_newPassword.text.length < 6) {
+                                  return minimumCharacter;
+                                }
+                              },
+                            ),
+
+                            SizedBox(
+                              height: Get.height * 0.03,
+                            ),
+                            Text(confirmNewPass, style: fullNameHintStyle),
+                            SizedBox(
+                              height: Get.height * 0.01,
+                            ),
+                            commonTextFormField(
+                              textFocusNode: _confirmPasswordFocus,
+                              onFieldSubmit: (String value) {
+                                FocusScope.of(context).requestFocus(FocusNode());
+                              },
+                              inputAction: TextInputAction.next,
+                              hintText: password,
+                              textStyle: textFieldStyle,
+                              hintStyle: textFieldHintStyle,
+                              textEditingController: _newPasswordConfirm,
+                              isPassword: true,
+                              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                              validationFunction: (value) {
+                                if (_newPassword.text.length < 6) {
+                                  return minimumCharacter;
+                                }
+                              },
+                            ),
+                            // commonTextField(
+                            //   contentPadding: const EdgeInsets.only(left: 13),
+                            //   hint: password,
+                            //   // controller: _newPasswordConfirm,
+                            //   suffixIcon: IconButton(
+                            //     splashRadius: 0.1,
+                            //     icon: isObscureNewPassCon == true
+                            //         ? const Icon(
+                            //             Icons.visibility,
+                            //             color: commonTextColor2,
+                            //           )
+                            //         : const Icon(Icons.visibility_off, color: commonTextColor2),
+                            //     onPressed: () {
+                            //       setState(() {
+                            //         isObscureNewPassCon = !isObscureNewPassCon;
+                            //       });
+                            //     },
+                            //   ),
+                            //   obscureText: isObscureNewPassCon,
+                            //   errorTextStyle: const TextStyle(color: commonTextColor),
+                            //   validator: (value) {
+                            //     // if (_password.text.length < 6) {
+                            //     //   return minimumCharacter;
+                            //     // }
+                            //   },
+                            // ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
+                        ),
+                        child: commonButton(
+                          onPress: () {},
+                          text: send,
+                          height: 50,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

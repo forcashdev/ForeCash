@@ -44,34 +44,32 @@ import 'package:get/get.dart';
 // },
 // )
 
-
-   scrollableWidget({double? height, bool? editMode, int? listViewItemCount, BoxConstraints? constraints, Function? onPageChanged, dynamic controller, int? pageViewItemCount, dynamic text}) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: listViewItemCount,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: EdgeInsets.only(bottom: Get.height * 0.014),
-          // color: Colors.red,
-          height: height != null ? height : Get.height * 0.018,
-          child: PageView.builder(
-            // scrollDirection: Axis.horizontal,
-            onPageChanged: (value) {
-              onPageChanged!(value);
-            },
-            controller: controller[index],
-            itemCount: pageViewItemCount,
-            itemBuilder: (BuildContext context, int index1) {
-              return Text(
-                text[index1],
-                style: greyIncomeTexStyle10W500,
-                textAlign: TextAlign.center,
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
+scrollableWidget({double? height, bool? editMode, int? listViewItemCount, BoxConstraints? constraints, Function? onPageChanged, dynamic controller, int? pageViewItemCount, dynamic text}) {
+  return ListView.builder(
+    physics: NeverScrollableScrollPhysics(),
+    shrinkWrap: true,
+    itemCount: listViewItemCount,
+    itemBuilder: (context, index) {
+      return Container(
+        margin: EdgeInsets.only(bottom: Get.height * 0.014),
+        // color: Colors.red,
+        height: height ?? Get.height * 0.018,
+        child: PageView.builder(
+          // scrollDirection: Axis.horizontal,
+          onPageChanged: (value) {
+            onPageChanged!(value);
+          },
+          controller: controller[index],
+          itemCount: pageViewItemCount,
+          itemBuilder: (BuildContext context, int index1) {
+            return Text(
+              text[index1],
+              style: greyIncomeTexStyle10W500,
+              textAlign: TextAlign.center,
+            );
+          },
+        ),
+      );
+    },
+  );
+}

@@ -56,6 +56,8 @@ String addMonthlyIncome = '+ Add New Monthly Income';
 String addOneTimeIncome2 = '+ Add One Time Income';
 String addOneTimeExpense2 = '+ Add One Time Expense';
 String addOneTimeIncome = 'Add One Time Income';
+String sureToDelete = 'Are you sure you want to delete ?';
+String sureToDeleteSubTitle = "Click 'Yes' to confirm deletion. Careful, deletion cannot be undone. ";
 String oneTimeIncome = 'One Time Income';
 String oneTimeIExpense = 'One Time Expense';
 String addOneTimeExpense = 'Add One Time Expense';
@@ -256,7 +258,7 @@ List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyI
 String cancel = 'Cancel';
 List<String> dataDateList = [
   "Sep, 1",
-  "Dec, 1",
+  "Sep, 2",
   "Jun, 15",
   "May, 15",
   "Mar, 6",
@@ -324,18 +326,23 @@ const String saveYourChanges = 'Do you want to save your Changes ?';
 const String description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ';
 const String yes = 'Yes';
 const String no = 'No';
+const String saveChanges = 'Save Changes';
 
 ///Api Config
 
 const String baseUri = "https://node.staging.rentechdigital.com:3001/";
 const String mLogIn = 'auth/login';
 const String mRegister = 'auth/register';
+const String mSetUpCalendar = 'auth/configuration';
 const String mGetIncome = 'app/getincome';
 const String mAddIncome = 'app/addincome';
+const String mUpsertIncome = 'app/upsertincome';
 const String mDeleteIncomeExpense = 'app/deleteincome';
 const String rEmail = 'email';
+const String rLowBalance = 'lowBalance';
 const String rPassword = 'password';
 const String rName = 'name';
+const String rResetWeekOn = 'resetWeekOn';
 const String rIncomeOutgoing = 'income_outgoing';
 const String rWeekMonth = 'week_month';
 const String rPaidOn = 'paid_on';

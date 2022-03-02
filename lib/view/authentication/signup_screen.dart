@@ -2,12 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
-import 'package:fore_cash/common_widget/common_textfield.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/controller/register_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
-import 'package:fore_cash/getx/signup_password_obscure_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -27,12 +25,13 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   // bool isObscure = true;
   final screenIndexController = Get.put(ScreenIndexController());
-  final obscureTextController = Get.put(SignUpPasswordObscureController());
+  // final obscureTextController = Get.put(SignUpPasswordObscureController());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _name = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  final FocusNode _focusOnEmail = FocusNode();
+  final FocusNode _focusOnPassword = FocusNode();
 
   // final controller = Get.put(ObscureText());
   @override
@@ -106,16 +105,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            commonTextField(
-                              hint: name,
-                              controller: _name,
-                              textInputAction: TextInputAction.next,
-                              validator: (value) {
+                            commonTextFormField(
+                              onFieldSubmit: (String value) {
+                                FocusScope.of(context).requestFocus(_focusOnEmail);
+                              },
+                              inputAction: TextInputAction.next,
+                              hintText: name,
+                              textStyle: textFieldStyle,
+                              hintStyle: textFieldHintStyle,
+                              textEditingController: _name,
+                              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
+                              validationFunction: (value) {
                                 if (_name.text.isEmpty) {
                                   return enterName;
                                 }
                               },
                             ),
+
                             SizedBox(
                               height: constraints.maxWidth > 1000 ? Get.height * 0.04 : Get.height * 0.05,
                             ),
@@ -123,12 +134,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-
-                            commonTextField(
-                              textInputAction: TextInputAction.next,
-                              hint: emailAddress,
-                              controller: _email,
-                              validator: (value) {
+                            commonTextFormField(
+                              textFocusNode: _focusOnEmail,
+                              onFieldSubmit: (String value) {
+                                FocusScope.of(context).requestFocus(_focusOnPassword);
+                              },
+                              inputAction: TextInputAction.next,
+                              hintText: emailAddress,
+                              textStyle: textFieldStyle,
+                              hintStyle: textFieldHintStyle,
+                              textEditingController: _email,
+                              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
+                              validationFunction: (value) {
                                 if (_email.text.isValidEmail()) {
                                   return null;
                                 } else {
@@ -136,6 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 }
                               },
                             ),
+
                             SizedBox(
                               height: constraints.maxWidth > 1000 ? Get.height * 0.04 : Get.height * 0.05,
                             ),
@@ -150,6 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             Padding(
                               padding: EdgeInsets.only(bottom: constraints.maxWidth > 1000 ? Get.height * 0.05 : Get.height * 0.2),
                               child: commonTextFormField(
+                                textFocusNode: _focusOnPassword,
                                 onFieldSubmit: (String value) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                 },

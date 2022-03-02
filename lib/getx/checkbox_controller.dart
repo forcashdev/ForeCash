@@ -2,13 +2,13 @@ import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:get/get.dart';
 
 class CheckBoxController extends GetxController {
+  static CheckBoxController get to => Get.find();
   final getIncomeController = Get.put(GetIncomeController());
+  List<bool> monthlyIncomeCheckBoxValueList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => true);
+  List<bool> weeklyIncomeCheckBoxValueList = List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) => true);
+  List<bool> monthlyExpenseCheckBoxValueList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => true);
+  List<bool> weeklyBudgetCheckBoxValueList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => true);
 
-  List<bool> monthlyIncomeCheckBoxValueList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false);
-  List<bool> weeklyIncomeCheckBoxValueList = List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) => false);
-  List<bool> monthlyExpenseCheckBoxValueList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false);
-  List<bool> weeklyBudgetCheckBoxValueList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false);
-  // List<bool> get SelectedCheckBoxValueList => checkBoxValueList;
   void selectCheckBox({bool? value, int? index}) {
     monthlyIncomeCheckBoxValueList[index!] = value!;
     update();

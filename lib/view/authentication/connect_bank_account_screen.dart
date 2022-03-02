@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -94,6 +95,8 @@ class ConnectBankAccountScreen extends StatelessWidget {
                   // print(controller.selectedIndex);
                   // screenIndex = 2;
                   // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
+                  GetIncomeController.to.monthlyIncomeList?.clear();
+                  GetIncomeController.to.monthlyIncomeList?.refresh();
                   screenIndexController.updateIndex(index: 2);
                   // Navigator.push(
                   //     context,

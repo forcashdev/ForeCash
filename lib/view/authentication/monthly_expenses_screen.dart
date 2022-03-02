@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
@@ -13,7 +13,7 @@ import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/getx/visibility_controller.dart';
-import 'package:fore_cash/model/income_request_model.dart';
+import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -31,20 +31,34 @@ class MonthlyExpensesScreen extends StatefulWidget {
 class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
   final TextEditingController _expenseName2 = TextEditingController();
   final TextEditingController _expenseAmount2 = TextEditingController();
-  TextEditingController? _monthlyExpenseName;
-  TextEditingController? _monthlyAmount;
+
   final visibilityController = Get.put(VisibilityController());
   final controller = Get.put(SelectedDropDownItem());
   final checkBoxController = Get.put(CheckBoxController());
   final getIncomeController = Get.put(GetIncomeController());
   final screenIndexController = Get.put(ScreenIndexController());
   DateTime currentDate = DateTime.now();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"}).whenComplete(() {
+      if (GetIncomeController.to.monthlyExpenseList!.isEmpty) {
+        GetIncomeController.to.getMonthlyExpenseList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
           screenIndexController.updateIndex(index: 3);
+          GetIncomeController.to.weeklyIncomesList?.clear();
+          GetIncomeController.to.weeklyIncomesList?.refresh();
+          CheckBoxController.to.weeklyIncomeCheckBoxValueList.clear();
           return false;
         },
         child: StreamBuilder(
@@ -54,7 +68,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth > 1000;
                   return Scaffold(
-                    backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+                    backgroundColor: maxWidth ? backGroundColor : Colors.white,
                     body: Align(
                       alignment: maxWidth ? Alignment.center : Alignment.topCenter,
                       child: Container(
@@ -62,54 +76,57 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         decoration: BoxDecoration(color: maxWidth ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
                         width: maxWidth ? Get.width / 1.4 : null,
                         height: maxWidth ? Get.height * 0.78 : null,
-                        child: Column(
-                          children: [
-                            _headerWidget(constraints: constraints),
-                            Expanded(
-                              flex: maxWidth ? 2 : 2,
-                              child: Container(
-                                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                                // width: maxWidth ? Get.width / 1.5 : null,
-                                // height: maxWidth ? 300 : null,
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              _headerWidget(constraints: constraints),
+                              Expanded(
+                                flex: maxWidth ? 2 : 2,
+                                child: Container(
+                                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                  // width: maxWidth ? Get.width / 1.5 : null,
+                                  // height: maxWidth ? 300 : null,
 
-                                decoration: BoxDecoration(
-                                    // color: Colors.red,
-                                    border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _nameTableRowWidget(),
-                                    SizedBox(
-                                      height: Get.height * 0.01,
-                                    ),
-                                    maxWidth
-                                        ? Divider(
-                                            color: commonGreyColor.withOpacity(0.5),
-                                          )
-                                        : Container(),
-                                    // SizedBox(
-                                    //   height: Get.height * 0.020,
-                                    // ),
-                                    Expanded(
-                                        flex: maxWidth ? 2 : 2,
-                                        child: SingleChildScrollView(
-                                          child: Column(
-                                            children: [
-                                              monthlyExpenseRowWidget(
-                                                constraints: constraints,
-                                              ),
-                                              _addNewMonthlyExpenseWidget(constraints: constraints),
-                                              // _addMonthlyExpenseButton(constraints: constraints),
-                                            ],
-                                          ),
-                                        )),
-                                  ],
+                                  decoration: BoxDecoration(
+                                      // color: Colors.red,
+                                      border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _nameTableRowWidget(),
+                                      SizedBox(
+                                        height: Get.height * 0.01,
+                                      ),
+                                      maxWidth
+                                          ? Divider(
+                                              color: commonGreyColor.withOpacity(0.5),
+                                            )
+                                          : Container(),
+                                      // SizedBox(
+                                      //   height: Get.height * 0.020,
+                                      // ),
+                                      Expanded(
+                                          flex: maxWidth ? 2 : 2,
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              children: [
+                                                monthlyExpenseRowWidget(
+                                                  constraints: constraints,
+                                                ),
+                                                _addNewMonthlyExpenseWidget(constraints: constraints),
+                                                // _addMonthlyExpenseButton(constraints: constraints),
+                                              ],
+                                            ),
+                                          )),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
-                          ],
+                              Visibility(visible: maxWidth ? true : false, child: _nextButtonWidget(constraints: constraints))
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -278,6 +295,9 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                 : IconButton(
                     onPressed: () {
                       screenIndexController.updateIndex(index: 3);
+                      GetIncomeController.to.weeklyIncomesList?.clear();
+                      GetIncomeController.to.weeklyIncomesList?.refresh();
+                      CheckBoxController.to.weeklyIncomeCheckBoxValueList.clear();
                     },
                     icon: const Icon(
                       Icons.chevron_left,
@@ -307,6 +327,9 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                 child: TextButton(
                     onPressed: () {
                       screenIndexController.updateIndex(index: 3);
+                      GetIncomeController.to.weeklyIncomesList?.clear();
+                      GetIncomeController.to.weeklyIncomesList?.refresh();
+                      CheckBoxController.to.weeklyIncomeCheckBoxValueList.clear();
                     },
                     child: Text(
                       backButton,
@@ -347,19 +370,47 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
       shrinkWrap: true,
       itemCount: GetIncomeController.to.monthlyExpenseList?.length,
       itemBuilder: (context, index) {
-        _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name);
-        _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString());
-        print('Check bob leangth=> ${checkBoxController.monthlyExpenseCheckBoxValueList.length}');
+        TextEditingController? _monthlyExpenseName;
+        TextEditingController? _monthlyAmount;
+        RxBool whenErrorOnlyShowRedBorder = false.obs;
+        RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
+        _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? '');
+        _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString() ?? '');
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
-          child: Slidable(
-            actionPane: const SlidableDrawerActionPane(),
-            actionExtentRatio: 0.13,
-            secondaryActions: [
-              deleteImageWidget(onTap: () {
-                GetIncomeController.to.monthlyExpenseList?.removeAt(index);
-              }),
+          child: SwipeActionCell(
+            backgroundColor: Colors.transparent,
+            isDraggable: constraints!.maxWidth > 1000 ? false : true,
+            trailingActions: [
+              SwipeAction(
+                backgroundRadius: 5,
+                widthSpace: 50,
+                color: colorsFFEBEB,
+                icon: Image.asset(
+                  deleteImage,
+                  height: Get.height * 0.025,
+                ),
+                onTap: (p0) {
+                  showCommonDialog(
+                      context: context,
+                      headerTitle: sureToDelete,
+                      descriptionTitle: sureToDeleteSubTitle,
+                      buttonColor: Colors.white,
+                      saveButtonBorderColor: colorsEE4242,
+                      noButtonTextStyle: noButtonTextStyle,
+                      saveButtonTextStyle: yesButtonTextStyle,
+                      noButtonColor: Colors.black,
+                      onPressYes: () {
+                        GetIncomeController.to.monthlyExpenseList?.removeAt(index);
+                        Get.back();
+                      },
+                      onPressNo: () {
+                        Get.back();
+                      });
+                },
+              ),
             ],
+            key: UniqueKey(),
             child: Table(
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(0.35),
@@ -372,7 +423,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               children: [
                 TableRow(
                   children: [
-                    constraints!.maxWidth < 1000
+                    constraints.maxWidth < 1000
                         ? Container(
                             height: Get.height * 0.044,
                             // width: 8,
@@ -400,32 +451,55 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                           ),
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Padding(
-                          padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                          child: commonTextFormField(
-                              inputAction: TextInputAction.next,
-                              // maxLine: 2,
-                              inputFormatter: [characterInputFormatter()],
-                              //contentPadding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
-                              contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                              textStyle: incomeNameStyle,
-                              textEditingController: _monthlyExpenseName,
-                              onChangedFunction: (value) {
-                                GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
-                              })),
+                      child: StreamBuilder(
+                          stream: whenErrorOnlyShowRedBorder.stream,
+                          builder: (context, snapshot) {
+                            return Padding(
+                                padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+                                child: commonTextFormField(
+                                    hintText: expenseName,
+                                    hintStyle: incomeNameStyle,
+                                    inputAction: TextInputAction.next,
+                                    enabledBorder: whenErrorOnlyShowRedBorder.value
+                                        ? OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderRadius: BorderRadius.circular(4.0),
+                                          )
+                                        : null,
+                                    validationFunction: (value) {
+                                      if (whenErrorOnlyShowRedBorder.value != value.isEmpty) {
+                                        whenErrorOnlyShowRedBorder.value = value.isEmpty;
+                                        print(whenErrorOnlyShowRedBorder.value);
+                                        whenErrorOnlyShowRedBorder.refresh();
+                                      }
+                                      return null;
+                                    },
+                                    // maxLine: 2,
+                                    inputFormatter: [characterInputFormatter()],
+                                    //contentPadding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
+                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                    textStyle: incomeNameStyle,
+                                    textEditingController: _monthlyExpenseName,
+                                    onChangedFunction: (value) {
+                                      GetIncomeController.to.monthlyExpenseList?[index].name = value;
+                                      // GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
+                                    }));
+                          }),
                     ),
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.fill,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
-                        // width: widget.constraints!.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        // height: Get.height * 0.044,
-
                         child: commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
-                            // value: controller.selectedMonthlyExpenseDate[index],
-                            value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn}th',
+                            value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn ?? 1}th'
+                                .replaceAllMapped('1th', (match) => '1st')
+                                .replaceAllMapped('2th', (match) => '2nd')
+                                .replaceAllMapped('3th', (match) => '3rd')
+                                .replaceAllMapped('11st', (match) => '11th')
+                                .replaceAllMapped('12nd', (match) => '12th')
+                                .replaceAllMapped('13rd', (match) => '13th'),
                             itemList: dateList,
                             onChanged: (item) {
                               GetIncomeController.to.monthlyExpenseList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
@@ -433,7 +507,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               // controller.changeMonthlyExpenseDate(item: item, index: index);
                               print(item);
                             }),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
@@ -447,7 +521,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         child: commonDropDown(
                             selectedItemTextStyle: dropDownStyle2,
                             valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.monthlyExpenseList?[index].every} mon',
+                            value: '${GetIncomeController.to.monthlyExpenseList?[index].every ?? 1} mon',
                             // value: controller.selectedMonthlyExpenseMonth[index],
                             itemList: months,
                             onChanged: (item) {
@@ -456,7 +530,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               // controller.changeMonthlyExpenseMonth(item: item, index: index);
                               print(item);
                             }),
-                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
@@ -467,34 +541,53 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             _selectDate(context: context, index: index);
                           },
                           child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${GetIncomeController.to.monthlyExpenseList?[index].date}',
+                              DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
                               // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
                               style: dateStyle,
                               maxLines: 1,
                             ),
-                            margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                            margin: EdgeInsets.only(right: Get.width * 0.02),
                             decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                           ),
                         )),
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: Get.width * 0.02),
-                        child: commonTextFormField(
-                            prefixText: '\$',
-                            prefixstyle: incomeNameStyle,
-                            keyboardType: TextInputType.phone,
-                            inputAction: TextInputAction.done,
-                            inputFormatter: [digitInputFormatter()],
-                            contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                            textStyle: incomeNameStyle,
-                            textEditingController: _monthlyAmount,
-                            onChangedFunction: (value) {
-                              GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(_monthlyAmount!.text);
-                            }),
-                      ),
+                      child: StreamBuilder(
+                          stream: whenErrorOnlyShowRedBorderAmount.stream,
+                          builder: (context, snapshot) {
+                            return Padding(
+                              padding: EdgeInsets.only(right: Get.width * 0.02),
+                              child: commonTextFormField(
+                                  prefixText: '\$',
+                                  prefixstyle: incomeNameStyle,
+                                  keyboardType: TextInputType.phone,
+                                  enabledBorder: whenErrorOnlyShowRedBorderAmount.value
+                                      ? OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderRadius: BorderRadius.circular(4.0),
+                                        )
+                                      : null,
+                                  validationFunction: (value) {
+                                    if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {
+                                      whenErrorOnlyShowRedBorderAmount.value = value.isEmpty;
+                                      print(whenErrorOnlyShowRedBorderAmount.value);
+                                      whenErrorOnlyShowRedBorderAmount.refresh();
+                                    }
+                                    return null;
+                                  },
+                                  inputAction: TextInputAction.done,
+                                  inputFormatter: [digitInputFormatter()],
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                  textStyle: incomeNameStyle,
+                                  textEditingController: _monthlyAmount,
+                                  onChangedFunction: (value) {
+                                    GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(value);
+                                  }),
+                            );
+                          }),
                     )
                   ],
                 ),
@@ -524,189 +617,238 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
       padding: EdgeInsets.only(top: Get.height * 0.01),
       child: GetBuilder<VisibilityController>(
         builder: (controller1) {
-          return Visibility(
-            visible: controller1.visibility,
-            replacement: Padding(
-              padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
-              child: GestureDetector(
-                onTap: () {
-                  if (GetIncomeController.to.monthlyExpenseList?.length == 1) {
-                    GetIncomeController.to.monthlyExpenseList?[0].amount = int.parse(_monthlyAmount!.text.toString());
-                    GetIncomeController.to.monthlyExpenseList?[0].name = _monthlyExpenseName!.text;
-                    GetIncomeController.to.monthlyExpenseList?[0].incomeOutgoing = 2;
-                    GetIncomeController.to.monthlyExpenseList?[0].weekMonth = 2;
-                    GetIncomeController.to.monthlyExpenseList?[0].date = DateTime.now().toString();
-
-                    controller.selectedMonthlyIncomeDateList.add(controller.selectedDate as Object);
-                    controller.selectedMonthlyIncomeMonthList.add(controller.selectedMonth as Object);
-                    checkBoxController.weeklyIncomeCheckBoxValueList.add(false);
-                  }
-                  visibilityController.changeVisibility();
-                },
-                child: Align(
-                  alignment: const FractionalOffset(0.015, 0.0),
-                  child: Text(
-                    addWeeklyIncome,
-                    style: addWeekIncomeStyle,
-                  ),
+          RxBool whenErrorShowRedBorder = false.obs;
+          RxBool whenErrorShowRedBorderAmount = false.obs;
+          return Padding(
+            padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
+            child: GestureDetector(
+              onTap: () {
+                GetIncomeController.to.monthlyExpenseList?.add(DataModel(
+                  name: '',
+                  amount: 0,
+                  date: DateTime.now().toString(),
+                  weekMonth: 2,
+                  incomeOutgoing: 2,
+                ));
+                checkBoxController.monthlyExpenseCheckBoxValueList.add(true);
+                GetIncomeController.to.monthlyExpenseList?.refresh();
+                // visibilityController.changeVisibility();
+              },
+              child: Align(
+                alignment: const FractionalOffset(0.015, 0.0),
+                child: Text(
+                  addWeeklyIncome,
+                  style: addWeekIncomeStyle,
                 ),
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: Get.height * 0.019,
-              ),
-              child: Column(
-                children: [
-                  Table(
-                    columnWidths: const <int, TableColumnWidth>{
-                      0: FlexColumnWidth(0.35),
-                      1: FlexColumnWidth(3),
-                      2: FlexColumnWidth(2),
-                      3: FlexColumnWidth(2),
-                      4: FlexColumnWidth(2),
-                      5: FlexColumnWidth(2),
-                    },
-                    children: [
-                      TableRow(
-                        children: [
-                          SizedBox(height: Get.height * 0.044),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
-                              child: commonTextFormField(
-                                  hintText: addExpense,
-                                  hintStyle: incomeNameStyle,
-                                  inputAction: TextInputAction.next,
-                                  inputFormatter: [characterInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                  textStyle: incomeNameStyle,
-                                  textEditingController: _expenseName2),
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                              ),
-                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                              // height: Get.height * 0.044,
-                              // alignment: Alignment.center,
-                              child: dropDownDayGetBuilder(dropDownList: dateList),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
-                              // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                              // height: Get.height * 0.044,
-                              // alignment: Alignment.center,
-                              child: dropDownWeekGetBuilder(dropDownList: months),
-                              margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                              decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.fill,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _selectDate(context: context);
-                                },
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                                    style: dateStyle,
-                                    maxLines: 1,
-                                  ),
-                                  margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-                                  decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                                ),
-                              )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.fill,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: Get.width * 0.02),
-                              child: commonTextFormField(
-                                  prefixText: '\$',
-                                  keyboardType: TextInputType.phone,
-                                  prefixstyle: incomeNameStyle,
-                                  inputAction: TextInputAction.done,
-                                  inputFormatter: [digitInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                  textStyle: incomeNameStyle,
-                                  textEditingController: _expenseAmount2),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: Get.height * 0.01, left: constraints.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.018),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: Get.width * 0.01,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // setState(() {
-                            //   MonthlyExpensesModel.monthlyExpensesListOld.add(MonthlyExpensesModel(expenseName: _monthlyExpenseName.text, amount: _monthlyAmount.text));
-                            //   controller.selectedMonthlyExpenseDate.add(controller.selectedSingleMonthlyExpenseDate as Object);
-                            //   controller.selectedMonthlyExpenseMonth.add(controller.selectedSingleMonthlyExpenseMonth as Object);
-                            //   checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
-                            //   controller1.changeVisibility();
-                            // });
-                            // _monthlyAmount.clear();
-                            // _monthlyExpenseName.clear();
-
-                            GetIncomeController.to.monthlyExpenseList?.add(Income(
-                                name: _expenseName2.text,
-                                amount: int.parse(_expenseAmount2.text),
-                                incomeOutgoing: 2,
-                                weekMonth: 2,
-                                every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
-                                paidOn: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                                date: DateFormat('yyyy-MM-dd').format(currentDate)));
-                            checkBoxController.monthlyExpenseCheckBoxValueList.add(false);
-                            // print('00000${checkBoxController.monthlyExpenseCheckBoxValueList.indexWhere((element) => element)}');
-                            // checkBoxController.monthlyExpenseCheckBoxValueList.forEach((element) {
-                            //   print(element);
-                            // });
-                            controller1.changeVisibility();
-                            // monthlyIncomeEditMode.showEditMode();
-                          },
-                          child: Text(
-                            save,
-                            style: greenMontserrat11W500,
-                          ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.017,
-                        ),
-                        InkWell(
-                          child: Text(
-                            cancel,
-                            style: redMontserrat11W500,
-                          ),
-                          onTap: () {
-                            controller1.changeVisibility();
-                            // monthlyIncomeEditMode.showEditMode();
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
           );
+          //   Visibility(
+          //   visible: controller1.visibility,
+          //   replacement: Padding(
+          //     padding: EdgeInsets.only(bottom: Get.height * 0.01, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
+          //     child: GestureDetector(
+          //       onTap: () {
+          //         visibilityController.changeVisibility();
+          //       },
+          //       child: Align(
+          //         alignment: const FractionalOffset(0.015, 0.0),
+          //         child: Text(
+          //           addWeeklyIncome,
+          //           style: addWeekIncomeStyle,
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          //   child: Padding(
+          //     padding: EdgeInsets.only(
+          //       bottom: Get.height * 0.019,
+          //     ),
+          //     child: Column(
+          //       children: [
+          //         Table(
+          //           columnWidths: const <int, TableColumnWidth>{
+          //             0: FlexColumnWidth(0.35),
+          //             1: FlexColumnWidth(3),
+          //             2: FlexColumnWidth(2),
+          //             3: FlexColumnWidth(2),
+          //             4: FlexColumnWidth(2),
+          //             5: FlexColumnWidth(2),
+          //           },
+          //           children: [
+          //             TableRow(
+          //               children: [
+          //                 SizedBox(height: Get.height * 0.044),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: StreamBuilder(
+          //                       stream: whenErrorShowRedBorder.stream,
+          //                       builder: (context, snapshot) {
+          //                         return Padding(
+          //                           padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
+          //                           child: commonTextFormField(
+          //                               hintText: addExpense,
+          //                               hintStyle: incomeNameStyle,
+          //                               enabledBorder: whenErrorShowRedBorder.value
+          //                                   ? OutlineInputBorder(
+          //                                       borderSide: const BorderSide(color: Colors.red),
+          //                                       borderRadius: BorderRadius.circular(4.0),
+          //                                     )
+          //                                   : null,
+          //                               validationFunction: (value) {
+          //                                 if (whenErrorShowRedBorder.value != value.isEmpty) {
+          //                                   whenErrorShowRedBorder.value = value.isEmpty;
+          //                                   print(whenErrorShowRedBorder.value);
+          //                                   whenErrorShowRedBorder.refresh();
+          //                                 }
+          //                                 return null;
+          //                               },
+          //                               inputAction: TextInputAction.next,
+          //                               inputFormatter: [characterInputFormatter()],
+          //                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+          //                               textStyle: incomeNameStyle,
+          //                               textEditingController: _expenseName2),
+          //                         );
+          //                       }),
+          //                 ),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: Container(
+          //                     padding: const EdgeInsets.symmetric(
+          //                       horizontal: 4,
+          //                     ),
+          //                     // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+          //                     // height: Get.height * 0.044,
+          //                     // alignment: Alignment.center,
+          //                     child: dropDownDayGetBuilder(dropDownList: dateList),
+          //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                   ),
+          //                 ),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: Container(
+          //                     padding: const EdgeInsets.symmetric(horizontal: 4),
+          //                     // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+          //                     // height: Get.height * 0.044,
+          //                     // alignment: Alignment.center,
+          //                     child: dropDownWeekGetBuilder(dropDownList: months),
+          //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                   ),
+          //                 ),
+          //                 TableCell(
+          //                     verticalAlignment: TableCellVerticalAlignment.fill,
+          //                     child: GestureDetector(
+          //                       onTap: () {
+          //                         _selectDate(context: context);
+          //                       },
+          //                       child: Container(
+          //                         alignment: Alignment.centerLeft,
+          //                         child: Text(
+          //                           '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+          //                           style: dateStyle,
+          //                           maxLines: 1,
+          //                         ),
+          //                         margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+          //                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+          //                       ),
+          //                     )),
+          //                 TableCell(
+          //                   verticalAlignment: TableCellVerticalAlignment.fill,
+          //                   child: StreamBuilder(
+          //                       stream: whenErrorShowRedBorderAmount.stream,
+          //                       builder: (context, snapshot) {
+          //                         return Padding(
+          //                           padding: EdgeInsets.only(right: Get.width * 0.02),
+          //                           child: commonTextFormField(
+          //                               prefixText: '\$',
+          //                               enabledBorder: whenErrorShowRedBorderAmount.value
+          //                                   ? OutlineInputBorder(
+          //                                       borderSide: const BorderSide(color: Colors.red),
+          //                                       borderRadius: BorderRadius.circular(4.0),
+          //                                     )
+          //                                   : null,
+          //                               validationFunction: (value) {
+          //                                 if (whenErrorShowRedBorderAmount.value != value.isEmpty) {
+          //                                   whenErrorShowRedBorderAmount.value = value.isEmpty;
+          //                                   print(whenErrorShowRedBorderAmount.value);
+          //                                   whenErrorShowRedBorderAmount.refresh();
+          //                                 }
+          //                                 return null;
+          //                               },
+          //                               keyboardType: TextInputType.phone,
+          //                               prefixstyle: incomeNameStyle,
+          //                               inputAction: TextInputAction.done,
+          //                               inputFormatter: [digitInputFormatter()],
+          //                               contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+          //                               textStyle: incomeNameStyle,
+          //                               textEditingController: _expenseAmount2),
+          //                         );
+          //                       }),
+          //                 ),
+          //               ],
+          //             ),
+          //           ],
+          //         ),
+          //         Padding(
+          //           padding: EdgeInsets.only(top: Get.height * 0.01, left: constraints.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.018),
+          //           child: Row(
+          //             children: [
+          //               SizedBox(
+          //                 width: Get.width * 0.01,
+          //               ),
+          //               InkWell(
+          //                 onTap: () {
+          //                   if (controller.selectedSingleMonthlyExpenseMonth == null || controller.selectedSingleMonthlyExpenseDate == null) {
+          //                     Fluttertoast.showToast(
+          //                         webPosition: 'center',
+          //                         msg: "Select DropDown",
+          //                         toastLength: Toast.LENGTH_SHORT,
+          //                         gravity: ToastGravity.BOTTOM,
+          //                         // webBgColor: Colors.black.withOpacity(0.5), // also possible "TOP" and "CENTER"
+          //                         // backgroundColor: Colors.black.withOpacity(0.5),
+          //                         textColor: const Color(0xffffffff));
+          //                   } else if (_formKey.currentState!.validate()) {
+          //                     GetIncomeController.to.monthlyExpenseList?.add(DataModel(
+          //                         name: _expenseName2.text,
+          //                         amount: int.parse(_expenseAmount2.text),
+          //                         incomeOutgoing: 2,
+          //                         weekMonth: 2,
+          //                         every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+          //                         paidOn: int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+          //                         date: DateFormat('yyyy-MM-dd').format(currentDate)));
+          //                     checkBoxController.monthlyExpenseCheckBoxValueList.add(true);
+          //                     controller1.changeVisibility();
+          //                     _expenseName2.clear();
+          //                     _expenseAmount2.clear();
+          //                   }
+          //                 },
+          //                 child: Text(
+          //                   save,
+          //                   style: greenMontserrat11W500,
+          //                 ),
+          //               ),
+          //               SizedBox(
+          //                 width: Get.width * 0.017,
+          //               ),
+          //               InkWell(
+          //                 child: Text(
+          //                   cancel,
+          //                   style: redMontserrat11W500,
+          //                 ),
+          //                 onTap: () {
+          //                   controller1.changeVisibility();
+          //                   // monthlyIncomeEditMode.showEditMode();
+          //                 },
+          //               )
+          //             ],
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // );
         },
       ),
     );
@@ -723,22 +865,23 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         height: 50,
         text: next,
         onPress: () {
-          // List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) {
-          //   GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
-          //   GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(_monthlyAmount!.text);
-          // });
-          print(GetIncomeController.to.monthlyExpenseList);
-          CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': GetIncomeController.to.monthlyExpenseList});
-          // screenIndex = 5;
-          // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-          // screenIndexController.updateIndex(index: 5);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => SetupWeeklyBudgetScreen(),
-          //     ));
+          if (_formKey.currentState!.validate()) {
+            if (constraints.maxWidth < 1000) {
+              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': GetIncomeController.to.monthlyExpenseList});
+            } else {
+              List<DataModel> tempMonthlyExpenseList = [];
+              checkBoxController.monthlyExpenseCheckBoxValueList.asMap().forEach((index, value) {
+                if (value) {
+                  tempMonthlyExpenseList.add(GetIncomeController.to.monthlyExpenseList!.value[index]);
+                }
+              });
 
-          // Get.to(SetupWeeklyBudgetScreen());
+              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': tempMonthlyExpenseList});
+            }
+            GetIncomeController.to.weeklyBudgetList?.clear();
+            GetIncomeController.to.weeklyBudgetList?.refresh();
+            CheckBoxController.to.weeklyBudgetCheckBoxValueList.clear();
+          }
         },
       ),
     );

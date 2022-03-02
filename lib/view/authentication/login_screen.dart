@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
-import 'package:fore_cash/common_widget/common_textfield.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/controller/login_controller.dart';
-import 'package:fore_cash/getx/login_password_obscure_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -23,22 +22,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // bool isObscure = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
-  final obscureTextController = Get.put(LogInPasswordObscureController());
-  final screenIndexController = Get.put(ScreenIndexController());
+  final TextEditingController _email = TextEditingController(text: 'navtan@gmail.com');
+  final TextEditingController _password = TextEditingController(text: '123456');
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   if (kDebugMode) {
-  //     _email.text = 'admin5@gmail.com';
-  //     _password.text = '12345';
-  //   }
-  // }
+  final screenIndexController = Get.put(ScreenIndexController());
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +99,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            commonTextField(
-                              textInputAction: TextInputAction.next,
-                              hint: emailAddress,
-                              controller: _email,
-                              validator: (value) {
+                            commonTextFormField(
+                              onFieldSubmit: (String value) {
+                                FocusScope.of(context).requestFocus(_focusNode);
+                              },
+                              inputAction: TextInputAction.next,
+                              hintText: emailAddress,
+                              textStyle: textFieldStyle,
+                              hintStyle: textFieldHintStyle,
+                              textEditingController: _email,
+                              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
+                              validationFunction: (value) {
                                 if (_email.text.isValidEmail()) {
                                   return null;
                                 } else {
@@ -122,6 +122,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                             ),
+                            // commonTextField(
+                            //   textInputAction: TextInputAction.next,
+                            //   hint: emailAddress,
+                            //   controller: _email,
+                            //   validator: (value) {
+                            //     if (_email.text.isValidEmail()) {
+                            //       return null;
+                            //     } else {
+                            //       return notValidEmail;
+                            //     }
+                            //   },
+                            // ),
                             SizedBox(
                               height: Get.height * 0.04,
                             ),
@@ -134,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    Get.to(ForgotPassword());
+                                    Get.to(const ForgotPassword());
                                   },
                                   child: Text(
                                     forgotPass,
@@ -148,34 +160,27 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(bottom: constraints.maxWidth > 1000 ? Get.height * 0.05 : Get.height * 0.36),
-                              child: GetBuilder<LogInPasswordObscureController>(
-                                builder: (controller) {
-                                  return commonTextField(
-                                    textInputAction: TextInputAction.done,
-                                    hint: password,
-                                    controller: _password,
-                                    suffixIcon: IconButton(
-                                      splashRadius: 0.1,
-                                      onPressed: () {
-                                        controller.changeObscure();
-                                        // setState(() {
-                                        //   isObscure = !isObscure;
-                                        // });
-                                      },
-                                      icon: controller.obscure == true
-                                          ? const Icon(
-                                              Icons.visibility,
-                                              color: commonTextColor2,
-                                            )
-                                          : const Icon(Icons.visibility_off, color: commonTextColor2),
-                                    ),
-                                    obscureText: controller.obscure,
-                                    validator: (value) {
-                                      if (_password.text.length < 5) {
-                                        return minimumCharacter;
-                                      }
-                                    },
-                                  );
+                              child: commonTextFormField(
+                                textFocusNode: _focusNode,
+                                onFieldSubmit: (String value) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                },
+                                inputAction: TextInputAction.done,
+                                hintText: password,
+                                textStyle: textFieldStyle,
+                                hintStyle: textFieldHintStyle,
+                                isPassword: true,
+                                textEditingController: _password,
+                                errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
+                                validationFunction: (value) {
+                                  if (_password.text.length < 6) {
+                                    return minimumCharacter;
+                                  }
                                 },
                               ),
                             ),
