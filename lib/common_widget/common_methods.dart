@@ -87,6 +87,16 @@ showCommonDialog(
       });
 }
 
+Future<void> selectDate({BuildContext? context, int? index, DateTime? currentDate}) async {
+  final pickedDate = await showDatePicker(context: context!, initialDate: currentDate!, firstDate: DateTime(2015), lastDate: DateTime(2050));
+  if (pickedDate != null && pickedDate != currentDate) {
+    // setState(() {
+    currentDate = pickedDate;
+    // });
+  }
+  currentDate.obs.refresh();
+}
+
 showPopupMenu(BuildContext context) {
   showMenu<String>(
     color: Colors.white,

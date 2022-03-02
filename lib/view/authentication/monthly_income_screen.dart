@@ -632,6 +632,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
             } // GetIncomeController.to.monthlyIncomeList?.clear();
             GetIncomeController.to.weeklyIncomesList?.clear();
             GetIncomeController.to.weeklyIncomesList?.refresh();
+            CheckBoxController.to.weeklyIncomeCheckBoxValueList.clear();
           }
         },
       ),

@@ -58,6 +58,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
           screenIndexController.updateIndex(index: 4);
           GetIncomeController.to.monthlyExpenseList?.clear();
           GetIncomeController.to.monthlyExpenseList?.refresh();
+          CheckBoxController.to.monthlyExpenseCheckBoxValueList.clear();
           return false;
         },
         child: StreamBuilder(
@@ -194,6 +195,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                       screenIndexController.updateIndex(index: 4);
                       GetIncomeController.to.monthlyExpenseList?.clear();
                       GetIncomeController.to.monthlyExpenseList?.refresh();
+                      CheckBoxController.to.monthlyExpenseCheckBoxValueList.clear();
                     },
                     icon: const Icon(
                       Icons.chevron_left,
@@ -225,6 +227,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                       screenIndexController.updateIndex(index: 4);
                       GetIncomeController.to.monthlyExpenseList?.clear();
                       GetIncomeController.to.monthlyExpenseList?.refresh();
+                      CheckBoxController.to.monthlyExpenseCheckBoxValueList.clear();
                     },
                     child: Text(
                       backButton,

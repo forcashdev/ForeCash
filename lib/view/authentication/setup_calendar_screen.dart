@@ -5,6 +5,7 @@ import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/set_up_calendar_controller.dart';
+import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -21,11 +22,13 @@ class SetupCalendarScreen extends StatelessWidget {
     final controller = Get.put(SelectedDropDownItem());
     TextEditingController _amountController = TextEditingController();
     final screenIndexController = Get.put(ScreenIndexController());
+    final checkBoxController = Get.put(CheckBoxController());
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
           screenIndexController.updateIndex(index: 5);
           GetIncomeController.to.weeklyBudgetList?.clear();
+          CheckBoxController.to.weeklyBudgetCheckBoxValueList.clear();
           return false;
         },
         child: LayoutBuilder(
@@ -59,6 +62,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                     onPressed: () {
                                       screenIndexController.updateIndex(index: 5);
                                       GetIncomeController.to.weeklyBudgetList?.clear();
+                                      CheckBoxController.to.weeklyBudgetCheckBoxValueList.clear();
                                     },
                                   ),
                             maxWidth
@@ -96,6 +100,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                           onPressed: () {
                                             screenIndexController.updateIndex(index: 5);
                                             GetIncomeController.to.weeklyBudgetList?.clear();
+                                            CheckBoxController.to.weeklyBudgetCheckBoxValueList.clear();
                                           },
                                           child: Text(
                                             backButton,
@@ -222,15 +227,6 @@ class SetupCalendarScreen extends StatelessWidget {
                                         .replaceAll('Saturday', '7'),
                                     lowBalance: _amountController.text,
                                   );
-                                  // Get.to(AllSetScreen());
-
-                                  // 'Sunday',
-                                  // 'Monday',
-                                  // 'Tuesday',
-                                  // 'WedDay',
-                                  // 'Thursday',
-                                  // 'Friday',
-                                  // 'Saturday',
                                 },
                               )
                             ],

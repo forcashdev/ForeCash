@@ -140,6 +140,8 @@ class Api {
           } else {
             //region 401 = Session Expired  Manage Authentication/Session Expire
             if (response.statusCode == 401 || response.statusCode == 403) {
+              print(responseData?["success"]);
+              print(responseData?["message"]);
               unauthorizedDialog(responseData?["message"]);
             } else {
               //#region alert
