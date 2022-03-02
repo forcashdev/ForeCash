@@ -44,6 +44,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
   @override
   void initState() {
     super.initState();
+    // GetIncomeController.to.weeklyIncomesList!.clear();
     GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
       if (GetIncomeController.to.weeklyIncomesList!.isEmpty) {
         GetIncomeController.to.getWeeklyIncomeList();

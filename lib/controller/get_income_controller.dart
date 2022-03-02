@@ -152,8 +152,8 @@ class GetIncomeController extends GetxController {
     super.onInit();
     monthlyIncomeList!.clear();
     // weeklyIncomesList!.clear();
-    // weeklyBudgetList!.clear();
-    // monthlyExpenseList!.clear();
+    weeklyBudgetList!.clear();
+    monthlyExpenseList!.clear();
   }
 
   @override

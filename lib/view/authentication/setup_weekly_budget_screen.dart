@@ -92,7 +92,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                   // height: maxWidth ? 300 : null,
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
-                                      border: maxWidth ? Border.all(color: commonGreyColor) : null,
+                                      border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,8 +102,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                         height: Get.height * 0.01,
                                       ),
                                       maxWidth
-                                          ? const Divider(
-                                              color: commonGreyColor,
+                                          ? Divider(
+                                              color: commonGreyColor.withOpacity(0.5),
                                             )
                                           : Container(),
                                       Expanded(
