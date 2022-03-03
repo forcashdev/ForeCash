@@ -4,7 +4,7 @@ import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
-import 'package:fore_cash/getx/selected_dropdown_controller.dart';
+import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';

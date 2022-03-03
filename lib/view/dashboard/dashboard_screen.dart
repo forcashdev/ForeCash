@@ -15,39 +15,39 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/page_view_common_widget.dart';
+import 'package:fore_cash/controller/add_monthly_expense_showtext_controller.dart';
+import 'package:fore_cash/controller/add_monthly_income_controller.dart';
+import 'package:fore_cash/controller/add_onetime_expense_showtext_controller.dart';
+import 'package:fore_cash/controller/add_onetime_income_showtext_controller.dart';
+import 'package:fore_cash/controller/add_weekly_budget_showtext_controller.dart';
+import 'package:fore_cash/controller/add_weekly_income_showtext_controller.dart';
+import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/dashboard_container_visibility.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
-import 'package:fore_cash/getx/add_monthly_expense_showtext_controller.dart';
-import 'package:fore_cash/getx/add_monthly_income_controller.dart';
-import 'package:fore_cash/getx/add_onetime_expense_showtext_controller.dart';
-import 'package:fore_cash/getx/add_onetime_income_showtext_controller.dart';
-import 'package:fore_cash/getx/add_weekly_budget_showtext_controller.dart';
-import 'package:fore_cash/getx/add_weekly_income_showtext_controller.dart';
-import 'package:fore_cash/getx/checkbox_controller.dart';
-import 'package:fore_cash/getx/dashboard_container_visibility.dart';
-import 'package:fore_cash/getx/monthly_expansion_visibility_controller.dart';
-import 'package:fore_cash/getx/monthly_expense_edit_mode_controller.dart';
-import 'package:fore_cash/getx/monthly_expense_expansiondata_visibility_controller.dart';
-import 'package:fore_cash/getx/monthlyincome_edit_mode_controller.dart';
-import 'package:fore_cash/getx/on_monthly_expense_expansion_change_controller.dart';
-import 'package:fore_cash/getx/on_monthly_income_expansion_change_controller.dart';
-import 'package:fore_cash/getx/on_one_time_expense_expansion_change_controller.dart';
-import 'package:fore_cash/getx/on_one_time_income_expansion_change_controller.dart';
-import 'package:fore_cash/getx/on_weekly_budget_expansion_change_controller.dart';
-import 'package:fore_cash/getx/on_weekly_income_expansion_change_controller.dart';
-import 'package:fore_cash/getx/one_time_expense_visibility_controller.dart';
-import 'package:fore_cash/getx/one_time_income_visibility_controller.dart';
-import 'package:fore_cash/getx/onetime_expense_edit_mode_controller.dart';
-import 'package:fore_cash/getx/onetime_expense_expansion_visibility_controller.dart';
-import 'package:fore_cash/getx/onetime_income_edit_mode_controller.dart';
-import 'package:fore_cash/getx/onetime_income_expansion_visibility_controller.dart';
-import 'package:fore_cash/getx/pageview_pageindex_controller.dart';
-import 'package:fore_cash/getx/selected_dropdown_controller.dart';
-import 'package:fore_cash/getx/switch_controller.dart';
-import 'package:fore_cash/getx/weekly_budget_edit_mode_controller.dart';
-import 'package:fore_cash/getx/weekly_budget_expansion_visibility_controller.dart';
-import 'package:fore_cash/getx/weekly_income_edit_mode_controller.dart';
-import 'package:fore_cash/getx/weekly_income_expansion_visibility_controller.dart';
+import 'package:fore_cash/controller/monthly_expansion_visibility_controller.dart';
+import 'package:fore_cash/controller/monthly_expense_edit_mode_controller.dart';
+import 'package:fore_cash/controller/monthly_expense_expansiondata_visibility_controller.dart';
+import 'package:fore_cash/controller/monthlyincome_edit_mode_controller.dart';
+import 'package:fore_cash/controller/on_monthly_expense_expansion_change_controller.dart';
+import 'package:fore_cash/controller/on_monthly_income_expansion_change_controller.dart';
+import 'package:fore_cash/controller/on_one_time_expense_expansion_change_controller.dart';
+import 'package:fore_cash/controller/on_one_time_income_expansion_change_controller.dart';
+import 'package:fore_cash/controller/on_weekly_budget_expansion_change_controller.dart';
+import 'package:fore_cash/controller/on_weekly_income_expansion_change_controller.dart';
+import 'package:fore_cash/controller/one_time_expense_visibility_controller.dart';
+import 'package:fore_cash/controller/one_time_income_visibility_controller.dart';
+import 'package:fore_cash/controller/onetime_expense_edit_mode_controller.dart';
+import 'package:fore_cash/controller/onetime_expense_expansion_visibility_controller.dart';
+import 'package:fore_cash/controller/onetime_income_edit_mode_controller.dart';
+import 'package:fore_cash/controller/onetime_income_expansion_visibility_controller.dart';
+import 'package:fore_cash/controller/pageview_pageindex_controller.dart';
+import 'package:fore_cash/controller/selected_dropdown_controller.dart';
+import 'package:fore_cash/controller/switch_controller.dart';
+import 'package:fore_cash/controller/weekly_budget_edit_mode_controller.dart';
+import 'package:fore_cash/controller/weekly_budget_expansion_visibility_controller.dart';
+import 'package:fore_cash/controller/weekly_income_edit_mode_controller.dart';
+import 'package:fore_cash/controller/weekly_income_expansion_visibility_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/model/one_time_expense_model.dart';
 import 'package:fore_cash/model/one_time_income_model.dart';
@@ -70,7 +70,7 @@ class DashBoardScreen extends StatefulWidget {
 class _DashBoardScreenState extends State<DashBoardScreen> {
   final _currentDate = DateTime.now();
   final DateFormat formatter = DateFormat('MMM, dd');
-  final datesList = [];
+  final RxList datesList = [].obs;
 
   int totalAmount = 0;
 
@@ -80,6 +80,34 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       datesList.add(date);
       print(datesList[i]);
     }
+  }
+
+  calculateMoreFutureDates() {
+    DateTime temp = scrollController.position.pixels == scrollController.position.maxScrollExtent ? DateFormat('MMM, dd').parse(datesList.last) : DateFormat('MMM, dd').parse(datesList.first);
+    print(datesList.last);
+    DateTime newTemp = DateTime(
+      DateTime.now().year,
+      temp.month,
+      temp.day,
+    );
+    print(newTemp);
+    print(datesList);
+    print('kkkkkkk');
+    // datesList.removeRange(0, 14);
+    for (int i = 0; i < 15; i++) {
+      print(i);
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+        final date = formatter.format(newTemp.add(Duration(days: i + 1)));
+        datesList.add(date);
+      } else {
+        final DateTime startDate = newTemp.subtract(Duration(days: i + 1));
+        final String start = formatter.format(startDate);
+        datesList.insert(0, start);
+      }
+    }
+
+    // datesList.sort((a, b) => a.compareTo(b));
+    print(datesList);
   }
 
   Future<dynamic>? calculatePastDates({DateTime? startDate, DateTime? endDate}) {
@@ -174,6 +202,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     scrollControllerTotalListWeeklyBudget = ScrollController();
 
     scrollController.addListener(() {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+        calculateMoreFutureDates();
+      }
+      if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
+        calculateMoreFutureDates();
+      }
       scrollControllerMonthlyIncome.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       scrollControllerWeeklyIncome.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       scrollControllerMonthlyExpense.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
@@ -392,6 +426,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           temp.month,
           temp.day,
         );
+
         DateTime newTempWeeklyBudget = DateTime(
           DateTime.now().year,
           dateFormatedWeeklyBudgetDate.month,
@@ -567,6 +602,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         bottom: 0,
                                         child: InkWell(
                                           onTap: () {
+                                            if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
+                                              calculateMoreFutureDates();
+                                            }
                                             // forLoopLogic(constraints: constraints);
                                             // if (scrollWidth < scrollController.position.minScrollExtent - 80) {
                                             scrollController.jumpTo(
@@ -691,23 +729,42 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             child: SingleChildScrollView(
                                               controller: scrollController,
                                               scrollDirection: Axis.horizontal,
-                                              child: ListView(
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                // controller: scrollController,
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.horizontal,
-                                                children: List.generate(
-                                                    datesList.length,
-                                                    (index) => SizedBox(
+                                              child: StreamBuilder(
+                                                  stream: datesList.stream,
+                                                  builder: (context, snapshot) {
+                                                    return ListView.builder(
+                                                      itemCount: datesList.length,
+                                                      physics: const NeverScrollableScrollPhysics(),
+                                                      // controller: scrollController,
+                                                      shrinkWrap: true,
+                                                      scrollDirection: Axis.horizontal,
+                                                      itemBuilder: (context, index) {
+                                                        // if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+                                                        //   return calculateMoreFutureDates();
+                                                        // } else {
+                                                        return SizedBox(
                                                           width: maxWidth ? Get.width * 0.067 : Get.width * 0.15,
-                                                          // margin: EdgeInsets.only(right: 1),
                                                           child: Text(
                                                             datesList[index],
                                                             style: greyDateTexStyle10W400,
                                                             textAlign: TextAlign.center,
                                                           ),
-                                                        )),
-                                              ),
+                                                        );
+                                                        // }
+                                                      },
+                                                      // children: List.generate(
+                                                      //     datesList.length,
+                                                      //     (index) => SizedBox(
+                                                      //           width: maxWidth ? Get.width * 0.067 : Get.width * 0.15,
+                                                      //           // margin: EdgeInsets.only(right: 1),
+                                                      //           child: Text(
+                                                      //             datesList[index],
+                                                      //             style: greyDateTexStyle10W400,
+                                                      //             textAlign: TextAlign.center,
+                                                      //           ),
+                                                      //         )),
+                                                    );
+                                                  }),
                                             ),
                                             // child: PageView.builder(
                                             //   itemCount: dataDateList.length,
@@ -745,8 +802,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       )),
                                       InkWell(
                                         onTap: () {
-                                          print(scrollController.position);
-                                          // if (scrollController.position.hasPixels == scrollController.position.minScrollExtent) {
+                                          if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+                                            calculateMoreFutureDates();
+                                          }
                                           scrollController.jumpTo(
                                             scrollController.position.pixels + scrollWidth++,
                                           );
@@ -933,36 +991,41 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   controller: scrollControllerMonthlyIncome,
                                                                   scrollDirection: Axis.horizontal,
                                                                   physics: const ClampingScrollPhysics(),
-                                                                  child: Column(
-                                                                      children: List.generate(
-                                                                    GetIncomeController.to.monthlyIncomeList!.length,
-                                                                    (index) => SizedBox(
-                                                                      height: MonthlyEditModeController.editMode
-                                                                          ? Get.height * 0.059
-                                                                          : maxWidth
-                                                                              ? Get.height * 0.035
-                                                                              : Get.height * 0.032,
-                                                                      child: ListView.builder(
-                                                                        shrinkWrap: true,
-                                                                        scrollDirection: Axis.horizontal,
-                                                                        itemCount: datesList.length,
-                                                                        itemBuilder: (context, dateIndex) {
-                                                                          int totalCount = 0;
-
-                                                                          return SizedBox(
-                                                                              width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
-                                                                              child: Text(
-                                                                                formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())) ==
-                                                                                        datesList[dateIndex]
-                                                                                    ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
-                                                                                    : '-',
-                                                                                style: greyDateTexStyle10W400,
-                                                                                textAlign: TextAlign.center,
-                                                                              ));
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  )),
+                                                                  child: StreamBuilder(
+                                                                      stream: datesList.stream,
+                                                                      builder: (context, snapshot) {
+                                                                        return Column(
+                                                                            children: List.generate(
+                                                                          GetIncomeController.to.monthlyIncomeList!.length,
+                                                                          (index) => SizedBox(
+                                                                            height: MonthlyEditModeController.editMode
+                                                                                ? Get.height * 0.059
+                                                                                : maxWidth
+                                                                                    ? Get.height * 0.035
+                                                                                    : Get.height * 0.032,
+                                                                            child: ListView.builder(
+                                                                              shrinkWrap: true,
+                                                                              scrollDirection: Axis.horizontal,
+                                                                              itemCount: datesList.length,
+                                                                              itemBuilder: (context, dateIndex) {
+                                                                                return SizedBox(
+                                                                                    width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                    child: Text(
+                                                                                      formatter
+                                                                                                  .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                                  .toString()
+                                                                                                  .replaceRange(0, 4, '') ==
+                                                                                              datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                          ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
+                                                                                          : '-',
+                                                                                      style: greyDateTexStyle10W400,
+                                                                                      textAlign: TextAlign.center,
+                                                                                    ));
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        ));
+                                                                      }),
                                                                 );
                                                               }),
                                                         );
@@ -1036,7 +1099,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         // padding: EdgeInsets.only(left: maxWidth ? 14 : 10, right: maxWidth ? 0 : 5),
                                         padding: EdgeInsets.only(
                                             // left: maxWidth ? 14 : 0, right: maxWidth ? 27 : 20
-                                            left: maxWidth ? 14 : 0,
+                                            left: maxWidth ? 14 : 0.0,
                                             right: maxWidth
                                                 ? 27
                                                 : weeklyIncomeDataController.incomeListVisibility == true
@@ -1087,47 +1150,55 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   controller: scrollControllerWeeklyIncome,
                                                                   scrollDirection: Axis.horizontal,
                                                                   physics: const ClampingScrollPhysics(),
-                                                                  child: Column(
-                                                                      children: List.generate(
-                                                                    GetIncomeController.to.weeklyIncomesList!.length,
-                                                                    (index) => SizedBox(
-                                                                      height: weeklyIncomeEditModeController.weeklyIncomeEditMode
-                                                                          ? Get.height * 0.059
-                                                                          : maxWidth
-                                                                              ? Get.height * 0.035
-                                                                              : Get.height * 0.032,
-                                                                      child: ListView.builder(
-                                                                        shrinkWrap: true,
-                                                                        scrollDirection: Axis.horizontal,
-                                                                        itemCount: datesList.length,
-                                                                        itemBuilder: (context, dateIndex) {
-                                                                          DateTime temp = DateFormat('MMM, dd').parse(datesList[dateIndex]);
-                                                                          DateTime dateFormatedWeeklyDate = DateTime.parse(GetIncomeController.to.weeklyIncomesList![index].date!);
-                                                                          DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyDate.toString());
-                                                                          DateTime newTemp = DateTime(
-                                                                            DateTime.now().year,
-                                                                            temp.month,
-                                                                            temp.day,
-                                                                          );
-                                                                          DateTime newTempWeeklyIncome = DateTime(
-                                                                            DateTime.now().year,
-                                                                            dateFormatedWeeklyDate.month,
-                                                                            dateFormatedWeeklyDate.day,
-                                                                          );
-                                                                          print('>>>>>>>>>>>>${newTemp}>>>>>>>${newTempWeeklyIncome}');
-                                                                          return SizedBox(
-                                                                              width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
-                                                                              child: Text(
-                                                                                DateFormat('EEEE').format(newTemp) == DateFormat('EEEE').format(newTempWeeklyIncome)
-                                                                                    ? '${GetIncomeController.to.weeklyIncomesList![index].amount}'
-                                                                                    : '-',
-                                                                                style: greyDateTexStyle10W400,
-                                                                                textAlign: TextAlign.center,
-                                                                              ));
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  )),
+                                                                  child: StreamBuilder(
+                                                                      stream: datesList.stream,
+                                                                      builder: (context, snapshot) {
+                                                                        return Column(
+                                                                            children: List.generate(
+                                                                          GetIncomeController.to.weeklyIncomesList!.length,
+                                                                          (index) => SizedBox(
+                                                                            height: weeklyIncomeEditModeController.weeklyIncomeEditMode
+                                                                                ? Get.height * 0.059
+                                                                                : maxWidth
+                                                                                    ? Get.height * 0.035
+                                                                                    : Get.height * 0.032,
+                                                                            child: StreamBuilder(
+                                                                                stream: datesList.stream,
+                                                                                builder: (context, snapshot) {
+                                                                                  return ListView.builder(
+                                                                                    shrinkWrap: true,
+                                                                                    scrollDirection: Axis.horizontal,
+                                                                                    itemCount: datesList.length,
+                                                                                    itemBuilder: (context, dateIndex) {
+                                                                                      DateTime temp = DateFormat('MMM, dd').parse(datesList[dateIndex]);
+                                                                                      DateTime dateFormatedWeeklyDate = DateTime.parse(GetIncomeController.to.weeklyIncomesList![index].date!);
+                                                                                      DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyDate.toString());
+                                                                                      DateTime newTemp = DateTime(
+                                                                                        DateTime.now().year,
+                                                                                        temp.month,
+                                                                                        temp.day,
+                                                                                      );
+                                                                                      DateTime newTempWeeklyIncome = DateTime(
+                                                                                        DateTime.now().year,
+                                                                                        dateFormatedWeeklyDate.month,
+                                                                                        dateFormatedWeeklyDate.day,
+                                                                                      );
+                                                                                      print('>>>>>>>>>>>>${newTemp}>>>>>>>${newTempWeeklyIncome}');
+                                                                                      return SizedBox(
+                                                                                          width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                          child: Text(
+                                                                                            DateFormat('EEEE').format(newTemp) == DateFormat('EEEE').format(newTempWeeklyIncome)
+                                                                                                ? '${GetIncomeController.to.weeklyIncomesList![index].amount}'
+                                                                                                : '-',
+                                                                                            style: greyDateTexStyle10W400,
+                                                                                            textAlign: TextAlign.center,
+                                                                                          ));
+                                                                                    },
+                                                                                  );
+                                                                                }),
+                                                                          ),
+                                                                        ));
+                                                                      }),
                                                                 );
                                                               }),
                                                         ),
@@ -1191,10 +1262,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               ),
                                             ),
                                           )
-                                        // SizedBox(
-                                        //         width: Get.width / 2.07,
-                                        //         child: pageViewCommonWidget(pageController: _singleMonthlyPageController, text: incomes, itemCount: incomes.length, onPageChanged: (value) {}),
-                                        //       )
                                         : Column();
                                   },
                                 ),
@@ -1206,11 +1273,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       return Container(
                                         // padding: EdgeInsets.only(left: maxWidth ? 14 : 10, right: maxWidth ? 0 : 5),
                                         padding: EdgeInsets.only(
+
                                             //     // left: maxWidth ? 14 : 10, right: maxWidth ? 0 : 2
-                                            left: maxWidth ? 14 : 0,
+                                            left: maxWidth ? 14 : 0.0,
                                             right: maxWidth
                                                 ? 27
-                                                : monthlyExpenseDataController.monthlyExpenseDataVisibility == true
+                                                : monthlyExpenseDataController.monthlyExpenseListVisibility == true
                                                     ? 20
                                                     : 0.0),
                                         decoration: BoxDecoration(
@@ -1256,37 +1324,44 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   controller: scrollControllerMonthlyExpense,
                                                                   scrollDirection: Axis.horizontal,
                                                                   physics: const ClampingScrollPhysics(),
-                                                                  child: Column(
-                                                                      // direction: Axis.vertical,
-                                                                      // mainAxisSize: MainAxisSize.min,
-                                                                      children: List.generate(
-                                                                    GetIncomeController.to.monthlyExpenseList!.length,
-                                                                    (index) => SizedBox(
-                                                                      height: monthlyExpenseEditModeController.monthlyExpenseEditMode
-                                                                          ? Get.height * 0.059
-                                                                          : maxWidth
-                                                                              ? Get.height * 0.035
-                                                                              : Get.height * 0.032,
-                                                                      child: ListView.builder(
-                                                                        shrinkWrap: true,
-                                                                        scrollDirection: Axis.horizontal,
-                                                                        itemCount: datesList.length,
-                                                                        itemBuilder: (context, dateIndex) {
-                                                                          return SizedBox(
-                                                                              width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
-                                                                              child: Text(
-                                                                                formatter.format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())) ==
-                                                                                        datesList[dateIndex]
-                                                                                    ? '${GetIncomeController.to.monthlyExpenseList?[index].amount}'
-                                                                                    : '-',
-                                                                                // index == dateListIndex ? '${GetIncomeController.to.monthlyExpenseList![dateListIndex].amount}' : '-',
-                                                                                style: greyDateTexStyle10W400,
-                                                                                textAlign: TextAlign.center,
-                                                                              ));
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  )),
+                                                                  child: StreamBuilder(
+                                                                      stream: datesList.stream,
+                                                                      builder: (context, snapshot) {
+                                                                        return Column(
+                                                                            // direction: Axis.vertical,
+                                                                            // mainAxisSize: MainAxisSize.min,
+                                                                            children: List.generate(
+                                                                          GetIncomeController.to.monthlyExpenseList!.length,
+                                                                          (index) => SizedBox(
+                                                                            height: monthlyExpenseEditModeController.monthlyExpenseEditMode
+                                                                                ? Get.height * 0.059
+                                                                                : maxWidth
+                                                                                    ? Get.height * 0.035
+                                                                                    : Get.height * 0.032,
+                                                                            child: ListView.builder(
+                                                                              shrinkWrap: true,
+                                                                              scrollDirection: Axis.horizontal,
+                                                                              itemCount: datesList.length,
+                                                                              itemBuilder: (context, dateIndex) {
+                                                                                return SizedBox(
+                                                                                    width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                    child: Text(
+                                                                                      formatter
+                                                                                                  .format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString()))
+                                                                                                  .toString()
+                                                                                                  .replaceRange(0, 4, '') ==
+                                                                                              datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                          ? '${GetIncomeController.to.monthlyExpenseList?[index].amount}'
+                                                                                          : '-',
+                                                                                      // index == dateListIndex ? '${GetIncomeController.to.monthlyExpenseList![dateListIndex].amount}' : '-',
+                                                                                      style: greyDateTexStyle10W400,
+                                                                                      textAlign: TextAlign.center,
+                                                                                    ));
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        ));
+                                                                      }),
                                                                 );
                                                               }),
                                                         ),
@@ -1446,49 +1521,53 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                   controller: scrollControllerWeeklyBudget,
                                                                   scrollDirection: Axis.horizontal,
                                                                   physics: const ClampingScrollPhysics(),
-                                                                  child: Column(
-                                                                      // direction: Axis.vertical,
-                                                                      // mainAxisSize: MainAxisSize.min,
-                                                                      children: List.generate(
-                                                                    GetIncomeController.to.weeklyBudgetList!.length,
-                                                                    (index) => SizedBox(
-                                                                      height: weeklyBudgetEditModeController.weeklyBudgetEditMode
-                                                                          ? Get.height * 0.059
-                                                                          : maxWidth
-                                                                              ? Get.height * 0.035
-                                                                              : Get.height * 0.032,
-                                                                      child: ListView.builder(
-                                                                        shrinkWrap: true,
-                                                                        scrollDirection: Axis.horizontal,
-                                                                        itemCount: datesList.length,
-                                                                        itemBuilder: (context, dateIndex) {
-                                                                          DateTime temp = DateFormat('MMM, dd').parse(datesList[dateIndex]);
-                                                                          DateTime dateFormatedWeeklyBudgetDate = DateTime.parse(GetIncomeController.to.weeklyBudgetList![index].date!);
-                                                                          DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyBudgetDate.toString());
-                                                                          DateTime newTemp = DateTime(
-                                                                            DateTime.now().year,
-                                                                            temp.month,
-                                                                            temp.day,
-                                                                          );
-                                                                          DateTime newTempWeeklyBudget = DateTime(
-                                                                            DateTime.now().year,
-                                                                            dateFormatedWeeklyBudgetDate.month,
-                                                                            dateFormatedWeeklyBudgetDate.day,
-                                                                          );
-                                                                          print('>>>>>>>>>>>>${newTemp}>>>>>>>${newTempWeeklyBudget}');
-                                                                          return SizedBox(
-                                                                              width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
-                                                                              child: Text(
-                                                                                DateFormat('EEEE').format(newTemp) == DateFormat('EEEE').format(newTempWeeklyBudget)
-                                                                                    ? '${GetIncomeController.to.weeklyBudgetList![index].amount}'
-                                                                                    : '-',
-                                                                                style: greyDateTexStyle10W400,
-                                                                                textAlign: TextAlign.center,
-                                                                              ));
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  )),
+                                                                  child: StreamBuilder(
+                                                                      stream: datesList.stream,
+                                                                      builder: (context, snapshot) {
+                                                                        return Column(
+                                                                            // direction: Axis.vertical,
+                                                                            // mainAxisSize: MainAxisSize.min,
+                                                                            children: List.generate(
+                                                                          GetIncomeController.to.weeklyBudgetList!.length,
+                                                                          (index) => SizedBox(
+                                                                            height: weeklyBudgetEditModeController.weeklyBudgetEditMode
+                                                                                ? Get.height * 0.059
+                                                                                : maxWidth
+                                                                                    ? Get.height * 0.035
+                                                                                    : Get.height * 0.032,
+                                                                            child: ListView.builder(
+                                                                              shrinkWrap: true,
+                                                                              scrollDirection: Axis.horizontal,
+                                                                              itemCount: datesList.length,
+                                                                              itemBuilder: (context, dateIndex) {
+                                                                                DateTime temp = DateFormat('MMM, dd').parse(datesList[dateIndex]);
+                                                                                DateTime dateFormatedWeeklyBudgetDate = DateTime.parse(GetIncomeController.to.weeklyBudgetList![index].date!);
+                                                                                DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyBudgetDate.toString());
+                                                                                DateTime newTemp = DateTime(
+                                                                                  DateTime.now().year,
+                                                                                  temp.month,
+                                                                                  temp.day,
+                                                                                );
+                                                                                DateTime newTempWeeklyBudget = DateTime(
+                                                                                  DateTime.now().year,
+                                                                                  dateFormatedWeeklyBudgetDate.month,
+                                                                                  dateFormatedWeeklyBudgetDate.day,
+                                                                                );
+                                                                                print('>>>>>>>>>>>>${newTemp}>>>>>>>${newTempWeeklyBudget}');
+                                                                                return SizedBox(
+                                                                                    width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                    child: Text(
+                                                                                      DateFormat('EEEE').format(newTemp) == DateFormat('EEEE').format(newTempWeeklyBudget)
+                                                                                          ? '${GetIncomeController.to.weeklyBudgetList![index].amount}'
+                                                                                          : '-',
+                                                                                      style: greyDateTexStyle10W400,
+                                                                                      textAlign: TextAlign.center,
+                                                                                    ));
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        ));
+                                                                      }),
                                                                 );
                                                               }),
                                                         ),
@@ -2360,18 +2439,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       },
     );
   }
-
-  // Future<void> selectDate({
-  //   BuildContext? context,
-  // }) async {
-  //   final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
-  //   if (pickedDate != null && pickedDate != currentDate) {
-  //     // setState(() {
-  //     currentDate = pickedDate;
-  //     // currentDate.obs.refresh();
-  //     // });
-  //   }
-  // }
 
   _saveChangesButton({BoxConstraints? constraints}) {
     return commonButton(
@@ -3520,9 +3587,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   },
                                   children: [
                                     TableRow(children: [
-                                      Text(
-                                        incomeName,
-                                        style: columnNameListStyle,
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
+                                                ? 0.0
+                                                : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
+                                                    ? 5.0
+                                                    : weeklyEditModeController.weeklyIncomeEditMode == false && constraints.maxWidth > 1000
+                                                        ? 0.0
+                                                        : 9.0),
+                                        child: Text(
+                                          incomeName,
+                                          style: columnNameListStyle,
+                                        ),
                                       ),
                                       Text(
                                         paidOn,
@@ -3631,7 +3708,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                         child: SizedBox(
                                                           height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
                                                           child: Padding(
-                                                            padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                                                            padding: EdgeInsets.only(
+                                                                right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02,
+                                                                left: weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
+                                                                    ? 5
+                                                                    : constraints.maxWidth < 1000
+                                                                        ? 10.0
+                                                                        : 0.0),
                                                             child: weeklyEditModeController.weeklyIncomeEditMode == false
                                                                 ? Text(
                                                                     GetIncomeController.to.weeklyIncomesList?[index].name ?? '',
@@ -3782,7 +3865,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                       TableCell(
                                                         verticalAlignment: TableCellVerticalAlignment.fill,
                                                         child: Padding(
-                                                          padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
+                                                          padding: EdgeInsets.only(
+                                                              right: constraints.maxWidth > 1000
+                                                                  ? Get.width * 0.01
+                                                                  : constraints.maxWidth < 1000 && weeklyEditModeController.weeklyIncomeEditMode == true
+                                                                      ? Get.width * 0.01
+                                                                      : Get.width * 0.0),
                                                           child: weeklyEditModeController.weeklyIncomeEditMode == false
                                                               ? Text(
                                                                   '${GetIncomeController.to.weeklyIncomesList?[index].amount ?? ''}'.toString(),
@@ -4173,7 +4261,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       margin: EdgeInsets.only(
                         right: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == false && constraints!.maxWidth < 1000 ? 13 : 0.0,
                       ),
-                      padding: EdgeInsets.only(right: monthlyExpenseEditModeController.monthlyExpenseEditMode == false ? 0.0 : Get.width * 0.003),
+                      padding: EdgeInsets.only(right: monthlyExpenseEditModeController.monthlyExpenseEditMode == false ? 0.0 : Get.width * 0.00),
                       decoration: BoxDecoration(
                           border: Border(
                               right: monthlyExpenseDataVisibilityController.monthlyExpenseDataVisibility == true &&
@@ -4196,9 +4284,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   },
                                   children: [
                                     TableRow(children: [
-                                      Text(
-                                        expenseName,
-                                        style: columnNameListStyle,
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth > 1000
+                                                ? 0.0
+                                                : monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
+                                                    ? 5.0
+                                                    : monthlyExpenseEditModeController.monthlyExpenseEditMode == false && constraints.maxWidth > 1000
+                                                        ? 0.0
+                                                        : 9.0),
+                                        child: Text(
+                                          expenseName,
+                                          style: columnNameListStyle,
+                                        ),
                                       ),
                                       Text(
                                         dueOn,
@@ -4306,7 +4404,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                       SizedBox(
                                                         height: monthlyExpenseEditModeController.monthlyExpenseEditMode ? Get.height * 0.044 : Get.height * 0.02,
                                                         child: Padding(
-                                                          padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                                                          padding: EdgeInsets.only(
+                                                              right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02,
+                                                              left: monthlyExpenseEditModeController.monthlyExpenseEditMode == true && constraints.maxWidth < 1000
+                                                                  ? 5
+                                                                  : constraints.maxWidth < 1000
+                                                                      ? 10.0
+                                                                      : 0.0),
                                                           child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
                                                               ? Text(
                                                                   GetIncomeController.to.monthlyExpenseList?[index].name ?? "",
@@ -4450,7 +4554,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                       TableCell(
                                                         verticalAlignment: TableCellVerticalAlignment.fill,
                                                         child: Padding(
-                                                          padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
+                                                          padding: EdgeInsets.only(
+                                                              right: constraints.maxWidth > 1000
+                                                                  ? Get.width * 0.01
+                                                                  : constraints.maxWidth < 1000 && monthlyExpenseEditModeController.monthlyExpenseEditMode == true
+                                                                      ? Get.width * 0.01
+                                                                      : Get.width * 0.0),
                                                           child: monthlyExpenseEditModeController.monthlyExpenseEditMode == false
                                                               ? Text(
                                                                   '${GetIncomeController.to.monthlyExpenseList?[index].amount ?? 1}',
@@ -4912,14 +5021,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         child: boolValue == true && constraints.maxWidth < 1000
                                             ? SizedBox(
                                                 height: Get.height * 0.017,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 10.0),
-                                                  child: Text(
-                                                    '${GetIncomeController.to.weeklyBudgetList?[index].name}',
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: blackMontserrat10W500,
-                                                  ),
+                                                child: Text(
+                                                  '${GetIncomeController.to.weeklyBudgetList?[index].name}',
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: blackMontserrat10W500,
                                                 ),
                                               )
                                             : Table(
@@ -5100,7 +5206,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                       TableCell(
                                                         verticalAlignment: TableCellVerticalAlignment.fill,
                                                         child: Padding(
-                                                          padding: EdgeInsets.only(right: constraints.maxWidth > 1000 ? Get.width * 0.01 : Get.width * 0.0),
+                                                          padding: EdgeInsets.only(
+                                                              right: constraints.maxWidth > 1000
+                                                                  ? Get.width * 0.01
+                                                                  : constraints.maxWidth < 1000 && editModeController.weeklyBudgetEditMode == true
+                                                                      ? Get.width * 0.01
+                                                                      : Get.width * 0.0),
                                                           child: editModeController.weeklyBudgetEditMode == false
                                                               ? Text(
                                                                   '${GetIncomeController.to.weeklyBudgetList?[index].amount ?? ''}',
@@ -5557,7 +5668,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   overflow: TextOverflow.ellipsis,
                                                   style: blackMontserrat10W500,
                                                 )
-                                              : CommonDataTextField.commonTextField(
+                                              : commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   hintText: OneTimeIncomeModel.oneTimeIncomeList[index].incomeName,
                                                   hintStyle: blackMontserrat10W500,
@@ -5613,7 +5724,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   style: blackMontserrat10W500,
                                                   maxLines: 1,
                                                 )
-                                              : CommonDataTextField.commonTextField(
+                                              : commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   hintText: OneTimeIncomeModel.oneTimeIncomeList[index].amount,
                                                   hintStyle: blackMontserrat10W500,
@@ -5662,7 +5773,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 ),
                                                 width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
                                                 height: Get.height * 0.04,
-                                                child: CommonDataTextField.commonTextField(
+                                                child: commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   controller: _monthlyIncomeNameController,
                                                   hintText: expenseName,
@@ -5696,7 +5807,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 height: Get.height * 0.04,
                                                 alignment: Alignment.center,
                                                 padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
-                                                child: CommonDataTextField.commonTextField(
+                                                child: commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   controller: _monthlyAmountController,
                                                   prefixStyle: blackMontserrat10W500,
@@ -5903,7 +6014,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   overflow: TextOverflow.ellipsis,
                                                   style: blackMontserrat10W500,
                                                 )
-                                              : CommonDataTextField.commonTextField(
+                                              : commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   hintText: OneTimeExpenseModel.oneTimeExpenseList[index].incomeName,
                                                   hintStyle: blackMontserrat10W500,
@@ -5958,7 +6069,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   style: blackMontserrat10W500,
                                                   maxLines: 1,
                                                 )
-                                              : CommonDataTextField.commonTextField(
+                                              : commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   hintText: OneTimeExpenseModel.oneTimeExpenseList[index].amount,
                                                   hintStyle: blackMontserrat10W500,
@@ -6003,7 +6114,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 ),
                                                 width: constraints.maxWidth < 1000 ? Get.width * 0.3 : Get.width * 0.10,
                                                 height: Get.height * 0.04,
-                                                child: CommonDataTextField.commonTextField(
+                                                child: commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
                                                   controller: _monthlyIncomeNameController,
                                                   hintText: expenseName,
@@ -6037,7 +6148,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 height: Get.height * 0.04,
                                                 alignment: Alignment.center,
                                                 padding: EdgeInsets.only(left: Get.width * 0.005, bottom: Get.height * 0.015),
-                                                child: CommonDataTextField.commonTextField(
+                                                child: commonTextField(
                                                   inputFormatter: [WhitelistingTextInputFormatter(RegExp("[0-9]"))],
                                                   controller: _monthlyAmountController,
                                                   prefixStyle: blackMontserrat10W500,

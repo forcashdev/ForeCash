@@ -1,5 +1,5 @@
 import 'package:fore_cash/api/api_call.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/model/register_model.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
@@ -34,7 +34,6 @@ class RegisterController extends GetxController {
             final box = GetStorage();
             box.write('userEmail', email);
             final screenIndexController = Get.put(ScreenIndexController());
-            // screenIndexController.pageController.animateToPage(2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
             screenIndexController.updateIndex(index: 1);
             Get.to(() => const ScreenProgressIndicator());
           }

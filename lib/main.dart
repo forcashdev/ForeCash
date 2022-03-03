@@ -24,6 +24,13 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 690),
       minTextAdapt: true,
       builder: () => GetMaterialApp(
+        // initialRoute: '/',
+        // routes: {
+        //   '/': (context) => const SplashScreen(),
+        //   '/ProgressIndicator': (context) => const ScreenProgressIndicator(),
+        //    '/AllSet': (context) => const AllSetScreen(),
+        //   '/DashBoard': (context) => const DashBoardScreen(),
+        // },
         initialBinding: AppBinding(),
         builder: (context, widget) {
           return ResponsiveWrapper.builder(widget, maxWidth: 4000, minWidth: 480, defaultScale: false, breakpoints: [

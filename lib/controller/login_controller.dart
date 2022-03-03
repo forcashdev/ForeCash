@@ -1,15 +1,10 @@
 import 'package:fore_cash/api/api_call.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/model/login_model.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-// import 'package:swipecart/Model/loginModel.dart';
-//
-// import '../../utility/api_call.dart';
-// import '../../utility/cs.dart';
-// import '../../view/themes/theme_1/main_screen.dart';
 
 class LoginInController extends GetxController {
   static LoginInController get to => Get.find();
@@ -70,9 +65,9 @@ class LoginInController extends GetxController {
             box.write('userEmail', email);
             storage.write("loginToken", loginModel.value.data!.token);
             final screenIndexController = Get.put(ScreenIndexController());
-            // screenIndexController.pageController.animateToPage(2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
             screenIndexController.updateIndex(index: 1);
             Get.to(() => const ScreenProgressIndicator());
+            // Get.toNamed('/ProgressIndicator');
           }
           // Get.offAll(() => const MainScreen());
         });

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
@@ -19,11 +19,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     final screenIndexController = Get.put(ScreenIndexController());
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       final box = GetStorage();
       final finalUserEmail = box.read('userEmail');
+
       screenIndexController.updateIndex(index: finalUserEmail == null ? 0 : 1);
       // screenIndexController.pageController.animateToPage(finalUserEmail == null ? 1 : 2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
+      // Navigator.pushReplacementNamed(context, '/ProgressIndicator');
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

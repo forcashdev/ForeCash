@@ -1,5 +1,6 @@
-import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:get/get.dart';
+
+import 'get_income_controller.dart';
 
 class CheckBoxController extends GetxController {
   static CheckBoxController get to => Get.find();

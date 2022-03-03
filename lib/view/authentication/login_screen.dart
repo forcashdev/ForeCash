@@ -5,6 +5,7 @@ import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/controller/login_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';

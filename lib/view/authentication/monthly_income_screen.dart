@@ -8,12 +8,12 @@ import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
-import 'package:fore_cash/getx/checkbox_controller.dart';
-import 'package:fore_cash/getx/monthly_income_show_text_visibility.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
-import 'package:fore_cash/getx/selected_dropdown_controller.dart';
+import 'package:fore_cash/controller/monthly_income_show_text_visibility.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
+import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -630,10 +630,10 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
               });
               CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': tempMonthlyIncome});
             } // GetIncomeController.to.monthlyIncomeList?.clear();
-            GetIncomeController.to.weeklyIncomesList?.clear();
-            GetIncomeController.to.weeklyIncomesList?.refresh();
-            CheckBoxController.to.weeklyIncomeCheckBoxValueList.clear();
           }
+          GetIncomeController.to.weeklyIncomesList?.clear();
+          GetIncomeController.to.weeklyIncomesList?.refresh();
+          CheckBoxController.to.weeklyIncomeCheckBoxValueList.clear();
         },
       ),
     );

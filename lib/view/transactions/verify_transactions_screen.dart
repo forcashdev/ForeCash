@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:fore_cash/getx/verifytransactions_controller.dart';
+import 'package:fore_cash/controller/verifytransactions_controller.dart';
 import 'package:fore_cash/model/verify_transaction_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';

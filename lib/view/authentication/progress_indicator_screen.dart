@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/app_theme/app_theme.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';

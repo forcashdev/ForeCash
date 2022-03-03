@@ -2,48 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget commonDropDownDemo(
-    {TextStyle? valueTextStyle,
-    TextStyle? selectedItemTextStyle,
-    String? value,
-    List<String>? itemList,
-    dynamic itemListMap,
-    List<double>? itemListDouble,
-    Function? onChanged,
-    String? hintText,
-    TextStyle? hintTextStyle}) {
-  return DropdownButtonHideUnderline(
-    child: DropdownButton<String>(
-      hint: hintText != null
-          ? Text(
-              hintText,
-              style: hintTextStyle,
-            )
-          : null,
-      value: value,
-      style: valueTextStyle,
-      items: itemList!.map((items) {
-        return DropdownMenuItem<String>(
-          value: items,
-          child: Text(
-            items.toString(),
-            style: selectedItemTextStyle,
-          ),
-        );
-      }).toList(),
-      onChanged: (item) {
-        value = item;
-        onChanged!(item);
-        // controller.changeItem(item: item);
-      },
-      isExpanded: true,
-      icon: Icon(
-        Icons.keyboard_arrow_down, color: Color(0xff777C90), size: 15.sp,
-        // color: AppTheme.colorGrey,
-      ),
-    ),
-  );
-}
+
 
 Widget commonDropDown(
     {TextStyle? valueTextStyle,

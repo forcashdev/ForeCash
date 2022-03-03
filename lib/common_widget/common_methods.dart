@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fore_cash/api/api_call.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';

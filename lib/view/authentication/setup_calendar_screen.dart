@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
+import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
+import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/set_up_calendar_controller.dart';
-import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/getx/screen_index_controller.dart';
-import 'package:fore_cash/getx/selected_dropdown_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -199,10 +200,10 @@ class SetupCalendarScreen extends StatelessWidget {
                                   style: textFieldStyle,
                                   controller: _amountController,
                                   decoration: InputDecoration(
-                                    hintStyle: textFieldStyle2,
                                     filled: true,
                                     fillColor: commonTextFieldColor,
-                                    hintText: dollarHint,
+                                    prefixText: dollarHint,
+                                    prefixStyle: textFieldStyle2,
                                     focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
                                     enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
                                     disabledBorder: OutlineInputBorder(

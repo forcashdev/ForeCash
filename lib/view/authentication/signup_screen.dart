@@ -5,7 +5,7 @@ import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/controller/register_controller.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -166,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            // CommonDataTextField.commonTextField(
+                            // commonTextField(
                             //   isPassword: true,
                             //   textStyle: textFieldStyle,
                             // ),

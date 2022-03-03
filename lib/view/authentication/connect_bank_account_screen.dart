@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
+import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -10,9 +11,10 @@ import 'package:get/get.dart';
 
 class ConnectBankAccountScreen extends StatelessWidget {
   const ConnectBankAccountScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // final controller = Get.put(SelectedBank());
+    final checkBoxController = Get.put(CheckBoxController());
     return SafeArea(
       child: LayoutBuilder(
         builder: (BuildContext layOutContext, BoxConstraints constraints) {
@@ -97,6 +99,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
                   // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
                   GetIncomeController.to.monthlyIncomeList?.clear();
                   GetIncomeController.to.monthlyIncomeList?.refresh();
+                  CheckBoxController.to.monthlyIncomeCheckBoxValueList.clear();
                   screenIndexController.updateIndex(index: 2);
                   // Navigator.push(
                   //     context,

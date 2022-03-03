@@ -1,9 +1,10 @@
 import 'package:fore_cash/api/api_call.dart';
-import 'package:fore_cash/getx/checkbox_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/model/temp_monthy_income_model.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+
+import 'checkbox_controller.dart';
 
 class GetIncomeController extends GetxController {
   static GetIncomeController get to => Get.find();
@@ -151,9 +152,13 @@ class GetIncomeController extends GetxController {
   void onInit() {
     super.onInit();
     monthlyIncomeList!.clear();
-    // weeklyIncomesList!.clear();
+    monthlyIncomeList!.refresh();
+    weeklyIncomesList!.clear();
+    weeklyIncomesList!.refresh();
     weeklyBudgetList!.clear();
+    weeklyBudgetList!.refresh();
     monthlyExpenseList!.clear();
+    monthlyExpenseList!.refresh();
   }
 
   @override
