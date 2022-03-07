@@ -16,6 +16,7 @@ commonTextFormField(
     TextStyle? prefixstyle,
     String? prefixText,
     String? hintText,
+    bool? isErrorShow = false,
     InputBorder? focusedBorder,
     InputBorder? disabledBorder,
     InputBorder? enabledBorder,
@@ -87,7 +88,7 @@ commonTextFormField(
         return onFieldSubmit != null ? onFieldSubmit(value) : null;
       },
       // maxLines: maxLine ?? 1,
-      keyboardType: keyboardType,
+      keyboardType: keyboardType ?? TextInputType.phone,
       controller: textEditingController,
       // initialValue: initialText,
       // cursorColor: colorPrimary,
@@ -95,14 +96,12 @@ commonTextFormField(
       textInputAction: inputAction ?? TextInputAction.next,
       style: textStyle ?? blackMontserrat10W500,
       inputFormatters: inputFormatter,
-      //expands: true,
-
       decoration: InputDecoration(
         // isCollapsed: true,
-        errorText: errorText ?? null,
+        errorText: errorText,
         hoverColor: Colors.transparent,
         prefixStyle: prefixstyle ?? incomeNameStyle,
-        prefixText: prefixText ?? null,
+        prefixText: prefixText,
         errorMaxLines: errorMaxLines ?? 1,
         filled: true,
         fillColor: filledColor,
@@ -111,10 +110,12 @@ commonTextFormField(
         focusedBorder: focusedBorder ?? textFieldBorderStyle,
         disabledBorder: disabledBorder ?? textFieldBorderStyle,
         enabledBorder: enabledBorder ?? textFieldBorderStyle,
+        // errorStyle: TextStyle(height: 10, fontSize: 10),
+        // errorStyle: isErrorShow == true ? TextStyle(height: Get.height * 0.040) : TextStyle(height: Get.height * 0.040),
         errorBorder: errorBorder ?? textFieldBorderStyle,
         focusedErrorBorder: focusedErrorBorder ?? textFieldBorderStyle,
         hintText: hintText ?? '',
-        prefixIcon: preFixIcon != null ? preFixIcon : null,
+        prefixIcon: preFixIcon,
         suffixIcon: isPassword
             ? InkWell(
                 onTap: () {

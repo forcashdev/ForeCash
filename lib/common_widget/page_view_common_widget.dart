@@ -24,11 +24,7 @@ pageViewCommonWidget({int? itemCount, PageController? pageController, dynamic te
   );
 }
 
-totalListScrollAbleWidget({
-  RxList? totalIncomeExpenseList,
-  ScrollController? scrollController,
-  int? itemCount,
-}) {
+totalListScrollAbleWidget({RxList? totalIncomeExpenseList, ScrollController? scrollController, int? itemCount, double? textWidth}) {
   return StreamBuilder(
       stream: totalIncomeExpenseList?.stream,
       builder: (context, snapshot) {
@@ -36,10 +32,10 @@ totalListScrollAbleWidget({
           shrinkWrap: true,
           controller: scrollController,
           scrollDirection: Axis.horizontal,
-          itemCount: itemCount,
+          itemCount: itemCount ?? 0,
           itemBuilder: (context, index) {
             return SizedBox(
-                width: Get.width * 0.067,
+                width: textWidth ?? Get.width * 0.067,
                 child: Align(
                   alignment: const FractionalOffset(0.5, 0.5),
                   child: Text(

@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_dropdown.dart';
+import 'package:fore_cash/common_widget/common_input_formatter.dart';
+import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/set_up_calendar_controller.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+
+import 'allset_screen.dart';
 
 class SetupCalendarScreen extends StatelessWidget {
   const SetupCalendarScreen({Key? key}) : super(key: key);
@@ -191,27 +194,18 @@ class SetupCalendarScreen extends StatelessWidget {
                                 SizedBox(
                                   height: Get.height * 0.01,
                                 ),
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Add low balance warning';
-                                    }
-                                  },
-                                  style: textFieldStyle,
-                                  controller: _amountController,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: commonTextFieldColor,
+                                commonTextFormField(
+                                    validationFunction: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Add low balance warning';
+                                      }
+                                    },
+                                    textStyle: textFieldStyle,
+                                    inputFormatter: [digitInputFormatter()],
+                                    textEditingController: _amountController,
                                     prefixText: dollarHint,
-                                    prefixStyle: textFieldStyle2,
-                                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
-                                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
+                                    prefixstyle: incomeNameStyle,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 10)),
                                 Padding(
                                   padding: EdgeInsets.only(bottom: maxWidth ? Get.height * 0.06 : Get.height * 0.25),
                                   child: Text(
@@ -222,21 +216,28 @@ class SetupCalendarScreen extends StatelessWidget {
                                 commonButton(
                                   height: 50,
                                   text: done,
-                                  onPress: () {
+                                  onPress: () async {
                                     print('>>>>>>>>>>>${controller.setupCalendarDay}>>>>>>>>>>>>>${_amountController.text}');
                                     if (_formKey.currentState!.validate()) {
-                                      SetUpCalendarController.to.callCalendar(
-                                        resetWeekOn: controller.setupCalendarDay
-                                            .toString()
-                                            .replaceAll('Sunday', '1')
-                                            .replaceAll('Monday', '2')
-                                            .replaceAll('Tuesday', '3')
-                                            .replaceAll('WedDay', '4')
-                                            .replaceAll('Thursday', '5')
-                                            .replaceAll('Friday', '6')
-                                            .replaceAll('Saturday', '7'),
-                                        lowBalance: _amountController.text,
-                                      );
+                                      var response = await SetUpCalendarController.to.callCalendar(
+                                          resetWeekOn: controller.setupCalendarDay
+                                              .toString()
+                                              .replaceAll('Sunday', '1')
+                                              .replaceAll('Monday', '2')
+                                              .replaceAll('Tuesday', '3')
+                                              .replaceAll('WedDay', '4')
+                                              .replaceAll('Thursday', '5')
+                                              .replaceAll('Friday', '6')
+                                              .replaceAll('Saturday', '7'),
+                                          lowBalance: _amountController.text,
+                                          onSuccess: () {
+                                            Get.to(const AllSetScreen());
+                                          });
+                                      // print('//////////$response');
+                                      // if (response["success"] == true) {
+                                      //   print('??????????$response');
+
+                                      // }
                                     }
                                   },
                                 )

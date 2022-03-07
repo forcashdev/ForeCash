@@ -13,7 +13,6 @@ import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/visibility_controller.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -78,6 +77,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         height: maxWidth ? Get.height * 0.78 : null,
                         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
                         child: Form(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           key: _formKey,
                           child: Column(
                             children: [
@@ -600,6 +600,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
         _expenseName = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].name);
         _amount = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].amount.toString());
+        RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false.obs).obs;
+        RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false.obs).obs;
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
           child: SwipeActionCell(
@@ -672,141 +674,144 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                               ),
                             ),
                           ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: StreamBuilder(
-                          stream: whenErrorOnlyShowRedBorder.stream,
-                          builder: (context, snapshot) {
-                            return Padding(
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderList.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: whenErrorOnlyShowRedBorderList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                               child: commonTextFormField(
                                   inputAction: TextInputAction.next,
                                   inputFormatter: [characterInputFormatter()],
                                   contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                   textStyle: incomeNameStyle,
-                                  enabledBorder: whenErrorOnlyShowRedBorder.value
+                                  hintText: expenseName,
+                                  hintStyle: incomeNameStyle,
+                                  errorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                      ? OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderRadius: BorderRadius.circular(4.0),
+                                        )
+                                      : null,
+                                  focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                       ? OutlineInputBorder(
                                           borderSide: const BorderSide(color: Colors.red),
                                           borderRadius: BorderRadius.circular(4.0),
                                         )
                                       : null,
                                   validationFunction: (value) {
-                                    if (whenErrorOnlyShowRedBorder.value != value.isEmpty) {
-                                      whenErrorOnlyShowRedBorder.value = value.isEmpty;
-                                      print(whenErrorOnlyShowRedBorder.value);
-                                      whenErrorOnlyShowRedBorder.refresh();
+                                    if (whenErrorOnlyShowRedBorderList[index].value != value.isEmpty) {
+                                      whenErrorOnlyShowRedBorderList[index].value = value.isEmpty;
+                                      print(whenErrorOnlyShowRedBorderList[index].value);
+                                      whenErrorOnlyShowRedBorderList.refresh();
                                     }
-                                    return null;
+                                    return whenErrorOnlyShowRedBorderList[index].value == true ? '' : null;
                                   },
                                   textEditingController: _expenseName,
                                   onChangedFunction: (value) {
                                     GetIncomeController.to.weeklyBudgetList?[index].name = value;
-                                    // GetIncomeController.to.weeklyBudgetList?[index].name = _expenseName?.text;
                                   }),
-                            );
-                          }),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                        ),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                        child: commonDropDown(
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.weeklyBudgetList?[index].paidOn ?? 1}'
-                                .toString()
-                                .replaceAll('1', 'Sun')
-                                .replaceAll('2', 'Mon')
-                                .replaceAll('3', 'Tue')
-                                .replaceAll('4', 'Wed')
-                                .replaceAll('5', 'Thu')
-                                .replaceAll('6', 'Fri')
-                                .replaceAll('7', 'Sat'),
-                            itemList: days,
-                            onChanged: (item) {
-                              GetIncomeController.to.weeklyBudgetList?[index].paidOn = int.parse(item
-                                  .replaceAll('Sun', '1')
-                                  .replaceAll('Mon', '2')
-                                  .replaceAll('Tue', '3')
-                                  .replaceAll('Wed', '4')
-                                  .replaceAll('Thu', '5')
-                                  .replaceAll('Fri', '6')
-                                  .replaceAll('Sat', '7'));
-                              GetIncomeController.to.weeklyBudgetList?.refresh();
-
-                              // controller.changeWeeklyBudgetDayList(item: item, index: index);
-                              print(item);
-                            }),
-                        margin: EdgeInsets.only(right: Get.width * 0.02),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        height: Get.height * 0.044,
-                        alignment: Alignment.center,
-                        child: commonDropDown(
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.weeklyBudgetList?[index].every ?? 1}W',
-                            // value: controller.weeklyBudgetWeekDropDownList[index],
-                            itemList: weeks,
-                            onChanged: (item) {
-                              GetIncomeController.to.weeklyBudgetList?[index].every = int.parse(item.replaceAll('W', ''));
-                              GetIncomeController.to.weeklyBudgetList?.refresh();
-                              // controller.changeWeeklyBudgetWeekList(item: item, index: index);
-                              print(item);
-                            }),
-                        margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: GestureDetector(
-                          onTap: () {
-                            _selectDate(context: context, index: index);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyBudgetList![index].date.toString())),
-                              // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                              style: dateStyle,
-                              maxLines: 1,
                             ),
-                            margin: EdgeInsets.only(right: Get.width * 0.02),
-                            decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                          ),
-                        )),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: StreamBuilder(
-                          stream: whenErrorOnlyShowRedBorderAmount.stream,
-                          builder: (context, snapshot) {
-                            return Padding(
+                          );
+                        }),
+                    Container(
+                      height: Get.height * 0.044,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                      ),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      child: commonDropDown(
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
+                          value: '${GetIncomeController.to.weeklyBudgetList?[index].paidOn ?? 1}'
+                              .toString()
+                              .replaceAll('1', 'Sun')
+                              .replaceAll('2', 'Mon')
+                              .replaceAll('3', 'Tue')
+                              .replaceAll('4', 'Wed')
+                              .replaceAll('5', 'Thu')
+                              .replaceAll('6', 'Fri')
+                              .replaceAll('7', 'Sat'),
+                          itemList: days,
+                          onChanged: (item) {
+                            GetIncomeController.to.weeklyBudgetList?[index].paidOn = int.parse(
+                                item.replaceAll('Sun', '1').replaceAll('Mon', '2').replaceAll('Tue', '3').replaceAll('Wed', '4').replaceAll('Thu', '5').replaceAll('Fri', '6').replaceAll('Sat', '7'));
+                            GetIncomeController.to.weeklyBudgetList?.refresh();
+
+                            // controller.changeWeeklyBudgetDayList(item: item, index: index);
+                            print(item);
+                          }),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                      height: Get.height * 0.044,
+                      alignment: Alignment.center,
+                      child: commonDropDown(
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
+                          value: '${GetIncomeController.to.weeklyBudgetList?[index].every ?? 1}W',
+                          // value: controller.weeklyBudgetWeekDropDownList[index],
+                          itemList: weeks,
+                          onChanged: (item) {
+                            GetIncomeController.to.weeklyBudgetList?[index].every = int.parse(item.replaceAll('W', ''));
+                            GetIncomeController.to.weeklyBudgetList?.refresh();
+                            // controller.changeWeeklyBudgetWeekList(item: item, index: index);
+                            print(item);
+                          }),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _selectDate(context: context, index: index);
+                      },
+                      child: Container(
+                        height: Get.height * 0.044,
+                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.010),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyBudgetList![index].date.toString())),
+                          // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                          style: dateStyle,
+                          maxLines: 1,
+                        ),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
+                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderAmountList.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: whenErrorOnlyShowRedBorderAmountList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02),
                               child: commonTextFormField(
+                                  hintText: amount,
+                                  hintStyle: incomeNameStyle,
                                   prefixText: '\$',
-                                  enabledBorder: whenErrorOnlyShowRedBorderAmount.value
+                                  errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                      ? OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderRadius: BorderRadius.circular(4.0),
+                                        )
+                                      : null,
+                                  focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
                                       ? OutlineInputBorder(
                                           borderSide: const BorderSide(color: Colors.red),
                                           borderRadius: BorderRadius.circular(4.0),
                                         )
                                       : null,
                                   validationFunction: (value) {
-                                    if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {
-                                      whenErrorOnlyShowRedBorderAmount.value = value.isEmpty;
-                                      print(whenErrorOnlyShowRedBorderAmount.value);
-                                      whenErrorOnlyShowRedBorderAmount.refresh();
+                                    if (whenErrorOnlyShowRedBorderAmountList[index].value != value.isEmpty) {
+                                      whenErrorOnlyShowRedBorderAmountList[index].value = value.isEmpty;
+                                      print(whenErrorOnlyShowRedBorderAmountList[index].value);
+                                      whenErrorOnlyShowRedBorderAmountList.refresh();
                                     }
-                                    return null;
+                                    return whenErrorOnlyShowRedBorderAmountList[index].value == true ? '' : null;
                                   },
                                   keyboardType: TextInputType.phone,
                                   prefixstyle: incomeNameStyle,
@@ -817,11 +822,10 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                   textEditingController: _amount,
                                   onChangedFunction: (value) {
                                     GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(value);
-                                    // GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(_amount!.text);
                                   }),
-                            );
-                          }),
-                    ),
+                            ),
+                          );
+                        }),
                   ],
                 ),
               ],

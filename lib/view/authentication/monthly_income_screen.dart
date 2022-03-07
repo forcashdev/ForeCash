@@ -41,7 +41,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   @override
   void initState() {
     super.initState();
-    // GetIncomeController.to.monthlyIncomeList?.clear();
     GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
       if (GetIncomeController.to.monthlyIncomeList!.isEmpty) {
         GetIncomeController.to.getMonthlyIncomeList();
@@ -55,7 +54,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
       child: WillPopScope(
           onWillPop: () async {
             screenIndexController.updateIndex(index: 1);
-            // GetIncomeController.to.monthlyIncomeList?.clear();
             return false;
           },
           child: StreamBuilder(
@@ -65,6 +63,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                   builder: (context, constraints) {
                     final maxWidth = constraints.maxWidth > 1000;
                     return Scaffold(
+                      resizeToAvoidBottomInset: false,
                       backgroundColor: maxWidth ? backGroundColor : Colors.white,
                       body: Align(
                         alignment: maxWidth ? Alignment.center : Alignment.topCenter,
@@ -74,6 +73,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                           width: maxWidth ? Get.width / 1.4 : null,
                           height: maxWidth ? Get.height * 0.78 : null,
                           child: Form(
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             key: _formKeyValidator,
                             child: Column(
                               children: [
@@ -89,8 +89,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                             splashRadius: 0.1,
                                             onPressed: () {
                                               screenIndexController.updateIndex(index: 1);
-                                              // GetIncomeController.to.monthlyIncomeList?.clear();
-                                              // Navigator.pop(context);
                                             },
                                             icon: const Icon(
                                               Icons.chevron_left,
@@ -121,8 +119,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                         child: TextButton(
                                             onPressed: () {
                                               screenIndexController.updateIndex(index: 1);
-                                              // GetIncomeController.to.monthlyIncomeList?.clear();
-                                              // Navigator.pop(context);
                                             },
                                             child: Text(
                                               backButton,
@@ -160,7 +156,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 ),
                                 Expanded(
                                   flex: maxWidth ? 2 : 2,
-                                  // flex: constraints.maxWidth > 1000 ? 2 : 0,
                                   child: Container(
                                     padding: const EdgeInsets.only(top: 10, bottom: 5),
                                     height: maxWidth ? double.infinity : null,
@@ -210,10 +205,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
       padding: EdgeInsets.only(top: Get.height * 0.01),
       child: GetBuilder<AddMonthlyIncomeVisibilityController>(
         builder: (controller1) {
-          final TextEditingController _incomeName2 = TextEditingController();
-          final TextEditingController _amount2 = TextEditingController();
-          RxBool whenErrorOnlyShowRedBorder = false.obs;
-          RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
           // return Visibility(
           //   visible: controller1.monthlyIncomeVisibility,
           //   replacement: Padding(
@@ -474,7 +465,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
           //     ),
           //   ),
           // );
-
           return Padding(
             padding: EdgeInsets.only(bottom: Get.height * 0.03, left: constraints!.maxWidth < 1000 ? Get.width * 0.03 : Get.width * 0.02),
             child: GestureDetector(
@@ -488,11 +478,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                 ));
                 checkBoxController.monthlyIncomeCheckBoxValueList.add(true);
                 GetIncomeController.to.monthlyIncomeList?.refresh();
-                // print(GetIncomeController.to.monthlyIncomeList);
-                // controller1.changeVisibility();
-
-                // _amount2.clear();
-                // _incomeName2.clear();
               },
               child: Align(
                 alignment: const FractionalOffset(0.015, 0.0),
@@ -518,7 +503,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   }
 
   Widget dropDownDayGetBuilder({List<String>? dropDownList}) {
-    // final controller = Get.put(SelectedDropDownItem());
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
         return commonDropDown(
@@ -537,11 +521,8 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   }
 
   Widget dropDownWeekGetBuilder({List<String>? dropDownList}) {
-    // final controller = Get.put(SelectedDropDownItem());
-
     return GetBuilder<SelectedDropDownItem>(
       builder: (controller1) {
-        // return commonDropDown(itemList: dropDownList, value: controller.selectedSingleWeek);
         return commonDropDown(
             selectedItemTextStyle: dropDownStyle2,
             valueTextStyle: dropDownStyle,
@@ -569,7 +550,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
       },
       children: [
         TableRow(children: [
-          SizedBox(),
+          const SizedBox(),
           Padding(
             padding: EdgeInsets.only(left: constraints!.maxWidth > 1000 ? 5 : 0.0),
             child: Text(
@@ -610,14 +591,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         text: next,
         onPress: () {
           if (_formKeyValidator.currentState!.validate()) {
-            // List<DataModel> tempMonthlyIncome = [];
-            // checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) {
-            //   if (value) {
-            //     tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList!.value[index]);
-            //   }
-            // });
-            // CreateIncomeController.to.createIncome(screenIndex: 3, parameter: constraints.maxWidth < 1000 ? {'income': GetIncomeController.to.monthlyIncomeList} : {'income': tempMonthlyIncome});
-            // GetIncomeController.to.monthlyIncomeList?.clear();
             if (constraints.maxWidth < 1000) {
               CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': GetIncomeController.to.monthlyIncomeList});
             } else {
@@ -629,7 +602,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                 }
               });
               CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': tempMonthlyIncome});
-            } // GetIncomeController.to.monthlyIncomeList?.clear();
+            }
           }
           GetIncomeController.to.weeklyIncomesList?.clear();
           GetIncomeController.to.weeklyIncomesList?.refresh();
@@ -649,6 +622,8 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         TextEditingController? _amount;
         _incomeName = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].name ?? '');
         _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString() ?? '');
+        RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false.obs).obs;
+        RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false.obs).obs;
         RxBool whenErrorOnlyShowRedBorder = false.obs;
         RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
         return Padding(
@@ -721,163 +696,156 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 },
                               ),
                             )),
-                    TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: StreamBuilder(
-                            stream: whenErrorOnlyShowRedBorder.stream,
-                            builder: (context, snapshot) {
-                              return Padding(
-                                padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth > 1000 ? 5 : 0.0),
-                                child: commonTextFormField(
-                                  textEditingController: _incomeName,
-                                  onChangedFunction: (value) {
-                                    // GetIncomeController.to.monthlyIncomeList?[index].name = _incomeName?.text;
-                                    GetIncomeController.to.monthlyIncomeList?[index].name = value;
-                                    // CreateIncomeController.to.monthlyIncomeList?.refresh();
-                                  },
-
-                                  enabledBorder: whenErrorOnlyShowRedBorder.value
-                                      ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
-                                          borderRadius: BorderRadius.circular(4.0),
-                                        )
-                                      : null,
-                                  validationFunction: (value) {
-                                    if (whenErrorOnlyShowRedBorder.value != value.isEmpty) {
-                                      whenErrorOnlyShowRedBorder.value = value.isEmpty;
-                                      print(whenErrorOnlyShowRedBorder.value);
-                                      whenErrorOnlyShowRedBorder.refresh();
-                                    }
-                                    return null;
-                                  },
-
-                                  // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.017, 10.0, Get.height * 0.016),
-                                  hintText: 'Income Name',
-                                  hintStyle: incomeNameStyle,
-                                  inputAction: TextInputAction.next,
-                                  inputFormatter: [characterInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
-                                  textStyle: incomeNameStyle,
-                                ),
-                              );
-                            })),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderList.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            // color: Colors.redAccent,
+                            height: whenErrorOnlyShowRedBorderList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth > 1000 ? 5 : 0.0),
+                              child: commonTextFormField(
+                                // isErrorShow: whenErrorOnlyShowRedBorder.value,
+                                textEditingController: _incomeName,
+                                onChangedFunction: (value) {
+                                  GetIncomeController.to.monthlyIncomeList?[index].name = value;
+                                },
+                                focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                    ? OutlineInputBorder(
+                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderRadius: BorderRadius.circular(4.0),
+                                      )
+                                    : null,
+                                errorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                    ? OutlineInputBorder(
+                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderRadius: BorderRadius.circular(
+                                          4.0,
+                                        ),
+                                      )
+                                    : null,
+                                validationFunction: (value) {
+                                  if (whenErrorOnlyShowRedBorderList[index].value != value.isEmpty) {
+                                    whenErrorOnlyShowRedBorderList[index].value = value.isEmpty;
+                                    print(whenErrorOnlyShowRedBorderList[index].value);
+                                    whenErrorOnlyShowRedBorderList.refresh();
+                                  }
+                                  return whenErrorOnlyShowRedBorderList[index].value == true ? '' : null;
+                                },
+                                hintText: incomeName,
+                                hintStyle: incomeNameStyle,
+                                inputAction: TextInputAction.next,
+                                inputFormatter: [characterInputFormatter()],
+                                contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
+                                textStyle: incomeNameStyle,
+                              ),
+                            ),
+                          );
+                        }),
+                    Container(
+                      height: Get.height * 0.044,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      alignment: Alignment.center,
+                      child: commonDropDown(
+                          hintText: date,
+                          hintTextStyle: dropDownStyle2,
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
+                          value: '${GetIncomeController.to.monthlyIncomeList?[index].paidOn ?? 1}th'
+                              .replaceAllMapped('1th', (match) => '1st')
+                              .replaceAllMapped('2th', (match) => '2nd')
+                              .replaceAllMapped('3th', (match) => '3rd')
+                              .replaceAllMapped('11st', (match) => '11th')
+                              .replaceAllMapped('12nd', (match) => '12th')
+                              .replaceAllMapped('13rd', (match) => '13th'),
+                          itemList: dateList,
+                          onChanged: (item) {
+                            GetIncomeController.to.monthlyIncomeList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
+                            GetIncomeController.to.monthlyIncomeList?.refresh();
+                          }),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                    ),
+                    Container(
+                      height: Get.height * 0.044,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                      ),
+                      alignment: Alignment.center,
+                      child: commonDropDown(
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
+                          value: '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 1} mon',
+                          itemList: months,
+                          onChanged: (item) {
+                            GetIncomeController.to.monthlyIncomeList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                            GetIncomeController.to.monthlyIncomeList?.refresh();
+                          }),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _selectDate(context: context, index: index);
+                      },
                       child: Container(
-                        // height: Get.height * 0.044,
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        alignment: Alignment.center,
-                        child: commonDropDown(
-                            hintText: date,
-                            hintTextStyle: dropDownStyle2,
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.monthlyIncomeList?[index].paidOn ?? 1}th'
-                                .replaceAllMapped('1th', (match) => '1st')
-                                .replaceAllMapped('2th', (match) => '2nd')
-                                .replaceAllMapped('3th', (match) => '3rd')
-                                .replaceAllMapped('11st', (match) => '11th')
-                                .replaceAllMapped('12nd', (match) => '12th')
-                                .replaceAllMapped('13rd', (match) => '13th'),
-                            itemList: dateList,
-                            onChanged: (item) {
-                              GetIncomeController.to.monthlyIncomeList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
-                              // CreateIncomeController.to.IncomesList[index].paidOn = item;
-                              GetIncomeController.to.monthlyIncomeList?.refresh();
-                              print(item);
-                              // controller.changeDate(item: item, index: index);
-                            }),
+                        height: Get.height * 0.044,
+                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.010),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())),
+                          style: dateStyle,
+                          maxLines: 1,
+                        ),
                         margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        // height: Get.height * 0.044,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                        ),
-                        alignment: Alignment.center,
-                        child: commonDropDown(
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.monthlyIncomeList?[index].every ?? 1} mon',
-                            // value: controller.selectedMonthlyIncomeMonthList[index],
-                            itemList: months,
-                            onChanged: (item) {
-                              GetIncomeController.to.monthlyIncomeList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
-                              GetIncomeController.to.monthlyIncomeList?.refresh();
-                              // controller.changeItem(item: item, index: index);
-                              print(item);
-                            }),
-                        margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: GestureDetector(
-                        onTap: () {
-                          _selectDate(context: context, index: index);
-                        },
-                        child: Container(
-                          // height: Get.height * 0.044,
-                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString())),
-                            // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                            style: dateStyle,
-                            maxLines: 1,
-                          ),
-                          margin: EdgeInsets.only(right: Get.width * 0.02),
-                          decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                        ),
-                      ),
-                    ),
-                    TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: StreamBuilder(
-                            stream: whenErrorOnlyShowRedBorderAmount.stream,
-                            builder: (context, snapshot) {
-                              return Padding(
-                                padding: EdgeInsets.only(right: Get.width * 0.02),
-                                child: commonTextFormField(
-                                  textEditingController: _amount,
-                                  hintText: 'Amount',
-                                  hintStyle: incomeNameStyle,
-                                  prefixText: '\$',
-                                  keyboardType: TextInputType.phone,
-                                  prefixstyle: incomeNameStyle,
-                                  inputAction: TextInputAction.done,
-                                  enabledBorder: whenErrorOnlyShowRedBorderAmount.value
-                                      ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
-                                          borderRadius: BorderRadius.circular(4.0),
-                                        )
-                                      : null,
-                                  validationFunction: (value) {
-                                    if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {
-                                      whenErrorOnlyShowRedBorderAmount.value = value.isEmpty;
-                                      print(whenErrorOnlyShowRedBorderAmount.value);
-                                      whenErrorOnlyShowRedBorderAmount.refresh();
-                                      setState(() {});
-                                    }
-                                    return null;
-                                  },
-                                  // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.017, 10.0, Get.height * 0.016),
-                                  onChangedFunction: (value) {
-                                    GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
-                                    // GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(_amount!.text);
-                                    // CreateIncomeController.to.monthlyIncomeList?.refresh();
-                                  },
-                                  inputFormatter: [digitInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
-                                  textStyle: incomeNameStyle,
-                                ),
-                              );
-                            })),
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderAmountList.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: whenErrorOnlyShowRedBorderAmountList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: Get.width * 0.02),
+                              child: commonTextFormField(
+                                textEditingController: _amount,
+                                hintText: amount,
+                                hintStyle: incomeNameStyle,
+                                prefixText: '\$',
+                                keyboardType: TextInputType.phone,
+                                prefixstyle: incomeNameStyle,
+                                inputAction: TextInputAction.done,
+                                errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                    ? OutlineInputBorder(
+                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderRadius: BorderRadius.circular(4.0),
+                                      )
+                                    : null,
+                                focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                    ? OutlineInputBorder(
+                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderRadius: BorderRadius.circular(4.0),
+                                      )
+                                    : null,
+                                validationFunction: (value) {
+                                  if (whenErrorOnlyShowRedBorderAmountList[index].value != value.isEmpty) {
+                                    whenErrorOnlyShowRedBorderAmountList[index].value = value.isEmpty;
+                                    print(whenErrorOnlyShowRedBorderAmountList[index].value);
+                                    whenErrorOnlyShowRedBorderAmountList.refresh();
+                                  }
+                                  return whenErrorOnlyShowRedBorderAmountList[index].value == true ? '' : null;
+                                },
+                                onChangedFunction: (value) {
+                                  GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
+                                },
+                                inputFormatter: [digitInputFormatter()],
+                                contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
+                                textStyle: incomeNameStyle,
+                              ),
+                            ),
+                          );
+                        }),
                   ],
                 ),
               ],

@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ScreenProgressIndicator(),
+            builder: (context) => const ScreenProgressIndicator(),
           ));
       // Get.off(ScreenProgressIndicator());
     });

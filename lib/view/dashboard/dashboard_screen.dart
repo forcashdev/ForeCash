@@ -108,13 +108,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   late ScrollController scrollControllerTotalListWeeklyIncome;
   late ScrollController scrollControllerTotalListMonthlyExpense;
   late ScrollController scrollControllerTotalListWeeklyBudget;
+  late ScrollController scrollControllerTotalListOneTimeIncome;
+  late ScrollController scrollControllerTotalListOneTimeExpense;
   late ScrollController scrollControllerWeeklyIncome;
   late ScrollController scrollControllerMonthlyExpense;
   late ScrollController scrollControllerWeeklyBudget;
+  late ScrollController scrollControllerOneTimeIncome;
+  late ScrollController scrollControllerOneTimeExpense;
+  late ScrollController scrollControllerPreviousWeekBalance;
+  late ScrollController scrollControllerTotalWeeklyIncome;
+  late ScrollController scrollControllerTotalWeeklyExpense;
+  late ScrollController scrollControllerEndOfTheWeekBalance;
   RxBool monthlyIncomeExpansion = false.obs;
   RxBool weeklyIncomeExpansion = false.obs;
   RxBool monthlyExpenseExpansion = false.obs;
   RxBool weeklyBudgetExpansion = false.obs;
+  RxBool oneTimeIncomeExpansion = false.obs;
+  RxBool oneTimeExpenseExpansion = false.obs;
   int totalCount = 0;
 
   @override
@@ -139,6 +149,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     scrollControllerTotalListWeeklyIncome = ScrollController();
     scrollControllerTotalListMonthlyExpense = ScrollController();
     scrollControllerTotalListWeeklyBudget = ScrollController();
+    scrollControllerTotalListOneTimeIncome = ScrollController();
+    scrollControllerTotalListOneTimeExpense = ScrollController();
+    scrollControllerPreviousWeekBalance = ScrollController();
+    scrollControllerTotalWeeklyIncome = ScrollController();
+    scrollControllerTotalWeeklyExpense = ScrollController();
+    scrollControllerOneTimeIncome = ScrollController();
+    scrollControllerOneTimeExpense = ScrollController();
+    scrollControllerEndOfTheWeekBalance = ScrollController();
 
     scrollController.addListener(() {
       if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
@@ -155,6 +173,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       scrollControllerTotalListWeeklyIncome.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       scrollControllerTotalListMonthlyExpense.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       scrollControllerTotalListWeeklyBudget.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeIncome.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeIncome.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerPreviousWeekBalance.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyIncome.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyExpense.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollController.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
     });
 
     scrollControllerMonthlyIncome.addListener(() {
@@ -188,93 +214,346 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
         }
       }
+
+      if (oneTimeIncomeExpansion.value == true) {
+        if (scrollControllerOneTimeIncome.offset < scrollControllerMonthlyIncome.offset || scrollControllerOneTimeIncome.offset > scrollControllerMonthlyIncome.offset) {
+          scrollControllerOneTimeIncome.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+        }
+      } else {
+        if (scrollControllerTotalListOneTimeIncome.offset < scrollControllerMonthlyIncome.offset || scrollControllerTotalListOneTimeIncome.offset > scrollControllerMonthlyIncome.offset) {
+          scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+        }
+      }
+
+      if (oneTimeExpenseExpansion.value == true) {
+        if (scrollControllerOneTimeExpense.offset < scrollControllerMonthlyIncome.offset || scrollControllerOneTimeExpense.offset > scrollControllerMonthlyIncome.offset) {
+          scrollControllerOneTimeExpense.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+        }
+      } else {
+        if (scrollControllerTotalListOneTimeExpense.offset < scrollControllerMonthlyIncome.offset || scrollControllerTotalListOneTimeExpense.offset > scrollControllerMonthlyIncome.offset) {
+          scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+        }
+      }
+
       if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerMonthlyIncome.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerMonthlyIncome.offset) {
         scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
-    });
-    scrollControllerWeeklyIncome.addListener(() {
-      if (scrollController.offset < scrollControllerWeeklyIncome.offset || scrollController.offset > scrollControllerWeeklyIncome.offset) {
-        scrollController.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerMonthlyIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerMonthlyIncome.offset > scrollControllerWeeklyIncome.offset) {
-        scrollControllerMonthlyIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerMonthlyExpense.offset < scrollControllerWeeklyIncome.offset || scrollControllerMonthlyExpense.offset > scrollControllerWeeklyIncome.offset) {
-        scrollControllerMonthlyExpense.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerWeeklyBudget.offset < scrollControllerWeeklyIncome.offset || scrollControllerWeeklyBudget.offset > scrollControllerWeeklyIncome.offset) {
-        scrollControllerWeeklyBudget.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerWeeklyIncome.offset) {
-        scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+
+      if (scrollControllerPreviousWeekBalance.offset < scrollControllerMonthlyIncome.offset || scrollControllerPreviousWeekBalance.offset > scrollControllerMonthlyIncome.offset) {
+        scrollControllerPreviousWeekBalance.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
 
-      if (scrollControllerTotalListWeeklyIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListWeeklyIncome.offset > scrollControllerWeeklyIncome.offset) {
-        scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      if (scrollControllerTotalWeeklyIncome.offset < scrollControllerMonthlyIncome.offset || scrollControllerTotalWeeklyIncome.offset > scrollControllerMonthlyIncome.offset) {
+        scrollControllerTotalWeeklyIncome.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
-      if (scrollControllerTotalListMonthlyExpense.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListMonthlyExpense.offset > scrollControllerWeeklyIncome.offset) {
-        scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      if (scrollControllerTotalWeeklyExpense.offset < scrollControllerMonthlyIncome.offset || scrollControllerTotalWeeklyExpense.offset > scrollControllerMonthlyIncome.offset) {
+        scrollControllerTotalWeeklyExpense.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
-      if (scrollControllerTotalListWeeklyBudget.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListWeeklyBudget.offset > scrollControllerWeeklyIncome.offset) {
-        scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      if (scrollControllerEndOfTheWeekBalance.offset < scrollControllerMonthlyIncome.offset || scrollControllerEndOfTheWeekBalance.offset > scrollControllerMonthlyIncome.offset) {
+        scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerMonthlyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       }
+    });
+    scrollControllerWeeklyIncome.addListener(() {
+      // if (scrollController.offset < scrollControllerWeeklyIncome.offset || scrollController.offset > scrollControllerWeeklyIncome.offset) {
+      scrollController.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerMonthlyIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerMonthlyIncome.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerMonthlyIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerMonthlyExpense.offset < scrollControllerWeeklyIncome.offset || scrollControllerMonthlyExpense.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerMonthlyExpense.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerWeeklyBudget.offset < scrollControllerWeeklyIncome.offset || scrollControllerWeeklyBudget.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerWeeklyBudget.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      //
+      // if (scrollControllerTotalListWeeklyIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListWeeklyIncome.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyExpense.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListMonthlyExpense.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListWeeklyBudget.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListWeeklyBudget.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      //
+      // if (scrollControllerOneTimeIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerOneTimeIncome.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerOneTimeIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListOneTimeIncome.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeExpense.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalListOneTimeExpense.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerOneTimeExpense.offset < scrollControllerWeeklyIncome.offset || scrollControllerOneTimeExpense.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerOneTimeExpense.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerPreviousWeekBalance.offset < scrollControllerWeeklyIncome.offset || scrollControllerPreviousWeekBalance.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyIncome.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalWeeklyIncome.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyExpense.offset < scrollControllerWeeklyIncome.offset || scrollControllerTotalWeeklyExpense.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerEndOfTheWeekBalance.offset < scrollControllerWeeklyIncome.offset || scrollControllerEndOfTheWeekBalance.offset > scrollControllerWeeklyIncome.offset) {
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
     });
 
     scrollControllerMonthlyExpense.addListener(() {
-      if (scrollController.offset < scrollControllerMonthlyExpense.offset || scrollController.offset > scrollControllerMonthlyExpense.offset) {
-        scrollController.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerMonthlyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerMonthlyIncome.offset > scrollControllerMonthlyExpense.offset) {
-        scrollControllerMonthlyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerWeeklyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerWeeklyIncome.offset > scrollControllerMonthlyExpense.offset) {
-        scrollControllerWeeklyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerWeeklyBudget.offset < scrollControllerMonthlyExpense.offset || scrollControllerWeeklyBudget.offset > scrollControllerMonthlyExpense.offset) {
-        scrollControllerWeeklyBudget.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerMonthlyExpense.offset) {
-        scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-
-      if (scrollControllerTotalListWeeklyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListWeeklyIncome.offset > scrollControllerMonthlyExpense.offset) {
-        scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerTotalListMonthlyExpense.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListMonthlyExpense.offset > scrollControllerMonthlyExpense.offset) {
-        scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerTotalListWeeklyBudget.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListWeeklyBudget.offset > scrollControllerMonthlyExpense.offset) {
-        scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
+      // if (scrollController.offset < scrollControllerMonthlyExpense.offset || scrollController.offset > scrollControllerMonthlyExpense.offset) {
+      scrollController.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerMonthlyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerMonthlyIncome.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerMonthlyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerWeeklyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerWeeklyIncome.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerWeeklyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerWeeklyBudget.offset < scrollControllerMonthlyExpense.offset || scrollControllerWeeklyBudget.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerWeeklyBudget.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListWeeklyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListWeeklyIncome.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyExpense.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListMonthlyExpense.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListWeeklyBudget.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListWeeklyBudget.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerOneTimeIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerOneTimeIncome.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerOneTimeIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListOneTimeIncome.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerOneTimeExpense.offset < scrollControllerMonthlyExpense.offset || scrollControllerOneTimeExpense.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerOneTimeExpense.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeExpense.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalListOneTimeExpense.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerPreviousWeekBalance.offset < scrollControllerMonthlyExpense.offset || scrollControllerPreviousWeekBalance.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyIncome.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalWeeklyIncome.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyExpense.offset < scrollControllerMonthlyExpense.offset || scrollControllerTotalWeeklyExpense.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerEndOfTheWeekBalance.offset < scrollControllerMonthlyExpense.offset || scrollControllerEndOfTheWeekBalance.offset > scrollControllerMonthlyExpense.offset) {
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerMonthlyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
     });
 
     scrollControllerWeeklyBudget.addListener(() {
-      if (scrollController.offset < scrollControllerWeeklyBudget.offset || scrollController.offset > scrollControllerWeeklyBudget.offset) {
-        scrollController.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerMonthlyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerMonthlyIncome.offset > scrollControllerWeeklyBudget.offset) {
-        scrollControllerMonthlyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerWeeklyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerWeeklyIncome.offset > scrollControllerWeeklyBudget.offset) {
-        scrollControllerWeeklyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerMonthlyExpense.offset < scrollControllerWeeklyBudget.offset || scrollControllerMonthlyExpense.offset > scrollControllerWeeklyBudget.offset) {
-        scrollControllerMonthlyExpense.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerWeeklyBudget.offset) {
-        scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-
-      if (scrollControllerTotalListWeeklyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListWeeklyIncome.offset > scrollControllerWeeklyBudget.offset) {
-        scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerTotalListMonthlyExpense.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListMonthlyExpense.offset > scrollControllerWeeklyBudget.offset) {
-        scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
-      if (scrollControllerTotalListWeeklyBudget.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListWeeklyBudget.offset > scrollControllerWeeklyBudget.offset) {
-        scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-      }
+      // if (scrollController.offset < scrollControllerWeeklyBudget.offset || scrollController.offset > scrollControllerWeeklyBudget.offset) {
+      scrollController.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerMonthlyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerMonthlyIncome.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerMonthlyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerWeeklyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerWeeklyIncome.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerWeeklyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerMonthlyExpense.offset < scrollControllerWeeklyBudget.offset || scrollControllerMonthlyExpense.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerMonthlyExpense.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListWeeklyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListWeeklyIncome.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyExpense.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListMonthlyExpense.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListWeeklyBudget.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListWeeklyBudget.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerOneTimeIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerOneTimeIncome.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerOneTimeIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListOneTimeIncome.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerOneTimeExpense.offset < scrollControllerWeeklyBudget.offset || scrollControllerOneTimeExpense.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerOneTimeExpense.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeExpense.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalListOneTimeExpense.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerPreviousWeekBalance.offset < scrollControllerWeeklyBudget.offset || scrollControllerPreviousWeekBalance.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyIncome.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalWeeklyIncome.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyExpense.offset < scrollControllerWeeklyBudget.offset || scrollControllerTotalWeeklyExpense.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerEndOfTheWeekBalance.offset < scrollControllerWeeklyBudget.offset || scrollControllerEndOfTheWeekBalance.offset > scrollControllerWeeklyBudget.offset) {
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerWeeklyBudget.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
     });
+
+    scrollControllerOneTimeIncome.addListener(() {
+      // if (scrollController.offset < scrollControllerOneTimeIncome.offset || scrollController.offset > scrollControllerOneTimeIncome.offset) {
+      scrollController.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerMonthlyIncome.offset < scrollControllerOneTimeIncome.offset || scrollControllerMonthlyIncome.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerMonthlyIncome.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerWeeklyIncome.offset < scrollControllerOneTimeIncome.offset || scrollControllerWeeklyIncome.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerWeeklyIncome.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerWeeklyBudget.offset < scrollControllerOneTimeIncome.offset || scrollControllerWeeklyBudget.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerWeeklyBudget.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerMonthlyExpense.offset < scrollControllerOneTimeIncome.offset || scrollControllerMonthlyExpense.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerMonthlyExpense.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerOneTimeExpense.offset < scrollControllerOneTimeIncome.offset || scrollControllerOneTimeExpense.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerOneTimeExpense.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyIncome.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalListMonthlyIncome.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListWeeklyIncome.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalListWeeklyIncome.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListWeeklyBudget.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalListWeeklyBudget.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListMonthlyExpense.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalListMonthlyExpense.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeExpense.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalListOneTimeExpense.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalListOneTimeIncome.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalListOneTimeIncome.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerPreviousWeekBalance.offset < scrollControllerOneTimeIncome.offset || scrollControllerPreviousWeekBalance.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyIncome.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalWeeklyIncome.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerTotalWeeklyExpense.offset < scrollControllerOneTimeIncome.offset || scrollControllerTotalWeeklyExpense.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+      // if (scrollControllerEndOfTheWeekBalance.offset < scrollControllerOneTimeIncome.offset || scrollControllerEndOfTheWeekBalance.offset > scrollControllerOneTimeIncome.offset) {
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerOneTimeIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      // }
+    });
+
+    scrollControllerOneTimeExpense.addListener(() {
+      scrollController.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyIncome.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyIncome.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyBudget.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyExpense.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeIncome.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerOneTimeExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+    });
+
+    scrollControllerPreviousWeekBalance.addListener(() {
+      scrollController.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyIncome.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyIncome.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyBudget.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyExpense.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeIncome.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeExpense.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerPreviousWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+    });
+
+    scrollControllerTotalWeeklyIncome.addListener(() {
+      scrollController.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyIncome.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyIncome.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyBudget.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyExpense.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeIncome.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeExpense.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerTotalWeeklyIncome.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+    });
+
+    scrollControllerTotalWeeklyExpense.addListener(() {
+      scrollController.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyIncome.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyIncome.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyBudget.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyExpense.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeIncome.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeExpense.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerEndOfTheWeekBalance.animateTo(scrollControllerTotalWeeklyExpense.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+    });
+
+    scrollControllerEndOfTheWeekBalance.addListener(() {
+      scrollController.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyIncome.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyIncome.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerWeeklyBudget.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerMonthlyExpense.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeIncome.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerOneTimeExpense.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyIncome.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyIncome.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListWeeklyBudget.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListMonthlyExpense.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeExpense.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalListOneTimeIncome.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerPreviousWeekBalance.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyIncome.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+      scrollControllerTotalWeeklyExpense.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+    });
+
     super.initState();
   }
 
@@ -493,6 +772,36 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 scrollController.offset,
                                               );
                                             }
+                                            if (oneTimeIncomeExpansion.value == true) {
+                                              scrollControllerOneTimeIncome.jumpTo(
+                                                scrollController.offset,
+                                              );
+                                            } else {
+                                              scrollControllerTotalListOneTimeIncome.jumpTo(
+                                                scrollController.offset,
+                                              );
+                                            }
+                                            if (oneTimeExpenseExpansion.value == true) {
+                                              scrollControllerOneTimeExpense.jumpTo(
+                                                scrollController.offset,
+                                              );
+                                            } else {
+                                              scrollControllerTotalListOneTimeExpense.jumpTo(
+                                                scrollController.offset,
+                                              );
+                                            }
+                                            scrollControllerPreviousWeekBalance.jumpTo(
+                                              scrollController.offset,
+                                            );
+                                            scrollControllerTotalWeeklyIncome.jumpTo(
+                                              scrollController.offset,
+                                            );
+                                            scrollControllerTotalWeeklyExpense.jumpTo(
+                                              scrollController.offset,
+                                            );
+                                            scrollControllerEndOfTheWeekBalance.jumpTo(
+                                              scrollController.offset,
+                                            );
                                           },
                                           child: Icon(
                                             Icons.arrow_back_ios, color: Colors.black, size: 12.sp,
@@ -622,6 +931,36 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               scrollController.offset,
                                             );
                                           }
+                                          if (oneTimeIncomeExpansion.value == true) {
+                                            scrollControllerOneTimeIncome.jumpTo(
+                                              scrollController.offset,
+                                            );
+                                          } else {
+                                            scrollControllerTotalListOneTimeIncome.jumpTo(
+                                              scrollController.offset,
+                                            );
+                                          }
+                                          if (oneTimeExpenseExpansion.value == true) {
+                                            scrollControllerOneTimeExpense.jumpTo(
+                                              scrollController.offset,
+                                            );
+                                          } else {
+                                            scrollControllerTotalListOneTimeExpense.jumpTo(
+                                              scrollController.offset,
+                                            );
+                                          }
+                                          scrollControllerPreviousWeekBalance.jumpTo(
+                                            scrollController.offset,
+                                          );
+                                          scrollControllerTotalWeeklyIncome.jumpTo(
+                                            scrollController.offset,
+                                          );
+                                          scrollControllerTotalWeeklyExpense.jumpTo(
+                                            scrollController.offset,
+                                          );
+                                          scrollControllerEndOfTheWeekBalance.jumpTo(
+                                            scrollController.offset,
+                                          );
                                         },
                                         // print('>>>>>>>>>>${_pageController.position}');
                                         // print(_pageController.page);
@@ -755,16 +1094,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                       builder: (MonthlyEditModeController) {
                                                         return Padding(
                                                           padding: EdgeInsets.only(
-                                                            left: constraints.maxWidth > 1000 ? 8.0 : 13.0,
-                                                            // right: 13,
-                                                            bottom: maxWidth
-                                                                ? controller.showTextWeb == false
-                                                                    ? 62
-                                                                    : controller.showTextWeb == true && MonthlyEditModeController.editMode == false
-                                                                        ? Get.height * 0.045
-                                                                        : Get.height * 0.01
-                                                                : 0.0,
-                                                          ),
+                                                              left: constraints.maxWidth > 1000 ? 8.0 : 13.0,
+                                                              // right: 13,
+                                                              bottom: controller.showTextWeb == true && MonthlyEditModeController.editMode == false && maxWidth
+                                                                  ? Get.height * 0.045
+                                                                  : controller.showTextWeb == false
+                                                                      ? 62
+                                                                      : 0.0
+                                                              // bottom: maxWidth
+                                                              //     ? controller.showTextWeb == false
+                                                              //         ? 62
+                                                              //         : controller.showTextWeb == true && MonthlyEditModeController.editMode == false
+                                                              //             ? Get.height * 0.045
+                                                              //             : MonthlyEditModeController.editMode == true && maxWidth
+                                                              //                 ? Get.height * 0.01
+                                                              //                 : 0.0
+                                                              //     : 0.0,
+                                                              ),
                                                           child: StreamBuilder(
                                                               stream: GetIncomeController.to.monthlyIncomeList?.stream,
                                                               builder: (context, snapshot) {
@@ -917,15 +1263,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                         visible: constraints.maxWidth < 1000 ? weeklyIncomeDataController.incomeListVisibility : true,
                                                         child: Padding(
                                                           padding: EdgeInsets.only(
-                                                            left: constraints.maxWidth > 1000 ? 0.0 : 13.0,
-                                                            bottom: maxWidth
-                                                                ? controller.weeklyIncomeShowTextWeb == false
-                                                                    ? 62
-                                                                    : controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false
-                                                                        ? Get.height * 0.045
-                                                                        : Get.height * 0.01
-                                                                : 0.0,
-                                                          ),
+                                                              left: constraints.maxWidth > 1000 ? 0.0 : 13.0,
+                                                              // bottom: maxWidth
+                                                              //     ? controller.weeklyIncomeShowTextWeb == false
+                                                              //         ? 62
+                                                              //         : controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false
+                                                              //             ? Get.height * 0.045
+                                                              //             : Get.height * 0.01
+                                                              //     : 0.0,
+                                                              bottom: controller.weeklyIncomeShowTextWeb == true && weeklyIncomeEditModeController.weeklyIncomeEditMode == false && maxWidth
+                                                                  ? Get.height * 0.045
+                                                                  : controller.weeklyIncomeShowTextWeb == false
+                                                                      ? 62
+                                                                      : 0.0),
                                                           child: StreamBuilder(
                                                               stream: GetIncomeController.to.weeklyIncomesList?.stream,
                                                               builder: (context, snapshot) {
@@ -1091,15 +1441,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                         visible: constraints.maxWidth < 1000 ? monthlyExpenseDataController.monthlyExpenseListVisibility : true,
                                                         child: Padding(
                                                           padding: EdgeInsets.only(
-                                                            left: constraints.maxWidth > 1000 ? 8.0 : 10.0,
-                                                            bottom: maxWidth
-                                                                ? controller.monthlyExpenseShowTextWeb == false
-                                                                    ? 62
-                                                                    : controller.monthlyExpenseShowTextWeb == true && monthlyExpenseEditModeController.monthlyExpenseEditMode == false
-                                                                        ? Get.height * 0.045
-                                                                        : Get.height * 0.01
-                                                                : 0.0,
-                                                          ),
+                                                              left: constraints.maxWidth > 1000 ? 8.0 : 10.0,
+                                                              // bottom: maxWidth
+                                                              //     ? controller.monthlyExpenseShowTextWeb == false
+                                                              //         ? 62
+                                                              //         : controller.monthlyExpenseShowTextWeb == true && monthlyExpenseEditModeController.monthlyExpenseEditMode == false
+                                                              //             ? Get.height * 0.045
+                                                              //             : Get.height * 0.01
+                                                              //     : 0.0,
+                                                              bottom: controller.monthlyExpenseShowTextWeb == true && monthlyExpenseEditModeController.monthlyExpenseEditMode == false && maxWidth
+                                                                  ? Get.height * 0.045
+                                                                  : controller.monthlyExpenseShowTextWeb == false
+                                                                      ? 62
+                                                                      : 0.0),
                                                           child: StreamBuilder(
                                                               stream: GetIncomeController.to.monthlyExpenseList?.stream,
                                                               builder: (context, snapshot) {
@@ -1227,6 +1581,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         scrollController.position.pixels,
                                       );
                                     });
+                                  } else {
+                                    Future.delayed(Duration(milliseconds: 50), () {
+                                      scrollControllerTotalListWeeklyBudget.jumpTo(
+                                        scrollController.position.pixels,
+                                      );
+                                    });
                                   }
                                   weeklyBudgetExpansion = value.obs;
                                   weeklyBudgetExpansion.refresh();
@@ -1289,15 +1649,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                         visible: constraints.maxWidth < 1000 ? weeklyBudgetController.weeklyBudgetVisibilityIncome : true,
                                                         child: Padding(
                                                           padding: EdgeInsets.only(
-                                                            left: constraints.maxWidth > 1000 ? 8.0 : 13.0,
-                                                            bottom: maxWidth
-                                                                ? controller.weeklyBudgetShowTextWeb == false
-                                                                    ? 62
-                                                                    : controller.weeklyBudgetShowTextWeb == true && weeklyBudgetEditModeController.weeklyBudgetEditMode == false
-                                                                        ? Get.height * 0.045
-                                                                        : Get.height * 0.01
-                                                                : 0.0,
-                                                          ),
+                                                              left: constraints.maxWidth > 1000 ? 8.0 : 13.0,
+                                                              // bottom: maxWidth
+                                                              //     ? controller.weeklyBudgetShowTextWeb == false
+                                                              //         ? 62
+                                                              //         : controller.weeklyBudgetShowTextWeb == true && weeklyBudgetEditModeController.weeklyBudgetEditMode == false
+                                                              //             ? Get.height * 0.045
+                                                              //             : Get.height * 0.01
+                                                              //     : 0.0,
+                                                              bottom: controller.weeklyBudgetShowTextWeb == true && weeklyBudgetEditModeController.weeklyBudgetEditMode == false && maxWidth
+                                                                  ? Get.height * 0.045
+                                                                  : controller.weeklyBudgetShowTextWeb == false
+                                                                      ? 62
+                                                                      : 0.0),
                                                           child: StreamBuilder(
                                                               stream: GetIncomeController.to.weeklyBudgetList?.stream,
                                                               builder: (context, snapshot) {
@@ -1398,6 +1762,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               iconColor: containerColor,
                                               tilePadding: const EdgeInsets.only(left: 15),
                                               onExpansionChanged: (value) {
+                                                if (value) {
+                                                  Future.delayed(const Duration(milliseconds: 50), () {
+                                                    scrollControllerOneTimeIncome.jumpTo(
+                                                      scrollController.position.pixels,
+                                                    );
+                                                  });
+                                                } else {
+                                                  Future.delayed(const Duration(milliseconds: 50), () {
+                                                    scrollControllerTotalListOneTimeIncome.jumpTo(
+                                                      scrollController.position.pixels,
+                                                    );
+                                                  });
+                                                }
+                                                oneTimeIncomeExpansion = value.obs;
+                                                oneTimeIncomeExpansion.refresh();
                                                 oneTimeIncomeExpansionValue.changeExpansionValue();
                                               },
                                               trailing: GetBuilder<OneTimeIncomeExpansionChange>(
@@ -1412,7 +1791,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                               builder: (context, snapshot) {
                                                                 return totalListScrollAbleWidget(
                                                                     itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
-                                                                    scrollController: scrollControllerTotalListWeeklyBudget,
+                                                                    scrollController: scrollControllerTotalListOneTimeIncome,
                                                                     totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                                               },
                                                             ),
@@ -1468,7 +1847,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                       ],
                                                                     ),
                                                               Row(
-                                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
                                                                   oneTimeIncomeData(
                                                                       boolValue: oneTimeIncomeController.oneTimeIncomeVisibilityIncome,
@@ -1484,21 +1863,22 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                       visible: constraints.maxWidth < 1000 ? oneTimeIncomeController.oneTimeIncomeVisibilityIncome : true,
                                                                       child: Padding(
                                                                         padding: EdgeInsets.only(
+                                                                          top: maxWidth ? 25 : Get.height * 0.01,
                                                                           left: constraints.maxWidth > 1000 ? 8.0 : 10.0,
-                                                                          bottom: maxWidth
-                                                                              ? showOneTimeIncomeSaveTextController.oneTimeIncomeShowTextWeb == false
-                                                                                  ? 62
-                                                                                  : showOneTimeIncomeSaveTextController.oneTimeIncomeShowTextWeb == true &&
-                                                                                          oneTimeIncomeEditModeController.oneTimeIncomeEditMode == false
-                                                                                      ? Get.height * 0.04
-                                                                                      : Get.height * 0.01
-                                                                              : 0.0,
+                                                                          // bottom: maxWidth
+                                                                          //     ? showOneTimeIncomeSaveTextController.oneTimeIncomeShowTextWeb == false
+                                                                          //         ? 62
+                                                                          //         : showOneTimeIncomeSaveTextController.oneTimeIncomeShowTextWeb == true &&
+                                                                          //                 oneTimeIncomeEditModeController.oneTimeIncomeEditMode == false
+                                                                          //             ? Get.height * 0.04
+                                                                          //             : Get.height * 0.01
+                                                                          //     : 0.0,
                                                                         ),
                                                                         child: StreamBuilder(
                                                                             stream: GetIncomeController.to.monthlyExpenseList?.stream,
                                                                             builder: (context, snapshot) {
                                                                               return SingleChildScrollView(
-                                                                                controller: scrollControllerMonthlyExpense,
+                                                                                controller: scrollControllerOneTimeIncome,
                                                                                 scrollDirection: Axis.horizontal,
                                                                                 physics: const ClampingScrollPhysics(),
                                                                                 child: StreamBuilder(
@@ -1647,6 +2027,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               iconColor: containerColor,
                                               tilePadding: const EdgeInsets.only(right: 0.0, left: 15),
                                               onExpansionChanged: (value) {
+                                                if (value) {
+                                                  Future.delayed(const Duration(milliseconds: 50), () {
+                                                    scrollControllerOneTimeExpense.jumpTo(
+                                                      scrollController.position.pixels,
+                                                    );
+                                                  });
+                                                } else {
+                                                  Future.delayed(const Duration(milliseconds: 50), () {
+                                                    scrollControllerTotalListOneTimeExpense.jumpTo(
+                                                      scrollController.position.pixels,
+                                                    );
+                                                  });
+                                                }
+                                                oneTimeExpenseExpansion = value.obs;
+                                                oneTimeExpenseExpansion.refresh();
                                                 oneTimeExpenseExpansionValue.changeExpansionValue();
                                               },
                                               trailing: GetBuilder<OneTimeExpenseExpansionChange>(
@@ -1661,7 +2056,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                               builder: (context, snapshot) {
                                                                 return totalListScrollAbleWidget(
                                                                     itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
-                                                                    scrollController: scrollControllerTotalListWeeklyBudget,
+                                                                    scrollController: scrollControllerTotalListOneTimeExpense,
                                                                     totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                                               },
                                                             ),
@@ -1717,7 +2112,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                       ],
                                                                     ),
                                                               Row(
-                                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
                                                                   oneTimeExpenseData(
                                                                       boolValue: oneTimeExpenseController.oneTimeExpenseVisibilityIncome,
@@ -1734,58 +2129,59 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                       child: Padding(
                                                                         padding: EdgeInsets.only(
                                                                           left: constraints.maxWidth > 1000 ? 8.0 : 10.0,
-                                                                          bottom: maxWidth
-                                                                              ? showOneTimeExpenseSaveTextController.oneTimeExpenseShowTextWeb == false
-                                                                                  ? 62
-                                                                                  : showOneTimeExpenseSaveTextController.oneTimeExpenseShowTextWeb == true &&
-                                                                                          oneTimeExpenseEditModeController.oneTimeExpenseEditMode == false
-                                                                                      ? Get.height * 0.04
-                                                                                      : Get.height * 0.01
-                                                                              : 0.0,
+                                                                          // bottom: maxWidth
+                                                                          //     ? showOneTimeExpenseSaveTextController.oneTimeExpenseShowTextWeb == false
+                                                                          //         ? 62
+                                                                          //         : showOneTimeExpenseSaveTextController.oneTimeExpenseShowTextWeb == true &&
+                                                                          //                 oneTimeExpenseEditModeController.oneTimeExpenseEditMode == false
+                                                                          //             ? Get.height * 0.04
+                                                                          //             : Get.height * 0.01
+                                                                          //     : 0.0,
+                                                                          top: maxWidth ? 25 : Get.height * 0.01,
                                                                         ),
                                                                         child: StreamBuilder(
                                                                             stream: GetIncomeController.to.monthlyExpenseList?.stream,
                                                                             builder: (context, snapshot) {
                                                                               return SingleChildScrollView(
-                                                                                controller: scrollControllerMonthlyExpense,
+                                                                                controller: scrollControllerOneTimeExpense,
                                                                                 scrollDirection: Axis.horizontal,
                                                                                 physics: const ClampingScrollPhysics(),
                                                                                 child: StreamBuilder(
                                                                                     stream: TotalIncomeExpenseController.to.datesList.stream,
                                                                                     builder: (context, snapshot) {
                                                                                       return Column(
+                                                                                          mainAxisAlignment: MainAxisAlignment.center,
                                                                                           children: List.generate(
-                                                                                        oneTimeIncomePageControllerList.length,
-                                                                                        (index) => SizedBox(
-                                                                                          height: oneTimeExpenseEditModeController.oneTimeExpenseEditMode
-                                                                                              ? Get.height * 0.059
-                                                                                              : maxWidth
-                                                                                                  ? Get.height * 0.035
-                                                                                                  : Get.height * 0.032,
-                                                                                          child: ListView.builder(
-                                                                                            shrinkWrap: true,
-                                                                                            scrollDirection: Axis.horizontal,
-                                                                                            itemCount: TotalIncomeExpenseController.to.datesList.length,
-                                                                                            itemBuilder: (context, dateIndex) {
-                                                                                              return SizedBox(
-                                                                                                  width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
-                                                                                                  child: Text(
-                                                                                                    formatter
-                                                                                                                .format(
-                                                                                                                    DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString()))
-                                                                                                                .toString()
-                                                                                                                .replaceRange(0, 4, '') ==
-                                                                                                            TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
-                                                                                                        ? '${GetIncomeController.to.monthlyExpenseList?[index].amount}'
-                                                                                                        : '-',
-                                                                                                    // index == dateListIndex ? '${GetIncomeController.to.monthlyExpenseList![dateListIndex].amount}' : '-',
-                                                                                                    style: greyDateTexStyle10W400,
-                                                                                                    textAlign: TextAlign.center,
-                                                                                                  ));
-                                                                                            },
-                                                                                          ),
-                                                                                        ),
-                                                                                      ));
+                                                                                            oneTimeIncomePageControllerList.length,
+                                                                                            (index) => SizedBox(
+                                                                                              height: oneTimeExpenseEditModeController.oneTimeExpenseEditMode
+                                                                                                  ? Get.height * 0.059
+                                                                                                  : maxWidth
+                                                                                                      ? Get.height * 0.035
+                                                                                                      : Get.height * 0.032,
+                                                                                              child: ListView.builder(
+                                                                                                shrinkWrap: true,
+                                                                                                scrollDirection: Axis.horizontal,
+                                                                                                itemCount: TotalIncomeExpenseController.to.datesList.length,
+                                                                                                itemBuilder: (context, dateIndex) {
+                                                                                                  return SizedBox(
+                                                                                                      width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                                      child: Text(
+                                                                                                        formatter
+                                                                                                                    .format(DateTime.parse(
+                                                                                                                        GetIncomeController.to.monthlyExpenseList![index].date.toString()))
+                                                                                                                    .toString()
+                                                                                                                    .replaceRange(0, 4, '') ==
+                                                                                                                TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                                            ? '${GetIncomeController.to.monthlyExpenseList?[index].amount}'
+                                                                                                            : '-',
+                                                                                                        style: greyDateTexStyle10W400,
+                                                                                                        textAlign: TextAlign.center,
+                                                                                                      ));
+                                                                                                },
+                                                                                              ),
+                                                                                            ),
+                                                                                          ));
                                                                                     }),
                                                                               );
                                                                             }),
@@ -1933,7 +2329,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 builder: (context, snapshot) {
                                                   return totalListScrollAbleWidget(
                                                       itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
-                                                      scrollController: scrollControllerTotalListWeeklyBudget,
+                                                      scrollController: scrollControllerPreviousWeekBalance,
                                                       totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                                 },
                                               ),
@@ -1971,8 +2367,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
                                             builder: (context, snapshot) {
                                               return totalListScrollAbleWidget(
+                                                  textWidth: Get.width * 0.15,
                                                   itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
-                                                  scrollController: scrollControllerTotalListWeeklyBudget,
+                                                  scrollController: scrollControllerPreviousWeekBalance,
                                                   totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                             },
                                           ),
@@ -2034,7 +2431,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   builder: (context, snapshot) {
                                                     return totalListScrollAbleWidget(
                                                         itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
-                                                        scrollController: scrollControllerTotalListWeeklyBudget,
+                                                        scrollController: scrollControllerTotalWeeklyIncome,
                                                         totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                                   },
                                                 ),
@@ -2091,27 +2488,37 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         height: Get.height * 0.02,
                                         child: Align(
                                           alignment: const FractionalOffset(0.5, 0.5),
-                                          child: countForCashPageViewBuilderWidget(
-                                              pageController: _totalWeeklyIncomePageController,
-                                              onPageChanged: (value) {
-                                                // List.generate(monthlyIncomepageControllerList.length,
-                                                //     (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(
-                                                //     weeklyIncomePageControllerList.length,
-                                                //     (index) => weeklyIncomePageControllerList[index]
-                                                //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                // List.generate(monthlyExpensePageControllerList.length,
-                                                //     (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(weeklyBudgetPageControllerList.length,
-                                                //     (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(oneTimeExpensePageControllerList.length,
-                                                //     (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(oneTimeIncomePageControllerList.length,
-                                                //     (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                // _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                // _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              }),
+                                          child: StreamBuilder(
+                                            stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                                            builder: (context, snapshot) {
+                                              return totalListScrollAbleWidget(
+                                                  textWidth: Get.width * 0.15,
+                                                  itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                                  scrollController: scrollControllerTotalWeeklyIncome,
+                                                  totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                            },
+                                          ),
+                                          // child: countForCashPageViewBuilderWidget(
+                                          //     pageController: _totalWeeklyIncomePageController,
+                                          //     onPageChanged: (value) {
+                                          //       List.generate(monthlyIncomepageControllerList.length,
+                                          //           (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(
+                                          //           weeklyIncomePageControllerList.length,
+                                          //           (index) => weeklyIncomePageControllerList[index]
+                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                          //       List.generate(monthlyExpensePageControllerList.length,
+                                          //           (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(weeklyBudgetPageControllerList.length,
+                                          //           (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(oneTimeExpensePageControllerList.length,
+                                          //           (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(oneTimeIncomePageControllerList.length,
+                                          //           (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                          //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                          //       _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                          //     }),
                                         ),
                                       ),
                                     ),
@@ -2166,7 +2573,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   builder: (context, snapshot) {
                                                     return totalListScrollAbleWidget(
                                                         itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
-                                                        scrollController: scrollControllerTotalListWeeklyBudget,
+                                                        scrollController: scrollControllerTotalWeeklyExpense,
                                                         totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                                   },
                                                 ),
@@ -2222,27 +2629,37 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         height: Get.height * 0.02,
                                         child: Align(
                                           alignment: const FractionalOffset(0.5, 0.5),
-                                          child: countForCashPageViewBuilderWidget(
-                                              pageController: _totalWeeklyExpensePageController,
-                                              onPageChanged: (value) {
-                                                // List.generate(monthlyIncomepageControllerList.length,
-                                                //     (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(
-                                                //     weeklyIncomePageControllerList.length,
-                                                //     (index) => weeklyIncomePageControllerList[index]
-                                                //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                // List.generate(monthlyExpensePageControllerList.length,
-                                                //     (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(weeklyBudgetPageControllerList.length,
-                                                //     (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(oneTimeExpensePageControllerList.length,
-                                                //     (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // List.generate(oneTimeIncomePageControllerList.length,
-                                                //     (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                // _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                // _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              }),
+                                          child: StreamBuilder(
+                                            stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                                            builder: (context, snapshot) {
+                                              return totalListScrollAbleWidget(
+                                                  textWidth: Get.width * 0.15,
+                                                  itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                                  scrollController: scrollControllerTotalWeeklyExpense,
+                                                  totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                            },
+                                          ),
+                                          // child: countForCashPageViewBuilderWidget(
+                                          //     pageController: _totalWeeklyExpensePageController,
+                                          //     onPageChanged: (value) {
+                                          //       List.generate(monthlyIncomepageControllerList.length,
+                                          //           (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(
+                                          //           weeklyIncomePageControllerList.length,
+                                          //           (index) => weeklyIncomePageControllerList[index]
+                                          //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                                          //       List.generate(monthlyExpensePageControllerList.length,
+                                          //           (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(weeklyBudgetPageControllerList.length,
+                                          //           (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(oneTimeExpensePageControllerList.length,
+                                          //           (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       List.generate(oneTimeIncomePageControllerList.length,
+                                          //           (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                                          //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                          //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                          //       _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                                          //     }),
                                         ),
                                       ),
                                     ),
@@ -2331,7 +2748,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   builder: (context, snapshot) {
                                     return totalListScrollAbleWidget(
                                         itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
-                                        scrollController: scrollControllerTotalListWeeklyBudget,
+                                        scrollController: scrollControllerEndOfTheWeekBalance,
                                         totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                   },
                                 ),
@@ -2380,27 +2797,37 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           height: Get.height * 0.04,
                           child: Align(
                             alignment: const FractionalOffset(0.5, 0.5),
-                            child: countForCashPageViewBuilderWidget(
-                                // pageController: _totalWeeklyExpensePageController,
-                                onPageChanged: (value) {
-                              // List.generate(monthlyIncomepageControllerList.length,
-                              //     (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                              // List.generate(
-                              //     weeklyIncomePageControllerList.length,
-                              //     (index) => weeklyIncomePageControllerList[index]
-                              //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                              // List.generate(monthlyExpensePageControllerList.length,
-                              //     (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                              // List.generate(weeklyBudgetPageControllerList.length,
-                              //     (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                              // List.generate(oneTimeExpensePageControllerList.length,
-                              //     (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                              // List.generate(oneTimeIncomePageControllerList.length,
-                              //     (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                              // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                              // _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                              // _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                            }),
+                            child: StreamBuilder(
+                              stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                              builder: (context, snapshot) {
+                                return totalListScrollAbleWidget(
+                                    textWidth: Get.width * 0.15,
+                                    itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                    scrollController: scrollControllerEndOfTheWeekBalance,
+                                    totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                              },
+                            ),
+                            // child: countForCashPageViewBuilderWidget(
+                            //      pageController: _totalWeeklyExpensePageController,
+                            //     onPageChanged: (value) {
+                            //   List.generate(monthlyIncomepageControllerList.length,
+                            //       (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                            //   List.generate(
+                            //       weeklyIncomePageControllerList.length,
+                            //       (index) => weeklyIncomePageControllerList[index]
+                            //           .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
+                            //   List.generate(monthlyExpensePageControllerList.length,
+                            //       (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                            //   List.generate(weeklyBudgetPageControllerList.length,
+                            //       (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                            //   List.generate(oneTimeExpensePageControllerList.length,
+                            //       (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                            //   List.generate(oneTimeIncomePageControllerList.length,
+                            //       (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
+                            //   _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                            //   _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                            //   _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                            // }),
                           ),
                         ),
                       ),
@@ -2481,7 +2908,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       },
     );
   }
+
   Widget webHeaderRow({BoxConstraints? constraints}) {
+    DateTime today = DateTime.now();
+    final _firstDayOfTheweek = today.subtract(new Duration(days: today.weekday));
+    final formatedFirstDay = DateFormat('MMM dd').format(_firstDayOfTheweek);
+    final _lastDayOfTheweek = DateFormat('MMM dd').format(today.subtract(new Duration(days: _firstDayOfTheweek.weekday)));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
@@ -2571,13 +3003,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               Text(
                 currentWeek,
                 style: currentWeekTextStyle,
               ),
               Text(
-                currentWeekDate,
+                '${formatedFirstDay}-$_lastDayOfTheweek',
                 style: currentWeekDateTextStyle,
               )
             ],
@@ -2726,6 +3157,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   _mobileSimulateModeRow({BoxConstraints? constraints}) {
+    DateTime today = DateTime.now();
+    final _firstDayOfTheweek = today.subtract(new Duration(days: today.weekday));
+    final formatedFirstDay = DateFormat('MMM dd').format(_firstDayOfTheweek);
+    final _lastDayOfTheweek = DateFormat('MMM dd').format(today.subtract(new Duration(days: _firstDayOfTheweek.weekday)));
     return Row(
       children: [
         Padding(
@@ -2744,7 +3179,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 5),
                 child: Text(
-                  currentWeekDate,
+                  '${formatedFirstDay}-$_lastDayOfTheweek',
                   style: currentWeekDateTextStyle,
                 ),
               )
@@ -3431,6 +3866,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   GetIncomeController.to.tempMonthlyIncomeList?.clear();
                                                   GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
                                                     GetIncomeController.to.tempMonthlyIncomeList?.refresh();
+                                                    TotalIncomeExpenseController.to.totalMonthlyIncomeList.clear();
                                                     TotalIncomeExpenseController.to.totalMonthlyIncomeLogic();
                                                   });
                                                 });
@@ -4121,31 +4557,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   GetIncomeController.to.tempWeeklyIncomeList?.clear();
                                                   GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
                                                     GetIncomeController.to.weeklyIncomesList?.refresh();
-                                                    TotalIncomeExpenseController.to.totalWeeklyIncomeList.refresh();
+                                                    TotalIncomeExpenseController.to.totalWeeklyIncomeList.clear();
                                                     TotalIncomeExpenseController.to.totalWeeklyIncomeLogic();
                                                   });
                                                 });
 
                                                 print("{{{{{{{{{{{{{{{{$response");
-                                                // if (response["success"] == true) {
-                                                //   GetIncomeController.to.weeklyIncomesList?.add(DataModel(
-                                                //       name: _weeklyIncomeNameController.text,
-                                                //       amount: int.parse(_weeklyAmountController.text),
-                                                //       paidOn: int.parse(controller.selectedSingleWeeklyIncomeDay
-                                                //           .toString()
-                                                //           .replaceAll('Sun', '1')
-                                                //           .replaceAll('Mon', '2')
-                                                //           .replaceAll('Tue', '3')
-                                                //           .replaceAll('Wed', '4')
-                                                //           .replaceAll('Thu', '5')
-                                                //           .replaceAll('Fri', '6')
-                                                //           .replaceAll('Sat', '7')),
-                                                //       every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
-                                                //       weekMonth: 1,
-                                                //       incomeOutgoing: 1,
-                                                //       date: currentDate.toString().replaceAll('T00:00:00.000Z', '')));
-                                                //   GetIncomeController.to.weeklyIncomesList?.refresh();
-                                                // }
                                               }
                                               GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                               _weeklyIncomeNameController.clear();
@@ -4781,20 +5198,28 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                         incomeOutgoing: 2,
                                                         date: currentDate.toString())
                                                   ]
+                                                }).whenComplete(() {
+                                                  GetIncomeController.to.monthlyExpenseList?.clear();
+                                                  GetIncomeController.to.tempMonthlyExpenseList?.clear();
+                                                  GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"}).whenComplete(() {
+                                                    GetIncomeController.to.monthlyExpenseList?.refresh();
+                                                    TotalIncomeExpenseController.to.totalMonthlyExpenseList.clear();
+                                                    TotalIncomeExpenseController.to.totalMonthlyExpenseLogic();
+                                                  });
                                                 });
-                                                print("{{{{{{{{{{{{{{{{$response");
-                                                if (response["success"] == true) {
-                                                  GetIncomeController.to.monthlyExpenseList?.add(DataModel(
-                                                      name: _monthlyExpenseNameController.text,
-                                                      amount: int.parse(_monthlyExpenseAmountController.text),
-                                                      every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
-                                                      paidOn:
-                                                          int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                                                      weekMonth: 2,
-                                                      incomeOutgoing: 2,
-                                                      date: currentDate.toString()));
-                                                  GetIncomeController.to.monthlyExpenseList?.refresh();
-                                                }
+                                                // print("{{{{{{{{{{{{{{{{$response");
+                                                // if (response["success"] == true) {
+                                                //   GetIncomeController.to.monthlyExpenseList?.add(DataModel(
+                                                //       name: _monthlyExpenseNameController.text,
+                                                //       amount: int.parse(_monthlyExpenseAmountController.text),
+                                                //       every: int.parse(controller.selectedSingleMonthlyExpenseMonth!.replaceAll('mon', '').replaceAll(' ', '')),
+                                                //       paidOn:
+                                                //           int.parse(controller.selectedSingleMonthlyExpenseDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
+                                                //       weekMonth: 2,
+                                                //       incomeOutgoing: 2,
+                                                //       date: currentDate.toString()));
+                                                //   GetIncomeController.to.monthlyExpenseList?.refresh();
+                                                // }
                                               }
                                               _monthlyExpenseNameController.clear();
                                               _monthlyExpenseAmountController.clear();
@@ -5452,29 +5877,36 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                         incomeOutgoing: 2,
                                                         date: currentDate.toString())
                                                   ]
+                                                }).whenComplete(() {
+                                                  GetIncomeController.to.weeklyBudgetList?.clear();
+                                                  GetIncomeController.to.tempWeeklyBudgetList?.clear();
+                                                  GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"}).whenComplete(() {});
                                                 });
-                                                print("{{{{{{{{{{{{{{{{$response");
-                                                if (response["success"] == true) {
-                                                  GetIncomeController.to.weeklyBudgetList?.add(DataModel(
-                                                      name: _weeklyBudgetNameController.text,
-                                                      amount: int.parse(_weeklyBudgetAmountController.text),
-                                                      paidOn: int.parse(controller.weeklyBudgetDay
-                                                          .toString()
-                                                          .replaceAll('Sun', '1')
-                                                          .replaceAll('Mon', '2')
-                                                          .replaceAll('Tue', '3')
-                                                          .replaceAll('Wed', '4')
-                                                          .replaceAll('Thu', '5')
-                                                          .replaceAll('Fri', '6')
-                                                          .replaceAll('Sat', '7')),
-                                                      every: int.parse(controller.weeklyBudgetWeek!.replaceAll('W', '')),
-                                                      weekMonth: 1,
-                                                      incomeOutgoing: 2,
-                                                      date: currentDate.toString()));
-                                                  GetIncomeController.to.weeklyBudgetList?.refresh();
-                                                }
+                                                // print("{{{{{{{{{{{{{{{{$response");
+                                                // if (response["success"] == true) {
+                                                //   GetIncomeController.to.weeklyBudgetList?.add(DataModel(
+                                                //       name: _weeklyBudgetNameController.text,
+                                                //       amount: int.parse(_weeklyBudgetAmountController.text),
+                                                //       paidOn: int.parse(controller.weeklyBudgetDay
+                                                //           .toString()
+                                                //           .replaceAll('Sun', '1')
+                                                //           .replaceAll('Mon', '2')
+                                                //           .replaceAll('Tue', '3')
+                                                //           .replaceAll('Wed', '4')
+                                                //           .replaceAll('Thu', '5')
+                                                //           .replaceAll('Fri', '6')
+                                                //           .replaceAll('Sat', '7')),
+                                                //       every: int.parse(controller.weeklyBudgetWeek!.replaceAll('W', '')),
+                                                //       weekMonth: 1,
+                                                //       incomeOutgoing: 2,
+                                                //       date: currentDate.toString()));
+                                                //   GetIncomeController.to.weeklyBudgetList?.refresh();
+                                                // }
                                               }
+                                              GetIncomeController.to.weeklyBudgetList?.refresh();
                                               GetIncomeController.to.tempWeeklyBudgetList?.refresh();
+                                              TotalIncomeExpenseController.to.totalWeeklyBudgetList.clear();
+                                              TotalIncomeExpenseController.to.totalWeeklyBudgetLogic();
                                               _weeklyBudgetNameController.clear();
                                               _weeklyBudgetAmountController.clear();
                                               controller.weeklyBudgetDay = null;
@@ -6299,26 +6731,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         width: Get.width * 0.01,
                       ),
                       TextButton(
-                        onPressed: () async {
-                          final DownController = Get.put(SelectedDropDownItem());
+                        onPressed: () {
                           monthlyIncomeEditMode.showEditMode();
-                          var response = await CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyIncomeList}).whenComplete(() {
+                          CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyIncomeList}).whenComplete(() {
                             GetIncomeController.to.monthlyIncomeList?.clear();
                             GetIncomeController.to.tempMonthlyIncomeList?.clear();
-                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"});
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
+                              TotalIncomeExpenseController.to.totalMonthlyIncomeList.clear();
+                              TotalIncomeExpenseController.to.totalMonthlyIncomeLogic();
+                            });
                           });
-                          // GetIncomeController.to.monthlyIncomeList?.clear();
-                          // if (response["success"] == true) {
-                          //   GetIncomeController.to.monthlyIncomeList?.add(DataModel(
-                          //       name: _monthlyIncomeNameController.text,
-                          //       amount: int.parse(_monthlyIncomeAmountController.text),
-                          //       every: int.parse(DownController.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
-                          //       paidOn: int.parse(DownController.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                          //       weekMonth: 2,
-                          //       incomeOutgoing: 1,
-                          //       date: currentDate.toString()));
-                          //   GetIncomeController.to.monthlyIncomeList?.refresh();
-                          // }
                         },
                         child: Text(
                           save,
@@ -6383,13 +6805,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         width: Get.width * 0.01,
                       ),
                       TextButton(
-                        onPressed: () async {
+                        onPressed: () {
                           controller.showEditMode();
-                          // CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyIncomeList});
-                          var response = await CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyIncomeList}).whenComplete(() {
+                          CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyIncomeList}).whenComplete(() {
                             GetIncomeController.to.weeklyIncomesList?.clear();
                             GetIncomeController.to.tempWeeklyIncomeList?.clear();
-                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"});
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
+                              TotalIncomeExpenseController.to.totalWeeklyIncomeList.clear();
+                              TotalIncomeExpenseController.to.totalWeeklyIncomeLogic();
+                            });
+                            ;
                           });
                         },
                         child: Text(
@@ -6454,11 +6879,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           controller.showEditMode();
-                          // CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyExpenseList});
                           CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempMonthlyExpenseList}).whenComplete(() {
                             GetIncomeController.to.monthlyExpenseList?.clear();
                             GetIncomeController.to.tempMonthlyExpenseList?.clear();
-                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"});
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"}).whenComplete(() {
+                              TotalIncomeExpenseController.to.totalMonthlyExpenseList.clear();
+                              TotalIncomeExpenseController.to.totalMonthlyExpenseLogic();
+                            });
                           });
                         },
                         child: Text(
@@ -6524,11 +6951,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           weeklyBudgetController.showEditMode();
-                          // CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyBudgetList});
                           CreateIncomeController.to.createIncome(parameter: {'income': GetIncomeController.to.tempWeeklyBudgetList}).whenComplete(() {
                             GetIncomeController.to.weeklyBudgetList?.clear();
                             GetIncomeController.to.tempWeeklyBudgetList?.clear();
-                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"});
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"}).whenComplete(() {
+                              TotalIncomeExpenseController.to.totalWeeklyBudgetList.clear();
+                              TotalIncomeExpenseController.to.totalWeeklyBudgetLogic();
+                            });
                           });
                         },
                         child: Text(

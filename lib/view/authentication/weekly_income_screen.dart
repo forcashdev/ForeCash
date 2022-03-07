@@ -15,7 +15,6 @@ import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/visibility_controller.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -59,7 +58,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
       child: WillPopScope(
         onWillPop: () async {
           screenIndexController.updateIndex(index: 2);
-          // GetIncomeController.to.weeklyIncomesList?.clear();
           GetIncomeController.to.monthlyIncomeList?.clear();
           GetIncomeController.to.monthlyIncomeList?.refresh();
           CheckBoxController.to.monthlyIncomeCheckBoxValueList.clear();
@@ -81,6 +79,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                         width: maxWidth ? Get.width / 1.4 : null,
                         height: maxWidth ? Get.height * 0.78 : null,
                         child: Form(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           key: _formKey,
                           child: Column(
                             children: [
@@ -626,8 +625,11 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         TextEditingController? _amount;
         _incomeName = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].name ?? "");
         _amount = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString() ?? "");
-        RxBool whenErrorOnlyShowRedBorder = false.obs;
-        RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
+        // RxBool whenErrorOnlyShowRedBorder = false.obs;
+        // RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
+        RxList<RxBool> whenErrorOnlyShowRedBorderListWeekly = List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) => false.obs).obs;
+        RxList<RxBool> whenErrorOnlyShowRedBorderAmountListWeekly = List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) => false.obs).obs;
+        print('???????????${whenErrorOnlyShowRedBorderListWeekly.length}');
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
           child: SwipeActionCell(
@@ -699,149 +701,150 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                               ),
                             ),
                           ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: StreamBuilder(
-                          stream: whenErrorOnlyShowRedBorder.stream,
-                          builder: (context, snapshot) {
-                            return Padding(
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderListWeekly.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: whenErrorOnlyShowRedBorderListWeekly[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                               child: commonTextFormField(
-                                hintText: 'Income Name',
+                                hintText: incomeName,
                                 hintStyle: incomeNameStyle,
                                 inputAction: TextInputAction.next,
                                 inputFormatter: [characterInputFormatter()],
                                 contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                 textStyle: incomeNameStyle,
                                 textEditingController: _incomeName,
-                                enabledBorder: whenErrorOnlyShowRedBorder.value
+                                onChangedFunction: (value) {
+                                  GetIncomeController.to.weeklyIncomesList?[index].name = value;
+                                  // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                },
+                                errorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
+                                    ? OutlineInputBorder(
+                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderRadius: BorderRadius.circular(4.0),
+                                      )
+                                    : null,
+                                focusedErrorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
                                     ? OutlineInputBorder(
                                         borderSide: const BorderSide(color: Colors.red),
                                         borderRadius: BorderRadius.circular(4.0),
                                       )
                                     : null,
                                 validationFunction: (value) {
-                                  if (whenErrorOnlyShowRedBorder.value != value.isEmpty) {
-                                    whenErrorOnlyShowRedBorder.value = value.isEmpty;
-                                    print(whenErrorOnlyShowRedBorder.value);
-                                    whenErrorOnlyShowRedBorder.refresh();
+                                  if (whenErrorOnlyShowRedBorderListWeekly[index].value != value.isEmpty) {
+                                    whenErrorOnlyShowRedBorderListWeekly[index].value = value.isEmpty;
+                                    print(whenErrorOnlyShowRedBorderListWeekly[index].value);
+                                    whenErrorOnlyShowRedBorderListWeekly.refresh();
                                   }
-                                  return null;
-                                },
-                                onChangedFunction: (value) {
-                                  GetIncomeController.to.weeklyIncomesList?[index].name = value;
-                                  // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                  return whenErrorOnlyShowRedBorderListWeekly[index].value == true ? '' : null;
                                 },
                               ),
-                            );
-                          }),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                        ),
-                        width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        height: Get.height * 0.044,
-                        alignment: Alignment.center,
-                        child: GetBuilder<SelectedDropDownItem>(
-                          builder: (controller1) {
-                            return commonDropDown(
-                                selectedItemTextStyle: dropDownStyle2,
-                                valueTextStyle: dropDownStyle,
-                                value: '${GetIncomeController.to.weeklyIncomesList?[index].paidOn ?? 1}'
-                                    .toString()
-                                    .replaceAll('1', 'Sun')
-                                    .replaceAll('2', 'Mon')
-                                    .replaceAll('3', 'Tue')
-                                    .replaceAll('4', 'Wed')
-                                    .replaceAll('5', 'Thu')
-                                    .replaceAll('6', 'Fri')
-                                    .replaceAll('7', 'Sat'),
-
-                                // value: controller.selectDayDropDown[index],
-                                // value: GetIncomeController.to.weeklyIncomesList?[index].paidOn,
-                                itemList: days,
-                                onChanged: (item) {
-                                  GetIncomeController.to.weeklyIncomesList?[index].paidOn = int.parse(item
-                                      .replaceAll('Sun', '1')
-                                      .replaceAll('Mon', '2')
-                                      .replaceAll('Tue', '3')
-                                      .replaceAll('Wed', '4')
-                                      .replaceAll('Thu', '5')
-                                      .replaceAll('Fri', '6')
-                                      .replaceAll('Sat', '7'));
-                                  GetIncomeController.to.weeklyIncomesList?.refresh();
-                                  // controller.changeDay(item: item, index: index);
-                                  print(item);
-                                });
-                          },
-                        ),
-                        margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                        ),
-                        width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        height: Get.height * 0.044,
-                        alignment: Alignment.center,
-                        child: GetBuilder<SelectedDropDownItem>(
-                          builder: (controller1) {
-                            return commonDropDown(
-                                selectedItemTextStyle: dropDownStyle2,
-                                valueTextStyle: dropDownStyle,
-                                value: '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
-
-                                // value: controller.selectWeekDropDown[index],
-                                // value: GetIncomeController.to.weeklyIncomesList?[index].every,
-                                itemList: weeks,
-                                onChanged: (item) {
-                                  GetIncomeController.to.weeklyIncomesList?[index].every = int.parse(item.replaceAll('W', ''));
-                                  GetIncomeController.to.weeklyIncomesList?.refresh();
-                                  // GetIncomeController.to.weeklyIncomesList?[index].every = item;
-                                  // controller.changeWeek(item: item, index: index);
-                                  print(item);
-                                });
-                          },
-                        ),
-                        margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: GestureDetector(
-                          onTap: () {
-                            _selectDate(context: context, index: index);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyIncomesList![index].date.toString())),
-                              // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                              style: dateStyle,
-                              maxLines: 1,
                             ),
-                            margin: EdgeInsets.only(right: Get.width * 0.02),
-                            decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                          ),
-                        )),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: StreamBuilder(
-                          stream: whenErrorOnlyShowRedBorderAmount.stream,
-                          builder: (context, snapshot) {
-                            return Padding(
+                          );
+                        }),
+                    Container(
+                      height: Get.height * 0.044,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                      ),
+                      // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                      // height: Get.height * 0.044,
+                      alignment: Alignment.center,
+                      child: GetBuilder<SelectedDropDownItem>(
+                        builder: (controller1) {
+                          return commonDropDown(
+                              selectedItemTextStyle: dropDownStyle2,
+                              valueTextStyle: dropDownStyle,
+                              value: '${GetIncomeController.to.weeklyIncomesList?[index].paidOn ?? 1}'
+                                  .toString()
+                                  .replaceAll('1', 'Sun')
+                                  .replaceAll('2', 'Mon')
+                                  .replaceAll('3', 'Tue')
+                                  .replaceAll('4', 'Wed')
+                                  .replaceAll('5', 'Thu')
+                                  .replaceAll('6', 'Fri')
+                                  .replaceAll('7', 'Sat'),
+
+                              // value: controller.selectDayDropDown[index],
+                              // value: GetIncomeController.to.weeklyIncomesList?[index].paidOn,
+                              itemList: days,
+                              onChanged: (item) {
+                                GetIncomeController.to.weeklyIncomesList?[index].paidOn = int.parse(item
+                                    .replaceAll('Sun', '1')
+                                    .replaceAll('Mon', '2')
+                                    .replaceAll('Tue', '3')
+                                    .replaceAll('Wed', '4')
+                                    .replaceAll('Thu', '5')
+                                    .replaceAll('Fri', '6')
+                                    .replaceAll('Sat', '7'));
+                                GetIncomeController.to.weeklyIncomesList?.refresh();
+                                // controller.changeDay(item: item, index: index);
+                                print(item);
+                              });
+                        },
+                      ),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                    ),
+                    Container(
+                      height: Get.height * 0.044,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                      ),
+                      // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                      // height: Get.height * 0.044,
+                      alignment: Alignment.center,
+                      child: GetBuilder<SelectedDropDownItem>(
+                        builder: (controller1) {
+                          return commonDropDown(
+                              selectedItemTextStyle: dropDownStyle2,
+                              valueTextStyle: dropDownStyle,
+                              value: '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
+
+                              // value: controller.selectWeekDropDown[index],
+                              // value: GetIncomeController.to.weeklyIncomesList?[index].every,
+                              itemList: weeks,
+                              onChanged: (item) {
+                                GetIncomeController.to.weeklyIncomesList?[index].every = int.parse(item.replaceAll('W', ''));
+                                GetIncomeController.to.weeklyIncomesList?.refresh();
+                                // GetIncomeController.to.weeklyIncomesList?[index].every = item;
+                                // controller.changeWeek(item: item, index: index);
+                                print(item);
+                              });
+                        },
+                      ),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _selectDate(context: context, index: index);
+                      },
+                      child: Container(
+                        height: Get.height * 0.044,
+                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.010),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.weeklyIncomesList![index].date.toString())),
+                          // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                          style: dateStyle,
+                          maxLines: 1,
+                        ),
+                        margin: EdgeInsets.only(right: Get.width * 0.02),
+                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderAmountListWeekly.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02),
                               child: commonTextFormField(
-                                hintText: 'Amount',
+                                hintText: amount,
                                 hintStyle: incomeNameStyle,
                                 prefixText: '\$',
                                 keyboardType: TextInputType.phone,
@@ -851,28 +854,42 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                 contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
                                 textStyle: incomeNameStyle,
                                 textEditingController: _amount,
-                                enabledBorder: whenErrorOnlyShowRedBorderAmount.value
+                                errorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
+                                    ? OutlineInputBorder(
+                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderRadius: BorderRadius.circular(4.0),
+                                      )
+                                    : null,
+                                focusedErrorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
                                     ? OutlineInputBorder(
                                         borderSide: const BorderSide(color: Colors.red),
                                         borderRadius: BorderRadius.circular(4.0),
                                       )
                                     : null,
                                 validationFunction: (value) {
-                                  if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {
-                                    whenErrorOnlyShowRedBorderAmount.value = value.isEmpty;
-                                    print(whenErrorOnlyShowRedBorderAmount.value);
-                                    whenErrorOnlyShowRedBorderAmount.refresh();
+                                  if (whenErrorOnlyShowRedBorderAmountListWeekly[index].value != value.isEmpty) {
+                                    whenErrorOnlyShowRedBorderAmountListWeekly[index].value = value.isEmpty;
+                                    print(whenErrorOnlyShowRedBorderAmountListWeekly[index].value);
+                                    whenErrorOnlyShowRedBorderAmountListWeekly.refresh();
                                   }
-                                  return null;
+                                  return whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true ? '' : null;
                                 },
+                                // validationFunction: (value) {
+                                //   if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {
+                                //     whenErrorOnlyShowRedBorderAmount.value = value.isEmpty;
+                                //     print(whenErrorOnlyShowRedBorderAmount.value);
+                                //     whenErrorOnlyShowRedBorderAmount.refresh();
+                                //   }
+                                //   return null;
+                                // },
                                 onChangedFunction: (value) {
                                   GetIncomeController.to.weeklyIncomesList?[index].amount = int.parse(value);
                                   // GetIncomeController.to.weeklyIncomesList?[index].amount = int.parse(_amount!.text);
                                 },
                               ),
-                            );
-                          }),
-                    ),
+                            ),
+                          );
+                        }),
                   ],
                 ),
               ],

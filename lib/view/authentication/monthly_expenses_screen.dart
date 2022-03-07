@@ -13,7 +13,6 @@ import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/visibility_controller.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -78,6 +77,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         width: maxWidth ? Get.width / 1.4 : null,
                         height: maxWidth ? Get.height * 0.78 : null,
                         child: Form(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           key: _formKey,
                           child: Column(
                             children: [
@@ -86,9 +86,6 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                 flex: maxWidth ? 2 : 2,
                                 child: Container(
                                   padding: const EdgeInsets.only(top: 10, bottom: 10),
-                                  // width: maxWidth ? Get.width / 1.5 : null,
-                                  // height: maxWidth ? 300 : null,
-
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
                                       border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
@@ -375,6 +372,8 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         TextEditingController? _monthlyAmount;
         RxBool whenErrorOnlyShowRedBorder = false.obs;
         RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
+        RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false.obs).obs;
+        RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false.obs).obs;
         _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? '');
         _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString() ?? '');
         return Padding(
@@ -450,134 +449,138 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               ),
                             ),
                           ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: StreamBuilder(
-                          stream: whenErrorOnlyShowRedBorder.stream,
-                          builder: (context, snapshot) {
-                            return Padding(
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderList.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: whenErrorOnlyShowRedBorderList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
                                 padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                                 child: commonTextFormField(
                                     hintText: expenseName,
                                     hintStyle: incomeNameStyle,
                                     inputAction: TextInputAction.next,
-                                    enabledBorder: whenErrorOnlyShowRedBorder.value
+                                    errorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                        ? OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderRadius: BorderRadius.circular(4.0),
+                                          )
+                                        : null,
+                                    focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                         ? OutlineInputBorder(
                                             borderSide: const BorderSide(color: Colors.red),
                                             borderRadius: BorderRadius.circular(4.0),
                                           )
                                         : null,
                                     validationFunction: (value) {
-                                      if (whenErrorOnlyShowRedBorder.value != value.isEmpty) {
-                                        whenErrorOnlyShowRedBorder.value = value.isEmpty;
-                                        print(whenErrorOnlyShowRedBorder.value);
-                                        whenErrorOnlyShowRedBorder.refresh();
+                                      if (whenErrorOnlyShowRedBorderList[index].value != value.isEmpty) {
+                                        whenErrorOnlyShowRedBorderList[index].value = value.isEmpty;
+                                        print(whenErrorOnlyShowRedBorderList[index].value);
+                                        whenErrorOnlyShowRedBorderList.refresh();
                                       }
-                                      return null;
+                                      return whenErrorOnlyShowRedBorderList[index].value == true ? '' : null;
                                     },
-                                    // maxLine: 2,
                                     inputFormatter: [characterInputFormatter()],
-                                    //contentPadding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
                                     contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                     textStyle: incomeNameStyle,
                                     textEditingController: _monthlyExpenseName,
                                     onChangedFunction: (value) {
                                       GetIncomeController.to.monthlyExpenseList?[index].name = value;
-                                      // GetIncomeController.to.monthlyExpenseList?[index].name = _monthlyExpenseName?.text;
-                                    }));
+                                    })),
+                          );
+                        }),
+                    Container(
+                      height: Get.height * 0.044,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: commonDropDown(
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
+                          value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn ?? 1}th'
+                              .replaceAllMapped('1th', (match) => '1st')
+                              .replaceAllMapped('2th', (match) => '2nd')
+                              .replaceAllMapped('3th', (match) => '3rd')
+                              .replaceAllMapped('11st', (match) => '11th')
+                              .replaceAllMapped('12nd', (match) => '12th')
+                              .replaceAllMapped('13rd', (match) => '13th'),
+                          itemList: dateList,
+                          onChanged: (item) {
+                            GetIncomeController.to.monthlyExpenseList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
+                            GetIncomeController.to.monthlyExpenseList?.refresh();
+                            // controller.changeMonthlyExpenseDate(item: item, index: index);
+                            print(item);
                           }),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                     ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: commonDropDown(
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.monthlyExpenseList?[index].paidOn ?? 1}th'
-                                .replaceAllMapped('1th', (match) => '1st')
-                                .replaceAllMapped('2th', (match) => '2nd')
-                                .replaceAllMapped('3th', (match) => '3rd')
-                                .replaceAllMapped('11st', (match) => '11th')
-                                .replaceAllMapped('12nd', (match) => '12th')
-                                .replaceAllMapped('13rd', (match) => '13th'),
-                            itemList: dateList,
-                            onChanged: (item) {
-                              GetIncomeController.to.monthlyExpenseList?[index].paidOn = int.parse(item.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', ''));
-                              GetIncomeController.to.monthlyExpenseList?.refresh();
-                              // controller.changeMonthlyExpenseDate(item: item, index: index);
-                              print(item);
-                            }),
-                        margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        // width: widget.constraints!.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
-                        // height: Get.height * 0.044,
+                    Container(
+                      height: Get.height * 0.044,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      // width: widget.constraints!.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
+                      // height: Get.height * 0.044,
 
-                        child: commonDropDown(
-                            selectedItemTextStyle: dropDownStyle2,
-                            valueTextStyle: dropDownStyle,
-                            value: '${GetIncomeController.to.monthlyExpenseList?[index].every ?? 1} mon',
-                            // value: controller.selectedMonthlyExpenseMonth[index],
-                            itemList: months,
-                            onChanged: (item) {
-                              GetIncomeController.to.monthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
-                              GetIncomeController.to.monthlyExpenseList?.refresh();
-                              // controller.changeMonthlyExpenseMonth(item: item, index: index);
-                              print(item);
-                            }),
+                      child: commonDropDown(
+                          selectedItemTextStyle: dropDownStyle2,
+                          valueTextStyle: dropDownStyle,
+                          value: '${GetIncomeController.to.monthlyExpenseList?[index].every ?? 1} mon',
+                          // value: controller.selectedMonthlyExpenseMonth[index],
+                          itemList: months,
+                          onChanged: (item) {
+                            GetIncomeController.to.monthlyExpenseList?[index].every = int.parse(item.replaceAll('mon', '').replaceAll(' ', ''));
+                            GetIncomeController.to.monthlyExpenseList?.refresh();
+                            // controller.changeMonthlyExpenseMonth(item: item, index: index);
+                            print(item);
+                          }),
+                      margin: EdgeInsets.only(right: Get.width * 0.02),
+                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _selectDate(context: context, index: index);
+                      },
+                      child: Container(
+                        height: Get.height * 0.044,
+                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.010),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
+                          // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
+                          style: dateStyle,
+                          maxLines: 1,
+                        ),
                         margin: EdgeInsets.only(right: Get.width * 0.02),
                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
-                    TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: GestureDetector(
-                          onTap: () {
-                            _selectDate(context: context, index: index);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              DateFormat('dd-MM-yyyy').format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString())),
-                              // '${DateFormat('yyyy-MM-dd').format(currentDate)}',
-                              style: dateStyle,
-                              maxLines: 1,
-                            ),
-                            margin: EdgeInsets.only(right: Get.width * 0.02),
-                            decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
-                          ),
-                        )),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.fill,
-                      child: StreamBuilder(
-                          stream: whenErrorOnlyShowRedBorderAmount.stream,
-                          builder: (context, snapshot) {
-                            return Padding(
+                    StreamBuilder(
+                        stream: whenErrorOnlyShowRedBorderAmountList.stream,
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: whenErrorOnlyShowRedBorderAmountList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02),
                               child: commonTextFormField(
                                   prefixText: '\$',
                                   prefixstyle: incomeNameStyle,
                                   keyboardType: TextInputType.phone,
-                                  enabledBorder: whenErrorOnlyShowRedBorderAmount.value
+                                  errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                      ? OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderRadius: BorderRadius.circular(4.0),
+                                        )
+                                      : null,
+                                  focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
                                       ? OutlineInputBorder(
                                           borderSide: const BorderSide(color: Colors.red),
                                           borderRadius: BorderRadius.circular(4.0),
                                         )
                                       : null,
                                   validationFunction: (value) {
-                                    if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {
-                                      whenErrorOnlyShowRedBorderAmount.value = value.isEmpty;
-                                      print(whenErrorOnlyShowRedBorderAmount.value);
-                                      whenErrorOnlyShowRedBorderAmount.refresh();
+                                    if (whenErrorOnlyShowRedBorderAmountList[index].value != value.isEmpty) {
+                                      whenErrorOnlyShowRedBorderAmountList[index].value = value.isEmpty;
+                                      print(whenErrorOnlyShowRedBorderAmountList[index].value);
+                                      whenErrorOnlyShowRedBorderAmountList.refresh();
                                     }
-                                    return null;
+                                    return whenErrorOnlyShowRedBorderAmountList[index].value == true ? '' : null;
                                   },
                                   inputAction: TextInputAction.done,
                                   inputFormatter: [digitInputFormatter()],
@@ -587,9 +590,9 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                   onChangedFunction: (value) {
                                     GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(value);
                                   }),
-                            );
-                          }),
-                    )
+                            ),
+                          );
+                        })
                   ],
                 ),
               ],

@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
       builder: () => GetMaterialApp(
         // initialRoute: '/',
         // routes: {
-        //   '/': (context) => const SplashScreen(),
-        //   '/ProgressIndicator': (context) => const ScreenProgressIndicator(),
-        //    '/AllSet': (context) => const AllSetScreen(),
+        //    '/': (context) => const SplashScreen(),
+        //    '/ProgressIndicator': (context) => const ScreenProgressIndicator(),
+        //     '/AllSet': (context) => const AllSetScreen(),
         //   '/DashBoard': (context) => const DashBoardScreen(),
         // },
         initialBinding: AppBinding(),
