@@ -1,7 +1,7 @@
 class OneTimeExpenseModel {
-  final String? incomeName;
-  final DateTime? dateTime;
-  final String? amount;
+  String? incomeName;
+  DateTime? dateTime;
+  String? amount;
 
   OneTimeExpenseModel({this.incomeName, this.dateTime, this.amount});
 

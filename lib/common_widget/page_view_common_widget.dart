@@ -29,22 +29,26 @@ totalListScrollAbleWidget({
   ScrollController? scrollController,
   int? itemCount,
 }) {
-  return ListView.builder(
-    shrinkWrap: true,
-    controller: scrollController,
-    scrollDirection: Axis.horizontal,
-    itemCount: itemCount,
-    itemBuilder: (context, index) {
-      return SizedBox(
-          width: Get.width * 0.067,
-          child: Align(
-            alignment: const FractionalOffset(0.5, 0.5),
-            child: Text(
-              '${totalIncomeExpenseList?[index] == 0 ? '-' : totalIncomeExpenseList?[index]}',
-              style: greyDateTexStyle10W400,
-              textAlign: TextAlign.center,
-            ),
-          ));
-    },
-  );
+  return StreamBuilder(
+      stream: totalIncomeExpenseList?.stream,
+      builder: (context, snapshot) {
+        return ListView.builder(
+          shrinkWrap: true,
+          controller: scrollController,
+          scrollDirection: Axis.horizontal,
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            return SizedBox(
+                width: Get.width * 0.067,
+                child: Align(
+                  alignment: const FractionalOffset(0.5, 0.5),
+                  child: Text(
+                    '${totalIncomeExpenseList?[index] == 0 ? '-' : totalIncomeExpenseList?[index]}',
+                    style: greyDateTexStyle10W400,
+                    textAlign: TextAlign.center,
+                  ),
+                ));
+          },
+        );
+      });
 }
