@@ -6,7 +6,6 @@ import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
 import 'package:fore_cash/controller/login_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
-import 'package:fore_cash/getx/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -61,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: constraints.maxWidth < 1000 ? Get.height * 0.02 : Get.height * 0.04,
                             ),
                             Align(
-                              alignment: FractionalOffset(0.5, 0.0),
+                              alignment: const FractionalOffset(0.5, 0.0),
                               child: constraints.maxWidth < 1000
                                   ? Image.asset(
                                       foreCashLogo2,
@@ -221,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => SignUpScreen(),
+                                            builder: (context) => const SignUpScreen(),
                                           ));
                                     },
                                     child: Text(

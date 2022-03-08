@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
@@ -324,7 +325,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
             child: Align(
               alignment: const FractionalOffset(0.015, 0.0),
               child: Text(
-                addWeeklyIncome,
+                addWeeklyBudget,
                 style: addWeekIncomeStyle,
               ),
             ),
@@ -598,8 +599,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         TextEditingController? _amount;
         RxBool whenErrorOnlyShowRedBorder = false.obs;
         RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
-        _expenseName = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].name);
-        _amount = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].amount.toString());
+        _expenseName = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].name ?? '');
+        _amount = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].amount.toString().replaceAll('null', '') ?? '');
         RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false.obs).obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false.obs).obs;
         return Padding(
@@ -678,22 +679,52 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         stream: whenErrorOnlyShowRedBorderList.stream,
                         builder: (context, snapshot) {
                           return SizedBox(
-                            height: whenErrorOnlyShowRedBorderList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            // height: whenErrorOnlyShowRedBorderList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            height: checkBoxController.weeklyBudgetCheckBoxValueList[index]
+                                ? whenErrorOnlyShowRedBorderList[index].value == true
+                                    ? Get.height * 0.07
+                                    : Get.height * 0.044
+                                : checkBoxController.weeklyBudgetCheckBoxValueList[index] == false
+                                    ? Get.height * 0.044
+                                    : Get.height * 0.07,
                             child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                               child: commonTextFormField(
+                                  errorTextStyle: TextStyle(fontSize: constraints.maxWidth < 1000 ? 8.sp : null),
                                   inputAction: TextInputAction.next,
                                   inputFormatter: [characterInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                  // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                   textStyle: incomeNameStyle,
                                   hintText: expenseName,
                                   hintStyle: incomeNameStyle,
-                                  errorBorder: whenErrorOnlyShowRedBorderList[index].value
-                                      ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
-                                          borderRadius: BorderRadius.circular(4.0),
-                                        )
-                                      : null,
+                                  // errorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                  //     ? OutlineInputBorder(
+                                  //         borderSide: const BorderSide(color: Colors.red),
+                                  //         borderRadius: BorderRadius.circular(4.0),
+                                  //       )
+                                  //     : null,
+                                  // focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                  //     ? OutlineInputBorder(
+                                  //         borderSide: const BorderSide(color: Colors.red),
+                                  //         borderRadius: BorderRadius.circular(4.0),
+                                  //       )
+                                  //     : null,
+                                  errorBorder: constraints.maxWidth > 1000
+                                      ? checkBoxController.weeklyBudgetCheckBoxValueList[index]
+                                          ? whenErrorOnlyShowRedBorderList[index].value
+                                              ? OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.red),
+                                                  borderRadius: BorderRadius.circular(4.0),
+                                                )
+                                              : null
+                                          : null
+                                      : whenErrorOnlyShowRedBorderList[index].value
+                                          ? OutlineInputBorder(
+                                              borderSide: const BorderSide(color: Colors.red),
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            )
+                                          : null,
                                   focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                       ? OutlineInputBorder(
                                           borderSide: const BorderSide(color: Colors.red),
@@ -706,7 +737,12 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                       print(whenErrorOnlyShowRedBorderList[index].value);
                                       whenErrorOnlyShowRedBorderList.refresh();
                                     }
-                                    return whenErrorOnlyShowRedBorderList[index].value == true ? '' : null;
+                                    // return whenErrorOnlyShowRedBorderList[index].value == true ? '' : null;
+                                    return checkBoxController.weeklyBudgetCheckBoxValueList[index]
+                                        ? whenErrorOnlyShowRedBorderList[index].value == true
+                                            ? addBudgetName
+                                            : null
+                                        : null;
                                   },
                                   textEditingController: _expenseName,
                                   onChangedFunction: (value) {
@@ -717,8 +753,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         }),
                     Container(
                       height: Get.height * 0.044,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth > 1000 ? 8 : 4,
                       ),
                       decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
                       child: commonDropDown(
@@ -745,7 +781,9 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                       margin: EdgeInsets.only(right: Get.width * 0.02),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth > 1000 ? 8 : 4,
+                      ),
                       // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
                       height: Get.height * 0.044,
                       alignment: Alignment.center,
@@ -786,19 +824,46 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         stream: whenErrorOnlyShowRedBorderAmountList.stream,
                         builder: (context, snapshot) {
                           return SizedBox(
-                            height: whenErrorOnlyShowRedBorderAmountList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            height: checkBoxController.weeklyBudgetCheckBoxValueList[index]
+                                ? whenErrorOnlyShowRedBorderAmountList[index].value == true
+                                    ? Get.height * 0.07
+                                    : Get.height * 0.044
+                                : checkBoxController.weeklyBudgetCheckBoxValueList[index] == false
+                                    ? Get.height * 0.044
+                                    : Get.height * 0.07,
                             child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02),
                               child: commonTextFormField(
                                   hintText: amount,
                                   hintStyle: incomeNameStyle,
                                   prefixText: '\$',
-                                  errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
-                                      ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
-                                          borderRadius: BorderRadius.circular(4.0),
-                                        )
-                                      : null,
+                                  // errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                  //     ? OutlineInputBorder(
+                                  //         borderSide: const BorderSide(color: Colors.red),
+                                  //         borderRadius: BorderRadius.circular(4.0),
+                                  //       )
+                                  //     : null,
+                                  // focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                  //     ? OutlineInputBorder(
+                                  //         borderSide: const BorderSide(color: Colors.red),
+                                  //         borderRadius: BorderRadius.circular(4.0),
+                                  //       )
+                                  //     : null,
+                                  errorBorder: constraints.maxWidth > 1000
+                                      ? checkBoxController.weeklyBudgetCheckBoxValueList[index]
+                                          ? whenErrorOnlyShowRedBorderAmountList[index].value
+                                              ? OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.red),
+                                                  borderRadius: BorderRadius.circular(4.0),
+                                                )
+                                              : null
+                                          : null
+                                      : whenErrorOnlyShowRedBorderAmountList[index].value
+                                          ? OutlineInputBorder(
+                                              borderSide: const BorderSide(color: Colors.red),
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            )
+                                          : null,
                                   focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
                                       ? OutlineInputBorder(
                                           borderSide: const BorderSide(color: Colors.red),
@@ -811,14 +876,20 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                       print(whenErrorOnlyShowRedBorderAmountList[index].value);
                                       whenErrorOnlyShowRedBorderAmountList.refresh();
                                     }
-                                    return whenErrorOnlyShowRedBorderAmountList[index].value == true ? '' : null;
+                                    // return whenErrorOnlyShowRedBorderAmountList[index].value == true ? '' : null;
+                                    return checkBoxController.weeklyBudgetCheckBoxValueList[index]
+                                        ? whenErrorOnlyShowRedBorderAmountList[index].value == true
+                                            ? addAmount
+                                            : null
+                                        : null;
                                   },
                                   keyboardType: TextInputType.phone,
                                   prefixstyle: incomeNameStyle,
                                   inputAction: TextInputAction.done,
                                   inputFormatter: [digitInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                  // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                   textStyle: incomeNameStyle,
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                   textEditingController: _amount,
                                   onChangedFunction: (value) {
                                     GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(value);

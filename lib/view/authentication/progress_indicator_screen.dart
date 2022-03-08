@@ -69,8 +69,8 @@ class ScreenProgressIndicator extends StatelessWidget {
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontFamily: AppTheme.fontName,
-                                              fontWeight: index <= screenIndexController.screensIndexes! ? FontWeight.w600 : FontWeight.w500,
-                                              color: index <= screenIndexController.screensIndexes! ? indicatorColor : indicatorColor2),
+                                              fontWeight: index <= screenIndexController.screensIndexes.read('index') ? FontWeight.w600 : FontWeight.w500,
+                                              color: index <= screenIndexController.screensIndexes.read('index') ? indicatorColor : indicatorColor2),
                                           //color: screenIndexController.screensIndexes == index && screenIndexController.screensIndexes >= index ? indicatorColor : indicatorColor2),
                                         ),
                                       );
@@ -92,38 +92,38 @@ class ScreenProgressIndicator extends StatelessWidget {
                               child: Container(
                                 decoration: BoxDecoration(color: indicatorColor, borderRadius: BorderRadius.circular(15)),
                                 height: 25,
-                                width: screenIndexController.screensIndexes == 0
+                                width: screenIndexController.screensIndexes.read('index') == 0
                                     ? constraints.maxWidth > 1300
                                         ? 160
                                         : Get.width * 0.13
-                                    : screenIndexController.screensIndexes == 1
+                                    : screenIndexController.screensIndexes.read('index') == 1
                                         ? constraints.maxWidth > 1300
                                             ? 360
                                             : Get.width * 0.30
-                                        : screenIndexController.screensIndexes == 2
+                                        : screenIndexController.screensIndexes.read('index') == 2
                                             ? constraints.maxWidth > 1250
                                                 ? 530
                                                 : Get.width * 0.44
-                                            : screenIndexController.screensIndexes == 3
+                                            : screenIndexController.screensIndexes.read('index') == 3
                                                 ? constraints.maxWidth > 1240
                                                     ? 700
                                                     : Get.width * 0.57
-                                                : screenIndexController.screensIndexes == 4
+                                                : screenIndexController.screensIndexes.read('index') == 4
                                                     ? constraints.maxWidth > 1240
                                                         ? 870
                                                         : Get.width * 0.72
-                                                    : screenIndexController.screensIndexes == 5
+                                                    : screenIndexController.screensIndexes.read('index') == 5
                                                         ? constraints.maxWidth > 1240
                                                             ? 1040
                                                             : Get.width * 0.86
-                                                        : screenIndexController.screensIndexes == 6
+                                                        : screenIndexController.screensIndexes.read('index') == 6
                                                             ? constraints.maxWidth > 1240
                                                                 ? 1200
                                                                 : Get.width * 0.99
                                                             : 0.0,
                                 child: Text(
-                                  '$step${screenIndexController.screensIndexes! + 1}$step2',
-                                  style: TextStyle(
+                                  '$step${screenIndexController.screensIndexes.read('index') + 1}$step2',
+                                  style: const TextStyle(
                                     color: Colors.white,
                                   ),
                                 ),
@@ -137,7 +137,7 @@ class ScreenProgressIndicator extends StatelessWidget {
                 Flexible(
                   child: GetBuilder<ScreenIndexController>(
                     builder: (controller) {
-                      return screensList[controller.screensIndexes!];
+                      return screensList[controller.screensIndexes.read('index')];
                     },
                   ),
                 ),

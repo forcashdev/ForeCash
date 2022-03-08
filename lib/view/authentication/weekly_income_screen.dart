@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
@@ -236,7 +237,8 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                 GetIncomeController.to.weeklyIncomesList?.add(DataModel(
                   name: '',
                   date: DateTime.now().toString(),
-                  amount: 0,
+                  paidOn: 1, every: 1,
+                  // amount: 0,
                   incomeOutgoing: 1,
                   weekMonth: 1,
                 ));
@@ -624,12 +626,11 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         TextEditingController? _incomeName;
         TextEditingController? _amount;
         _incomeName = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].name ?? "");
-        _amount = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString() ?? "");
+        _amount = TextEditingController(text: GetIncomeController.to.weeklyIncomesList?[index].amount.toString().replaceAll('null', '') ?? "");
         // RxBool whenErrorOnlyShowRedBorder = false.obs;
         // RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderListWeekly = List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) => false.obs).obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderAmountListWeekly = List.generate(GetIncomeController.to.weeklyIncomesList!.length, (index) => false.obs).obs;
-        print('???????????${whenErrorOnlyShowRedBorderListWeekly.length}');
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
           child: SwipeActionCell(
@@ -705,27 +706,56 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                         stream: whenErrorOnlyShowRedBorderListWeekly.stream,
                         builder: (context, snapshot) {
                           return SizedBox(
-                            height: whenErrorOnlyShowRedBorderListWeekly[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            // height: whenErrorOnlyShowRedBorderListWeekly[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            height: checkBoxController.weeklyIncomeCheckBoxValueList[index]
+                                ? whenErrorOnlyShowRedBorderListWeekly[index].value == true
+                                    ? Get.height * 0.07
+                                    : Get.height * 0.044
+                                : checkBoxController.weeklyIncomeCheckBoxValueList[index] == false
+                                    ? Get.height * 0.044
+                                    : Get.height * 0.07,
                             child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                               child: commonTextFormField(
+                                errorTextStyle: TextStyle(fontSize: constraints.maxWidth < 1000 ? 8.sp : null),
                                 hintText: incomeName,
                                 hintStyle: incomeNameStyle,
                                 inputAction: TextInputAction.next,
                                 inputFormatter: [characterInputFormatter()],
-                                contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                 textStyle: incomeNameStyle,
                                 textEditingController: _incomeName,
                                 onChangedFunction: (value) {
                                   GetIncomeController.to.weeklyIncomesList?[index].name = value;
                                   // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
                                 },
-                                errorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
-                                    ? OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.red),
-                                        borderRadius: BorderRadius.circular(4.0),
-                                      )
-                                    : null,
+                                // errorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
+                                //     ? OutlineInputBorder(
+                                //         borderSide: const BorderSide(color: Colors.red),
+                                //         borderRadius: BorderRadius.circular(4.0),
+                                //       )
+                                //     : null,
+                                // focusedErrorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
+                                //     ? OutlineInputBorder(
+                                //         borderSide: const BorderSide(color: Colors.red),
+                                //         borderRadius: BorderRadius.circular(4.0),
+                                //       )
+                                //     : null,
+                                errorBorder: constraints.maxWidth > 1000
+                                    ? checkBoxController.weeklyIncomeCheckBoxValueList[index]
+                                        ? whenErrorOnlyShowRedBorderListWeekly[index].value
+                                            ? OutlineInputBorder(
+                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderRadius: BorderRadius.circular(4.0),
+                                              )
+                                            : null
+                                        : null
+                                    : whenErrorOnlyShowRedBorderListWeekly[index].value
+                                        ? OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderRadius: BorderRadius.circular(4.0),
+                                          )
+                                        : null,
                                 focusedErrorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
                                     ? OutlineInputBorder(
                                         borderSide: const BorderSide(color: Colors.red),
@@ -738,7 +768,12 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                     print(whenErrorOnlyShowRedBorderListWeekly[index].value);
                                     whenErrorOnlyShowRedBorderListWeekly.refresh();
                                   }
-                                  return whenErrorOnlyShowRedBorderListWeekly[index].value == true ? '' : null;
+                                  // return whenErrorOnlyShowRedBorderListWeekly[index].value == true ? '' : null;
+                                  return checkBoxController.weeklyIncomeCheckBoxValueList[index]
+                                      ? whenErrorOnlyShowRedBorderListWeekly[index].value == true
+                                          ? addIncomeName
+                                          : null
+                                      : null;
                                 },
                               ),
                             ),
@@ -746,8 +781,8 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                         }),
                     Container(
                       height: Get.height * 0.044,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth > 1000 ? 8 : 4,
                       ),
                       // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
                       // height: Get.height * 0.044,
@@ -790,8 +825,8 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                     ),
                     Container(
                       height: Get.height * 0.044,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth > 1000 ? 8 : 4,
                       ),
                       // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
                       // height: Get.height * 0.044,
@@ -802,15 +837,10 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                               selectedItemTextStyle: dropDownStyle2,
                               valueTextStyle: dropDownStyle,
                               value: '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
-
-                              // value: controller.selectWeekDropDown[index],
-                              // value: GetIncomeController.to.weeklyIncomesList?[index].every,
                               itemList: weeks,
                               onChanged: (item) {
                                 GetIncomeController.to.weeklyIncomesList?[index].every = int.parse(item.replaceAll('W', ''));
                                 GetIncomeController.to.weeklyIncomesList?.refresh();
-                                // GetIncomeController.to.weeklyIncomesList?[index].every = item;
-                                // controller.changeWeek(item: item, index: index);
                                 print(item);
                               });
                         },
@@ -840,7 +870,14 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                         stream: whenErrorOnlyShowRedBorderAmountListWeekly.stream,
                         builder: (context, snapshot) {
                           return SizedBox(
-                            height: whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            // height: whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            height: checkBoxController.weeklyIncomeCheckBoxValueList[index]
+                                ? whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true
+                                    ? Get.height * 0.07
+                                    : Get.height * 0.044
+                                : checkBoxController.weeklyIncomeCheckBoxValueList[index] == false
+                                    ? Get.height * 0.044
+                                    : Get.height * 0.07,
                             child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02),
                               child: commonTextFormField(
@@ -851,15 +888,36 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                 prefixstyle: incomeNameStyle,
                                 inputAction: TextInputAction.done,
                                 inputFormatter: [digitInputFormatter()],
-                                contentPadding: EdgeInsets.fromLTRB(5.0, Get.height * 0.020, 5.0, Get.height * 0.009),
+                                contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                 textStyle: incomeNameStyle,
                                 textEditingController: _amount,
-                                errorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
-                                    ? OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.red),
-                                        borderRadius: BorderRadius.circular(4.0),
-                                      )
-                                    : null,
+                                // errorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
+                                //     ? OutlineInputBorder(
+                                //         borderSide: const BorderSide(color: Colors.red),
+                                //         borderRadius: BorderRadius.circular(4.0),
+                                //       )
+                                //     : null,
+                                // focusedErrorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
+                                //     ? OutlineInputBorder(
+                                //         borderSide: const BorderSide(color: Colors.red),
+                                //         borderRadius: BorderRadius.circular(4.0),
+                                //       )
+                                //     : null,
+                                errorBorder: constraints.maxWidth > 1000
+                                    ? checkBoxController.weeklyIncomeCheckBoxValueList[index]
+                                        ? whenErrorOnlyShowRedBorderAmountListWeekly[index].value
+                                            ? OutlineInputBorder(
+                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderRadius: BorderRadius.circular(4.0),
+                                              )
+                                            : null
+                                        : null
+                                    : whenErrorOnlyShowRedBorderAmountListWeekly[index].value
+                                        ? OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderRadius: BorderRadius.circular(4.0),
+                                          )
+                                        : null,
                                 focusedErrorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
                                     ? OutlineInputBorder(
                                         borderSide: const BorderSide(color: Colors.red),
@@ -872,7 +930,13 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                     print(whenErrorOnlyShowRedBorderAmountListWeekly[index].value);
                                     whenErrorOnlyShowRedBorderAmountListWeekly.refresh();
                                   }
-                                  return whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true ? '' : null;
+                                  // return whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true ? '' : null;
+
+                                  return checkBoxController.weeklyIncomeCheckBoxValueList[index]
+                                      ? whenErrorOnlyShowRedBorderAmountListWeekly[index].value == true
+                                          ? addAmount
+                                          : null
+                                      : null;
                                 },
                                 // validationFunction: (value) {
                                 //   if (whenErrorOnlyShowRedBorderAmount.value != value.isEmpty) {

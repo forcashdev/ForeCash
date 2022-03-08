@@ -216,28 +216,24 @@ class SetupCalendarScreen extends StatelessWidget {
                                 commonButton(
                                   height: 50,
                                   text: done,
-                                  onPress: () async {
-                                    print('>>>>>>>>>>>${controller.setupCalendarDay}>>>>>>>>>>>>>${_amountController.text}');
+                                  onPress: () {
                                     if (_formKey.currentState!.validate()) {
-                                      var response = await SetUpCalendarController.to.callCalendar(
-                                          resetWeekOn: controller.setupCalendarDay
-                                              .toString()
-                                              .replaceAll('Sunday', '1')
-                                              .replaceAll('Monday', '2')
-                                              .replaceAll('Tuesday', '3')
-                                              .replaceAll('WedDay', '4')
-                                              .replaceAll('Thursday', '5')
-                                              .replaceAll('Friday', '6')
-                                              .replaceAll('Saturday', '7'),
-                                          lowBalance: _amountController.text,
-                                          onSuccess: () {
-                                            Get.to(const AllSetScreen());
-                                          });
-                                      // print('//////////$response');
-                                      // if (response["success"] == true) {
-                                      //   print('??????????$response');
-
-                                      // }
+                                      SetUpCalendarController.to.callCalendar(
+                                        resetWeekOn: controller.setupCalendarDay
+                                            .toString()
+                                            .replaceAll('Sunday', '1')
+                                            .replaceAll('Monday', '2')
+                                            .replaceAll('Tuesday', '3')
+                                            .replaceAll('WedDay', '4')
+                                            .replaceAll('Thursday', '5')
+                                            .replaceAll('Friday', '6')
+                                            .replaceAll('Saturday', '7'),
+                                        lowBalance: _amountController.text,
+                                        onSuccess: () {
+                                          Get.to(const AllSetScreen());
+                                          screenIndexController.updateIndex(index: 1);
+                                        },
+                                      );
                                     }
                                   },
                                 )

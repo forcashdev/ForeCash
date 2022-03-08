@@ -36,6 +36,7 @@ commonTextFormField(
     List<TextInputFormatter>? inputFormatter,
     bool? isEnabled,
     int? errorMaxLines,
+    TextStyle? errorTextStyle,
     int? maxLine,
     FocusNode? textFocusNode,
     GlobalKey<FormFieldState>? key,
@@ -97,6 +98,7 @@ commonTextFormField(
       style: textStyle ?? blackMontserrat10W500,
       inputFormatters: inputFormatter,
       decoration: InputDecoration(
+        errorStyle: errorTextStyle,
         // isCollapsed: true,
         errorText: errorText,
         hoverColor: Colors.transparent,

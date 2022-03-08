@@ -33,7 +33,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
                         height: Get.height * 0.02,
                       ),
                       Align(
-                        alignment: FractionalOffset(0.5, 0.0),
+                        alignment: const FractionalOffset(0.5, 0.0),
                         child: constraints.maxWidth < 1000
                             ? Image.asset(
                                 foreCashLogo2,
@@ -55,7 +55,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
                       TextField(
                         decoration: InputDecoration(
                           filled: true,
-                          prefixIcon: Icon(Icons.search),
+                          prefixIcon: const Icon(Icons.search),
                           hintText: searchBank,
                           hintStyle: searchBankStyle,
                           fillColor: commonTextFieldColor,

@@ -51,7 +51,8 @@ class UpdateCalendarScreen extends StatelessWidget {
                               : IconButton(
                                   splashRadius: 0.1,
                                   onPressed: () {
-                                    Get.back();
+                                    // Get.back();
+                                    Navigator.pushNamed(context, 'DashBoard');
                                   },
                                   icon: const Icon(
                                     Icons.chevron_left,
@@ -76,7 +77,8 @@ class UpdateCalendarScreen extends StatelessWidget {
                               padding: EdgeInsets.only(left: Get.width * 0.04),
                               child: InkWell(
                                 onTap: () {
-                                  Get.back();
+                                  // Get.back();
+                                  Navigator.pushNamed(context, 'DashBoard');
                                 },
                                 child: Text(
                                   backButton,

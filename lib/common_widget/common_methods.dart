@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fore_cash/api/api_call.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
-import 'package:fore_cash/view/authentication/login_screen.dart';
-import 'package:fore_cash/view/authentication/profile_update_screen_screen.dart';
 import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
-import 'package:fore_cash/view/authentication/update_calendar_screen.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -91,7 +87,7 @@ showPopupMenu(BuildContext context) {
   showMenu<String>(
     color: Colors.white,
     context: context,
-    position: RelativeRect.fromLTRB(25.0, 0.0, 0.0, 0.0),
+    position: const RelativeRect.fromLTRB(25.0, 0.0, 0.0, 0.0),
     //position where you want to show the menu on screen
     items: [
       PopupMenuItem<String>(
@@ -99,11 +95,12 @@ showPopupMenu(BuildContext context) {
             imagePath: 'assets/image/icons/ic_menu_user.png',
             title: 'Profile',
             onTap: () {
-              Get.to(() => const ProfileUpdateScreen());
+              // Get.to(() => const ProfileUpdateScreen());
+              Navigator.pushNamed(context, 'Profile');
             }),
         value: '1',
       ),
-      PopupMenuDivider(height: 0.0),
+      const PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
           child: getOptionItem(
             imagePath: 'assets/image/icons/ic_menu_credit_card.png',
@@ -113,20 +110,21 @@ showPopupMenu(BuildContext context) {
           onTap: () {
             print("Profile====>");
           }),
-      PopupMenuDivider(height: 0.0),
+      const PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
           child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_credit_card.png', title: 'Chime Bank #1568'),
           value: '3',
           onTap: () {
             print("Profile====>");
           }),
-      PopupMenuDivider(height: 0.0),
+      const PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
           child: getOptionItem(
               imagePath: 'assets/image/icons/ic_menu_user_plus.png',
               title: 'Add Account',
               onTap: () {
-                Get.to(() => const LoginScreen());
+                // Get.to(() => const LoginScreen());
+                Navigator.pushNamed(context, 'LoginScreen');
               }),
           value: '4',
           onTap: () {
@@ -138,7 +136,8 @@ showPopupMenu(BuildContext context) {
               imagePath: 'assets/image/icons/ic_menu_setting.png',
               title: 'Setting',
               onTap: () {
-                Get.to(() => const UpdateCalendarScreen());
+                // Get.to(() => const UpdateCalendarScreen());
+                Navigator.pushNamed(context, 'UpdateCalendar');
               }),
           value: '5',
           onTap: () {
@@ -155,7 +154,7 @@ showPopupMenu(BuildContext context) {
               // screenIndexController.updateIndex(index: 1);
               final box = GetStorage();
               final finalUserEmail = box.remove('userEmail');
-              storage.write("loginToken", '');
+              // storage.write("loginToken", '');
               screenIndexController.updateIndex(index: 0);
               Get.to(() => const ScreenProgressIndicator());
             }),

@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+
+import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -23,14 +26,20 @@ class _SplashScreenState extends State<SplashScreen> {
       final box = GetStorage();
       final finalUserEmail = box.read('userEmail');
 
-      screenIndexController.updateIndex(index: finalUserEmail == null ? 0 : 1);
+      screenIndexController.updateIndex(
+          index: finalUserEmail == null
+              ? 0
+              : kIsWeb
+                  ? screenIndexController.screensIndexes.read('index')
+                  : 1);
       // screenIndexController.pageController.animateToPage(finalUserEmail == null ? 1 : 2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
-      // Navigator.pushReplacementNamed(context, '/ProgressIndicator');
+      // Navigator.pushReplacementNamed(context, 'AllSet');
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const ScreenProgressIndicator(),
+            builder: (context) => finalUserEmail == null ? const LoginScreen() : const ScreenProgressIndicator(),
           ));
+
       // Get.off(ScreenProgressIndicator());
     });
   }

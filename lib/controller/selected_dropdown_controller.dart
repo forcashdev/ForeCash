@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
 
 class SelectedDropDownItem extends GetxController {
-  String? selectedMonth;
-  String? selectedSingleMonthlyExpenseMonth;
-  String? selectedDate;
-  String? selectedSingleMonthlyExpenseDate;
+  String? selectedMonth = '1 mon';
+  String? selectedSingleMonthlyExpenseMonth = '1 mon';
+  String? selectedDate = '1st';
+  String? selectedSingleMonthlyExpenseDate = '1st';
   String? selectedDay = 'Sun';
   // String? weeklyBudgetSingleDay;
-  String? selectedSingleWeeklyIncomeDay;
-  String? selectedSingleWeeklyIncomeWeek;
+  String? selectedSingleWeeklyIncomeDay = 'Sun';
+  String? selectedSingleWeeklyIncomeWeek = '1W';
   String? selectedWeek = '1W';
-  String? weeklyBudgetDay;
-  String? weeklyBudgetWeek;
+  String? weeklyBudgetDay = 'Sun';
+  String? weeklyBudgetWeek = '1W';
   String? setupCalendarDay = 'Sunday';
   // List<Object> selectedMonthlyIncomeMonthList = List.generate(MonthlyIncomeModelOld.monthlyIncomeList.length, (index) => '1 mon');
   // List<Object> selectedMonthlyExpenseDate = List.generate(MonthlyExpensesModel.monthlyExpensesListOld.length, (index) => '1st');

@@ -43,7 +43,7 @@ class ForgotPassword extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         maxWidth
-                            ? SizedBox()
+                            ? const SizedBox()
                             : IconButton(
                                 splashRadius: 0.1,
                                 onPressed: () {
@@ -83,7 +83,7 @@ class ForgotPassword extends StatelessWidget {
                         : Container(),
                     maxWidth
                         ? Align(
-                            alignment: FractionalOffset(0.5, 0.0),
+                            alignment: const FractionalOffset(0.5, 0.0),
                             child: Text(
                               forgotPass2,
                               style: mobileAppBarStyle,
@@ -94,7 +94,7 @@ class ForgotPassword extends StatelessWidget {
                       height: maxWidth ? Get.height * 0.015 : Get.height * 0.03,
                     ),
                     Align(
-                      alignment: FractionalOffset(0.5, 0.0),
+                      alignment: const FractionalOffset(0.5, 0.0),
                       child: Text(
                         forgotPassSubTitle,
                         style: textSpanStyle1,
@@ -151,7 +151,7 @@ class ForgotPassword extends StatelessWidget {
                       child: commonButton(
                         onPress: () {
                           if (_formKey.currentState!.validate()) {
-                            Get.to(ResetPasswordScreen());
+                            Get.to(const ResetPasswordScreen());
                           }
                         },
                         text: send,

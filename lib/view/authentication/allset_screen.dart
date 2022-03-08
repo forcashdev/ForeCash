@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
-import 'package:fore_cash/view/dashboard/dashboard_screen.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -20,7 +19,11 @@ class _AllSetScreenState extends State<AllSetScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 2500), () => Get.off(const DashBoardScreen()));
+    Timer(
+        const Duration(milliseconds: 2500),
+        () =>
+            // Get.off(const DashBoardScreen())
+            Navigator.pushReplacementNamed(context, 'DashBoard'));
   }
 
   @override

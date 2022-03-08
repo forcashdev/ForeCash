@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
@@ -375,7 +376,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false.obs).obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false.obs).obs;
         _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? '');
-        _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString() ?? '');
+        _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString().replaceAll('null', '') ?? '');
         return Padding(
           padding: EdgeInsets.only(bottom: Get.height * 0.019),
           child: SwipeActionCell(
@@ -453,19 +454,48 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         stream: whenErrorOnlyShowRedBorderList.stream,
                         builder: (context, snapshot) {
                           return SizedBox(
-                            height: whenErrorOnlyShowRedBorderList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            // height: whenErrorOnlyShowRedBorderList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            height: checkBoxController.monthlyExpenseCheckBoxValueList[index]
+                                ? whenErrorOnlyShowRedBorderList[index].value == true
+                                    ? Get.height * 0.07
+                                    : Get.height * 0.044
+                                : checkBoxController.monthlyExpenseCheckBoxValueList[index] == false
+                                    ? Get.height * 0.044
+                                    : Get.height * 0.07,
                             child: Padding(
                                 padding: EdgeInsets.only(right: Get.width * 0.02, left: constraints.maxWidth < 1000 ? 0.0 : 5),
                                 child: commonTextFormField(
+                                    errorTextStyle: TextStyle(fontSize: constraints.maxWidth < 1000 ? 8.sp : null),
                                     hintText: expenseName,
                                     hintStyle: incomeNameStyle,
                                     inputAction: TextInputAction.next,
-                                    errorBorder: whenErrorOnlyShowRedBorderList[index].value
-                                        ? OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.red),
-                                            borderRadius: BorderRadius.circular(4.0),
-                                          )
-                                        : null,
+                                    // errorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                    //     ? OutlineInputBorder(
+                                    //         borderSide: const BorderSide(color: Colors.red),
+                                    //         borderRadius: BorderRadius.circular(4.0),
+                                    //       )
+                                    //     : null,
+                                    // focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
+                                    //     ? OutlineInputBorder(
+                                    //         borderSide: const BorderSide(color: Colors.red),
+                                    //         borderRadius: BorderRadius.circular(4.0),
+                                    //       )
+                                    //     : null,
+                                    errorBorder: constraints.maxWidth > 1000
+                                        ? checkBoxController.monthlyExpenseCheckBoxValueList[index]
+                                            ? whenErrorOnlyShowRedBorderList[index].value
+                                                ? OutlineInputBorder(
+                                                    borderSide: const BorderSide(color: Colors.red),
+                                                    borderRadius: BorderRadius.circular(4.0),
+                                                  )
+                                                : null
+                                            : null
+                                        : whenErrorOnlyShowRedBorderList[index].value
+                                            ? OutlineInputBorder(
+                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderRadius: BorderRadius.circular(4.0),
+                                              )
+                                            : null,
                                     focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                         ? OutlineInputBorder(
                                             borderSide: const BorderSide(color: Colors.red),
@@ -478,10 +508,16 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                         print(whenErrorOnlyShowRedBorderList[index].value);
                                         whenErrorOnlyShowRedBorderList.refresh();
                                       }
-                                      return whenErrorOnlyShowRedBorderList[index].value == true ? '' : null;
+                                      // return whenErrorOnlyShowRedBorderList[index].value == true ? '' : null;
+                                      return checkBoxController.monthlyExpenseCheckBoxValueList[index]
+                                          ? whenErrorOnlyShowRedBorderList[index].value == true
+                                              ? addExpenseName
+                                              : null
+                                          : null;
                                     },
                                     inputFormatter: [characterInputFormatter()],
-                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                    // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                    contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                     textStyle: incomeNameStyle,
                                     textEditingController: _monthlyExpenseName,
                                     onChangedFunction: (value) {
@@ -491,7 +527,9 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         }),
                     Container(
                       height: Get.height * 0.044,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth > 1000 ? 8 : 4,
+                      ),
                       child: commonDropDown(
                           selectedItemTextStyle: dropDownStyle2,
                           valueTextStyle: dropDownStyle,
@@ -514,7 +552,9 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                     ),
                     Container(
                       height: Get.height * 0.044,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth > 1000 ? 8 : 4,
+                      ),
                       // width: widget.constraints!.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
                       // height: Get.height * 0.044,
 
@@ -555,19 +595,50 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                         stream: whenErrorOnlyShowRedBorderAmountList.stream,
                         builder: (context, snapshot) {
                           return SizedBox(
-                            height: whenErrorOnlyShowRedBorderAmountList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            // height: whenErrorOnlyShowRedBorderAmountList[index].value == true ? Get.height * 0.07 : Get.height * 0.044,
+                            height: checkBoxController.monthlyExpenseCheckBoxValueList[index]
+                                ? whenErrorOnlyShowRedBorderAmountList[index].value == true
+                                    ? Get.height * 0.07
+                                    : Get.height * 0.044
+                                : checkBoxController.monthlyExpenseCheckBoxValueList[index] == false
+                                    ? Get.height * 0.044
+                                    : Get.height * 0.07,
                             child: Padding(
                               padding: EdgeInsets.only(right: Get.width * 0.02),
                               child: commonTextFormField(
+                                  hintText: amount,
+                                  hintStyle: incomeNameStyle,
                                   prefixText: '\$',
                                   prefixstyle: incomeNameStyle,
                                   keyboardType: TextInputType.phone,
-                                  errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
-                                      ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
-                                          borderRadius: BorderRadius.circular(4.0),
-                                        )
-                                      : null,
+                                  // errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                  //     ? OutlineInputBorder(
+                                  //         borderSide: const BorderSide(color: Colors.red),
+                                  //         borderRadius: BorderRadius.circular(4.0),
+                                  //       )
+                                  //     : null,
+                                  // focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
+                                  //     ? OutlineInputBorder(
+                                  //         borderSide: const BorderSide(color: Colors.red),
+                                  //         borderRadius: BorderRadius.circular(4.0),
+                                  //       )
+                                  //     : null,
+
+                                  errorBorder: constraints.maxWidth > 1000
+                                      ? checkBoxController.monthlyExpenseCheckBoxValueList[index]
+                                          ? whenErrorOnlyShowRedBorderAmountList[index].value
+                                              ? OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.red),
+                                                  borderRadius: BorderRadius.circular(4.0),
+                                                )
+                                              : null
+                                          : null
+                                      : whenErrorOnlyShowRedBorderAmountList[index].value
+                                          ? OutlineInputBorder(
+                                              borderSide: const BorderSide(color: Colors.red),
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            )
+                                          : null,
                                   focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
                                       ? OutlineInputBorder(
                                           borderSide: const BorderSide(color: Colors.red),
@@ -580,12 +651,18 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                       print(whenErrorOnlyShowRedBorderAmountList[index].value);
                                       whenErrorOnlyShowRedBorderAmountList.refresh();
                                     }
-                                    return whenErrorOnlyShowRedBorderAmountList[index].value == true ? '' : null;
+                                    // return whenErrorOnlyShowRedBorderAmountList[index].value == true ? '' : null;
+                                    return checkBoxController.monthlyExpenseCheckBoxValueList[index]
+                                        ? whenErrorOnlyShowRedBorderAmountList[index].value == true
+                                            ? addAmount
+                                            : null
+                                        : null;
                                   },
                                   inputAction: TextInputAction.done,
                                   inputFormatter: [digitInputFormatter()],
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                  // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                   textStyle: incomeNameStyle,
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                   textEditingController: _monthlyAmount,
                                   onChangedFunction: (value) {
                                     GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(value);
@@ -629,10 +706,11 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               onTap: () {
                 GetIncomeController.to.monthlyExpenseList?.add(DataModel(
                   name: '',
-                  amount: 0,
                   date: DateTime.now().toString(),
                   weekMonth: 2,
                   incomeOutgoing: 2,
+                  paidOn: 1,
+                  every: 1,
                 ));
                 checkBoxController.monthlyExpenseCheckBoxValueList.add(true);
                 GetIncomeController.to.monthlyExpenseList?.refresh();
@@ -641,7 +719,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               child: Align(
                 alignment: const FractionalOffset(0.015, 0.0),
                 child: Text(
-                  addWeeklyIncome,
+                  addMonthlyExpense,
                   style: addWeekIncomeStyle,
                 ),
               ),
