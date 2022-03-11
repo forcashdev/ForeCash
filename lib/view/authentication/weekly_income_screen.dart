@@ -12,6 +12,7 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/delete_income_expense_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
@@ -45,8 +46,9 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
   @override
   void initState() {
     super.initState();
-    // GetIncomeController.to.weeklyIncomesList!.clear();
-    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
+
+    // GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "2"}).whenComplete(() {
       if (GetIncomeController.to.weeklyIncomesList!.isEmpty) {
         GetIncomeController.to.getWeeklyIncomeList();
       }
@@ -201,7 +203,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                   paidOn: 1, every: 1,
                   // amount: 0,
                   incomeOutgoing: 1,
-                  weekMonth: 1,
+                  onetimeWeekMonth: 2,
                 ));
                 checkBoxController.weeklyIncomeCheckBoxValueList.add(true);
                 GetIncomeController.to.weeklyIncomesList?.refresh();
@@ -546,15 +548,31 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
         onPress: () {
           if (_formKey.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {'income': GetIncomeController.to.weeklyIncomesList});
+              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {'upsert_income': GetIncomeController.to.weeklyIncomesList}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyIncomeList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.clear();
+                  });
+                }
+              });
             } else {
               List<DataModel> tempWeeklyIncomeList = [];
               checkBoxController.weeklyIncomeCheckBoxValueList.asMap().forEach((index, value) {
                 if (value) {
                   tempWeeklyIncomeList.add(GetIncomeController.to.weeklyIncomesList!.value[index]);
+                } else {
+                  if (GetIncomeController.to.weeklyIncomesList![index].id != null) {
+                    DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.add(GetIncomeController.to.weeklyIncomesList![index].id!);
+                  }
                 }
               });
-              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {'income': tempWeeklyIncomeList});
+              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {'upsert_income': tempWeeklyIncomeList}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyIncomeList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.clear();
+                  });
+                }
+              });
               // GetIncomeController.to.weeklyIncomesList?.clear();
 
             }
@@ -617,6 +635,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
+                        DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.add(GetIncomeController.to.weeklyIncomesList![index].id!);
                         GetIncomeController.to.weeklyIncomesList?.removeAt(index);
                         Get.back();
                       },

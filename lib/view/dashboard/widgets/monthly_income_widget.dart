@@ -8,12 +8,14 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/add_monthly_income_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/delete_income_expense_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/monthly_expansion_visibility_controller.dart';
 import 'package:fore_cash/controller/monthlyincome_edit_mode_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/total_income_expense_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
+import 'package:fore_cash/model/temp_income_expense_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -150,6 +152,9 @@ monthlyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilit
                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                   noButtonColor: Colors.black,
                                                   onPressYes: () {
+                                                    DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.add(GetIncomeController.to.tempMonthlyIncomeList![index].id!);
+                                                    // DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.refresh();
+                                                    print(DeleteIncomeExpenseController.to.deleteMonthlyIncomeList[index]);
                                                     GetIncomeController.to.tempMonthlyIncomeList?.removeAt(index);
                                                     GetIncomeController.to.tempMonthlyIncomeList?.refresh();
                                                     Get.back();
@@ -329,7 +334,7 @@ monthlyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilit
                                                                   Flexible(
                                                                     child: Text(
                                                                       DateFormat('dd-MM-yyyy').format(DateTime.parse(editModeController.editMode == true
-                                                                          ? GetIncomeController.to.tempMonthlyIncomeList![index].date
+                                                                          ? GetIncomeController.to.tempMonthlyIncomeList![index].date.toString()
                                                                           : GetIncomeController.to.monthlyIncomeList![index].date.toString())),
                                                                       // tempMonthlyIncomeList![index].date.toString().replaceAll('T10:16:38.185Z', ''),
                                                                       // '${GetIncomeController.to.monthlyIncomeList?[index].date}',
@@ -389,6 +394,9 @@ monthlyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilit
                                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                                   noButtonColor: Colors.black,
                                                                   onPressYes: () {
+                                                                    DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.add(GetIncomeController.to.tempMonthlyIncomeList![index].id!);
+                                                                    // DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.refresh();
+                                                                    print(DeleteIncomeExpenseController.to.deleteMonthlyIncomeList);
                                                                     GetIncomeController.to.tempMonthlyIncomeList?.removeAt(index);
                                                                     GetIncomeController.to.tempMonthlyIncomeList?.refresh();
                                                                     Get.back();
@@ -607,30 +615,31 @@ monthlyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilit
                                               final controller = Get.put(SelectedDropDownItem());
                                               if (_formKey.currentState!.validate()) {
                                                 if (constraints.maxWidth < 1000) {
-                                                  GetIncomeController.to.tempMonthlyIncomeList?.add(DataModel(
+                                                  GetIncomeController.to.tempMonthlyIncomeList?.add(Data(
                                                       name: _monthlyIncomeNameController.text,
                                                       amount: int.parse(_monthlyIncomeAmountController.text),
                                                       every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
                                                       paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                                                      weekMonth: 2,
+                                                      onetimeWeekMonth: 3,
                                                       incomeOutgoing: 1,
                                                       date: currentDate.toString()));
                                                 } else {
-                                                  CreateIncomeController.to.createIncome(parameter: {
-                                                    'income': [
+                                                  CreateIncomeController.to.createIncome(url: mSyncAllIncome, parameter: {
+                                                    // 'delete_income': DeleteIncomeExpenseController.to.deleteMonthlyIncomeList,
+                                                    'upsert_income': [
                                                       DataModel(
                                                           name: _monthlyIncomeNameController.text,
                                                           amount: int.parse(_monthlyIncomeAmountController.text),
                                                           every: int.parse(controller.selectedMonth!.replaceAll('mon', '').replaceAll(' ', '')),
                                                           paidOn: int.parse(controller.selectedDate!.replaceAll('th', '').replaceAll('st', '').replaceAll('nd', '').replaceAll('rd', '')),
-                                                          weekMonth: 2,
+                                                          onetimeWeekMonth: 3,
                                                           incomeOutgoing: 1,
                                                           date: currentDate.toString())
                                                     ]
                                                   }).whenComplete(() {
                                                     GetIncomeController.to.monthlyIncomeList?.clear();
                                                     GetIncomeController.to.tempMonthlyIncomeList?.clear();
-                                                    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
+                                                    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "3"}).whenComplete(() {
                                                       GetIncomeController.to.tempMonthlyIncomeList?.refresh();
                                                       TotalIncomeExpenseController.to.totalMonthlyIncomeList.clear();
                                                       TotalIncomeExpenseController.to.totalMonthlyIncomeLogic();

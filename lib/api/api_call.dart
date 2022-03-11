@@ -114,8 +114,8 @@ class Api {
           if (kDebugMode) {
             print('LOGIN TOKEN ${storage.read("loginToken") ?? ""}');
             print(url);
-            print(params);
-            print(response.data);
+            print('::::::${params.toString()}');
+            print('?????${response.data}');
             // print(response);
           }
 

@@ -588,7 +588,7 @@
 //                                                   // tempMonthlyIncomeList?.refresh();
 //                                                 } else {
 //                                                   CreateIncomeController.to.createIncome(parameter: {
-//                                                     'income': [
+//                                                     'upsert_income': [
 //                                                       DataModel(
 //                                                           name: _monthlyExpenseNameController.text,
 //                                                           amount: int.parse(_monthlyExpenseAmountController.text),
@@ -602,7 +602,7 @@
 //                                                   }).whenComplete(() {
 //                                                     GetIncomeController.to.monthlyExpenseList?.clear();
 //                                                     GetIncomeController.to.tempMonthlyExpenseList?.clear();
-//                                                     GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"}).whenComplete(() {
+//                                                     GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "onetime_week_month": "3"}).whenComplete(() {
 //                                                       GetIncomeController.to.monthlyExpenseList?.refresh();
 //                                                       TotalIncomeExpenseController.to.totalMonthlyExpenseList.clear();
 //                                                       TotalIncomeExpenseController.to.totalMonthlyExpenseLogic();

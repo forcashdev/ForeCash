@@ -8,12 +8,14 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/add_weekly_income_showtext_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/delete_income_expense_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/total_income_expense_controller.dart';
 import 'package:fore_cash/controller/weekly_income_edit_mode_controller.dart';
 import 'package:fore_cash/controller/weekly_income_expansion_visibility_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
+import 'package:fore_cash/model/temp_income_expense_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
@@ -148,6 +150,7 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                   noButtonColor: Colors.black,
                                                   onPressYes: () {
+                                                    DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.add(GetIncomeController.to.tempWeeklyIncomeList![index].id!);
                                                     GetIncomeController.to.tempWeeklyIncomeList?.removeAt(index);
                                                     GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                     // GetIncomeController.to.monthlyIncomeList?.refresh();
@@ -389,6 +392,7 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                                   saveButtonTextStyle: yesButtonTextStyle,
                                                                   noButtonColor: Colors.black,
                                                                   onPressYes: () {
+                                                                    DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.add(GetIncomeController.to.tempWeeklyIncomeList![index].id!);
                                                                     GetIncomeController.to.tempWeeklyIncomeList?.removeAt(index);
                                                                     GetIncomeController.to.tempWeeklyIncomeList?.refresh();
                                                                     // GetIncomeController.to.monthlyIncomeList?.refresh();
@@ -581,7 +585,7 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                               final controller = Get.put(SelectedDropDownItem());
                                               if (_formKey.currentState!.validate()) {
                                                 if (constraints.maxWidth < 1000) {
-                                                  GetIncomeController.to.tempWeeklyIncomeList?.add(DataModel(
+                                                  GetIncomeController.to.tempWeeklyIncomeList?.add(Data(
                                                       name: _weeklyIncomeNameController.text,
                                                       amount: int.parse(_weeklyAmountController.text),
                                                       paidOn: int.parse(controller.selectedSingleWeeklyIncomeDay
@@ -594,12 +598,12 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                           .replaceAll('Fri', '6')
                                                           .replaceAll('Sat', '7')),
                                                       every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
-                                                      weekMonth: 1,
+                                                      onetimeWeekMonth: 2,
                                                       incomeOutgoing: 1,
                                                       date: currentDate.toString().replaceAll('T00:00:00.000Z', '')));
                                                 } else {
-                                                  CreateIncomeController.to.createIncome(parameter: {
-                                                    'income': [
+                                                  CreateIncomeController.to.createIncome(url: mSyncAllIncome, parameter: {
+                                                    'upsert_income': [
                                                       DataModel(
                                                           name: _weeklyIncomeNameController.text,
                                                           amount: int.parse(_weeklyAmountController.text),
@@ -613,14 +617,14 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                               .replaceAll('Fri', '6')
                                                               .replaceAll('Sat', '7')),
                                                           every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
-                                                          weekMonth: 1,
+                                                          onetimeWeekMonth: 2,
                                                           incomeOutgoing: 1,
                                                           date: currentDate.toString().replaceAll('T00:00:00.000Z', ''))
                                                     ]
                                                   }).whenComplete(() {
                                                     GetIncomeController.to.weeklyIncomesList?.clear();
                                                     GetIncomeController.to.tempWeeklyIncomeList?.clear();
-                                                    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
+                                                    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "2"}).whenComplete(() {
                                                       GetIncomeController.to.weeklyIncomesList?.refresh();
                                                       TotalIncomeExpenseController.to.totalWeeklyIncomeList.clear();
                                                       TotalIncomeExpenseController.to.totalWeeklyIncomeLogic();

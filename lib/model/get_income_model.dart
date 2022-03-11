@@ -36,11 +36,12 @@ class DataModel {
     this.name,
     this.userId,
     this.incomeOutgoing,
-    this.weekMonth,
+    this.onetimeWeekMonth,
     this.every,
     this.paidOn,
     this.amount,
     this.date,
+    this.firstPaymentOn,
     this.v,
   });
 
@@ -49,22 +50,24 @@ class DataModel {
     name = json['name'];
     userId = json['userId'];
     incomeOutgoing = json['income_outgoing'];
-    weekMonth = json['week_month'];
+    onetimeWeekMonth = json['onetime_week_month'];
     every = json['every'];
     paidOn = json['paid_on'];
     amount = json['amount'];
     date = json['date'];
+    firstPaymentOn = json['firstPaymentOn'];
     v = json['__v'];
   }
   String? id;
   String? name;
   String? userId;
   int? incomeOutgoing;
-  int? weekMonth;
+  int? onetimeWeekMonth;
   int? every;
   int? paidOn;
   int? amount;
   String? date;
+  String? firstPaymentOn;
   int? v;
 
   Map<String, dynamic> toJson() {
@@ -73,11 +76,12 @@ class DataModel {
     map['name'] = name;
     map['userId'] = userId;
     map['income_outgoing'] = incomeOutgoing;
-    map['week_month'] = weekMonth;
+    map['onetime_week_month'] = onetimeWeekMonth;
     map['every'] = every;
     map['paid_on'] = paidOn;
     map['amount'] = amount;
     map['date'] = date;
+    map['firstPaymentOn'] = firstPaymentOn;
     map['__v'] = v;
     return map;
   }

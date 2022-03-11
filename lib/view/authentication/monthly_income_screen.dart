@@ -11,6 +11,7 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/delete_income_expense_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/monthly_income_show_text_visibility.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
@@ -38,12 +39,14 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   final addMonthlyIncomeTextVisibility = Get.put(AddMonthlyIncomeVisibilityController());
   final formKeyValidator = GlobalKey<FormState>();
   DateTime currentDate = DateTime.now();
+  List<String> deleteMonthlyIncomeList = [];
 
   @override
   void initState() {
     super.initState();
 
-    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
+    // GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "3"}).whenComplete(() {
       if (GetIncomeController.to.monthlyIncomeList!.isEmpty) {
         GetIncomeController.to.getMonthlyIncomeList();
       }
@@ -473,7 +476,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                   // amount: int.parse(''),
                   name: '',
                   date: DateTime.now().toString(),
-                  weekMonth: 2,
+                  onetimeWeekMonth: 3,
                   incomeOutgoing: 1, paidOn: 1, every: 1,
                 ));
                 checkBoxController.monthlyIncomeCheckBoxValueList.add(true);
@@ -556,16 +559,32 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         onPress: () {
           if (formKeyValidator.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': GetIncomeController.to.monthlyIncomeList});
+              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'upsert_income': GetIncomeController.to.monthlyIncomeList}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyIncomeList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.clear();
+                  });
+                }
+              });
             } else {
               List<DataModel> tempMonthlyIncome = [];
               checkBoxController.monthlyIncomeCheckBoxValueList.asMap().forEach((index, value) {
                 if (value) {
                   print(value);
                   tempMonthlyIncome.add(GetIncomeController.to.monthlyIncomeList![index]);
+                } else {
+                  if (GetIncomeController.to.monthlyIncomeList![index].id != null) {
+                    DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.add(GetIncomeController.to.monthlyIncomeList![index].id!);
+                  }
                 }
               });
-              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': tempMonthlyIncome});
+              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'upsert_income': tempMonthlyIncome}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyIncomeList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.clear();
+                  });
+                }
+              });
             }
           }
           GetIncomeController.to.weeklyIncomesList?.clear();
@@ -585,7 +604,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         TextEditingController? _incomeName;
         TextEditingController? _amount;
         _incomeName = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].name ?? '');
-        _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString().replaceAll('null', '') ?? "");
+        _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString().replaceAll('null', '') ?? '');
         RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false.obs).obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false.obs).obs;
         return Padding(
@@ -613,6 +632,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
+                        DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.add(GetIncomeController.to.monthlyIncomeList![index].id!);
                         GetIncomeController.to.monthlyIncomeList?.removeAt(index);
                         Get.back();
                       },
@@ -678,7 +698,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 // isErrorShow: whenErrorOnlyShowRedBorder.value,
                                 textEditingController: _incomeName,
                                 onChangedFunction: (value) {
-                                  GetIncomeController.to.monthlyIncomeList?[index].name = value ?? '';
+                                  GetIncomeController.to.monthlyIncomeList?[index].name = value;
                                 },
                                 // focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                 //     ? OutlineInputBorder(
@@ -855,7 +875,8 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                       : null;
                                 },
                                 onChangedFunction: (value) {
-                                  GetIncomeController.to.monthlyIncomeList?[index].amount = value.toString().isNotEmpty ? int.parse(value) : 0;
+                                  // GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
+                                  GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
                                 },
                                 inputFormatter: [digitInputFormatter()],
                                 contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),

@@ -10,6 +10,7 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/delete_income_expense_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
@@ -44,7 +45,8 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
   @override
   void initState() {
     super.initState();
-    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"}).whenComplete(() {
+    // GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "2"}).whenComplete(() {
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "onetime_week_month": "3"}).whenComplete(() {
       if (GetIncomeController.to.monthlyExpenseList!.isEmpty) {
         GetIncomeController.to.getMonthlyExpenseList();
       }
@@ -304,6 +306,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
+                        DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.add(GetIncomeController.to.monthlyExpenseList![index].id!);
                         GetIncomeController.to.monthlyExpenseList?.removeAt(index);
                         Get.back();
                       },
@@ -609,7 +612,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                 GetIncomeController.to.monthlyExpenseList?.add(DataModel(
                   name: '',
                   date: DateTime.now().toString(),
-                  weekMonth: 2,
+                  onetimeWeekMonth: 3,
                   incomeOutgoing: 2,
                   paidOn: 1,
                   every: 1,
@@ -851,16 +854,31 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         onPress: () {
           if (_formKey.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': GetIncomeController.to.monthlyExpenseList});
+              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'upsert_income': GetIncomeController.to.monthlyExpenseList}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyExpenseList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.clear();
+                  });
+                }
+              });
             } else {
               List<DataModel> tempMonthlyExpenseList = [];
               checkBoxController.monthlyExpenseCheckBoxValueList.asMap().forEach((index, value) {
                 if (value) {
                   tempMonthlyExpenseList.add(GetIncomeController.to.monthlyExpenseList!.value[index]);
+                } else {
+                  if (GetIncomeController.to.monthlyExpenseList![index].id != null) {
+                    DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.add(GetIncomeController.to.monthlyExpenseList![index].id!);
+                  }
                 }
               });
-
-              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'income': tempMonthlyExpenseList});
+              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'upsert_income': tempMonthlyExpenseList}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyExpenseList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.clear();
+                  });
+                }
+              });
             }
             GetIncomeController.to.weeklyBudgetList?.clear();
             GetIncomeController.to.weeklyBudgetList?.refresh();

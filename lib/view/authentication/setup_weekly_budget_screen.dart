@@ -10,6 +10,7 @@ import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
+import 'package:fore_cash/controller/delete_income_expense_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
@@ -44,7 +45,8 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   @override
   void initState() {
     super.initState();
-    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"}).whenComplete(() {
+    // GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "week_month": "1"}).whenComplete(() {
+    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "onetime_week_month": "2"}).whenComplete(() {
       if (GetIncomeController.to.weeklyBudgetList!.isEmpty) {
         GetIncomeController.to.getWeeklyBudgetList();
       }
@@ -273,12 +275,13 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
           child: GestureDetector(
             onTap: () {
               GetIncomeController.to.weeklyBudgetList?.add(DataModel(
-                name: '',
-                amount: 0,
-                date: DateTime.now().toString(),
-                incomeOutgoing: 2,
-                weekMonth: 1,
-              ));
+                  name: '',
+                  // amount: 0,
+                  date: DateTime.now().toString(),
+                  incomeOutgoing: 2,
+                  onetimeWeekMonth: 2,
+                  every: 1,
+                  paidOn: 1));
               checkBoxController.weeklyBudgetCheckBoxValueList.add(true);
               GetIncomeController.to.weeklyBudgetList?.refresh();
               // controller1.changeVisibility();
@@ -524,27 +527,33 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         onPress: () {
           if (_formKey.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'income': GetIncomeController.to.weeklyBudgetList});
+              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'upsert_income': GetIncomeController.to.weeklyBudgetList}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyExpenseList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.clear();
+                  });
+                }
+              });
             } else {
               List<DataModel> tempMonthlyExpenseList = [];
               checkBoxController.weeklyBudgetCheckBoxValueList.asMap().forEach((index, value) {
                 if (value) {
                   tempMonthlyExpenseList.add(GetIncomeController.to.weeklyBudgetList!.value[index]);
+                } else {
+                  if (GetIncomeController.to.weeklyBudgetList![index].id != null) {
+                    DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.add(GetIncomeController.to.weeklyBudgetList![index].id!);
+                  }
                 }
               });
-
-              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'income': tempMonthlyExpenseList});
+              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'upsert_income': tempMonthlyExpenseList}).whenComplete(() {
+                if (DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.isNotEmpty) {
+                  DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyExpenseList).whenComplete(() {
+                    DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.clear();
+                  });
+                }
+              });
             }
           }
-          // checkBoxController.weeklyBudgetCheckBoxValueList.indexWhere((element) => element);
-          // List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) {
-          //   GetIncomeController.to.weeklyBudgetList?[index].name = _expenseName?.text;
-          //   GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(_amount!.text);
-          // });
-          // print('((((((((((((((((${GetIncomeController.to.weeklyBudgetList}');
-          // CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'income': GetIncomeController.to.weeklyBudgetList});
-
-          // Get.to(SetupCalendarScreen());
         },
       ),
     );
@@ -589,6 +598,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
+                        DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.add(GetIncomeController.to.weeklyBudgetList![index].id!);
                         GetIncomeController.to.weeklyBudgetList?.removeAt(index);
                         Get.back();
                       },
