@@ -40,7 +40,7 @@ class SetupCalendarScreen extends StatelessWidget {
           builder: (context, constraints) {
             final maxWidth = constraints.maxWidth > 1000;
             return Scaffold(
-              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+              backgroundColor: constraints.maxWidth > 1000 ? colorEDF2F6 : Colors.white,
               // resizeToAvoidBottomInset: false,
               body: Align(
                 alignment: maxWidth ? Alignment.center : Alignment.topCenter,
@@ -173,7 +173,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                           });
                                     },
                                   ),
-                                  decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+                                  decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                                 ),
                                 SizedBox(
                                   height: Get.height * 0.004,
@@ -230,8 +230,8 @@ class SetupCalendarScreen extends StatelessWidget {
                                             .replaceAll('Saturday', '7'),
                                         lowBalance: _amountController.text,
                                         onSuccess: () {
-                                          Get.to(const AllSetScreen());
-                                          screenIndexController.updateIndex(index: 1);
+                                          Get.off(const AllSetScreen());
+                                          screenIndexController.updateIndex(index: 0);
                                         },
                                       );
                                     }

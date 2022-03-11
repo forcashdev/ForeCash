@@ -26,7 +26,7 @@ class UpdateCalendarScreen extends StatelessWidget {
         builder: (context, constraints) {
           final maxWidth = constraints.maxWidth > 1000;
           return Scaffold(
-            backgroundColor: maxWidth ? backGroundColor : null,
+            backgroundColor: maxWidth ? colorEDF2F6 : null,
             appBar: maxWidth ? appBarWithUserNAme(context: context) : null,
             // resizeToAvoidBottomInset: false,
 
@@ -172,7 +172,7 @@ class UpdateCalendarScreen extends StatelessWidget {
                         //   decoration: InputDecoration(
                         //     hintStyle: textFieldStyle2,
                         //     filled: true,
-                        //     fillColor: commonTextFieldColor,
+                        //     fillColor: colorEDF2F6,
                         //     hintText: dollarHint,
                         //     focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
                         //     enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),

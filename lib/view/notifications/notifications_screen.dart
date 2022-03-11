@@ -18,7 +18,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         appBar: constraints.maxWidth > 1000 ? appBarWithUserNAme(context: context) : null,
-        backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+        backgroundColor: constraints.maxWidth > 1000 ? colorEDF2F6 : Colors.white,
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

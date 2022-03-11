@@ -19,7 +19,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
       child: LayoutBuilder(
         builder: (BuildContext layOutContext, BoxConstraints constraints) {
           return Scaffold(
-            backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+            backgroundColor: constraints.maxWidth > 1000 ? colorEDF2F6 : Colors.white,
             body: Center(
               child: Container(
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
@@ -58,7 +58,7 @@ class ConnectBankAccountScreen extends StatelessWidget {
                           prefixIcon: const Icon(Icons.search),
                           hintText: searchBank,
                           hintStyle: searchBankStyle,
-                          fillColor: commonTextFieldColor,
+                          fillColor: colorEDF2F6,
                           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
                           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
                           disabledBorder: OutlineInputBorder(

@@ -42,6 +42,8 @@ class LoginInController extends GetxController {
   }
 
   callLogin({String? email, String? password}) {
+    print(email);
+    print(password);
     // if (formKey.currentState!.validate()) {
     Api().call(
         // isHideLoader: false,
@@ -52,13 +54,13 @@ class LoginInController extends GetxController {
           rPassword: password,
         },
         error: () {
+          print('???????????????');
           print(loginModel.value.success);
         },
         success: (Map<String, dynamic> data) {
           print("loginModel.value.success");
           print(data.toString());
           loginModel.value = LoginModel.fromJson(data);
-
           loginModel.value.toJson();
           if (loginModel.value.success == true) {
             final box = GetStorage();

@@ -5,13 +5,11 @@ class SaveDataTextController extends GetxController {
   bool showTextWeb = true;
   void changeVisibility() {
     showText = !showText;
-
     update();
   }
 
   void changeVisibilityForWeb() {
     showTextWeb = !showTextWeb;
-
     update();
   }
 }

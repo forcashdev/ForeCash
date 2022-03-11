@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Scaffold(
-              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+              backgroundColor: constraints.maxWidth > 1000 ? colorEDF2F6 : Colors.white,
               body: Align(
                 alignment: constraints.maxWidth > 1000 ? Alignment.center : Alignment.topCenter,
                 child: SingleChildScrollView(

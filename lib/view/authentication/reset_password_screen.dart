@@ -30,7 +30,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         final maxWidth = constraints.maxWidth > 1000;
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: maxWidth ? backGroundColor : null,
+          backgroundColor: maxWidth ? colorEDF2F6 : null,
           appBar: maxWidth ? appBarWithUserNAme(context: context) : null,
           body: Center(
             child: Container(
@@ -185,9 +185,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             //     icon: isObscureNewPassCon == true
                             //         ? const Icon(
                             //             Icons.visibility,
-                            //             color: commonTextColor2,
+                            //             color: color777C90,
                             //           )
-                            //         : const Icon(Icons.visibility_off, color: commonTextColor2),
+                            //         : const Icon(Icons.visibility_off, color: color777C90),
                             //     onPressed: () {
                             //       setState(() {
                             //         isObscureNewPassCon = !isObscureNewPassCon;
@@ -195,7 +195,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             //     },
                             //   ),
                             //   obscureText: isObscureNewPassCon,
-                            //   errorTextStyle: const TextStyle(color: commonTextColor),
+                            //   errorTextStyle: const TextStyle(color: color777C90),
                             //   validator: (value) {
                             //     // if (_password.text.length < 6) {
                             //     //   return minimumCharacter;

@@ -21,15 +21,33 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void dispose() {
+    // document.addEventListener("visibilitychange", function(event) {
+    // document.title = document.hidden ? "I'm away" : "I'm here";
+    // });
+    GetStorage screensIndexes = GetStorage();
+    // html.window.onBeforeUnload.listen((event) async {
+    //   screensIndexes.remove('index');
+    // });
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
       builder: () => GetMaterialApp(
-        initialRoute: '/',
+        initialRoute: 'DashBoard',
         routes: {
           '/': (context) => const SplashScreen(),
           'ProgressIndicator': (context) => const ScreenProgressIndicator(),
@@ -48,13 +66,13 @@ class MyApp extends StatelessWidget {
           ]);
         },
         debugShowCheckedModeBanner: false,
-        // home: const DashBoardScreen(),
+        // home: const AllSetScreen(),
         theme: ThemeData(
-            primaryColor: colorPrimary,
+            primaryColor: color174261,
             fontFamily: AppTheme.fontName,
             textSelectionTheme: TextSelectionThemeData(
-              selectionColor: colorPrimary.withOpacity(0.2),
-              selectionHandleColor: colorPrimary,
+              selectionColor: color174261.withOpacity(0.2),
+              selectionHandleColor: color174261,
             )),
       ),
     );

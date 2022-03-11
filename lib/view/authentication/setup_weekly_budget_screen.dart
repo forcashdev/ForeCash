@@ -69,7 +69,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth > 1000;
                   return Scaffold(
-                    backgroundColor: maxWidth ? backGroundColor : Colors.white,
+                    backgroundColor: maxWidth ? colorEDF2F6 : Colors.white,
                     body: Align(
                       alignment: maxWidth ? Alignment.center : Alignment.topCenter,
                       child: Container(
@@ -94,7 +94,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                   // height: maxWidth ? 300 : null,
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
-                                      border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
+                                      border: maxWidth ? Border.all(color: color777C90.withOpacity(0.5)) : null,
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +105,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                       ),
                                       maxWidth
                                           ? Divider(
-                                              color: commonGreyColor.withOpacity(0.5),
+                                              color: color777C90.withOpacity(0.5),
                                             )
                                           : Container(),
                                       Expanded(
@@ -138,45 +138,6 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
               );
             }),
       ),
-    );
-  }
-
-  Widget dropDownDayGetBuilder({List<String>? dropDownList}) {
-    final controller = Get.put(SelectedDropDownItem());
-    return GetBuilder<SelectedDropDownItem>(
-      builder: (controller1) {
-        return commonDropDown(
-            hintText: day,
-            hintTextStyle: chooseDateStyle,
-            selectedItemTextStyle: dropDownStyle2,
-            valueTextStyle: dropDownStyle,
-            value: controller.weeklyBudgetDay,
-            itemList: dropDownList,
-            onChanged: (item) {
-              controller.changeWeeklyBudgetSingleDay(item: item);
-              print(item);
-            });
-      },
-    );
-  }
-
-  Widget dropDownWeekGetBuilder({List<String>? dropDownList}) {
-    final controller = Get.put(SelectedDropDownItem());
-
-    return GetBuilder<SelectedDropDownItem>(
-      builder: (controller1) {
-        return commonDropDown(
-            hintText: every,
-            hintTextStyle: chooseDateStyle,
-            selectedItemTextStyle: dropDownStyle2,
-            valueTextStyle: dropDownStyle,
-            value: controller.weeklyBudgetWeek,
-            itemList: dropDownList,
-            onChanged: (item) {
-              controller.changeWeeklyBudgetSingleWeek(item: item);
-              print(item);
-            });
-      },
     );
   }
 
@@ -410,7 +371,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         //                     // alignment: Alignment.center,
         //                     child: dropDownDayGetBuilder(dropDownList: days),
         //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-        //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+        //                     decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
         //                   ),
         //                 ),
         //                 TableCell(
@@ -422,7 +383,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         //                     // alignment: Alignment.center,
         //                     child: dropDownWeekGetBuilder(dropDownList: weeks),
         //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-        //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+        //                     decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
         //                   ),
         //                 ),
         //                 TableCell(
@@ -439,7 +400,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         //                           maxLines: 1,
         //                         ),
         //                         margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-        //                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+        //                         decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
         //                       ),
         //                     )),
         //                 TableCell(
@@ -604,7 +565,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false.obs).obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false.obs).obs;
         return Padding(
-          padding: EdgeInsets.only(bottom: Get.height * 0.019),
+          padding: const EdgeInsets.only(bottom: 10),
           child: SwipeActionCell(
             backgroundColor: Colors.transparent,
             isDraggable: constraints!.maxWidth > 1000 ? false : true,
@@ -655,7 +616,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                             height: Get.height * 0.044,
                             // width: 8,
                             margin: EdgeInsets.only(right: Get.width * 0.02),
-                            decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
+                            decoration: BoxDecoration(color: color12CC8E, borderRadius: BorderRadius.circular(2)),
                           )
                         : SizedBox(
                             height: Get.height * 0.044,
@@ -664,7 +625,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                               child: GetBuilder<CheckBoxController>(
                                 builder: (controller) {
                                   return Checkbox(
-                                    activeColor: cameraBackGroundColor,
+                                    activeColor: color12CC8E,
                                     checkColor: Colors.white,
                                     value: checkBoxController.weeklyBudgetCheckBoxValueList[index],
                                     onChanged: (value) {
@@ -746,7 +707,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                   },
                                   textEditingController: _expenseName,
                                   onChangedFunction: (value) {
-                                    GetIncomeController.to.weeklyBudgetList?[index].name = value;
+                                    GetIncomeController.to.weeklyBudgetList?[index].name = value ?? "";
                                   }),
                             ),
                           );
@@ -756,7 +717,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                       padding: EdgeInsets.symmetric(
                         horizontal: constraints.maxWidth > 1000 ? 8 : 4,
                       ),
-                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                       child: commonDropDown(
                           selectedItemTextStyle: dropDownStyle2,
                           valueTextStyle: dropDownStyle,
@@ -800,7 +761,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                             print(item);
                           }),
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -817,7 +778,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                           maxLines: 1,
                         ),
                         margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                        decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
                     StreamBuilder(
@@ -892,7 +853,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                   contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                   textEditingController: _amount,
                                   onChangedFunction: (value) {
-                                    GetIncomeController.to.weeklyBudgetList?[index].amount = int.parse(value);
+                                    GetIncomeController.to.weeklyBudgetList?[index].amount = value.toString().isNotEmpty ? int.parse(value) : 0;
                                   }),
                             ),
                           );

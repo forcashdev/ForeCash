@@ -44,7 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Scaffold(
-              backgroundColor: constraints.maxWidth > 1000 ? backGroundColor : Colors.white,
+              backgroundColor: constraints.maxWidth > 1000 ? colorEDF2F6 : Colors.white,
               // resizeToAvoidBottomInset: false,
               body: Align(
                 alignment: constraints.maxWidth > 1000 ? Alignment.center : Alignment.topCenter,
@@ -209,9 +209,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               //         icon: controller.obscure == true
                               //             ? const Icon(
                               //                 Icons.visibility,
-                              //                 color: commonTextColor2,
+                              //                 color: color777C90,
                               //               )
-                              //             : const Icon(Icons.visibility_off, color: commonTextColor2),
+                              //             : const Icon(Icons.visibility_off, color: color777C90),
                               //       ),
                               //       obscureText: controller.obscure,
                               //       validator: (value) {

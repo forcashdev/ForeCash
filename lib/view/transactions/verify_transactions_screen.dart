@@ -37,7 +37,7 @@ class _VerifyTransactionsScreenState extends State<VerifyTransactionsScreen> {
     return LayoutBuilder(builder: (context, constraints) {
       final maxWidth = constraints.maxWidth > 1000;
       return Scaffold(
-        backgroundColor: backGroundColor,
+        backgroundColor: colorEDF2F6,
         body: Center(
           child: Container(
             decoration: constraints.maxWidth > 1000 ? BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.0)) : const BoxDecoration(),
@@ -363,7 +363,7 @@ class _VerifyTransactionsScreenState extends State<VerifyTransactionsScreen> {
   getTransactionsData(BoxConstraints constraints) {
     return Container(
       margin: constraints.maxWidth > 1000 ? const EdgeInsets.all(14.0) : EdgeInsets.zero,
-      decoration: constraints.maxWidth > 1000 ? BoxDecoration(border: Border.all(color: commonTextColor2), borderRadius: BorderRadius.circular(10.0)) : const BoxDecoration(),
+      decoration: constraints.maxWidth > 1000 ? BoxDecoration(border: Border.all(color: color777C90), borderRadius: BorderRadius.circular(10.0)) : const BoxDecoration(),
       child: Column(
         children: [
           Padding(
@@ -415,7 +415,7 @@ class _VerifyTransactionsScreenState extends State<VerifyTransactionsScreen> {
             ),
           ),
           Divider(
-            color: constraints.maxWidth > 1000 ? commonTextColor2 : Colors.transparent,
+            color: constraints.maxWidth > 1000 ? color777C90 : Colors.transparent,
           ),
           constraints.maxWidth > 1000 ? getTransactionsListWeb(constraints) : getTransactionsList(constraints),
         ],

@@ -6,6 +6,7 @@ import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/connect_bank_account_screen.dart';
+import 'package:fore_cash/view/authentication/login_screen.dart';
 import 'package:fore_cash/view/authentication/monthly_expenses_screen.dart';
 import 'package:fore_cash/view/authentication/monthly_income_screen.dart';
 import 'package:fore_cash/view/authentication/setup_calendar_screen.dart';
@@ -47,7 +48,7 @@ class ScreenProgressIndicator extends StatelessWidget {
                         )),
                   )
                 : null,
-            backgroundColor: constraints.maxWidth < 1000 ? null : backGroundColor,
+            backgroundColor: constraints.maxWidth < 1000 ? null : colorEDF2F6,
             body: Column(
               children: [
                 SizedBox(
@@ -64,14 +65,21 @@ class ScreenProgressIndicator extends StatelessWidget {
                                     builder: (controller) {
                                       return Padding(
                                         padding: const EdgeInsets.only(right: 5),
-                                        child: Text(
-                                          progressIndicatorTitleList[index],
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily: AppTheme.fontName,
-                                              fontWeight: index <= screenIndexController.screensIndexes.read('index') ? FontWeight.w600 : FontWeight.w500,
-                                              color: index <= screenIndexController.screensIndexes.read('index') ? indicatorColor : indicatorColor2),
-                                          //color: screenIndexController.screensIndexes == index && screenIndexController.screensIndexes >= index ? indicatorColor : indicatorColor2),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (index == 0) {
+                                              Get.to(() => const LoginScreen());
+                                            }
+                                          },
+                                          child: Text(
+                                            progressIndicatorTitleList[index],
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontFamily: AppTheme.fontName,
+                                                fontWeight: index <= screenIndexController.screensIndexes.read('index') ? FontWeight.w600 : FontWeight.w500,
+                                                color: index <= screenIndexController.screensIndexes.read('index') ? color174261 : color777C90),
+                                            //color: screenIndexController.screensIndexes == index && screenIndexController.screensIndexes >= index ? color174261 : color777C90),
+                                          ),
                                         ),
                                       );
                                     },
@@ -90,7 +98,7 @@ class ScreenProgressIndicator extends StatelessWidget {
                             child: Align(
                               alignment: FractionalOffset(0.0, 0.0),
                               child: Container(
-                                decoration: BoxDecoration(color: indicatorColor, borderRadius: BorderRadius.circular(15)),
+                                decoration: BoxDecoration(color: color174261, borderRadius: BorderRadius.circular(15)),
                                 height: 25,
                                 width: screenIndexController.screensIndexes.read('index') == 0
                                     ? constraints.maxWidth > 1300

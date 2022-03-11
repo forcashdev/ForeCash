@@ -36,12 +36,13 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   final screenIndexController = Get.put(ScreenIndexController());
   final getIncomeController = Get.put(GetIncomeController());
   final addMonthlyIncomeTextVisibility = Get.put(AddMonthlyIncomeVisibilityController());
-  final GlobalKey<FormState> _formKeyValidator = GlobalKey<FormState>();
+  final formKeyValidator = GlobalKey<FormState>();
   DateTime currentDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
+
     GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "2"}).whenComplete(() {
       if (GetIncomeController.to.monthlyIncomeList!.isEmpty) {
         GetIncomeController.to.getMonthlyIncomeList();
@@ -55,7 +56,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
       child: WillPopScope(
           onWillPop: () async {
             screenIndexController.updateIndex(index: 1);
-            return false;
+            return true;
           },
           child: StreamBuilder(
               stream: GetIncomeController.to.monthlyIncomeList?.stream,
@@ -65,7 +66,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                     final maxWidth = constraints.maxWidth > 1000;
                     return Scaffold(
                       resizeToAvoidBottomInset: false,
-                      backgroundColor: maxWidth ? backGroundColor : Colors.white,
+                      backgroundColor: maxWidth ? colorEDF2F6 : Colors.white,
                       body: Align(
                         alignment: maxWidth ? Alignment.center : Alignment.topCenter,
                         child: Container(
@@ -74,8 +75,8 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                           width: maxWidth ? Get.width / 1.4 : null,
                           height: maxWidth ? Get.height * 0.78 : null,
                           child: Form(
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            key: _formKeyValidator,
+                            autovalidateMode: AutovalidateMode.always,
+                            key: formKeyValidator,
                             child: Column(
                               children: [
                                 SizedBox(
@@ -160,8 +161,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.only(top: 10, bottom: 5),
                                     height: maxWidth ? double.infinity : null,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white, border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
+                                    decoration: BoxDecoration(color: Colors.white, border: maxWidth ? Border.all(color: color777C90.withOpacity(0.5)) : null, borderRadius: BorderRadius.circular(5)),
                                     child: Column(
                                       children: [
                                         _nameTableRowWidget(constraints: constraints),
@@ -170,15 +170,14 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                         ),
                                         maxWidth
                                             ? Divider(
-                                                color: commonGreyColor.withOpacity(0.5),
+                                                color: color777C90.withOpacity(0.5),
                                               )
                                             : Container(),
                                         Expanded(
                                             flex: maxWidth ? 2 : 2,
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                children: [rowList(constraints: constraints, context: context), _addNewMonthlyIncomeWidget(constraints: constraints, context: context)],
-                                              ),
+                                            child: ListView(
+                                              shrinkWrap: true,
+                                              children: [rowList(constraints: constraints, context: context), _addNewMonthlyIncomeWidget(constraints: constraints, context: context)],
                                             )),
                                       ],
                                     ),
@@ -301,7 +300,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
           //                     alignment: Alignment.center,
           //                     child: dropDownDayGetBuilder(dropDownList: dateList),
           //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                     decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
           //                   ),
           //                 ),
           //                 TableCell(
@@ -313,7 +312,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
           //                     alignment: Alignment.center,
           //                     child: dropDownWeekGetBuilder(dropDownList: months),
           //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                     decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
           //                   ),
           //                 ),
           //                 TableCell(
@@ -334,7 +333,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
           //                               maxLines: 1,
           //                             ),
           //                             margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-          //                             decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+          //                             decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
           //                           ),
           //                         );
           //                       }),
@@ -503,42 +502,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
     }
   }
 
-  Widget dropDownDayGetBuilder({List<String>? dropDownList}) {
-    return GetBuilder<SelectedDropDownItem>(
-      builder: (controller1) {
-        return commonDropDown(
-            selectedItemTextStyle: dropDownStyle2,
-            valueTextStyle: dropDownStyle,
-            hintText: day,
-            hintTextStyle: chooseDateStyle,
-            value: controller.selectedDate,
-            itemList: dropDownList,
-            onChanged: (item) {
-              controller.changeMonthlyIncomeDate(item: item);
-              print(item);
-            });
-      },
-    );
-  }
-
-  Widget dropDownWeekGetBuilder({List<String>? dropDownList}) {
-    return GetBuilder<SelectedDropDownItem>(
-      builder: (controller1) {
-        return commonDropDown(
-            selectedItemTextStyle: dropDownStyle2,
-            valueTextStyle: dropDownStyle,
-            hintText: every,
-            hintTextStyle: chooseDateStyle,
-            value: controller.selectedMonth,
-            itemList: dropDownList,
-            onChanged: (item) {
-              controller.changeMonthlyIncomeMonth(item: item);
-              print(item);
-            });
-      },
-    );
-  }
-
   _nameTableRowWidget({BoxConstraints? constraints}) {
     return Table(
       columnWidths: const <int, TableColumnWidth>{
@@ -591,7 +554,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         height: 50,
         text: next,
         onPress: () {
-          if (_formKeyValidator.currentState!.validate()) {
+          if (formKeyValidator.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
               CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'income': GetIncomeController.to.monthlyIncomeList});
             } else {
@@ -622,11 +585,9 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         TextEditingController? _incomeName;
         TextEditingController? _amount;
         _incomeName = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].name ?? '');
-        _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString().replaceAll('null', '') ?? '');
+        _amount = TextEditingController(text: GetIncomeController.to.monthlyIncomeList?[index].amount.toString().replaceAll('null', '') ?? "");
         RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false.obs).obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.monthlyIncomeList!.length, (index) => false.obs).obs;
-        RxBool whenErrorOnlyShowRedBorder = false.obs;
-        RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
         return Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
           child: SwipeActionCell(
@@ -678,7 +639,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                         ? Container(
                             height: Get.height * 0.044,
                             margin: EdgeInsets.only(right: Get.width * 0.02),
-                            decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
+                            decoration: BoxDecoration(color: color12CC8E, borderRadius: BorderRadius.circular(2)),
                           )
                         : SizedBox(
                             height: Get.height * 0.044,
@@ -687,7 +648,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                               child: GetBuilder<CheckBoxController>(
                                 builder: (controller) {
                                   return Checkbox(
-                                    activeColor: cameraBackGroundColor,
+                                    activeColor: color12CC8E,
                                     checkColor: Colors.white,
                                     value: checkBoxController.monthlyIncomeCheckBoxValueList[index],
                                     onChanged: (value) {
@@ -717,7 +678,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 // isErrorShow: whenErrorOnlyShowRedBorder.value,
                                 textEditingController: _incomeName,
                                 onChangedFunction: (value) {
-                                  GetIncomeController.to.monthlyIncomeList?[index].name = value;
+                                  GetIncomeController.to.monthlyIncomeList?[index].name = value ?? '';
                                 },
                                 // focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                 //     ? OutlineInputBorder(
@@ -802,7 +763,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                             GetIncomeController.to.monthlyIncomeList?.refresh();
                           }),
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                     ),
                     Container(
                       height: Get.height * 0.044,
@@ -820,7 +781,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                             GetIncomeController.to.monthlyIncomeList?.refresh();
                           }),
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -836,7 +797,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                           maxLines: 1,
                         ),
                         margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                        decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
                     StreamBuilder(
@@ -894,10 +855,9 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                       : null;
                                 },
                                 onChangedFunction: (value) {
-                                  GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
+                                  GetIncomeController.to.monthlyIncomeList?[index].amount = value.toString().isNotEmpty ? int.parse(value) : 0;
                                 },
                                 inputFormatter: [digitInputFormatter()],
-                                // contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
                                 contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                 textStyle: incomeNameStyle,
                               ),

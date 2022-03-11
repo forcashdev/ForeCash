@@ -33,7 +33,7 @@ class _AllSetScreenState extends State<AllSetScreen> {
         body: Container(
           height: double.infinity,
           width: double.infinity,
-          color: colorPrimary,
+          color: color174261,
           alignment: Alignment.center,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

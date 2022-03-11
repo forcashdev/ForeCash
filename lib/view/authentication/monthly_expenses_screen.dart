@@ -69,7 +69,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth > 1000;
                   return Scaffold(
-                    backgroundColor: maxWidth ? backGroundColor : Colors.white,
+                    backgroundColor: maxWidth ? colorEDF2F6 : Colors.white,
                     body: Align(
                       alignment: maxWidth ? Alignment.center : Alignment.topCenter,
                       child: Container(
@@ -89,7 +89,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                                   decoration: BoxDecoration(
                                       // color: Colors.red,
-                                      border: maxWidth ? Border.all(color: commonGreyColor.withOpacity(0.5)) : null,
+                                      border: maxWidth ? Border.all(color: color777C90.withOpacity(0.5)) : null,
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +100,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                       ),
                                       maxWidth
                                           ? Divider(
-                                              color: commonGreyColor.withOpacity(0.5),
+                                              color: color777C90.withOpacity(0.5),
                                             )
                                           : Container(),
                                       // SizedBox(
@@ -138,104 +138,6 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
               );
             }),
       ),
-    );
-  }
-
-  Widget dropDownDayGetBuilder({List<String>? dropDownList}) {
-    final controller = Get.put(SelectedDropDownItem());
-    return GetBuilder<SelectedDropDownItem>(
-      builder: (controller1) {
-        return commonDropDown(
-            hintTextStyle: chooseDateStyle,
-            hintText: chooseDate,
-            selectedItemTextStyle: dropDownStyle2,
-            valueTextStyle: dropDownStyle,
-            value: controller.selectedSingleMonthlyExpenseDate,
-            itemList: dropDownList,
-            onChanged: (item) {
-              controller.changeSingleDate(item: item);
-              print(item);
-            });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       chooseDate,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.selectedSingleDate,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeSingleDate(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
-      },
-    );
-  }
-
-  Widget dropDownWeekGetBuilder({List<String>? dropDownList}) {
-    final controller = Get.put(SelectedDropDownItem());
-
-    return GetBuilder<SelectedDropDownItem>(
-      builder: (controller1) {
-        // return commonDropDown(itemList: dropDownList, value: controller.selectedSingleWeek);
-        return commonDropDown(
-            hintTextStyle: chooseDateStyle,
-            hintText: chooseMonth,
-            selectedItemTextStyle: dropDownStyle2,
-            valueTextStyle: dropDownStyle,
-            value: controller.selectedSingleMonthlyExpenseMonth,
-            itemList: dropDownList,
-            onChanged: (item) {
-              controller.changeSingleMonth(item: item);
-              print(item);
-            });
-        //   DropdownButtonHideUnderline(
-        //   child: DropdownButton(
-        //     hint: Text(
-        //       chooseMonth,
-        //       style: chooseDateStyle,
-        //     ),
-        //     value: controller.selectedSingleMonth,
-        //     // value: controller.selectedItem,
-        //     style: dropDownStyle,
-        //     items: dropDownList!.map((String items) {
-        //       return DropdownMenuItem(
-        //         value: items,
-        //         child: Text(
-        //           items,
-        //           style: dropDownStyle2,
-        //         ),
-        //       );
-        //     }).toList(),
-        //     onChanged: (item) {
-        //       controller.changeSingleMonth(item: item);
-        //     },
-        //     isExpanded: true,
-        //
-        //     icon: const Icon(
-        //       Icons.keyboard_arrow_down, color: Color(0xff777C90),
-        //       // color: AppTheme.colorGrey,
-        //     ),
-        //   ),
-        // );
-      },
     );
   }
 
@@ -378,7 +280,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
         _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? '');
         _monthlyAmount = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].amount.toString().replaceAll('null', '') ?? '');
         return Padding(
-          padding: EdgeInsets.only(bottom: Get.height * 0.019),
+          padding: const EdgeInsets.only(bottom: 10),
           child: SwipeActionCell(
             backgroundColor: Colors.transparent,
             isDraggable: constraints!.maxWidth > 1000 ? false : true,
@@ -429,7 +331,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             height: Get.height * 0.044,
                             // width: 8,
                             margin: EdgeInsets.only(right: Get.width * 0.02),
-                            decoration: BoxDecoration(color: cameraBackGroundColor, borderRadius: BorderRadius.circular(2)),
+                            decoration: BoxDecoration(color: color12CC8E, borderRadius: BorderRadius.circular(2)),
                           )
                         : SizedBox(
                             height: Get.height * 0.044,
@@ -438,7 +340,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                               child: GetBuilder<CheckBoxController>(
                                 builder: (controller) {
                                   return Checkbox(
-                                    activeColor: cameraBackGroundColor,
+                                    activeColor: color12CC8E,
                                     checkColor: Colors.white,
                                     value: checkBoxController.monthlyExpenseCheckBoxValueList[index],
                                     //value: checkBoxController.monthlyExpenseCheckBoxValueList[index] ?? false,
@@ -521,7 +423,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                     textStyle: incomeNameStyle,
                                     textEditingController: _monthlyExpenseName,
                                     onChangedFunction: (value) {
-                                      GetIncomeController.to.monthlyExpenseList?[index].name = value;
+                                      GetIncomeController.to.monthlyExpenseList?[index].name = value ?? "";
                                     })),
                           );
                         }),
@@ -548,7 +450,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             print(item);
                           }),
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                     ),
                     Container(
                       height: Get.height * 0.044,
@@ -571,7 +473,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             print(item);
                           }),
                       margin: EdgeInsets.only(right: Get.width * 0.02),
-                      decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                      decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -588,7 +490,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                           maxLines: 1,
                         ),
                         margin: EdgeInsets.only(right: Get.width * 0.02),
-                        decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+                        decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
                     StreamBuilder(
@@ -665,7 +567,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                   contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                   textEditingController: _monthlyAmount,
                                   onChangedFunction: (value) {
-                                    GetIncomeController.to.monthlyExpenseList?[index].amount = int.parse(value);
+                                    GetIncomeController.to.monthlyExpenseList?[index].amount = value.toString().isNotEmpty ? int.parse(value) : 0;
                                   }),
                             ),
                           );
@@ -804,7 +706,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
           //                     // alignment: Alignment.center,
           //                     child: dropDownDayGetBuilder(dropDownList: dateList),
           //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                     decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
           //                   ),
           //                 ),
           //                 TableCell(
@@ -816,7 +718,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
           //                     // alignment: Alignment.center,
           //                     child: dropDownWeekGetBuilder(dropDownList: months),
           //                     margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-          //                     decoration: BoxDecoration(color: commonTextFieldColor, borderRadius: BorderRadius.circular(4)),
+          //                     decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
           //                   ),
           //                 ),
           //                 TableCell(
@@ -833,7 +735,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
           //                           maxLines: 1,
           //                         ),
           //                         margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
-          //                         decoration: BoxDecoration(color: backGroundColor, borderRadius: BorderRadius.circular(4)),
+          //                         decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
           //                       ),
           //                     )),
           //                 TableCell(

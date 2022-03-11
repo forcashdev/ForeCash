@@ -47,7 +47,7 @@ showCommonDialog(
                       Flexible(
                           child: commonButton(
                         textStyle: saveButtonTextStyle,
-                        borderColor: saveButtonBorderColor,
+                        colorEDEDED: saveButtonBorderColor,
                         height: maxWidth ? 65 : 50,
                         text: yes,
                         bgColor: buttonColor,
@@ -64,7 +64,7 @@ showCommonDialog(
                         height: maxWidth ? 65 : 50,
                         text: no,
                         bgColor: noButtonColor ?? Colors.white,
-                        borderColor: commonTextColor,
+                        colorEDEDED: color777C90,
                         textStyle: noButtonTextStyle ?? commonBackButtonTheme,
                         onPress: () {
                           if (onPressNo != null) {
@@ -81,6 +81,20 @@ showCommonDialog(
           }),
         );
       });
+}
+
+Future<DateTime> selectDate({
+  Rx<DateTime>? currentDate,
+  BuildContext? context,
+}) async {
+  final pickedDate = await showDatePicker(context: context!, initialDate: currentDate!.value, firstDate: DateTime(2015), lastDate: DateTime(2050));
+  if (pickedDate != null && pickedDate != currentDate) {
+    currentDate.value = pickedDate;
+    print(currentDate);
+    currentDate.refresh();
+  }
+
+  return currentDate.value;
 }
 
 showPopupMenu(BuildContext context) {
@@ -102,14 +116,17 @@ showPopupMenu(BuildContext context) {
       ),
       const PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
-          child: getOptionItem(
+        child: getOptionItem(
             imagePath: 'assets/image/icons/ic_menu_credit_card.png',
             title: 'Chase Bank #2345',
-          ),
-          value: '2',
-          onTap: () {
-            print("Profile====>");
-          }),
+            onTap: () {
+              print('Chase Bank #2345');
+              GetStorage screensIndexes = GetStorage();
+              screensIndexes.write('index', 1);
+              Navigator.pushReplacementNamed(context, 'ProgressIndicator');
+            }),
+        value: '2',
+      ),
       const PopupMenuDivider(height: 0.0),
       PopupMenuItem<String>(
           child: getOptionItem(imagePath: 'assets/image/icons/ic_menu_credit_card.png', title: 'Chime Bank #1568'),
@@ -197,7 +214,7 @@ getOptionItem({Function? onTap, String? imagePath, String? title, colors = Color
           Image.asset(
             imagePath ?? "",
             scale: 3.5,
-            color: commonTextColor,
+            color: color777C90,
           ),
           const SizedBox(width: 14),
           Text(title ?? "", style: stlyes)

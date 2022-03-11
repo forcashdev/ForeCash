@@ -6,7 +6,7 @@ commonButton({
   Function()? onPress,
   String? text,
   double? height,
-  Color? borderColor = Colors.transparent,
+  Color? colorEDEDED = Colors.transparent,
   Color? bgColor = commonButtonColor,
   TextStyle? textStyle = commonButtonTheme,
   double? width = double.infinity,
@@ -19,7 +19,7 @@ commonButton({
     ),
     shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: borderColor ?? Colors.transparent,
+          color: colorEDEDED ?? Colors.transparent,
         ),
         borderRadius: BorderRadius.circular(9)),
 

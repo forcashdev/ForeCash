@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
 
 const commonButtonColor = Color(0xff12cc8e);
-const commonTextColor = Color(0xff777C90);
-const commonTextColor2 = Color(0xff777C90);
-const backGroundColor = Color(0xffEDF2F6);
-const cameraBackGroundColor = Color(0xff12CC8E);
-const Color colorPrimary = Color(0xFF174261);
-const Color commonTextFieldColor = Color(0xffEDF2F6);
-const Color commonGreyColor = Color(0xff777C90);
-const Color indicatorColor = Color(0xff174261);
-const Color indicatorColor2 = Color(0xff777C90);
-const Color appBarActionColor = Color(0xffF5F6F7);
-const Color containerColor = Color(0xff097EA2);
-const Color greyColor = Color(0xff4B506D);
+const color777C90 = Color(0xff777C90);
+// const color777C90 = Color(0xff777C90);
+// const color777C90 = Color(0xff777C90);
+const colorEDF2F6 = Color(0xffEDF2F6);
+const color12CC8E = Color(0xff12CC8E);
+const Color color174261 = Color(0xFF174261);
+// const Color colorEDF2F6 = Color(0xffEDF2F6);
+// const Color color777C90 = Color(0xff777C90);
+// const Color color174261 = Color(0xff174261);
+// const Color color777C90 = Color(0xff777C90);
+const Color colorF5F6F7 = Color(0xffF5F6F7);
+const Color color097EA2 = Color(0xff097EA2);
+const Color color4B506D = Color(0xff4B506D);
 const Color greyColor969CB2 = Color(0xff969CB2);
-const Color borderColor = Color(0xffEDEDED);
+const Color colorEDEDED = Color(0xffEDEDED);
 const Color colorsFFEBEB = Color(0xffFFEBEB);
 //hardik
 const Color colors252733 = Color(0xff252733);

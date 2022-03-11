@@ -44,7 +44,6 @@ dependencies:
   get_storage: ^2.0.3
   connectivity_plus: ^2.2.0
   dio: ^4.0.4
-  syncfusion_flutter_datagrid: ^19.4.50
   fluttertoast: ^8.0.8
   flutter_swipe_action_cell: ^2.1.6
 

@@ -23,18 +23,18 @@ TextStyle yesButtonTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w6
 TextStyle noButtonTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName, color: Colors.white);
 TextStyle createAccountTextStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w300, fontSize: 12.sp);
 TextStyle fullNameHintStyle = TextStyle(
-  color: commonTextColor2,
+  color: color777C90,
   fontSize: 11.sp,
   fontWeight: FontWeight.w700,
   fontFamily: AppTheme.fontName,
 );
 const forgotPassStyle = TextStyle(
-  color: commonTextColor2,
+  color: color777C90,
   fontWeight: FontWeight.w500,
   fontFamily: AppTheme.fontName,
 );
-TextStyle alreadyAccountStyle = TextStyle(fontSize: 12.sp, color: commonTextColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
-TextStyle dontHaveAccountStyle = TextStyle(fontSize: 12.sp, color: commonTextColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
+TextStyle alreadyAccountStyle = TextStyle(fontSize: 12.sp, color: color777C90, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
+TextStyle dontHaveAccountStyle = TextStyle(fontSize: 12.sp, color: color777C90, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400);
 TextStyle loginStyle = TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: commonButtonColor, fontFamily: AppTheme.fontName);
 TextStyle textSpanStyle1 = TextStyle(
   fontWeight: FontWeight.w200,
@@ -43,7 +43,7 @@ TextStyle textSpanStyle1 = TextStyle(
   color: Color(0xFF777C90),
   fontFamily: AppTheme.fontName,
 );
-TextStyle simulateModeOffTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: commonGreyColor, fontWeight: FontWeight.w500, fontSize: 10.sp);
+TextStyle simulateModeOffTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: color777C90, fontWeight: FontWeight.w500, fontSize: 10.sp);
 TextStyle simulateModeOnTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: commonButtonColor, fontWeight: FontWeight.w500, fontSize: 10.sp);
 TextStyle textSpanStyle2 = TextStyle(
   fontWeight: FontWeight.w700,
@@ -55,10 +55,10 @@ TextStyle textSpanStyle2 = TextStyle(
 TextStyle columnNameListStyle = TextStyle(
   fontSize: 11.sp,
   fontWeight: FontWeight.w500,
-  color: commonGreyColor,
+  color: color777C90,
 );
-TextStyle incomeNameStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
-TextStyle dateStyle = TextStyle(fontSize: 10.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle incomeNameStyle = TextStyle(fontSize: 11.sp, color: color777C90, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle dateStyle = TextStyle(fontSize: 10.sp, color: color777C90, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle emailStyle = TextStyle(
   fontSize: 12.sp,
   fontWeight: FontWeight.w300,
@@ -68,25 +68,25 @@ TextStyle emailStyle = TextStyle(
 TextStyle textFieldHintStyle = TextStyle(fontSize: 11.sp, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500);
 TextStyle signupButtonStyle = TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: commonButtonColor);
 TextStyle searchBankStyle = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, fontSize: 12.sp);
-TextStyle expenseNameStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle expenseNameStyle = TextStyle(fontSize: 11.sp, color: color777C90, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle dropDownStyle = TextStyle(color: Color(0xff777C90), fontSize: 10.sp, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle greyMontserrat10W500 = TextStyle(color: Color(0xff777C90), fontSize: 10.sp, fontWeight: FontWeight.w500, fontFamily: AppTheme.fontName);
 TextStyle blackMontserrat10W500 = TextStyle(color: Color(0xff252733), fontSize: 10.sp, fontWeight: FontWeight.w500, fontFamily: AppTheme.fontName);
 TextStyle dropDownStyle2 = TextStyle(color: Color(0xff777C90), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, fontSize: 11.sp);
-TextStyle amountStyle = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontFamily: AppTheme.fontName);
-TextStyle textFieldStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 12.sp);
-const prefixTextStyle = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 13);
+TextStyle amountStyle = TextStyle(fontSize: 11.sp, color: color777C90, fontFamily: AppTheme.fontName);
+TextStyle textFieldStyle = TextStyle(color: color777C90, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 12.sp);
+const prefixTextStyle = TextStyle(color: color777C90, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 13);
 TextStyle addWeekIncomeStyle = TextStyle(fontSize: 12.sp, color: Color(0xff087DA1), fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, decoration: TextDecoration.underline);
-TextStyle expenseNameStyle2 = TextStyle(color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 11.sp);
+TextStyle expenseNameStyle2 = TextStyle(color: color777C90, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName, fontSize: 11.sp);
 const chooseDateStyle = TextStyle(
-  color: commonGreyColor,
+  color: color777C90,
   fontWeight: FontWeight.w500,
   fontFamily: AppTheme.fontName,
 );
-TextStyle greyMontserratW400 = TextStyle(fontSize: 11.sp, color: commonGreyColor, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
+TextStyle greyMontserratW400 = TextStyle(fontSize: 11.sp, color: color777C90, fontWeight: FontWeight.w400, fontFamily: AppTheme.fontName);
 TextStyle greyMontserratW500 = TextStyle(
   fontSize: 11.sp,
-  color: commonGreyColor,
+  color: color777C90,
   fontWeight: FontWeight.w500,
 );
 const resetTextStyle = TextStyle(
@@ -119,7 +119,7 @@ const userNameStyle = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w700,
 );
-const userNameProfileStyle = TextStyle(color: commonTextColor2, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600);
+const userNameProfileStyle = TextStyle(color: color777C90, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600);
 TextStyle allSetTextStyle = TextStyle(color: Colors.white, fontSize: Get.mediaQuery.size.aspectRatio * 45, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500);
 TextStyle foreCashWeeklyBalanceTextStyle = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w400, fontSize: 12.sp);
 TextStyle foreCashWeeklyBalanceTextStyleWeb = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w400, fontSize: 10.sp);
@@ -129,28 +129,28 @@ TextStyle foreCashWeeklyBalanceStyle = TextStyle(fontFamily: AppTheme.fontName, 
 TextStyle foreCashWeeklyBalanceStyleWeb = TextStyle(fontFamily: AppTheme.fontName, color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13.sp);
 TextStyle incomeExpenseTExtStyle = TextStyle(color: Colors.white, fontSize: 11.sp, fontFamily: AppTheme.fontName);
 TextStyle blackCalendarStyle11W500 = TextStyle(fontFamily: AppTheme.fontName, fontSize: 11.sp, fontWeight: FontWeight.w500);
-TextStyle greyDateTexStyle10W400 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, fontSize: 10.sp, color: greyColor);
-TextStyle greyTexStyle10W500 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, fontSize: 10.sp, color: greyColor);
-TextStyle greyIncomeTexStyle10W500 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, fontSize: 10.sp, color: commonTextColor2);
+TextStyle greyDateTexStyle10W400 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w400, fontSize: 10.sp, color: color4B506D);
+TextStyle greyTexStyle10W500 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, fontSize: 10.sp, color: color4B506D);
+TextStyle greyIncomeTexStyle10W500 = TextStyle(fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, fontSize: 10.sp, color: color777C90);
 
 //Hardik
 
 const greyMontserrat14w400 = TextStyle(
-  color: commonTextColor2,
+  color: color777C90,
   fontSize: 14,
   fontWeight: FontWeight.w400,
   fontFamily: AppTheme.fontName,
 );
 
 const greyMontserrat12w500 = TextStyle(
-  color: commonTextColor2,
+  color: color777C90,
   fontSize: 12,
   fontWeight: FontWeight.w500,
   fontFamily: AppTheme.fontName,
 );
 
 const greyMontserrat14w500 = TextStyle(
-  color: commonTextColor2,
+  color: color777C90,
   fontSize: 14,
   fontWeight: FontWeight.w500,
   fontFamily: AppTheme.fontName,
@@ -213,8 +213,8 @@ const whiteMontserrat14w500 = TextStyle(
 TextStyle blackMontserrat15W600 = TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName);
 TextStyle blackMontserrat13W600 = TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, fontFamily: AppTheme.fontName);
 TextStyle redMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: Colors.red, fontWeight: FontWeight.w500, fontSize: 11.sp);
-TextStyle greenMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: cameraBackGroundColor, fontWeight: FontWeight.w500, fontSize: 11.sp);
-TextStyle whiteMontserrat11W500 = TextStyle(fontSize: 11.sp, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, color: backGroundColor);
+TextStyle greenMontserrat11W500 = TextStyle(decoration: TextDecoration.underline, fontFamily: AppTheme.fontName, color: color12CC8E, fontWeight: FontWeight.w500, fontSize: 11.sp);
+TextStyle whiteMontserrat11W500 = TextStyle(fontSize: 11.sp, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w500, color: colorEDF2F6);
 TextStyle blackMontserrat12W600 = TextStyle(color: colors252733, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 12.sp);
-TextStyle blueMontserrat12W600 = TextStyle(color: containerColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 12.sp);
-TextStyle blueMontserrat13W600 = TextStyle(color: containerColor, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 18.sp);
+TextStyle blueMontserrat12W600 = TextStyle(color: color097EA2, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 12.sp);
+TextStyle blueMontserrat13W600 = TextStyle(color: color097EA2, fontFamily: AppTheme.fontName, fontWeight: FontWeight.w600, fontSize: 18.sp);

@@ -35,7 +35,7 @@ appBarWithUserNAme({BuildContext? context}) {
                   padding: const EdgeInsets.all(7),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: appBarActionColor,
+                    color: colorF5F6F7,
                   ),
                   child: Image.asset('assets/image/png/notificationIcon.png'),
                 ),
@@ -44,7 +44,7 @@ appBarWithUserNAme({BuildContext? context}) {
                 right: 3,
                 top: 4,
                 child: CircleAvatar(
-                  backgroundColor: cameraBackGroundColor,
+                  backgroundColor: color12CC8E,
                   radius: 6,
                 ),
               )
@@ -62,7 +62,7 @@ appBarWithUserNAme({BuildContext? context}) {
             width: 160,
             margin: EdgeInsets.only(top: Get.height * 0.01, bottom: Get.height * 0.01, right: Get.width * 0.015),
             padding: const EdgeInsets.only(left: 4),
-            decoration: BoxDecoration(color: appBarActionColor, borderRadius: BorderRadius.circular(25)),
+            decoration: BoxDecoration(color: colorF5F6F7, borderRadius: BorderRadius.circular(25)),
             child: Row(
               children: [
                 const CircleAvatar(

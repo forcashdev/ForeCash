@@ -6,7 +6,7 @@ import 'package:fore_cash/utility/const.dart';
 import 'package:get/get.dart';
 
 OutlineInputBorder textFieldBorderStyle = OutlineInputBorder(
-  borderSide: const BorderSide(color: commonTextFieldColor),
+  borderSide: const BorderSide(color: colorEDF2F6),
   borderRadius: BorderRadius.circular(4.0),
 );
 
@@ -43,7 +43,7 @@ commonTextFormField(
     bool isReadOnly = false,
     Widget? suffixIcon,
     Widget? preFixIcon,
-    Color? filledColor = commonTextFieldColor,
+    Color? filledColor = colorEDF2F6,
     RxBool? showPassword,
     EdgeInsets? contentPadding,
     ScrollController? scrollController,
@@ -89,10 +89,10 @@ commonTextFormField(
         return onFieldSubmit != null ? onFieldSubmit(value) : null;
       },
       // maxLines: maxLine ?? 1,
-      keyboardType: keyboardType ?? TextInputType.phone,
+      keyboardType: keyboardType ?? TextInputType.text,
       controller: textEditingController,
       // initialValue: initialText,
-      // cursorColor: colorPrimary,
+      // cursorColor: color174261,
       obscureText: passwordVisible,
       textInputAction: inputAction ?? TextInputAction.next,
       style: textStyle ?? blackMontserrat10W500,
@@ -128,13 +128,13 @@ commonTextFormField(
                 child: passwordVisible
                     ? const Icon(
                         Icons.visibility_off,
-                        color: commonTextColor2,
+                        color: color777C90,
                       )
                     : const Icon(
                         Icons.visibility,
-                        color: commonTextColor2,
+                        color: color777C90,
                       ))
-            : suffixIcon ?? null,
+            : suffixIcon,
         hintStyle: hintStyle ?? blackMontserrat10W500,
       ),
     );

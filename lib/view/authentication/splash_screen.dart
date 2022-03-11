@@ -25,12 +25,13 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () {
       final box = GetStorage();
       final finalUserEmail = box.read('userEmail');
-
       screenIndexController.updateIndex(
           index: finalUserEmail == null
               ? 0
               : kIsWeb
-                  ? screenIndexController.screensIndexes.read('index')
+                  ? finalUserEmail == null
+                      ? 0
+                      : screenIndexController.screensIndexes.read('index') ?? 1
                   : 1);
       // screenIndexController.pageController.animateToPage(finalUserEmail == null ? 1 : 2, duration: Duration(milliseconds: 1600), curve: Curves.easeInOut);
       // Navigator.pushReplacementNamed(context, 'AllSet');

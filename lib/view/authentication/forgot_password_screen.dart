@@ -24,7 +24,7 @@ class ForgotPassword extends StatelessWidget {
         final maxWidth = constraints.maxWidth > 1000;
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: maxWidth ? backGroundColor : null,
+          backgroundColor: maxWidth ? colorEDF2F6 : null,
           appBar: maxWidth ? appBarWithUserNAme(context: context) : null,
           body: Center(
             child: Container(

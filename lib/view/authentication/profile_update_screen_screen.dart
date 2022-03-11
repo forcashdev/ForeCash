@@ -43,7 +43,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
           final maxWidth = constraints.maxWidth > 1000;
           return Scaffold(
             appBar: maxWidth ? appBarWithUserNAme(context: context) : null,
-            backgroundColor: maxWidth ? backGroundColor : null,
+            backgroundColor: maxWidth ? colorEDF2F6 : null,
             // resizeToAvoidBottomInset: false,
             body: Align(
               alignment: maxWidth ? Alignment.center : Alignment.topCenter,
@@ -124,7 +124,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                                     height: 30,
                                     width: 30,
                                     padding: const EdgeInsets.all(8),
-                                    decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/image/png/cameraPng.png')), shape: BoxShape.circle, color: cameraBackGroundColor),
+                                    decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/image/png/cameraPng.png')), shape: BoxShape.circle, color: color12CC8E),
                                   ),
                                 )
                               ],
