@@ -30,18 +30,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void dispose() {
-    // document.addEventListener("visibilitychange", function(event) {
-    // document.title = document.hidden ? "I'm away" : "I'm here";
-    // });
-    GetStorage screensIndexes = GetStorage();
-    // html.window.onBeforeUnload.listen((event) async {
-    //   screensIndexes.remove('index');
-    // });
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 690),

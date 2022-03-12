@@ -559,7 +559,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         onPress: () {
           if (formKeyValidator.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'upsert_income': GetIncomeController.to.monthlyIncomeList}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {rUpsertIncome: GetIncomeController.to.monthlyIncomeList}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyIncomeList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.clear();
@@ -578,7 +578,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                   }
                 }
               });
-              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {'upsert_income': tempMonthlyIncome}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 3, parameter: {rUpsertIncome: tempMonthlyIncome}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyIncomeList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.clear();
@@ -632,8 +632,14 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
-                        DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.add(GetIncomeController.to.monthlyIncomeList![index].id!);
-                        GetIncomeController.to.monthlyIncomeList?.removeAt(index);
+                        print(GetIncomeController.to.monthlyIncomeList![index].id!);
+                        if (GetIncomeController.to.monthlyIncomeList![index].id == null) {
+                          GetIncomeController.to.monthlyIncomeList?.removeAt(index);
+                        } else {
+                          DeleteIncomeExpenseController.to.deleteMonthlyIncomeList.add(GetIncomeController.to.monthlyIncomeList![index].id!);
+                          GetIncomeController.to.monthlyIncomeList?.removeAt(index);
+                        }
+
                         Get.back();
                       },
                       onPressNo: () {

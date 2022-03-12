@@ -49,8 +49,6 @@ import 'package:fore_cash/controller/weekly_budget_expansion_visibility_controll
 import 'package:fore_cash/controller/weekly_income_edit_mode_controller.dart';
 import 'package:fore_cash/controller/weekly_income_expansion_visibility_controller.dart';
 import 'package:fore_cash/model/get_income_model.dart';
-import 'package:fore_cash/model/one_time_expense_model.dart';
-import 'package:fore_cash/model/one_time_income_model.dart';
 import 'package:fore_cash/model/temp_income_expense_model.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
@@ -155,7 +153,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       calculatePastDates();
       calculateFutureDates();
-      TotalIncomeExpenseController.to.datesList.sort();
+      // TotalIncomeExpenseController.to.datesList.sort();
       GetIncomeController.to.monthlyIncomeList?.clear();
       GetIncomeController.to.weeklyIncomesList?.clear();
       GetIncomeController.to.monthlyExpenseList?.clear();
@@ -591,12 +589,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth > 1000;
         double scrollWidth = maxWidth ? Get.width * 0.067 : Get.width * 0.14;
-
-        List<PageController> oneTimeIncomePageControllerList = List.generate(
-            OneTimeIncomeModel.oneTimeIncomeList.length,
-            (index) => PageController(
-                  viewportFraction: maxWidth ? 1 / 7 : 1 / Get.size.aspectRatio * 0.17 / 1,
-                ));
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: maxWidth ? const Color(0xffebf0f4) : const Color(0xffE5E5E5),
@@ -858,37 +850,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                       );
                                                     }),
                                               ),
-                                              // child: PageView.builder(
-                                              //   itemCount: dataDateList.length,
-                                              //   scrollDirection: Axis.horizontal,
-                                              //   controller: _pageController,
-                                              //   itemBuilder: (context, index) {
-                                              //     return Align(
-                                              //       alignment: const FractionalOffset(0.3, 0.5),
-                                              //       child: Text(
-                                              //         dataDateList[index],
-                                              //         style: greyDateTexStyle10W400,
-                                              //         textAlign: TextAlign.end,
-                                              //       ),
-                                              //     );
-                                              //   },
-                                              //   onPageChanged: (value) {
-                                              //     if (monthlyIncomeExpansion == true) {
-                                              //       List.generate(monthlyIncomepageControllerList.length, (index) => monthlyIncomepageControllerList[index].jumpToPage(value));
-                                              //     }
-                                              //     List.generate(weeklyIncomePageControllerList.length, (index) => weeklyIncomePageControllerList[index].jumpToPage(value));
-                                              //     List.generate(weeklyBudgetPageControllerList.length, (index) => weeklyBudgetPageControllerList[index].jumpToPage(value));
-                                              //     List.generate(oneTimeIncomePageControllerList.length, (index) => oneTimeIncomePageControllerList[index].jumpToPage(value));
-                                              //     List.generate(oneTimeExpensePageControllerList.length, (index) => oneTimeExpensePageControllerList[index].jumpToPage(value));
-                                              //     List.generate(monthlyExpensePageControllerList.length,
-                                              //         (index) => monthlyExpensePageControllerList[index].jumpToPage(value)); // _pageController2.jumpToPage(value);
-                                              //     _previousWeekBalancePageController.jumpToPage(value);
-                                              //     _totalWeeklyExpensePageController.jumpToPage(value);
-                                              //     _totalWeeklyIncomePageController.jumpToPage(value);
-                                              //
-                                              //     // print(value);
-                                              //   },
-                                              // ),
                                             );
                                           },
                                         )),
@@ -968,32 +929,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               scrollController.offset,
                                             );
                                           },
-                                          // print('>>>>>>>>>>${_pageController.position}');
-                                          // print(_pageController.page);
-                                          //
-                                          // _pageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // if (monthlyIncomeExpansion == true) {
-                                          //   // _pageController2.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          //   List.generate(monthlyIncomepageControllerList.length,
-                                          //       (index) => monthlyIncomepageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // }
-                                          // List.generate(weeklyIncomePageControllerList.length,
-                                          //     (index) => weeklyIncomePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(monthlyExpensePageControllerList.length,
-                                          //     (index) => monthlyExpensePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(weeklyBudgetPageControllerList.length,
-                                          //     (index) => weeklyBudgetPageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(oneTimeExpensePageControllerList.length,
-                                          //     (index) => oneTimeExpensePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // List.generate(oneTimeIncomePageControllerList.length,
-                                          //     (index) => oneTimeIncomePageControllerList[index].nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                          // _previousWeekBalancePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // _totalWeeklyExpensePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // _totalWeeklyIncomePageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                          // _singleMonthlyPageController.nextPage(duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-
-                                          // }
-                                          // },
                                           child: Icon(
                                             Icons.arrow_forward_ios,
                                             size: 12.sp, color: Colors.black,
@@ -1015,6 +950,22 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 data: ThemeData().copyWith(dividerColor: Colors.transparent),
                                 child: ExpansionTile(
                                   onExpansionChanged: (value) {
+                                    // print(TotalIncomeExpenseController.to.datesList[0]);
+                                    // GetIncomeController.to.monthlyIncomeList!.forEach((element) {
+                                    //   DateTime formated = DateFormat("yyyy-MM-dd").parse(element.date.toString());
+                                    //   // print(element.date);
+                                    //   print(DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[0]).isAfter(DateFormat('MMM, dd').parse(formated.toString())));
+                                    // });
+                                    // var service_start_date = '2020-10-17';
+                                    // var service_end_date = '2020-10-23';
+                                    // var service_start_time = '10:00:00';
+                                    // var service_end_time = '11:00:00';
+                                    // DateTime startDate = DateTime.parse(service_start_date);
+                                    // DateTime endDate = DateTime.parse(service_end_date);
+                                    // DateTime now = DateTime.now();
+                                    // print(startDate.isBefore(now));
+                                    // print(endDate.isAfter(now));
+                                    // print(DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[0]));
                                     if (value) {
                                       Future.delayed(const Duration(milliseconds: 50), () {
                                         scrollControllerMonthlyIncome.jumpTo(
@@ -1030,7 +981,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     }
                                     monthlyIncomeExpansion = value.obs;
                                     monthlyIncomeExpansion.refresh();
-                                    // print('////////$value');
                                     monthlyIncomeExpansionValue.changeExpansionValue();
                                   },
                                   collapsedBackgroundColor: Colors.white,
@@ -1145,14 +1095,37 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                 scrollDirection: Axis.horizontal,
                                                                                 itemCount: TotalIncomeExpenseController.to.datesList.length,
                                                                                 itemBuilder: (context, dateIndex) {
+                                                                                  // DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[0])
+                                                                                  // DateTime monthlyDate = DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date!);
+                                                                                  // DateTime dateListDate = DateTime.parse(TotalIncomeExpenseController.to.datesList[dateIndex]);
+                                                                                  // DateTime newTemp = DateTime(
+                                                                                  //   DateTime.now().year,
+                                                                                  //   DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[dateIndex]).month,
+                                                                                  //   dateListDate.day,
+                                                                                  // );
+                                                                                  // DateTime newdate = DateTime(
+                                                                                  //   DateTime.now().year,
+                                                                                  //   monthlyDate.month,
+                                                                                  //   monthlyDate.day,
+                                                                                  // );
+                                                                                  // print(newdate);
+                                                                                  DateTime formated = DateFormat("yyyy-MM-dd").parse(GetIncomeController.to.monthlyIncomeList![index].date.toString());
+                                                                                  print(formated);
                                                                                   return SizedBox(
                                                                                       width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
                                                                                       child: Text(
-                                                                                        formatter
-                                                                                                    .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
-                                                                                                    .toString()
-                                                                                                    .replaceRange(0, 4, '') ==
-                                                                                                TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                        // formatter
+                                                                                        //             .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                        //             .toString()
+                                                                                        //             .replaceRange(0, 4, '') ==
+                                                                                        //         TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                        // formatter
+                                                                                        //         .parse(GetIncomeController.to.monthlyIncomeList![index].date!)
+                                                                                        //         .isAfter(DateTime.parse(TotalIncomeExpenseController.to.datesList[dateIndex]))
+                                                                                        //   DateTime formated = DateFormat("yyyy-MM-dd").parse(element.date.toString());
+                                                                                        DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[dateIndex].toString()).isBefore(formated)
+                                                                                            //  ==
+                                                                                            // TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
                                                                                             ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
                                                                                             : '-',
                                                                                         style: greyDateTexStyle10W400,
@@ -1947,58 +1920,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                 );
                                                                               }),
                                                                         ),
-                                                                        // child: Padding(
-                                                                        //   padding: EdgeInsets.only(
-                                                                        //     bottom: maxWidth
-                                                                        //         ? showOneTimeIncomeSaveTextController.oneTimeIncomeShowTextWeb == false
-                                                                        //             ? 62.0
-                                                                        //             : showOneTimeIncomeSaveTextController.oneTimeIncomeShowTextWeb == true &&
-                                                                        //                     oneTimeIncomeEditModeController.oneTimeIncomeEditMode == false
-                                                                        //                 ? Get.height * 0.042
-                                                                        //                 : 0.0
-                                                                        //         : 0.0,
-                                                                        //   ),
-                                                                        //   child: scrollableWidget(
-                                                                        //       height: oneTimeIncomeEditModeController.oneTimeIncomeEditMode == true && maxWidth
-                                                                        //           ? Get.height * 0.04
-                                                                        //           : maxWidth
-                                                                        //               ? Get.height * 0.019
-                                                                        //               : Get.height * 0.018,
-                                                                        //       text: incomes,
-                                                                        //       listViewItemCount: oneTimeIncomePageControllerList.length,
-                                                                        //       constraints: constraints,
-                                                                        //       controller: oneTimeIncomePageControllerList,
-                                                                        //       pageViewItemCount: incomes.length,
-                                                                        //       onPageChanged: (value) {
-                                                                        //         // List.generate(
-                                                                        //         //     monthlyIncomepageControllerList.length,
-                                                                        //         //     (index) => monthlyIncomepageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // List.generate(
-                                                                        //         //     weeklyIncomePageControllerList.length,
-                                                                        //         //     (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                                        //         //         duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                        //         // List.generate(
-                                                                        //         //     monthlyExpensePageControllerList.length,
-                                                                        //         //     (index) => monthlyExpensePageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // List.generate(
-                                                                        //         //     weeklyBudgetPageControllerList.length,
-                                                                        //         //     (index) => weeklyBudgetPageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // List.generate(
-                                                                        //         //     oneTimeExpensePageControllerList.length,
-                                                                        //         //     (index) => oneTimeExpensePageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //         // _previousWeekBalancePageController.animateToPage(value,
-                                                                        //         //     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //         // _totalWeeklyExpensePageController.animateToPage(value,
-                                                                        //         //     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //         // _totalWeeklyIncomePageController.animateToPage(value,
-                                                                        //         //     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //       }),
-                                                                        // ),
                                                                       ),
                                                                     )
                                                                   ],
@@ -2166,7 +2087,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                             top: maxWidth ? 25 : Get.height * 0.01,
                                                                           ),
                                                                           child: StreamBuilder(
-                                                                              stream: GetIncomeController.to.monthlyExpenseList?.stream,
+                                                                              stream: oneTimeExpenseEditModeController.oneTimeExpenseEditMode
+                                                                                  ? GetIncomeController.to.tempOneTimeExpenseList?.stream
+                                                                                  : GetIncomeController.to.oneTimeExpenseList?.stream,
                                                                               builder: (context, snapshot) {
                                                                                 return SingleChildScrollView(
                                                                                   controller: scrollControllerOneTimeExpense,
@@ -2178,7 +2101,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                         return Column(
                                                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                                                             children: List.generate(
-                                                                                              oneTimeIncomePageControllerList.length,
+                                                                                              oneTimeExpenseEditModeController.oneTimeExpenseEditMode
+                                                                                                  ? GetIncomeController.to.tempOneTimeExpenseList!.length
+                                                                                                  : GetIncomeController.to.oneTimeExpenseList!.length,
                                                                                               (index) => SizedBox(
                                                                                                 height: oneTimeExpenseEditModeController.oneTimeExpenseEditMode
                                                                                                     ? Get.height * 0.059
@@ -2195,11 +2120,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                                         child: Text(
                                                                                                           formatter
                                                                                                                       .format(DateTime.parse(
-                                                                                                                          GetIncomeController.to.monthlyExpenseList![index].date.toString()))
+                                                                                                                          GetIncomeController.to.oneTimeExpenseList![index].date.toString()))
                                                                                                                       .toString()
                                                                                                                       .replaceRange(0, 4, '') ==
                                                                                                                   TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
-                                                                                                              ? '${GetIncomeController.to.monthlyExpenseList?[index].amount}'
+                                                                                                              ? '${GetIncomeController.to.oneTimeExpenseList?[index].amount}'
                                                                                                               : '-',
                                                                                                           style: greyDateTexStyle10W400,
                                                                                                           textAlign: TextAlign.center,
@@ -2212,58 +2137,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                 );
                                                                               }),
                                                                         ),
-                                                                        // child: Padding(
-                                                                        //   padding: EdgeInsets.only(
-                                                                        //     bottom: maxWidth
-                                                                        //         ? showOneTimeExpenseSaveTextController.oneTimeExpenseShowText == false
-                                                                        //             ? 62.0
-                                                                        //             : showOneTimeExpenseSaveTextController.oneTimeExpenseShowText == true &&
-                                                                        //                     oneTimeExpenseEditModeController.oneTimeExpenseEditMode == false
-                                                                        //                 ? Get.height * 0.042
-                                                                        //                 : 0.0
-                                                                        //         : 0.0,
-                                                                        //   ),
-                                                                        //   child: scrollableWidget(
-                                                                        //       text: incomes,
-                                                                        //       height: oneTimeExpenseEditModeController.oneTimeExpenseEditMode == true && maxWidth
-                                                                        //           ? Get.height * 0.04
-                                                                        //           : maxWidth
-                                                                        //               ? Get.height * 0.019
-                                                                        //               : Get.height * 0.018,
-                                                                        //       listViewItemCount: oneTimeExpensePageControllerList.length,
-                                                                        //       constraints: constraints,
-                                                                        //       controller: oneTimeExpensePageControllerList,
-                                                                        //       pageViewItemCount: incomes.length,
-                                                                        //       onPageChanged: (value) {
-                                                                        //         // List.generate(
-                                                                        //         //     monthlyIncomepageControllerList.length,
-                                                                        //         //     (index) => monthlyIncomepageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // List.generate(
-                                                                        //         //     weeklyIncomePageControllerList.length,
-                                                                        //         //     (index) => weeklyIncomePageControllerList[index].animateToPage(value,
-                                                                        //         //         duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                                                        //         // List.generate(
-                                                                        //         //     monthlyExpensePageControllerList.length,
-                                                                        //         //     (index) => monthlyExpensePageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // List.generate(
-                                                                        //         //     weeklyBudgetPageControllerList.length,
-                                                                        //         //     (index) => weeklyBudgetPageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // List.generate(
-                                                                        //         //     oneTimeIncomePageControllerList.length,
-                                                                        //         //     (index) => oneTimeIncomePageControllerList[index]
-                                                                        //         //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                                                        //         // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //         // _previousWeekBalancePageController.animateToPage(value,
-                                                                        //         //     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //         // _totalWeeklyIncomePageController.animateToPage(value,
-                                                                        //         //     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //         // _totalWeeklyExpensePageController.animateToPage(value,
-                                                                        //         //     duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                                                        //       }),
-                                                                        // ),
                                                                       ),
                                                                     )
                                                                   ],
@@ -2868,27 +2741,34 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   calculateFutureDates() {
+    DateTime today = DateTime.now();
+    DateTime? returnedDate;
     for (int i = 0; i < 15; i++) {
-      final date = formatter.format(_currentDate.add(Duration(days: i)));
+      returnedDate = TotalIncomeExpenseController.to.findFirstDateOfTheWeek(i == 0 ? today : returnedDate!.add(const Duration(days: 7)));
+      // print(returnedDate);
+      final date = formatter.format(returnedDate);
+      // final date = formatter.format(_currentDate.add(Duration(days: i)));
       TotalIncomeExpenseController.to.datesList.add(date);
-      // print(TotalIncomeExpenseController.to.datesList[i]);
+      print(date);
     }
   }
 
-  Future<dynamic>? calculatePastDates({DateTime? startDate, DateTime? endDate}) {
+  Future<dynamic>? calculatePastDates() {
+    DateTime? startDate;
     for (int i = 0; i < 15; i++) {
-      final DateTime startDate = _currentDate.subtract(Duration(days: i + 1));
-
+      startDate = TotalIncomeExpenseController.to.findFirstDateOfTheWeek(i == 0 ? DateTime.now().subtract(const Duration(days: 7)) : startDate!.subtract(const Duration(days: 7)));
+      print(startDate);
+      // final DateTime startDate = _currentDate.subtract(Duration(days: i + 1));
       final String start = formatter.format(startDate);
       final String dayFormate = DateFormat('EEEE').format(startDate);
       // print('DayFormate$dayFormate');
       final DateTime endDate = _currentDate.subtract(Duration(days: i));
 
       final String end = formatter.format(endDate);
-      TotalIncomeExpenseController.to.datesList.add(start);
+      TotalIncomeExpenseController.to.datesList.insert(0, start);
 
       final String apiUrl = 'https://api?start=$start&end=$end';
-      // print('====$apiUrl');
+      print('====$apiUrl');
     }
   }
 
@@ -2938,10 +2818,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   Widget webHeaderRow({BoxConstraints? constraints}) {
-    DateTime today = DateTime.now();
-    final _firstDayOfTheweek = today.subtract(Duration(days: today.weekday));
-    final formatedFirstDay = DateFormat('MMM dd').format(_firstDayOfTheweek);
-    final _lastDayOfTheweek = DateFormat('MMM dd').format(today.subtract(Duration(days: _firstDayOfTheweek.weekday)));
+    final formatedFirstDay = DateFormat('MMM dd').format(TotalIncomeExpenseController.to.findFirstDateOfTheWeek(DateTime.now()));
+    final _lastDayOfTheweek = DateFormat('MMM dd').format(TotalIncomeExpenseController.to.findLastDateOfTheWeek(DateTime.now()));
+    // final formatedFirstDay = DateFormat('MMM dd').format(_firstDayOfTheweek);
+    // final _lastDayOfTheweek = DateFormat('MMM dd').format(today.subtract(Duration(days: _firstDayOfTheweek.weekday)));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
@@ -3185,10 +3065,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   _mobileSimulateModeRow({BoxConstraints? constraints}) {
-    DateTime today = DateTime.now();
-    final _firstDayOfTheweek = today.subtract(new Duration(days: today.weekday));
-    final formatedFirstDay = DateFormat('MMM dd').format(_firstDayOfTheweek);
-    final _lastDayOfTheweek = DateFormat('MMM dd').format(today.subtract(new Duration(days: _firstDayOfTheweek.weekday)));
+    final formatedFirstDay = DateFormat('MMM dd').format(TotalIncomeExpenseController.to.findFirstDateOfTheWeek(DateTime.now()));
+    final _lastDayOfTheweek = DateFormat('MMM dd').format(TotalIncomeExpenseController.to.findLastDateOfTheWeek(DateTime.now()));
+    // DateTime today = DateTime.now();
+    // final _firstDayOfTheweek = today.subtract(new Duration(days: today.weekday));
+    // final formatedFirstDay = DateFormat('MMM dd').format(_firstDayOfTheweek);
+    // final _lastDayOfTheweek = DateFormat('MMM dd').format(today.subtract(new Duration(days: _firstDayOfTheweek.weekday)));
     return Row(
       children: [
         Padding(
@@ -6362,11 +6244,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                           InkWell(
                                             onTap: () {
                                               if (_formKey.currentState!.validate()) {
-                                                // setState(() {
-                                                //   OneTimeIncomeModel.oneTimeIncomeList
-                                                //       .add(OneTimeIncomeModel(incomeName: _oneTimeIncomeNameController.text, amount: _oneTimeIncomeAmountController.text, dateTime: currentDate.value));
-                                                // });
-
                                                 if (constraints.maxWidth < 1000) {
                                                   GetIncomeController.to.tempOneTimeIncomeList?.add(Data(
                                                       name: _oneTimeIncomeNameController.text,
@@ -6775,11 +6652,37 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                           InkWell(
                                             onTap: () {
                                               if (_formKey.currentState!.validate()) {
-                                                setState(() {
-                                                  OneTimeExpenseModel.oneTimeExpenseList.add(
-                                                      OneTimeExpenseModel(incomeName: _oneTimeExpenseNameController.text, amount: _oneTimeExpenseAmountController.text, dateTime: currentDate.value));
-                                                });
+                                                // setState(() {
+                                                //   OneTimeExpenseModel.oneTimeExpenseList.add(
+                                                //       OneTimeExpenseModel(incomeName: _oneTimeExpenseNameController.text, amount: _oneTimeExpenseAmountController.text, dateTime: currentDate.value));
+                                                // });
+
+                                                if (constraints.maxWidth < 1000) {
+                                                  GetIncomeController.to.tempOneTimeExpenseList?.add(Data(
+                                                      name: _oneTimeExpenseNameController.text,
+                                                      amount: int.parse(_oneTimeExpenseAmountController.text),
+                                                      onetimeWeekMonth: 1,
+                                                      incomeOutgoing: 2,
+                                                      date: currentDate.toString()));
+                                                } else {
+                                                  CreateIncomeController.to.createIncome(url: mSyncAllIncome, parameter: {
+                                                    'upsert_income': [
+                                                      DataModel(
+                                                          name: _oneTimeExpenseNameController.text,
+                                                          amount: int.parse(_oneTimeExpenseAmountController.text),
+                                                          onetimeWeekMonth: 1,
+                                                          incomeOutgoing: 2,
+                                                          date: currentDate.toString())
+                                                    ]
+                                                  }).whenComplete(() {
+                                                    GetIncomeController.to.oneTimeExpenseList?.clear();
+                                                    GetIncomeController.to.tempOneTimeExpenseList?.clear();
+                                                    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "onetime_week_month": "1"});
+                                                  });
+                                                }
                                                 constraints.maxWidth > 1000 ? showSaveTextController.changeVisibilityForWeb() : showSaveTextController.changeVisibility();
+                                                _oneTimeExpenseAmountController.clear();
+                                                _oneTimeExpenseNameController.clear();
                                               }
                                             },
                                             child: Text(
@@ -7289,6 +7192,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       TextButton(
                         onPressed: () {
                           controller.showEditMode();
+                          CreateIncomeController.to.createIncome(url: mSyncAllIncome, parameter: {'upsert_income': GetIncomeController.to.tempOneTimeExpenseList}).whenComplete(() {
+                            GetIncomeController.to.oneTimeExpenseList?.clear();
+                            GetIncomeController.to.tempOneTimeExpenseList?.clear();
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "onetime_week_month": "1"}).whenComplete(() {
+                              // TotalIncomeExpenseController.to.totalWeeklyBudgetList.clear();
+                              // TotalIncomeExpenseController.to.totalWeeklyBudgetLogic();
+                            });
+                          });
+                          GetIncomeController.to.oneTimeIncomeList?.refresh();
+                          GetIncomeController.to.tempOneTimeIncomeList?.refresh();
                         },
                         child: Text(
                           save,

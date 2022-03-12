@@ -14,6 +14,15 @@ class TotalIncomeExpenseController extends GetxController {
   final RxList datesList = [].obs;
   final DateFormat formatter = DateFormat('MMM, dd');
   int totalCount = 0;
+
+  DateTime findFirstDateOfTheWeek(DateTime dateTime) {
+    return dateTime.subtract(Duration(days: dateTime.weekday - 1));
+  }
+
+  DateTime findLastDateOfTheWeek(DateTime dateTime) {
+    return dateTime.add(Duration(days: DateTime.daysPerWeek - dateTime.weekday));
+  }
+
   calculateMoreFutureDates({ScrollController? scrollController}) {
     int totalWeeklyIncomeCount = 0;
     int totalMonthlyExpenseCount = 0;
@@ -21,8 +30,8 @@ class TotalIncomeExpenseController extends GetxController {
     String? date;
     String? start;
     DateTime temp = scrollController?.position.pixels == scrollController?.position.maxScrollExtent
-        ? DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList.last)
-        : DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList.first);
+        ? formatter.parse(TotalIncomeExpenseController.to.datesList.last)
+        : formatter.parse(TotalIncomeExpenseController.to.datesList.first);
     print(TotalIncomeExpenseController.to.datesList.last);
     DateTime newTemp = DateTime(
       DateTime.now().year,
@@ -32,15 +41,17 @@ class TotalIncomeExpenseController extends GetxController {
     print(newTemp);
     print(TotalIncomeExpenseController.to.datesList);
     print('kkkkkkk');
-    // datesList.removeRange(0, 14);
     for (int i = 0; i < 15; i++) {
       if (scrollController?.position.pixels == scrollController?.position.maxScrollExtent) {
-        date = formatter.format(newTemp.add(Duration(days: i + 1)));
+        date = formatter.format(i == 0 ? newTemp.add(const Duration(days: 7)) : DateTime.parse(date!).add(const Duration(days: 7)));
+        // date = formatter.format(newTemp.add(Duration(days: i + 1)));
         TotalIncomeExpenseController.to.datesList.add(date);
       } else {
-        final DateTime startDate = newTemp.subtract(Duration(days: i + 1));
+        final DateTime startDate = i == 0 ? newTemp.add(const Duration(days: 7)) : DateTime.parse(start!).add(const Duration(days: 7));
+        // final DateTime startDate = newTemp.subtract(Duration(days: i + 1));
         start = formatter.format(startDate);
         TotalIncomeExpenseController.to.datesList.insert(0, start);
+        // DateFormat('yyyy-MM-dd').parse(start);
       }
       for (int j = 0; j < GetIncomeController.to.monthlyIncomeList!.length; j++) {
         if (formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![j].date.toString())).toString().replaceRange(0, 4, '') ==
@@ -50,7 +61,7 @@ class TotalIncomeExpenseController extends GetxController {
       }
 
       for (int j = 0; j < GetIncomeController.to.weeklyIncomesList!.length; j++) {
-        DateTime tempWeeklyDate = DateFormat('MMM, dd').parse((scrollController?.position.pixels == scrollController?.position.maxScrollExtent ? date.toString() : start.toString()));
+        DateTime tempWeeklyDate = formatter.parse((scrollController?.position.pixels == scrollController?.position.maxScrollExtent ? date.toString() : start.toString()));
         DateTime dateFormatedWeeklyDate = DateTime.parse(GetIncomeController.to.weeklyIncomesList![j].date!);
         DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyDate.toString());
         DateTime newTempWeekly = DateTime(
@@ -76,7 +87,7 @@ class TotalIncomeExpenseController extends GetxController {
       }
 
       for (int j = 0; j < GetIncomeController.to.weeklyBudgetList!.length; j++) {
-        DateTime tempWeeklyBudgetDate = DateFormat('MMM, dd').parse((scrollController?.position.pixels == scrollController?.position.maxScrollExtent ? date.toString() : start.toString()));
+        DateTime tempWeeklyBudgetDate = formatter.parse((scrollController?.position.pixels == scrollController?.position.maxScrollExtent ? date.toString() : start.toString()));
         DateTime dateFormatedWeeklyBudgetDate = DateTime.parse(GetIncomeController.to.weeklyBudgetList![j].date!);
         DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyBudgetDate.toString());
         DateTime newTempWeeklyBudgetDate = DateTime(
@@ -113,6 +124,7 @@ class TotalIncomeExpenseController extends GetxController {
       totalWeeklyBudgetCount = 0;
       print(totalCount);
     }
+    print('////$datesList');
     print(']]]]]]]');
     print(TotalIncomeExpenseController.to.totalWeeklyIncomeList.length);
     print(TotalIncomeExpenseController.to.totalMonthlyIncomeList.length);
@@ -146,7 +158,7 @@ class TotalIncomeExpenseController extends GetxController {
   totalWeeklyIncomeLogic() {
     for (int i = 0; i < datesList.length; i++) {
       for (int j = 0; j < GetIncomeController.to.weeklyIncomesList!.length; j++) {
-        DateTime temp = DateFormat('MMM, dd').parse(datesList[i]);
+        DateTime temp = formatter.parse(datesList[i]);
         DateTime dateFormatedWeeklyDate = DateTime.parse(GetIncomeController.to.weeklyIncomesList![j].date!);
         DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyDate.toString());
         DateTime newTemp = DateTime(
@@ -169,7 +181,7 @@ class TotalIncomeExpenseController extends GetxController {
       totalCount = 0;
       print(totalCount);
     }
-    print('WeeklyIncomeList${totalWeeklyIncomeList}');
+    print('WeeklyIncomeList$totalWeeklyIncomeList');
     print('WeeklyIncomeList${totalWeeklyIncomeList.length}');
     totalWeeklyIncomeList.refresh();
   }
@@ -192,7 +204,7 @@ class TotalIncomeExpenseController extends GetxController {
   totalWeeklyBudgetLogic() {
     for (int i = 0; i < datesList.length; i++) {
       for (int j = 0; j < GetIncomeController.to.weeklyBudgetList!.length; j++) {
-        DateTime temp = DateFormat('MMM, dd').parse(datesList[i]);
+        DateTime temp = formatter.parse(datesList[i]);
         DateTime dateFormatedWeeklyBudgetDate = DateTime.parse(GetIncomeController.to.weeklyBudgetList![j].date!);
         DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyBudgetDate.toString());
         DateTime newTemp = DateTime(
@@ -206,7 +218,7 @@ class TotalIncomeExpenseController extends GetxController {
           dateFormatedWeeklyBudgetDate.month,
           dateFormatedWeeklyBudgetDate.day,
         );
-        print('>>>>>>>>>>>>${newTemp}>>>>>>>${newTempWeeklyBudget}');
+        print('>>>>>>>>>>>>$newTemp>>>>>>>$newTempWeeklyBudget');
         if (DateFormat('EEEE').format(newTemp) == DateFormat('EEEE').format(newTempWeeklyBudget)) {
           totalCount += GetIncomeController.to.weeklyBudgetList![j].amount!;
         }
