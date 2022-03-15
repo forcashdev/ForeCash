@@ -43,12 +43,14 @@ class TotalIncomeExpenseController extends GetxController {
     print('kkkkkkk');
     for (int i = 0; i < 15; i++) {
       if (scrollController?.position.pixels == scrollController?.position.maxScrollExtent) {
+        // date = DateFormat("yyyy-MM-dd").format(i == 0 ? newTemp.add(const Duration(days: 7)) : DateTime.parse(date!).add(const Duration(days: 7)));
         date = formatter.format(i == 0 ? newTemp.add(const Duration(days: 7)) : DateTime.parse(date!).add(const Duration(days: 7)));
         // date = formatter.format(newTemp.add(Duration(days: i + 1)));
         TotalIncomeExpenseController.to.datesList.add(date);
       } else {
         final DateTime startDate = i == 0 ? newTemp.add(const Duration(days: 7)) : DateTime.parse(start!).add(const Duration(days: 7));
         // final DateTime startDate = newTemp.subtract(Duration(days: i + 1));
+        // start = DateFormat("yyyy-MM-dd").format(startDate);
         start = formatter.format(startDate);
         TotalIncomeExpenseController.to.datesList.insert(0, start);
         // DateFormat('yyyy-MM-dd').parse(start);

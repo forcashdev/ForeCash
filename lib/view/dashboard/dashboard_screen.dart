@@ -952,10 +952,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   onExpansionChanged: (value) {
                                     // print(TotalIncomeExpenseController.to.datesList[0]);
                                     // GetIncomeController.to.monthlyIncomeList!.forEach((element) {
-                                    //   DateTime formated = DateFormat("yyyy-MM-dd").parse(element.date.toString());
+                                    //   DateTime formated = DateFormat("yyyy-MM-dd").parse(element.date!);
                                     //   // print(element.date);
-                                    //   print(DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[0]).isAfter(DateFormat('MMM, dd').parse(formated.toString())));
+                                    //   // print(DateFormat('MMM, dd').format(formated));
                                     // });
+                                    // for (int i = 0; i < TotalIncomeExpenseController.to.datesList.length; i++) {
+                                    //   for (int j = 0; j < GetIncomeController.to.monthlyIncomeList!.length; j++) {
+                                    //     DateTime formated = DateFormat("yyyy-MM-dd").parse(GetIncomeController.to.monthlyIncomeList![j].date!);
+                                    //     DateTime tempDateTimeList = DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[i]);
+                                    //     DateTime dateListFormetted = DateTime(DateTime.now().year, tempDateTimeList.month, tempDateTimeList.day);
+                                    //     // tempDateTimeList.day <= formated.day
+                                    //     dateListFormetted.add(const Duration(days: 1)).day < formated.day
+                                    //         ? print('true${GetIncomeController.to.monthlyIncomeList![j].date!}::${GetIncomeController.to.monthlyIncomeList![j].amount}')
+                                    //         : print('false');
+                                    //   }
+                                    // }
                                     // var service_start_date = '2020-10-17';
                                     // var service_end_date = '2020-10-23';
                                     // var service_start_time = '10:00:00';
@@ -1109,28 +1120,89 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                   //   monthlyDate.day,
                                                                                   // );
                                                                                   // print(newdate);
-                                                                                  DateTime formated = DateFormat("yyyy-MM-dd").parse(GetIncomeController.to.monthlyIncomeList![index].date.toString());
-                                                                                  print(formated);
+
+                                                                                  // DateTime formated = DateFormat("yyyy-MM-dd").parse(GetIncomeController.to.monthlyIncomeList![index].date!);
+                                                                                  // DateTime tempDateTimeList = DateFormat("yyyy-MM-dd").parse(TotalIncomeExpenseController.to.datesList[dateIndex]);
+                                                                                  // DateTime dateListFormetted = DateTime(tempDateTimeList.year, tempDateTimeList.month, tempDateTimeList.day);
+
+                                                                                  // print('$formated:$tempDateTimeList');
+                                                                                  // final formated = DateFormat("yyyy-MM-dd").parse(GetIncomeController.to.monthlyIncomeList![index].date!);
+                                                                                  // DateTime monthFormetted = DateFormat('MMM, dd').format(formated);
+                                                                                  // print('?????$formated');
+
                                                                                   return SizedBox(
-                                                                                      width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
-                                                                                      child: Text(
-                                                                                        // formatter
-                                                                                        //             .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
-                                                                                        //             .toString()
-                                                                                        //             .replaceRange(0, 4, '') ==
-                                                                                        //         TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
-                                                                                        // formatter
-                                                                                        //         .parse(GetIncomeController.to.monthlyIncomeList![index].date!)
-                                                                                        //         .isAfter(DateTime.parse(TotalIncomeExpenseController.to.datesList[dateIndex]))
-                                                                                        //   DateTime formated = DateFormat("yyyy-MM-dd").parse(element.date.toString());
-                                                                                        DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[dateIndex].toString()).isBefore(formated)
-                                                                                            //  ==
-                                                                                            // TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
-                                                                                            ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
-                                                                                            : '-',
-                                                                                        style: greyDateTexStyle10W400,
-                                                                                        textAlign: TextAlign.center,
-                                                                                      ));
+                                                                                    width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
+                                                                                    child: Text(
+                                                                                      // formatter
+                                                                                      //             .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                      //             .toString()
+                                                                                      //             .replaceRange(0, 4, '') ==
+                                                                                      dateIndex != TotalIncomeExpenseController.to.datesList.length - 1 &&
+                                                                                                  int.parse(formatter
+                                                                                                          .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                                          .toString()
+                                                                                                          .replaceRange(0, 4, '')) <
+                                                                                                      int.parse(
+                                                                                                              TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')) +
+                                                                                                          7 &&
+                                                                                                  int.parse(formatter
+                                                                                                          .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                                          .toString()
+                                                                                                          .replaceRange(0, 4, '')) >
+                                                                                                      int.parse(
+                                                                                                          TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')) ||
+                                                                                              int.parse(formatter
+                                                                                                      .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                                      .toString()
+                                                                                                      .replaceRange(0, 4, '')) ==
+                                                                                                  int.parse(TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, ''))
+
+                                                                                          // formatter
+                                                                                          //         .parse(GetIncomeController.to.monthlyIncomeList![index].date!)
+                                                                                          //         .isAfter(DateTime.parse(TotalIncomeExpenseController.to.datesList[dateIndex]))
+                                                                                          //   DateTime formated = DateFormat("yyyy-MM-dd").parse(element.date.toString());
+                                                                                          // DateFormat('MMM, dd').parse(TotalIncomeExpenseController.to.datesList[dateIndex]).difference(formated).inDays >= 6
+                                                                                          //  ==
+                                                                                          // TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                          // DateTime.parse(TotalIncomeExpenseController.to.datesList[dateIndex])
+                                                                                          //             .difference(formatter.parse(GetIncomeController.to.monthlyIncomeList![index].date!))
+                                                                                          //             .inDays <=
+                                                                                          //         6
+                                                                                          // formatter
+                                                                                          //     .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                          //     .toString()
+                                                                                          //     .replaceRange(0, 4, '') ==
+                                                                                          //     TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                          // tempDateTimeList.day == formated.day
+                                                                                          // tempDateTimeList.isAfter(formated.)
+
+                                                                                          // DateTime.parse(TotalIncomeExpenseController.to.datesList[dateIndex]).add(Duration(days: index)).day ==
+                                                                                          //         int.parse(formatter
+                                                                                          //             .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                          //             .toString()
+                                                                                          //             .replaceRange(0, 4, ''))
+                                                                                          // int.parse(formatter
+                                                                                          //                 .format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![index].date.toString()))
+                                                                                          //                 .toString()
+                                                                                          //                 .replaceRange(0, 4, '')) >=
+                                                                                          //             int.parse(TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, ''))
+                                                                                          // ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
+                                                                                          // :
+
+                                                                                          // dateIndex != TotalIncomeExpenseController.to.datesList.length - 1 &&
+                                                                                          //         formated.isAfter(dateListFormetted) &&
+                                                                                          //         formated.isBefore(dateListFormetted.add(const Duration(days: 7)))
+                                                                                          //     ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
+                                                                                          //     : formated == dateListFormetted
+                                                                                          //         ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
+                                                                                          //         : '-',
+
+                                                                                          ? '${GetIncomeController.to.monthlyIncomeList![index].amount}'
+                                                                                          : '-',
+                                                                                      style: greyDateTexStyle10W400,
+                                                                                      textAlign: TextAlign.center,
+                                                                                    ),
+                                                                                  );
                                                                                 },
                                                                               ),
                                                                             ),
@@ -1167,7 +1239,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   onExpansionChanged: (value) {
                                     weeklyIncomeExpansionValue.changeExpansionValue();
                                     if (value) {
-                                      Future.delayed(Duration(milliseconds: 50), () {
+                                      Future.delayed(const Duration(milliseconds: 50), () {
                                         scrollControllerWeeklyIncome.jumpTo(
                                           scrollController.position.pixels,
                                         );
@@ -1474,11 +1546,30 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                                                   return SizedBox(
                                                                                       width: constraints.maxWidth > 1000 ? Get.width * 0.067 : Get.width * 0.15,
                                                                                       child: Text(
-                                                                                        formatter
-                                                                                                    .format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString()))
-                                                                                                    .toString()
-                                                                                                    .replaceRange(0, 4, '') ==
-                                                                                                TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                        // formatter
+                                                                                        //             .format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString()))
+                                                                                        //             .toString()
+                                                                                        //             .replaceRange(0, 4, '') ==
+                                                                                        //         TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')
+                                                                                        dateIndex != TotalIncomeExpenseController.to.datesList.length - 1 &&
+                                                                                            int.parse(formatter
+                                                                                                .format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString()))
+                                                                                                .toString()
+                                                                                                .replaceRange(0, 4, '')) <
+                                                                                                int.parse(
+                                                                                                    TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')) +
+                                                                                                    7 &&
+                                                                                            int.parse(formatter
+                                                                                                .format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString()))
+                                                                                                .toString()
+                                                                                                .replaceRange(0, 4, '')) >
+                                                                                                int.parse(
+                                                                                                    TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, '')) ||
+                                                                                            int.parse(formatter
+                                                                                                .format(DateTime.parse(GetIncomeController.to.monthlyExpenseList![index].date.toString()))
+                                                                                                .toString()
+                                                                                                .replaceRange(0, 4, '')) ==
+                                                                                                int.parse(TotalIncomeExpenseController.to.datesList[dateIndex].toString().replaceRange(0, 4, ''))
                                                                                             ? '${GetIncomeController.to.monthlyExpenseList?[index].amount}'
                                                                                             : '-',
                                                                                         // index == dateListIndex ? '${GetIncomeController.to.monthlyExpenseList![dateListIndex].amount}' : '-',
