@@ -16,7 +16,7 @@ class TotalIncomeExpenseController extends GetxController {
   int totalCount = 0;
 
   DateTime findFirstDateOfTheWeek(DateTime dateTime) {
-    return dateTime.subtract(Duration(days: dateTime.weekday - 1));
+    return dateTime.subtract(Duration(days: dateTime.weekday % 7));
   }
 
   DateTime findLastDateOfTheWeek(DateTime dateTime) {
@@ -141,16 +141,45 @@ class TotalIncomeExpenseController extends GetxController {
   }
 
   totalMonthlyIncomeLogic() {
-    for (int i = 0; i < datesList.length; i++) {
-      for (int j = 0; j < GetIncomeController.to.monthlyIncomeList!.length; j++) {
+    print('totalCount$totalCount');
+    print('????${datesList.length}');
+    print('????${GetIncomeController.to.monthlyIncomeList!.length}');
+
+    for (int i = 0; i < GetIncomeController.to.monthlyIncomeList!.length; i++) {
+      print('.....');
+      for (int j = 0; j < datesList.length; j++) {
+        print(',,,,');
+        // if (int.parse(datesList[i + 1].toString().replaceRange(0, 4, '')) < int.parse(datesList[i].toString().replaceRange(0, 4, ''))) {
+        //   print(
+        //       '>>>${int.parse(formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![i].date.toString())).toString().replaceRange(0, 4, ''))}>>>>${int.parse(datesList[j].toString().replaceRange(0, 4, ''))}');
+        //   totalCount += GetIncomeController.to.monthlyIncomeList![j].amount!;
+        // }
+        // if (j != datesList.length - 1 &&
+        //         int.parse(formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![i].date.toString())).toString().replaceRange(0, 4, '')) <
+        //             int.parse(datesList[j].toString().replaceRange(0, 4, '')) + 7 &&
+        //         int.parse(formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![i].date.toString())).toString().replaceRange(0, 4, '')) >
+        //             int.parse(datesList[j].toString().replaceRange(0, 4, '')) ||
+        //     int.parse(formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![i].date.toString())).toString().replaceRange(0, 4, '')) ==
+        //         int.parse(datesList[j].toString().replaceRange(0, 4, ''))) {
+        //   totalCount += GetIncomeController.to.monthlyIncomeList![j].amount!;
+        // }
         if (formatter.format(DateTime.parse(GetIncomeController.to.monthlyIncomeList![j].date.toString())).toString().replaceRange(0, 4, '') == datesList[i].toString().replaceRange(0, 4, '')) {
           totalCount += GetIncomeController.to.monthlyIncomeList![j].amount!;
         }
+        // if (formatter.parse(datesList[i].toString()).day < formatter.parse(GetIncomeController.to.monthlyIncomeList![j].date.toString()).day ||
+        //     formatter.parse(datesList[i].toString()).day > formatter.parse(GetIncomeController.to.monthlyIncomeList![j].date.toString()).day &&
+        //         formatter.parse(datesList[i].toString()).day == formatter.parse(GetIncomeController.to.monthlyIncomeList![j].date.toString()).day)
+        // {
+        //   totalCount += GetIncomeController.to.monthlyIncomeList![j].amount!;
+        // }
+        else {
+          print('false');
+        }
       }
       totalMonthlyIncomeList.add(totalCount);
-      print('>>>>>>.$totalCount');
+      // print('totalCount$totalCount');
       totalCount = 0;
-      print(totalCount);
+      // print(totalCount);
     }
     print('/////////');
     print(totalMonthlyIncomeList.length);

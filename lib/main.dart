@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       designSize: const Size(360, 690),
       minTextAdapt: true,
       builder: () => GetMaterialApp(
-        initialRoute: 'DashBoard',
+        initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),
           'ProgressIndicator': (context) => const ScreenProgressIndicator(),
@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
           ]);
         },
         debugShowCheckedModeBanner: false,
-        // home: const AllSetScreen(),
+        // home: const SetupCalendarScreen(),
         theme: ThemeData(
             primaryColor: color174261,
             fontFamily: AppTheme.fontName,

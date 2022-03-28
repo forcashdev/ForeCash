@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-TextInputFormatter characterInputFormatter() {
+characterInputFormatter() {
   return WhitelistingTextInputFormatter(RegExp("[a-z A-Z]"));
 
 // return WhitelistingTextInputFormatter(RegExp("[a-z A-Z á-ú Á-Ú 0-9]"));

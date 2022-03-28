@@ -10,13 +10,17 @@ import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/set_up_calendar_controller.dart';
+import 'package:fore_cash/controller/total_income_expense_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'allset_screen.dart';
+
+DateTime? selectedResetWeekDay;
 
 class SetupCalendarScreen extends StatelessWidget {
   const SetupCalendarScreen({Key? key}) : super(key: key);
@@ -129,7 +133,7 @@ class SetupCalendarScreen extends StatelessWidget {
                                   height: Get.height * 0.01,
                                 ),
                                 Align(
-                                  alignment: FractionalOffset(0.5, 0.0),
+                                  alignment: const FractionalOffset(0.5, 0.0),
                                   child: Text(
                                     maxWidth ? '' : createNewAccount,
                                     style: textSpanStyle1,
@@ -150,8 +154,8 @@ class SetupCalendarScreen extends StatelessWidget {
                                   height: Get.height * 0.01,
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.only(
-                                    left: 6,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
                                   ),
                                   // width: constraints.maxWidth < 1000 ? Get.width * 0.18 : Get.width * 0.15,
                                   // height: Get.height * 0.044,
@@ -218,20 +222,39 @@ class SetupCalendarScreen extends StatelessWidget {
                                   text: done,
                                   onPress: () {
                                     if (_formKey.currentState!.validate()) {
+                                      int selectedDay = int.parse(controller.setupCalendarDay
+                                          .toString()
+                                          .replaceAll('Sunday', '0')
+                                          .replaceAll('Monday', '1')
+                                          .replaceAll('Tuesday', '2')
+                                          .replaceAll('WedDay', '3')
+                                          .replaceAll('Thursday', '4')
+                                          .replaceAll('Friday', '5')
+                                          .replaceAll('Saturday', '6'));
                                       SetUpCalendarController.to.callCalendar(
-                                        resetWeekOn: controller.setupCalendarDay
-                                            .toString()
-                                            .replaceAll('Sunday', '1')
-                                            .replaceAll('Monday', '2')
-                                            .replaceAll('Tuesday', '3')
-                                            .replaceAll('WedDay', '4')
-                                            .replaceAll('Thursday', '5')
-                                            .replaceAll('Friday', '6')
-                                            .replaceAll('Saturday', '7'),
+                                        resetWeekOn: selectedDay,
                                         lowBalance: _amountController.text,
                                         onSuccess: () {
                                           Get.off(const AllSetScreen());
                                           screenIndexController.updateIndex(index: 0);
+                                          String stringDate = '2022-03-08';
+                                          // now.subtract(Duration(days: currentDay))
+
+                                          DateTime parsedStringDate = DateFormat('yyyy-MM-dd').parse(stringDate);
+                                          int currentDay = parsedStringDate.weekday;
+                                          DateTime firstDayOfWeek = parsedStringDate.subtract(Duration(days: parsedStringDate.weekday));
+                                          DateTime dateTime = TotalIncomeExpenseController.to.findFirstDateOfTheWeek(DateTime.now());
+
+                                          print('::::::${dateTime}');
+                                          print('firstDate${firstDayOfWeek}');
+                                          for (int i = 0; i < 7; i++) {
+                                            DateTime durationAddedDate = dateTime.add(Duration(days: i));
+                                            if (durationAddedDate.weekday == selectedDay) {
+                                              selectedResetWeekDay = durationAddedDate;
+                                              print('[[[[]]]]${durationAddedDate}');
+                                            }
+                                          }
+                                          print('???$selectedResetWeekDay');
                                         },
                                       );
                                     }

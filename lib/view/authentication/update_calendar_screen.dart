@@ -213,7 +213,7 @@ class UpdateCalendarScreen extends StatelessWidget {
                           onPress: () async {
                             if (_formKey.currentState!.validate()) {
                               var response = await SetUpCalendarController.to.callCalendar(
-                                  resetWeekOn: controller.setupCalendarDay
+                                  resetWeekOn: int.parse(controller.setupCalendarDay
                                       .toString()
                                       .replaceAll('Sunday', '1')
                                       .replaceAll('Monday', '2')
@@ -221,7 +221,7 @@ class UpdateCalendarScreen extends StatelessWidget {
                                       .replaceAll('WedDay', '4')
                                       .replaceAll('Thursday', '5')
                                       .replaceAll('Friday', '6')
-                                      .replaceAll('Saturday', '7'),
+                                      .replaceAll('Saturday', '7')),
                                   lowBalance: _amountController.text,
                                   onSuccess: () {
                                     Get.back();

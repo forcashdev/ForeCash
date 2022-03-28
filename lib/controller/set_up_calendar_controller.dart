@@ -8,7 +8,7 @@ class SetUpCalendarController extends GetxController {
 
   Rx<SetUpCalendarModel> setUpCalendarModel = SetUpCalendarModel().obs;
 
-  callCalendar({String? resetWeekOn, String? lowBalance, Function? onSuccess}) {
+  callCalendar({int? resetWeekOn, String? lowBalance, Function? onSuccess}) {
     Api().call(
         url: mSetUpCalendar,
         params: {
