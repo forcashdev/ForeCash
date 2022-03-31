@@ -41,7 +41,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
   final checkBoxController = Get.put(CheckBoxController());
   final screenIndexController = Get.put(ScreenIndexController());
   DateTime currentDate = DateTime.now();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                             children: [
                               _headerColumn(constraints: constraints),
                               Expanded(
-                                flex: maxWidth ? 2 : 2,
+                                flex: 2,
                                 child: Container(
                                   // height: constraints.maxWidth > 1000 ? double.infinity : null,
                                   padding: const EdgeInsets.only(bottom: 10),
@@ -112,7 +112,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                         height: maxWidth ? Get.height * 0.005 : Get.height * 0.005,
                                       ),
                                       Expanded(
-                                        flex: maxWidth ? 2 : 2,
+                                        flex: 2,
                                         child: SingleChildScrollView(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -541,14 +541,14 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
           bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
           left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
           right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
-          top: Get.width * 0.015),
+          top: Get.width * 0.003),
       child: commonButton(
         height: 50,
         text: next,
         onPress: () {
           if (_formKey.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {'upsert_income': GetIncomeController.to.weeklyIncomesList}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {rUpsertIncome: GetIncomeController.to.weeklyIncomesList}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyIncomeList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.clear();
@@ -566,7 +566,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                   }
                 }
               });
-              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {'upsert_income': tempWeeklyIncomeList}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 4, parameter: {rUpsertIncome: tempWeeklyIncomeList}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyIncomeList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.clear();

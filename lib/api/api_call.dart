@@ -148,7 +148,8 @@ class Api {
               //#region alert
               if (errorMessageType == ErrorMessageType.snackBarOnlyError || errorMessageType == ErrorMessageType.snackBarOnResponse) {
                 getX.Get.snackbar("Error", responseData?["message"]);
-                if (responseData?["message"] == "Not authorize to access this route") {
+                // if (responseData?["message"] == "Not authorize to access this route")
+                if (response.statusCode == 201) {
                   getX.Get.to(() => const LoginScreen());
                 }
               } else if (errorMessageType == ErrorMessageType.dialogOnlyError || errorMessageType == ErrorMessageType.dialogOnResponse) {

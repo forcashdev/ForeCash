@@ -10,6 +10,7 @@ import 'package:fore_cash/controller/add_weekly_income_showtext_controller.dart'
 import 'package:fore_cash/controller/create_income_controller.dart';
 import 'package:fore_cash/controller/delete_income_expense_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
+import 'package:fore_cash/controller/on_weekly_income_expansion_change_controller.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/total_income_expense_controller.dart';
 import 'package:fore_cash/controller/weekly_income_edit_mode_controller.dart';
@@ -23,13 +24,14 @@ import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibilityValue}) {
-  final dropDownController = Get.put(SelectedDropDownItem());
+  // final dropDownController = Get.put(SelectedDropDownItem());
   TextEditingController _weeklyIncomeNameController = TextEditingController();
   TextEditingController _weeklyAmountController = TextEditingController();
   final weeklyIncomeDataVisibilityController = Get.put(WeeklyIncomeDataVisibilityController());
   final showSaveTextController = Get.put(ShowWeeklyIncomeSaveDataTextController());
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Rx<DateTime> currentDate = DateTime.now().obs;
   return Expanded(
     flex: boolValue == true
@@ -121,6 +123,8 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                   shrinkWrap: true,
                                   itemCount: weeklyEditModeController.weeklyIncomeEditMode ? GetIncomeController.to.tempWeeklyIncomeList?.length : GetIncomeController.to.weeklyIncomesList?.length,
                                   itemBuilder: (context, index) {
+                                    RxList<RxBool> validateOrNotMonthlyIncomeName = List.generate(GetIncomeController.to.tempWeeklyIncomeList!.length, (index) => false.obs).obs;
+                                    RxList<RxBool> validateOrNotMonthlyIncomeAmount = List.generate(GetIncomeController.to.tempWeeklyIncomeList!.length, (index) => false.obs).obs;
                                     return Padding(
                                       padding: EdgeInsets.only(bottom: Get.height * 0.015, top: index == 0 ? Get.height * 0.01 : 0.0),
                                       child: SwipeActionCell(
@@ -189,165 +193,178 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                 children: [
                                                   TableRow(
                                                     children: [
-                                                      TableCell(
-                                                        // verticalAlignment: TableCellVerticalAlignment.fill,
-                                                        child: SizedBox(
-                                                          height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
-                                                          child: Padding(
-                                                            padding: EdgeInsets.only(
-                                                                right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02,
-                                                                left: weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
-                                                                    ? 5
-                                                                    : constraints.maxWidth < 1000
-                                                                        ? 10.0
+                                                      StreamBuilder(
+                                                          stream: validateOrNotMonthlyIncomeName[index].stream,
+                                                          builder: (context, snapshot) {
+                                                            return SizedBox(
+                                                              // height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                              height: validateOrNotMonthlyIncomeName[index].value
+                                                                  ? Get.height * 0.07
+                                                                  : weeklyEditModeController.weeklyIncomeEditMode
+                                                                      ? Get.height * 0.044
+                                                                      : Get.height * 0.02,
+                                                              child: Padding(
+                                                                padding: EdgeInsets.only(
+                                                                    right: Get.width * 0.02,
+                                                                    left: weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
+                                                                        ? 5
+                                                                        : constraints.maxWidth < 1000
+                                                                            ? 10.0
+                                                                            : 0.0),
+                                                                child: weeklyEditModeController.weeklyIncomeEditMode == false
+                                                                    ? Text(
+                                                                        GetIncomeController.to.weeklyIncomesList?[index].name ?? '',
+                                                                        maxLines: 1,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                        style: blackMontserrat10W500,
+                                                                        // textAlign: TextAlign.center,
+                                                                      )
+                                                                    : commonTextFormField(
+                                                                        inputAction: TextInputAction.next,
+                                                                        keyboardType: TextInputType.text,
+                                                                        inputFormatter: [characterInputFormatter()],
+                                                                        contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
+                                                                        textStyle: blackMontserrat10W500,
+                                                                        textEditingController: TextEditingController(text: GetIncomeController.to.tempWeeklyIncomeList?[index].name ?? ''),
+                                                                        onChangedFunction: (value) {
+                                                                          GetIncomeController.to.tempWeeklyIncomeList?[index].name = value;
+                                                                          // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                                                        },
+                                                                        validationFunction: (value) {
+                                                                          if (GetIncomeController.to.tempWeeklyIncomeList![index].name!.isEmpty) {
+                                                                            validateOrNotMonthlyIncomeName[index].value = value.isEmpty;
+                                                                            validateOrNotMonthlyIncomeName.refresh();
+                                                                            // validateOrNot=true.obs;
+                                                                            // validateOrNot.refresh();
+                                                                            return incomeName;
+                                                                          }
+                                                                        },
+                                                                      ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                      Container(
+                                                        height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                        padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
+                                                        alignment: Alignment.centerLeft,
+                                                        child: weeklyEditModeController.weeklyIncomeEditMode == true
+                                                            ? GetBuilder<SelectedDropDownItem>(
+                                                                builder: (controller1) {
+                                                                  return commonDropDown(
+                                                                      valueTextStyle: blackMontserrat10W500,
+                                                                      selectedItemTextStyle: blackMontserrat10W500,
+                                                                      value: '${GetIncomeController.to.tempWeeklyIncomeList?[index].paidOn ?? 1}'
+                                                                          .toString()
+                                                                          .replaceAll('1', 'Sun')
+                                                                          .replaceAll('2', 'Mon')
+                                                                          .replaceAll('3', 'Tue')
+                                                                          .replaceAll('4', 'Wed')
+                                                                          .replaceAll('5', 'Thu')
+                                                                          .replaceAll('6', 'Fri')
+                                                                          .replaceAll('7', 'Sat'),
+                                                                      itemList: days,
+                                                                      onChanged: (item) {
+                                                                        // controller1.changeDate(item: item, index: index);
+                                                                        GetIncomeController.to.tempWeeklyIncomeList?[index].paidOn = int.parse(item
+                                                                            .replaceAll('Sun', '1')
+                                                                            .replaceAll('Mon', '2')
+                                                                            .replaceAll('Tue', '3')
+                                                                            .replaceAll('Wed', '4')
+                                                                            .replaceAll('Thu', '5')
+                                                                            .replaceAll('Fri', '6')
+                                                                            .replaceAll('Sat', '7'));
+                                                                        GetIncomeController.to.tempWeeklyIncomeList?.refresh();
+                                                                      });
+                                                                },
+                                                              )
+                                                            : Text(
+                                                                '${GetIncomeController.to.weeklyIncomesList?[index].paidOn ?? 1}'
+                                                                    .toString()
+                                                                    .replaceAll('1', 'Sun')
+                                                                    .replaceAll('2', 'Mon')
+                                                                    .replaceAll('3', 'Tue')
+                                                                    .replaceAll('4', 'Wed')
+                                                                    .replaceAll('5', 'Thu')
+                                                                    .replaceAll('6', 'Fri')
+                                                                    .replaceAll('7', 'Sat'),
+                                                                style: blackMontserrat10W500,
+                                                              ),
+                                                        margin: EdgeInsets.only(right: Get.width * 0.02),
+                                                        decoration: BoxDecoration(
+                                                            color: weeklyEditModeController.weeklyIncomeEditMode == true ? colorEDF2F6 : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                                                      ),
+                                                      Container(
+                                                        height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                        padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
+                                                        alignment: Alignment.centerLeft,
+                                                        child: weeklyEditModeController.weeklyIncomeEditMode == true
+                                                            ? GetBuilder<SelectedDropDownItem>(
+                                                                builder: (controller1) {
+                                                                  return commonDropDown(
+                                                                      selectedItemTextStyle: blackMontserrat10W500,
+                                                                      valueTextStyle: blackMontserrat10W500,
+                                                                      // value: controller1.selectWeekDropDown[index],
+                                                                      value: '${GetIncomeController.to.tempWeeklyIncomeList?[index].every ?? 1}W',
+                                                                      itemList: weeks,
+                                                                      onChanged: (item) {
+                                                                        // controller1.changeItem(item: item, index: index);
+                                                                        GetIncomeController.to.tempWeeklyIncomeList?[index].every = int.parse(item.replaceAll('W', ''));
+                                                                        GetIncomeController.to.tempWeeklyIncomeList?.refresh();
+                                                                      });
+                                                                },
+                                                              )
+                                                            : Text(
+                                                                '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
+                                                                style: blackMontserrat10W500,
+                                                              ),
+                                                        margin: EdgeInsets.only(right: Get.width * 0.02),
+                                                        decoration: BoxDecoration(
+                                                            color: weeklyEditModeController.weeklyIncomeEditMode == true ? colorEDF2F6 : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          // _selectDate(context: context, index: index);
+                                                        },
+                                                        child: Container(
+                                                            height: weeklyEditModeController.weeklyIncomeEditMode ? Get.height * 0.044 : Get.height * 0.02,
+                                                            margin: EdgeInsets.only(right: Get.width * 0.02),
+                                                            decoration: BoxDecoration(
+                                                                color: weeklyEditModeController.weeklyIncomeEditMode ? colorEDF2F6 : Colors.transparent, borderRadius: BorderRadius.circular(5)),
+                                                            // margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                            padding: EdgeInsets.symmetric(
+                                                                horizontal: weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
+                                                                    ? Get.width * 0.02
+                                                                    : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
+                                                                        ? Get.width * 0.005
                                                                         : 0.0),
-                                                            child: weeklyEditModeController.weeklyIncomeEditMode == false
-                                                                ? Text(
-                                                                    GetIncomeController.to.weeklyIncomesList?[index].name ?? '',
-                                                                    maxLines: 1,
-                                                                    overflow: TextOverflow.ellipsis,
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Flexible(
+                                                                  child: Text(
+                                                                    DateFormat('dd-MM-yyyy').format(DateTime.parse(weeklyEditModeController.weeklyIncomeEditMode
+                                                                        ? GetIncomeController.to.tempWeeklyIncomeList![index].date.toString()
+                                                                        : GetIncomeController.to.weeklyIncomesList![index].date.toString())),
                                                                     style: blackMontserrat10W500,
-                                                                    // textAlign: TextAlign.center,
-                                                                  )
-                                                                : commonTextFormField(
-                                                                    inputAction: TextInputAction.next,
-                                                                    keyboardType: TextInputType.text,
-                                                                    inputFormatter: [characterInputFormatter()],
-                                                                    contentPadding: EdgeInsets.fromLTRB(10.0, Get.height * 0.020, 10.0, Get.height * 0.009),
-                                                                    textStyle: blackMontserrat10W500,
-                                                                    textEditingController: TextEditingController(text: GetIncomeController.to.tempWeeklyIncomeList?[index].name ?? ''),
-                                                                    onChangedFunction: (value) {
-                                                                      GetIncomeController.to.tempWeeklyIncomeList?[index].name = value;
-                                                                      // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
-                                                                    },
+                                                                    overflow: TextOverflow.ellipsis,
                                                                   ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      TableCell(
-                                                        verticalAlignment: TableCellVerticalAlignment.fill,
-                                                        child: Container(
-                                                          padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
-                                                          alignment: Alignment.centerLeft,
-                                                          child: weeklyEditModeController.weeklyIncomeEditMode == true
-                                                              ? GetBuilder<SelectedDropDownItem>(
-                                                                  builder: (controller1) {
-                                                                    return commonDropDown(
-                                                                        valueTextStyle: blackMontserrat10W500,
-                                                                        selectedItemTextStyle: blackMontserrat10W500,
-                                                                        value: '${GetIncomeController.to.tempWeeklyIncomeList?[index].paidOn ?? 1}'
-                                                                            .toString()
-                                                                            .replaceAll('1', 'Sun')
-                                                                            .replaceAll('2', 'Mon')
-                                                                            .replaceAll('3', 'Tue')
-                                                                            .replaceAll('4', 'Wed')
-                                                                            .replaceAll('5', 'Thu')
-                                                                            .replaceAll('6', 'Fri')
-                                                                            .replaceAll('7', 'Sat'),
-                                                                        itemList: days,
-                                                                        onChanged: (item) {
-                                                                          // controller1.changeDate(item: item, index: index);
-                                                                          GetIncomeController.to.tempWeeklyIncomeList?[index].paidOn = int.parse(item
-                                                                              .replaceAll('Sun', '1')
-                                                                              .replaceAll('Mon', '2')
-                                                                              .replaceAll('Tue', '3')
-                                                                              .replaceAll('Wed', '4')
-                                                                              .replaceAll('Thu', '5')
-                                                                              .replaceAll('Fri', '6')
-                                                                              .replaceAll('Sat', '7'));
-                                                                          GetIncomeController.to.tempWeeklyIncomeList?.refresh();
-                                                                        });
-                                                                  },
-                                                                )
-                                                              : Text(
-                                                                  '${GetIncomeController.to.weeklyIncomesList?[index].paidOn ?? 1}'
-                                                                      .toString()
-                                                                      .replaceAll('1', 'Sun')
-                                                                      .replaceAll('2', 'Mon')
-                                                                      .replaceAll('3', 'Tue')
-                                                                      .replaceAll('4', 'Wed')
-                                                                      .replaceAll('5', 'Thu')
-                                                                      .replaceAll('6', 'Fri')
-                                                                      .replaceAll('7', 'Sat'),
-                                                                  style: blackMontserrat10W500,
                                                                 ),
-                                                          margin: EdgeInsets.only(right: Get.width * 0.02),
-                                                          decoration: BoxDecoration(
-                                                              color: weeklyEditModeController.weeklyIncomeEditMode == true ? colorEDF2F6 : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                        ),
+                                                                constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true
+                                                                    ? Image.asset(
+                                                                        calendarImage2,
+                                                                        height: Get.height * 0.02,
+                                                                        width: Get.width * 0.010,
+                                                                      )
+                                                                    : Container(),
+                                                              ],
+                                                            )),
                                                       ),
-                                                      TableCell(
-                                                        verticalAlignment: TableCellVerticalAlignment.fill,
-                                                        child: Container(
-                                                          padding: EdgeInsets.symmetric(horizontal: weeklyEditModeController.weeklyIncomeEditMode == true ? 5 : 0.0),
-                                                          alignment: Alignment.centerLeft,
-                                                          child: weeklyEditModeController.weeklyIncomeEditMode == true
-                                                              ? GetBuilder<SelectedDropDownItem>(
-                                                                  builder: (controller1) {
-                                                                    return commonDropDown(
-                                                                        selectedItemTextStyle: blackMontserrat10W500,
-                                                                        valueTextStyle: blackMontserrat10W500,
-                                                                        // value: controller1.selectWeekDropDown[index],
-                                                                        value: '${GetIncomeController.to.tempWeeklyIncomeList?[index].every ?? 1}W',
-                                                                        itemList: weeks,
-                                                                        onChanged: (item) {
-                                                                          // controller1.changeItem(item: item, index: index);
-                                                                          GetIncomeController.to.tempWeeklyIncomeList?[index].every = int.parse(item.replaceAll('W', ''));
-                                                                          GetIncomeController.to.tempWeeklyIncomeList?.refresh();
-                                                                        });
-                                                                  },
-                                                                )
-                                                              : Text(
-                                                                  '${GetIncomeController.to.weeklyIncomesList?[index].every ?? 1}W',
-                                                                  style: blackMontserrat10W500,
-                                                                ),
-                                                          margin: EdgeInsets.only(right: Get.width * 0.02),
-                                                          decoration: BoxDecoration(
-                                                              color: weeklyEditModeController.weeklyIncomeEditMode == true ? colorEDF2F6 : Colors.transparent, borderRadius: BorderRadius.circular(4)),
-                                                        ),
-                                                      ),
-                                                      TableCell(
-                                                        verticalAlignment: TableCellVerticalAlignment.fill,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            // _selectDate(context: context, index: index);
-                                                          },
-                                                          child: Container(
-                                                              margin: EdgeInsets.only(right: Get.width * 0.02),
-                                                              decoration: BoxDecoration(
-                                                                  color: weeklyEditModeController.weeklyIncomeEditMode ? colorEDF2F6 : Colors.transparent, borderRadius: BorderRadius.circular(5)),
-                                                              // margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                                              padding: EdgeInsets.symmetric(
-                                                                  horizontal: weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth < 1000
-                                                                      ? Get.width * 0.02
-                                                                      : weeklyEditModeController.weeklyIncomeEditMode == true && constraints.maxWidth > 1000
-                                                                          ? Get.width * 0.005
-                                                                          : 0.0),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Flexible(
-                                                                    child: Text(
-                                                                      DateFormat('dd-MM-yyyy').format(DateTime.parse(weeklyEditModeController.weeklyIncomeEditMode
-                                                                          ? GetIncomeController.to.tempWeeklyIncomeList![index].date.toString()
-                                                                          : GetIncomeController.to.weeklyIncomesList![index].date.toString())),
-                                                                      style: blackMontserrat10W500,
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                    ),
-                                                                  ),
-                                                                  constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true
-                                                                      ? Image.asset(
-                                                                          calendarImage2,
-                                                                          height: Get.height * 0.02,
-                                                                          width: Get.width * 0.010,
-                                                                        )
-                                                                      : Container(),
-                                                                ],
-                                                              )),
-                                                        ),
-                                                      ),
-                                                      TableCell(
-                                                        verticalAlignment: TableCellVerticalAlignment.fill,
+                                                      SizedBox(
+                                                        height: validateOrNotMonthlyIncomeAmount[index].value
+                                                            ? Get.height * 0.07
+                                                            : weeklyEditModeController.weeklyIncomeEditMode
+                                                                ? Get.height * 0.044
+                                                                : Get.height * 0.02,
                                                         child: Padding(
                                                           padding: EdgeInsets.only(
                                                               right: constraints.maxWidth > 1000
@@ -373,6 +390,15 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                                   onChangedFunction: (value) {
                                                                     GetIncomeController.to.tempWeeklyIncomeList?[index].amount = int.parse(value);
                                                                     // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
+                                                                  },
+                                                                  validationFunction: (value) {
+                                                                    if (GetIncomeController.to.tempWeeklyIncomeList![index].amount!.toString().isEmpty) {
+                                                                      validateOrNotMonthlyIncomeAmount[index].value = value.isEmpty;
+                                                                      validateOrNotMonthlyIncomeAmount.refresh();
+                                                                      // validateOrNot=true.obs;
+                                                                      // validateOrNot.refresh();
+                                                                      return amount;
+                                                                    }
                                                                   },
                                                                 ),
                                                         ),
@@ -433,7 +459,8 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                   children: [
                                     showWeeklyIncomeSaveTextController.weeklyIncomeShowTextWeb == false || showWeeklyIncomeSaveTextController.weeklyIncomeShowText == false
                                         ? Padding(
-                                            padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? 0.0 : 10.0),
+                                            // padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? 0.0 : 10.0),
+                                            padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? 5.0 : 10.0, left: constraints.maxWidth < 1000 ? 5 : 0.0),
                                             child: Table(
                                               columnWidths: <int, TableColumnWidth>{
                                                 0: const FlexColumnWidth(3),
@@ -451,7 +478,7 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                           return SizedBox(
                                                             height: whenErrorOnlyShowRedBorder.value ? Get.height * 0.07 : Get.height * 0.044,
                                                             child: Padding(
-                                                              padding: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                                                              padding: EdgeInsets.only(right: Get.width * 0.02),
                                                               child: commonTextFormField(
                                                                 errorTextStyle: TextStyle(fontSize: constraints.maxWidth < 1000 ? 8.sp : null),
                                                                 hintText: incomeName,
@@ -494,7 +521,7 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                               });
                                                         },
                                                       ),
-                                                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                                                      margin: EdgeInsets.only(right: Get.width * 0.02),
                                                       decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                                                     ),
                                                     Container(
@@ -517,7 +544,7 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                         },
                                                       ),
                                                       // child: dropDownWeekGetBuilder(dropDownList: months),
-                                                      margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                                                      margin: EdgeInsets.only(right: Get.width * 0.02),
                                                       decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                                                     ),
                                                     GestureDetector(
@@ -538,7 +565,7 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                           style: blackMontserrat10W500,
                                                           maxLines: 1,
                                                         ),
-                                                        margin: EdgeInsets.only(right: constraints.maxWidth < 1000 ? Get.width * 0.02 : Get.width * 0.02),
+                                                        margin: EdgeInsets.only(right: Get.width * 0.02),
                                                         decoration: BoxDecoration(color: colorEDF2F6, borderRadius: BorderRadius.circular(4)),
                                                       ),
                                                     ),
@@ -578,36 +605,19 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                         : Container(),
                                     Visibility(
                                       visible: constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.weeklyIncomeShowTextWeb : showWeeklyIncomeSaveTextController.weeklyIncomeShowText,
-                                      replacement: Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              final controller = Get.put(SelectedDropDownItem());
-                                              if (_formKey.currentState!.validate()) {
-                                                if (constraints.maxWidth < 1000) {
-                                                  GetIncomeController.to.tempWeeklyIncomeList?.add(Data(
-                                                      name: _weeklyIncomeNameController.text,
-                                                      amount: int.parse(_weeklyAmountController.text),
-                                                      paidOn: int.parse(controller.selectedSingleWeeklyIncomeDay
-                                                          .toString()
-                                                          .replaceAll('Sun', '1')
-                                                          .replaceAll('Mon', '2')
-                                                          .replaceAll('Tue', '3')
-                                                          .replaceAll('Wed', '4')
-                                                          .replaceAll('Thu', '5')
-                                                          .replaceAll('Fri', '6')
-                                                          .replaceAll('Sat', '7')),
-                                                      every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
-                                                      onetimeWeekMonth: 2,
-                                                      incomeOutgoing: 1,
-                                                      date: currentDate.toString().replaceAll('T00:00:00.000Z', '')));
-                                                } else {
-                                                  CreateIncomeController.to.createIncome(url: mSyncAllIncome, parameter: {
-                                                    'upsert_income': [
-                                                      DataModel(
+                                      replacement: GetBuilder<SelectedDropDownItem>(
+                                        builder: (dropDownController) {
+                                          return Row(
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  // final controller = Get.put(SelectedDropDownItem());
+                                                  if (_formKey.currentState!.validate()) {
+                                                    if (constraints.maxWidth < 1000) {
+                                                      GetIncomeController.to.tempWeeklyIncomeList?.add(Data(
                                                           name: _weeklyIncomeNameController.text,
                                                           amount: int.parse(_weeklyAmountController.text),
-                                                          paidOn: int.parse(controller.selectedSingleWeeklyIncomeDay
+                                                          paidOn: int.parse(dropDownController.selectedSingleWeeklyIncomeDay
                                                               .toString()
                                                               .replaceAll('Sun', '1')
                                                               .replaceAll('Mon', '2')
@@ -616,48 +626,69 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                                                               .replaceAll('Thu', '5')
                                                               .replaceAll('Fri', '6')
                                                               .replaceAll('Sat', '7')),
-                                                          every: int.parse(controller.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
+                                                          every: int.parse(dropDownController.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
                                                           onetimeWeekMonth: 2,
                                                           incomeOutgoing: 1,
-                                                          date: currentDate.toString().replaceAll('T00:00:00.000Z', ''))
-                                                    ]
-                                                  }).whenComplete(() {
-                                                    GetIncomeController.to.weeklyIncomesList?.clear();
-                                                    GetIncomeController.to.tempWeeklyIncomeList?.clear();
-                                                    GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "2"}).whenComplete(() {
-                                                      GetIncomeController.to.weeklyIncomesList?.refresh();
-                                                      TotalIncomeExpenseController.to.totalWeeklyIncomeList.clear();
-                                                      TotalIncomeExpenseController.to.totalWeeklyIncomeLogic();
-                                                    });
-                                                  });
-                                                }
-                                                GetIncomeController.to.tempWeeklyIncomeList?.refresh();
-                                                _weeklyIncomeNameController.clear();
-                                                _weeklyAmountController.clear();
-                                                controller.selectedSingleWeeklyIncomeWeek = '1W';
-                                                controller.selectedSingleWeeklyIncomeDay = 'Sun';
-                                                constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
-                                              }
-                                            },
-                                            child: Text(
-                                              save,
-                                              style: greenMontserrat11W500,
-                                            ),
-                                          ),
-                                          TextButton(
-                                            child: Text(
-                                              cancel,
-                                              style: redMontserrat11W500,
-                                            ),
-                                            onPressed: () {
-                                              constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
-                                              _weeklyAmountController.clear();
-                                              _weeklyIncomeNameController.clear();
-                                              dropDownController.selectedSingleWeeklyIncomeWeek = null;
-                                              dropDownController.selectedSingleWeeklyIncomeDay = null;
-                                            },
-                                          )
-                                        ],
+                                                          date: currentDate.toString().replaceAll('T00:00:00.000Z', '')));
+                                                    } else {
+                                                      CreateIncomeController.to.createIncome(url: mSyncAllIncome, parameter: {
+                                                        'upsert_income': [
+                                                          DataModel(
+                                                              name: _weeklyIncomeNameController.text,
+                                                              amount: int.parse(_weeklyAmountController.text),
+                                                              paidOn: int.parse(dropDownController.selectedSingleWeeklyIncomeDay
+                                                                  .toString()
+                                                                  .replaceAll('Sun', '1')
+                                                                  .replaceAll('Mon', '2')
+                                                                  .replaceAll('Tue', '3')
+                                                                  .replaceAll('Wed', '4')
+                                                                  .replaceAll('Thu', '5')
+                                                                  .replaceAll('Fri', '6')
+                                                                  .replaceAll('Sat', '7')),
+                                                              every: int.parse(dropDownController.selectedSingleWeeklyIncomeWeek!.replaceAll('W', '')),
+                                                              onetimeWeekMonth: 2,
+                                                              incomeOutgoing: 1,
+                                                              date: currentDate.toString().replaceAll('T00:00:00.000Z', ''))
+                                                        ]
+                                                      }).whenComplete(() {
+                                                        GetIncomeController.to.weeklyIncomesList?.clear();
+                                                        GetIncomeController.to.tempWeeklyIncomeList?.clear();
+                                                        GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "2"}).whenComplete(() {
+                                                          GetIncomeController.to.weeklyIncomesList?.refresh();
+                                                          TotalIncomeExpenseController.to.totalWeeklyIncomeList.clear();
+                                                          TotalIncomeExpenseController.to.totalWeeklyIncomeLogic();
+                                                        });
+                                                      });
+                                                    }
+                                                    GetIncomeController.to.tempWeeklyIncomeList?.refresh();
+                                                    _weeklyIncomeNameController.clear();
+                                                    _weeklyAmountController.clear();
+                                                    dropDownController.selectedSingleWeeklyIncomeWeek = '1W';
+                                                    dropDownController.selectedSingleWeeklyIncomeDay = 'Sun';
+                                                    constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
+                                                  }
+                                                },
+                                                child: Text(
+                                                  save,
+                                                  style: greenMontserrat11W500,
+                                                ),
+                                              ),
+                                              TextButton(
+                                                child: Text(
+                                                  cancel,
+                                                  style: redMontserrat11W500,
+                                                ),
+                                                onPressed: () {
+                                                  constraints.maxWidth > 1000 ? showWeeklyIncomeSaveTextController.changeVisibilityForWeb() : showWeeklyIncomeSaveTextController.changeVisibility();
+                                                  _weeklyAmountController.clear();
+                                                  _weeklyIncomeNameController.clear();
+                                                  dropDownController.selectedSingleWeeklyIncomeWeek = null;
+                                                  dropDownController.selectedSingleWeeklyIncomeDay = null;
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        },
                                       ),
                                       child: constraints.maxWidth > 1000 && weeklyEditModeController.weeklyIncomeEditMode == true
                                           ? Container()
@@ -688,39 +719,112 @@ weeklyIncomeData({bool? boolValue, BoxConstraints? constraints, bool? visibility
                   ),
                   constraints.maxWidth > 1000
                       ? Container()
-                      : GetBuilder<WeeklyIncomeEditModeController>(
-                          builder: (weeklyCircleVisibilityController) {
-                            return Visibility(
-                                visible: weeklyCircleVisibilityController.weeklyCircleAvatarVisibility,
-                                child: Positioned(
-                                  right: 0,
-                                  top: 1,
-                                  bottom: 1,
-                                  // left: 0,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      weeklyIncomeDataVisibilityController.changeVisibility();
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: const Color(0xffF2F2F2),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
-                                        child: Icon(
-                                          weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                                          color: Colors.black,
-                                          size: 14.sp,
-                                        ),
-                                      ),
-                                    ),
+                      : Visibility(
+                          visible: weeklyEditModeController.weeklyCircleAvatarVisibility,
+                          child: Positioned(
+                            right: 0,
+                            top: 1,
+                            bottom: 1,
+                            // left: 0,
+                            child: GestureDetector(
+                              onTap: () {
+                                weeklyIncomeDataVisibilityController.changeVisibility();
+                              },
+                              child: CircleAvatar(
+                                radius: 12,
+                                backgroundColor: const Color(0xffF2F2F2),
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Get.width * 0.004 : Get.width * 0.01),
+                                  child: Icon(
+                                    weeklyIncomeDataVisibilityController.weeklyDataVisibility == false ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                                    color: Colors.black,
+                                    size: 14.sp,
                                   ),
-                                ));
-                          },
-                        )
+                                ),
+                              ),
+                            ),
+                          ))
                 ],
               );
             },
           );
         }),
+  );
+}
+
+weeklyIncomeEditModeRow({BoxConstraints? constraints}) {
+  return GetBuilder<WeeklyIncomeEditModeController>(
+    builder: (controller) {
+      return Row(
+        children: [
+          Text(
+            weeklyIncome,
+            style: blackMontserrat13W600,
+          ),
+          controller.weeklyIncomeEditMode == false
+              ? Padding(
+                  padding: EdgeInsets.only(left: Get.width * 0.063),
+                  child: InkWell(
+                    onTap: () {
+                      controller.showEditMode();
+                    },
+                    child: Image.asset(
+                      editPenImage,
+                      height: Get.height * 0.02,
+                      width: Get.width * 0.05,
+                    ),
+                  ),
+                )
+              : Row(
+                  children: [
+                    SizedBox(
+                      width: Get.width * 0.01,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          controller.showEditMode();
+                          CreateIncomeController.to.createIncome(
+                              url: mSyncAllIncome,
+                              parameter: {rDeleteIncome: DeleteIncomeExpenseController.to.deleteWeeklyIncomeList, rUpsertIncome: GetIncomeController.to.tempWeeklyIncomeList}).whenComplete(() {
+                            DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.clear();
+                            GetIncomeController.to.weeklyIncomesList?.clear();
+                            GetIncomeController.to.tempWeeklyIncomeList?.clear();
+                            GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "2"}).whenComplete(() {
+                              TotalIncomeExpenseController.to.totalWeeklyIncomeList.clear();
+                              TotalIncomeExpenseController.to.totalWeeklyIncomeLogic();
+                            });
+                          });
+                        }
+                      },
+                      child: Text(
+                        save,
+                        style: greenMontserrat11W500,
+                      ),
+                    ),
+                    TextButton(
+                      child: Text(
+                        cancel,
+                        style: redMontserrat11W500,
+                      ),
+                      onPressed: () {
+                        controller.showEditMode();
+                        DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.clear();
+                      },
+                    )
+                  ],
+                ),
+          const Spacer(),
+          GetBuilder<WeeklyIncomeExpansionChange>(
+            builder: (controller) {
+              return Icon(
+                controller.weeklyIncomeExpansionValue == true ? Icons.remove_circle_outline_sharp : Icons.add_circle_outline_sharp,
+                color: color097EA2,
+              );
+            },
+          )
+        ],
+      );
+    },
   );
 }

@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       designSize: const Size(360, 690),
       minTextAdapt: true,
       builder: () => GetMaterialApp(
-        initialRoute: '/',
+        initialRoute: 'DashBoard',
         routes: {
           '/': (context) => const SplashScreen(),
           'ProgressIndicator': (context) => const ScreenProgressIndicator(),

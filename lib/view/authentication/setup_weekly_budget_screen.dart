@@ -31,9 +31,6 @@ class SetupWeeklyBudgetScreen extends StatefulWidget {
 }
 
 class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
-  final TextEditingController _expenseName2 = TextEditingController();
-  final TextEditingController _amount2 = TextEditingController();
-
   final visibilityController = Get.put(VisibilityController());
   final controller = Get.put(SelectedDropDownItem());
   final checkBoxController = Get.put(CheckBoxController());
@@ -71,6 +68,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth > 1000;
                   return Scaffold(
+                    resizeToAvoidBottomInset: false,
                     backgroundColor: maxWidth ? colorEDF2F6 : Colors.white,
                     body: Align(
                       alignment: maxWidth ? Alignment.center : Alignment.topCenter,
@@ -80,7 +78,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                         height: maxWidth ? Get.height * 0.78 : null,
                         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(9)),
                         child: Form(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          // autovalidateMode: AutovalidateMode.onUserInteraction,
                           key: _formKey,
                           child: Column(
                             children: [
@@ -89,7 +87,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                 height: Get.height * 0.03,
                               ),
                               Expanded(
-                                flex: maxWidth ? 2 : 2,
+                                flex: 2,
                                 child: Container(
                                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                                   // width: maxWidth ? sequenceSize.width / 1.5 : null,
@@ -111,7 +109,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                             )
                                           : Container(),
                                       Expanded(
-                                        flex: maxWidth ? 2 : 2,
+                                        flex: 2,
                                         child: SingleChildScrollView(
                                           child: Column(
                                             children: [
@@ -520,14 +518,14 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
           bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
           left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
           right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
-          top: Get.width * 0.015),
+          top: Get.width * 0.003),
       child: commonButton(
         height: 50,
         text: next,
         onPress: () {
           if (_formKey.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'upsert_income': GetIncomeController.to.weeklyBudgetList}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {rUpsertIncome: GetIncomeController.to.weeklyBudgetList}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyExpenseList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.clear();
@@ -545,7 +543,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                   }
                 }
               });
-              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {'upsert_income': tempMonthlyExpenseList}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 6, parameter: {rUpsertIncome: tempMonthlyExpenseList}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteWeeklyExpenseList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.clear();
@@ -567,8 +565,6 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
       itemBuilder: (context, index) {
         TextEditingController? _expenseName;
         TextEditingController? _amount;
-        RxBool whenErrorOnlyShowRedBorder = false.obs;
-        RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
         _expenseName = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].name ?? '');
         _amount = TextEditingController(text: GetIncomeController.to.weeklyBudgetList?[index].amount.toString().replaceAll('null', '') ?? '');
         RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.weeklyBudgetList!.length, (index) => false.obs).obs;

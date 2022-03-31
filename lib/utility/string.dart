@@ -355,4 +355,5 @@ const String rPaidOn = 'paid_on';
 const String rAmount = 'amount';
 const String rDate = 'date';
 const String rUpsertIncome = 'upsert_income';
-const String rMonthlyIncome = '"income_outgoing": "1", "onetime_week_month": "3"';
+const String rDeleteIncome = 'delete_income';
+const String rMonthlyIncome = "'income_outgoing': '1', 'onetime_week_month': '3'";

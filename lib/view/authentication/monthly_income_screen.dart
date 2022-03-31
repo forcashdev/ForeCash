@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -108,7 +109,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                               width: Get.height * 0.25,
                                             ),
                                           ),
-                                    Container()
+                                    Container(),
                                   ],
                                 ),
                                 SizedBox(
@@ -160,7 +161,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                   height: Get.height * 0.03,
                                 ),
                                 Expanded(
-                                  flex: maxWidth ? 2 : 2,
+                                  flex: 2,
                                   child: Container(
                                     padding: const EdgeInsets.only(top: 10, bottom: 5),
                                     height: maxWidth ? double.infinity : null,
@@ -177,7 +178,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                               )
                                             : Container(),
                                         Expanded(
-                                            flex: maxWidth ? 2 : 2,
+                                            flex: 2,
                                             child: ListView(
                                               shrinkWrap: true,
                                               children: [rowList(constraints: constraints, context: context), _addNewMonthlyIncomeWidget(constraints: constraints, context: context)],
@@ -552,7 +553,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
           bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
           left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
           right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
-          top: Get.width * 0.015),
+          top: Get.width * 0.016),
       child: commonButton(
         height: 50,
         text: next,
@@ -882,7 +883,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                 },
                                 onChangedFunction: (value) {
                                   // GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
-                                  GetIncomeController.to.monthlyIncomeList?[index].amount = int.parse(value);
+                                  GetIncomeController.to.monthlyIncomeList?[index].amount = value.toString().isNotEmpty ? int.parse(value) : 0;
                                 },
                                 inputFormatter: [digitInputFormatter()],
                                 contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),

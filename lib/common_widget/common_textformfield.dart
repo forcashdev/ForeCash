@@ -48,7 +48,8 @@ commonTextFormField(
     EdgeInsets? contentPadding,
     ScrollController? scrollController,
     TextStyle? hintStyle,
-    String? errorText}) {
+    String? errorText,
+    bool? isDense}) {
   bool passwordVisible = isPassword;
   return StatefulBuilder(builder: (context, newSetState) {
     return TextFormField(
@@ -107,7 +108,7 @@ commonTextFormField(
         errorMaxLines: errorMaxLines ?? 1,
         filled: true,
         fillColor: filledColor,
-        // isDense: true,
+        isDense: isDense ?? false,
         contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
         focusedBorder: focusedBorder ?? textFieldBorderStyle,
         disabledBorder: disabledBorder ?? textFieldBorderStyle,

@@ -86,7 +86,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                             children: [
                               _headerWidget(constraints: constraints),
                               Expanded(
-                                flex: maxWidth ? 2 : 2,
+                                flex: 2,
                                 child: Container(
                                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                                   decoration: BoxDecoration(
@@ -109,7 +109,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                       //   height: Get.height * 0.020,
                                       // ),
                                       Expanded(
-                                          flex: maxWidth ? 2 : 2,
+                                          flex: 2,
                                           child: SingleChildScrollView(
                                             child: Column(
                                               children: [
@@ -847,14 +847,14 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
           bottom: constraints!.maxWidth < 1000 ? Get.height * 0.010 : Get.height * 0.03,
           left: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
           right: constraints.maxWidth > 1000 ? Get.width * 0.15 : Get.width * 0.04,
-          top: Get.width * 0.015),
+          top: Get.width * 0.002),
       child: commonButton(
         height: 50,
         text: next,
         onPress: () {
           if (_formKey.currentState!.validate()) {
             if (constraints.maxWidth < 1000) {
-              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'upsert_income': GetIncomeController.to.monthlyExpenseList}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {rUpsertIncome: GetIncomeController.to.monthlyExpenseList}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyExpenseList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.clear();
@@ -872,7 +872,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                   }
                 }
               });
-              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {'upsert_income': tempMonthlyExpenseList}).whenComplete(() {
+              CreateIncomeController.to.createIncome(screenIndex: 5, parameter: {rUpsertIncome: tempMonthlyExpenseList}).whenComplete(() {
                 if (DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.isNotEmpty) {
                   DeleteIncomeExpenseController.to.callDelete(idList: DeleteIncomeExpenseController.to.deleteMonthlyExpenseList).whenComplete(() {
                     DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.clear();
