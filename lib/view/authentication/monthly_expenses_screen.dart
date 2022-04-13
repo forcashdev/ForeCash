@@ -376,36 +376,24 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                     hintText: expenseName,
                                     hintStyle: incomeNameStyle,
                                     inputAction: TextInputAction.next,
-                                    // errorBorder: whenErrorOnlyShowRedBorderList[index].value
-                                    //     ? OutlineInputBorder(
-                                    //         borderSide: const BorderSide(color: Colors.red),
-                                    //         borderRadius: BorderRadius.circular(4.0),
-                                    //       )
-                                    //     : null,
-                                    // focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
-                                    //     ? OutlineInputBorder(
-                                    //         borderSide: const BorderSide(color: Colors.red),
-                                    //         borderRadius: BorderRadius.circular(4.0),
-                                    //       )
-                                    //     : null,
                                     errorBorder: constraints.maxWidth > 1000
                                         ? checkBoxController.monthlyExpenseCheckBoxValueList[index]
                                             ? whenErrorOnlyShowRedBorderList[index].value
                                                 ? OutlineInputBorder(
-                                                    borderSide: const BorderSide(color: Colors.red),
+                                                    borderSide: const BorderSide(color: colorsEE4242),
                                                     borderRadius: BorderRadius.circular(4.0),
                                                   )
                                                 : null
                                             : null
                                         : whenErrorOnlyShowRedBorderList[index].value
                                             ? OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderSide: const BorderSide(color: colorsEE4242),
                                                 borderRadius: BorderRadius.circular(4.0),
                                               )
                                             : null,
                                     focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                         ? OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderSide: const BorderSide(color: colorsEE4242),
                                             borderRadius: BorderRadius.circular(4.0),
                                           )
                                         : null,
@@ -524,37 +512,24 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                                   prefixText: '\$',
                                   prefixstyle: incomeNameStyle,
                                   keyboardType: TextInputType.phone,
-                                  // errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
-                                  //     ? OutlineInputBorder(
-                                  //         borderSide: const BorderSide(color: Colors.red),
-                                  //         borderRadius: BorderRadius.circular(4.0),
-                                  //       )
-                                  //     : null,
-                                  // focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
-                                  //     ? OutlineInputBorder(
-                                  //         borderSide: const BorderSide(color: Colors.red),
-                                  //         borderRadius: BorderRadius.circular(4.0),
-                                  //       )
-                                  //     : null,
-
                                   errorBorder: constraints.maxWidth > 1000
                                       ? checkBoxController.monthlyExpenseCheckBoxValueList[index]
                                           ? whenErrorOnlyShowRedBorderAmountList[index].value
                                               ? OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.red),
+                                                  borderSide: const BorderSide(color: colorsEE4242),
                                                   borderRadius: BorderRadius.circular(4.0),
                                                 )
                                               : null
                                           : null
                                       : whenErrorOnlyShowRedBorderAmountList[index].value
                                           ? OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.red),
+                                              borderSide: const BorderSide(color: colorsEE4242),
                                               borderRadius: BorderRadius.circular(4.0),
                                             )
                                           : null,
                                   focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
                                       ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderSide: const BorderSide(color: colorsEE4242),
                                           borderRadius: BorderRadius.circular(4.0),
                                         )
                                       : null,

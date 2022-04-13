@@ -13,6 +13,8 @@ class TotalIncomeExpenseController extends GetxController {
   RxList totalWeeklyBudgetList = [].obs;
   RxList totalOneTimeIncomeList = [].obs;
   RxList totalOneTimeExpenseList = [].obs;
+  RxList totalPreviousWeekBalanceList = [].obs;
+  RxList totalEndOfTheWeekBalanceList = [].obs;
   final RxList datesList = [].obs;
   final DateFormat formatter = DateFormat('MMM, dd');
   int totalCount = 0;
@@ -32,6 +34,7 @@ class TotalIncomeExpenseController extends GetxController {
     int totalWeeklyBudgetCount = 0;
     int totalOneTimeIncomeCount = 0;
     int totalOneTimeExpenseCount = 0;
+    num totalEndOfTheWeekAmount = 0;
     String? date;
     String? start;
 
@@ -43,7 +46,6 @@ class TotalIncomeExpenseController extends GetxController {
       temp.month,
       temp.day,
     );
-    print('!!!!!${newTemp}');
     for (int i = 0; i < 7; i++) {
       ///date
       if (scrollController?.position.pixels == scrollController?.position.maxScrollExtent) {
@@ -190,6 +192,18 @@ class TotalIncomeExpenseController extends GetxController {
         }
       }
 
+      // for (int i = 0; i < 1; i++) {
+      if (scrollController?.position.pixels == scrollController?.position.maxScrollExtent) {
+        totalEndOfTheWeekAmount = totalEndOfTheWeekBalanceList.elementAt(totalEndOfTheWeekBalanceList.length - 1);
+        totalEndOfTheWeekAmount += 3000;
+        totalEndOfTheWeekAmount -= 2500;
+      } else {
+        totalEndOfTheWeekAmount = totalEndOfTheWeekBalanceList.elementAt(0);
+        totalEndOfTheWeekAmount += 3000;
+        totalEndOfTheWeekAmount -= 2500;
+      }
+      // }
+      // print('totalEndOfTheWeekBalanceList.elementAt(0)${totalEndOfTheWeekBalanceList.elementAt(0)}');
       if (scrollController?.position.pixels == scrollController?.position.maxScrollExtent) {
         totalMonthlyIncomeList.add(totalMonthlyIncomeCount);
         totalWeeklyIncomeList.add(totalWeeklyIncomeCount);
@@ -197,6 +211,9 @@ class TotalIncomeExpenseController extends GetxController {
         totalWeeklyBudgetList.add(totalWeeklyBudgetCount);
         totalOneTimeIncomeList.add(totalOneTimeIncomeCount);
         totalOneTimeExpenseList.add(totalOneTimeExpenseCount);
+        totalEndOfTheWeekBalanceList.add(totalEndOfTheWeekAmount);
+        totalPreviousWeekBalanceList.add(totalEndOfTheWeekBalanceList.elementAt(totalEndOfTheWeekBalanceList.length - 2));
+        print('last element is$totalEndOfTheWeekAmount');
       } else {
         totalMonthlyIncomeList.insert(0, totalMonthlyIncomeCount);
         totalWeeklyIncomeList.insert(0, totalWeeklyIncomeCount);
@@ -204,6 +221,8 @@ class TotalIncomeExpenseController extends GetxController {
         totalWeeklyBudgetList.insert(0, totalWeeklyBudgetCount);
         totalOneTimeIncomeList.insert(0, totalOneTimeIncomeCount);
         totalOneTimeExpenseList.insert(0, totalOneTimeExpenseCount);
+        totalEndOfTheWeekBalanceList.insert(0, totalEndOfTheWeekAmount);
+        totalPreviousWeekBalanceList.insert(0, totalEndOfTheWeekBalanceList.elementAt(0));
       }
       totalMonthlyIncomeCount = 0;
       totalWeeklyIncomeCount = 0;
@@ -211,6 +230,10 @@ class TotalIncomeExpenseController extends GetxController {
       totalWeeklyBudgetCount = 0;
       totalOneTimeIncomeCount = 0;
       totalOneTimeExpenseCount = 0;
+      totalEndOfTheWeekAmount = 0;
+      print('totalEndOfTheWeekBalanceListLength${totalEndOfTheWeekBalanceList.length}');
+      print('totalEndOfTheWeekBalanceListLength${totalPreviousWeekBalanceList.length}');
+      print('totalEndOfTheWeekBalanceListLength${totalWeeklyIncomeList.length}');
     }
   }
 
@@ -293,7 +316,7 @@ class TotalIncomeExpenseController extends GetxController {
     for (int i = 0; i < datesList.length; i++) {
       for (int j = 0; j < GetIncomeController.to.weeklyBudgetList!.length; j++) {
         DateTime temp = DateFormat("yyyy-MM-dd").parse(datesList[i]);
-        DateTime dateFormatedWeeklyBudgetDate = DateTime.parse(GetIncomeController.to.weeklyIncomesList![j].date!);
+        DateTime dateFormatedWeeklyBudgetDate = DateTime.parse(GetIncomeController.to.weeklyBudgetList![j].date!);
         // DateTime temp = formatter.parse(datesList[i]);
         // DateTime dateFormatedWeeklyBudgetDate = DateTime.parse(GetIncomeController.to.weeklyBudgetList![j].date!);
         // DateTime tempWeeklyIncome = DateFormat('MM-dd').parse(dateFormatedWeeklyBudgetDate.toString());
@@ -308,7 +331,6 @@ class TotalIncomeExpenseController extends GetxController {
           dateFormatedWeeklyBudgetDate.month,
           dateFormatedWeeklyBudgetDate.day,
         );
-        print('>>>>>>>>>>>>$newTemp>>>>>>>$newTempWeeklyBudget');
         // if (DateFormat('EEEE').format(newTemp) == DateFormat('EEEE').format(newTempWeeklyBudget)) {
         if (newTemp.isAfter(newTempWeeklyBudget) || newTemp.isBefore(newTempWeeklyBudget)) {
           totalCount += GetIncomeController.to.weeklyBudgetList![j].amount!;
@@ -317,6 +339,8 @@ class TotalIncomeExpenseController extends GetxController {
       totalWeeklyBudgetList.add(totalCount);
       totalCount = 0;
     }
+    totalPreviousWeekBalanceLogic();
+    print('>>>>>>>>>>>>${totalWeeklyBudgetList.length}');
   }
 
   totalOneTimeIncomeLogic() {
@@ -346,6 +370,25 @@ class TotalIncomeExpenseController extends GetxController {
       }
       totalOneTimeExpenseList.add(totalCount);
       totalCount = 0;
+    }
+  }
+
+  totalPreviousWeekBalanceLogic() {
+    totalPreviousWeekBalanceList.clear();
+    totalPreviousWeekBalanceList.refresh();
+    totalEndOfTheWeekBalanceList.clear();
+    totalEndOfTheWeekBalanceList.refresh();
+    double amount;
+    totalPreviousWeekBalanceList.add(2000);
+    for (int i = 0; i < datesList.length; i++) {
+      amount = totalPreviousWeekBalanceList[i];
+      amount += totalWeeklyIncomeList[i];
+      amount -= totalWeeklyBudgetList[i];
+      if (i != datesList.length - 1) {
+        totalPreviousWeekBalanceList.add(amount);
+      }
+      totalEndOfTheWeekBalanceList.add(amount);
+      amount = 0;
     }
   }
 }

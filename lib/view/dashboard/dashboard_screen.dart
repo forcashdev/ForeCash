@@ -540,6 +540,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         scrollControllerTotalWeeklyExpense.animateTo(scrollControllerEndOfTheWeekBalance.offset, duration: const Duration(milliseconds: 1), curve: Curves.linear);
       });
     });
+    // print('totalWeeklyBudgetListLength${TotalIncomeExpenseController.to.totalWeeklyBudgetList.length}');
+    // TotalIncomeExpenseController.to.totalWeeklyBudgetList.refresh();
+    // TotalIncomeExpenseController.to.totalWeeklyIncomeList.refresh();
+    // TotalIncomeExpenseController.to.totalPreviousWeekBalanceLogic();
     super.initState();
   }
 
@@ -675,7 +679,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               decoration: BoxDecoration(color: maxWidth ? Colors.white : colorEDF2F6, borderRadius: BorderRadius.circular(maxWidth ? 5 : 0)),
                               height: 45,
                               child: Row(
-                                // mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
@@ -711,12 +714,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                               if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
                                                 TotalIncomeExpenseController.to.calculateMoreFutureDates(scrollController: scrollController);
                                               }
-                                              // forLoopLogic(constraints: constraints);
-                                              // if (scrollWidth < scrollController.position.minScrollExtent - 80) {
                                               scrollController.jumpTo(
                                                 scrollController.position.pixels - scrollWidth--,
                                               );
-                                              // }
                                               if (monthlyIncomeExpansion.value == true) {
                                                 scrollControllerMonthlyIncome.jumpTo(
                                                   scrollController.offset,
@@ -1135,7 +1135,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                         );
                                       });
                                     } else {
-                                      Future.delayed(Duration(milliseconds: 50), () {
+                                      Future.delayed(const Duration(milliseconds: 50), () {
                                         scrollControllerTotalListWeeklyIncome.jumpTo(
                                           scrollController.position.pixels,
                                         );
@@ -1154,6 +1154,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                 child: StreamBuilder(
                                                   stream: TotalIncomeExpenseController.to.totalWeeklyIncomeList.stream,
                                                   builder: (context, snapshot) {
+                                                    print('Lengthweweweew${TotalIncomeExpenseController.to.totalWeeklyIncomeList.length}');
                                                     return totalListScrollAbleWidget(
                                                         itemCount: TotalIncomeExpenseController.to.totalWeeklyIncomeList.length,
                                                         scrollController: scrollControllerTotalListWeeklyIncome,
@@ -1986,11 +1987,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                               ),
                                                             ),
                                                           )
-                                                        // SizedBox(
-                                                        //         width: Get.width / 2.07,
-                                                        //         child:
-                                                        //             pageViewCommonWidget(pageController: _singleMonthlyPageController, text: incomes, itemCount: incomes.length, onPageChanged: (value) {}),
-                                                        //       )
                                                         : Column();
                                                   },
                                                 ),
@@ -2222,27 +2218,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                             height: Get.height * 0.05,
                                             alignment: Alignment.centerRight,
                                             decoration: const BoxDecoration(color: Colors.white, border: Border(bottom: BorderSide(color: colorEDEDED))),
-                                            // child: SizedBox(
-                                            //   // width: Get.width / 2.05,
-                                            //   height: Get.height * 0.018,
-                                            //   child: countForCashPageViewBuilderWidget(
-                                            //       pageController: _previousWeekBalancePageController,
-                                            //       onPageChanged: (value) {
-                                            //
-                                            //       }),
-                                            // ),
                                             child: Padding(
                                               padding: const EdgeInsets.only(right: 25),
                                               child: SizedBox(
                                                 height: Get.height * 0.018,
                                                 width: Get.width / 2.1,
                                                 child: StreamBuilder(
-                                                  stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                                                  stream: TotalIncomeExpenseController.to.totalPreviousWeekBalanceList.stream,
                                                   builder: (context, snapshot) {
                                                     return totalListScrollAbleWidget(
-                                                        itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                                        itemCount: TotalIncomeExpenseController.to.totalPreviousWeekBalanceList.length,
                                                         scrollController: scrollControllerPreviousWeekBalance,
-                                                        totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                                        totalIncomeExpenseList: TotalIncomeExpenseController.to.totalPreviousWeekBalanceList);
                                                   },
                                                 ),
                                               ),
@@ -2276,13 +2263,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                           child: Align(
                                             alignment: const FractionalOffset(0.5, 0.5),
                                             child: StreamBuilder(
-                                              stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                                              stream: TotalIncomeExpenseController.to.totalPreviousWeekBalanceList.stream,
                                               builder: (context, snapshot) {
                                                 return totalListScrollAbleWidget(
                                                     textWidth: Get.width * 0.15,
-                                                    itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                                    itemCount: TotalIncomeExpenseController.to.totalPreviousWeekBalanceList.length,
                                                     scrollController: scrollControllerPreviousWeekBalance,
-                                                    totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                                    totalIncomeExpenseList: TotalIncomeExpenseController.to.totalPreviousWeekBalanceList);
                                               },
                                             ),
                                             // child: countForCashPageViewBuilderWidget(
@@ -2339,37 +2326,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   height: Get.height * 0.018,
                                                   width: Get.width / 2.1,
                                                   child: StreamBuilder(
-                                                    stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                                                    stream: TotalIncomeExpenseController.to.totalWeeklyIncomeList.stream,
                                                     builder: (context, snapshot) {
                                                       return totalListScrollAbleWidget(
-                                                          itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                                          itemCount: TotalIncomeExpenseController.to.totalWeeklyIncomeList.length,
                                                           scrollController: scrollControllerTotalWeeklyIncome,
-                                                          totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                                          totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyIncomeList);
                                                     },
                                                   ),
                                                 ),
                                               ),
-                                              // child: countForCashPageViewBuilderWidget(
-                                              //     pageController: _totalWeeklyIncomePageController,
-                                              //     onPageChanged: (value) {
-                                              //       // List.generate(monthlyIncomepageControllerList.length,
-                                              //       //     (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(
-                                              //       //     weeklyIncomePageControllerList.length,
-                                              //       //     (index) => weeklyIncomePageControllerList[index]
-                                              //       //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                              //       // List.generate(monthlyExpensePageControllerList.length,
-                                              //       //     (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(weeklyBudgetPageControllerList.length,
-                                              //       //     (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(oneTimeExpensePageControllerList.length,
-                                              //       //     (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(oneTimeIncomePageControllerList.length,
-                                              //       //     (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              //       // _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              //       // _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              //     }),
                                             ),
                                           ),
                                         ),
@@ -2401,36 +2367,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                           child: Align(
                                             alignment: const FractionalOffset(0.5, 0.5),
                                             child: StreamBuilder(
-                                              stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                                              stream: TotalIncomeExpenseController.to.totalWeeklyIncomeList.stream,
                                               builder: (context, snapshot) {
                                                 return totalListScrollAbleWidget(
                                                     textWidth: Get.width * 0.15,
-                                                    itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                                    itemCount: TotalIncomeExpenseController.to.totalWeeklyIncomeList.length,
                                                     scrollController: scrollControllerTotalWeeklyIncome,
-                                                    totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                                    totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyIncomeList);
                                               },
                                             ),
-                                            // child: countForCashPageViewBuilderWidget(
-                                            //     pageController: _totalWeeklyIncomePageController,
-                                            //     onPageChanged: (value) {
-                                            //       List.generate(monthlyIncomepageControllerList.length,
-                                            //           (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(
-                                            //           weeklyIncomePageControllerList.length,
-                                            //           (index) => weeklyIncomePageControllerList[index]
-                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                            //       List.generate(monthlyExpensePageControllerList.length,
-                                            //           (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(weeklyBudgetPageControllerList.length,
-                                            //           (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(oneTimeExpensePageControllerList.length,
-                                            //           (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(oneTimeIncomePageControllerList.length,
-                                            //           (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                            //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                            //       _totalWeeklyExpensePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                            //     }),
                                           ),
                                         ),
                                       ),
@@ -2492,27 +2437,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                   ),
                                                 ),
                                               ),
-                                              // child: countForCashPageViewBuilderWidget(
-                                              //     pageController: _totalWeeklyExpensePageController,
-                                              //     onPageChanged: (value) {
-                                              //       // List.generate(monthlyIncomepageControllerList.length,
-                                              //       //     (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(
-                                              //       //     weeklyIncomePageControllerList.length,
-                                              //       //     (index) => weeklyIncomePageControllerList[index]
-                                              //       //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                              //       // List.generate(monthlyExpensePageControllerList.length,
-                                              //       //     (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(weeklyBudgetPageControllerList.length,
-                                              //       //     (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(oneTimeExpensePageControllerList.length,
-                                              //       //     (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // List.generate(oneTimeIncomePageControllerList.length,
-                                              //       //     (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                              //       // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              //       // _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              //       // _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                              //     }),
                                             ),
                                           ),
                                         ),
@@ -2552,27 +2476,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                                     totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
                                               },
                                             ),
-                                            // child: countForCashPageViewBuilderWidget(
-                                            //     pageController: _totalWeeklyExpensePageController,
-                                            //     onPageChanged: (value) {
-                                            //       List.generate(monthlyIncomepageControllerList.length,
-                                            //           (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(
-                                            //           weeklyIncomePageControllerList.length,
-                                            //           (index) => weeklyIncomePageControllerList[index]
-                                            //               .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                                            //       List.generate(monthlyExpensePageControllerList.length,
-                                            //           (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(weeklyBudgetPageControllerList.length,
-                                            //           (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(oneTimeExpensePageControllerList.length,
-                                            //           (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       List.generate(oneTimeIncomePageControllerList.length,
-                                            //           (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                                            //       _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                            //       _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                            //       _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                                            //     }),
                                           ),
                                         ),
                                       ),
@@ -2658,37 +2561,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 height: Get.height * 0.018,
                                 width: Get.width / 2.1,
                                 child: StreamBuilder(
-                                  stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                                  stream: TotalIncomeExpenseController.to.totalEndOfTheWeekBalanceList.stream,
                                   builder: (context, snapshot) {
                                     return totalListScrollAbleWidget(
-                                        itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                        itemCount: TotalIncomeExpenseController.to.totalEndOfTheWeekBalanceList.length,
                                         scrollController: scrollControllerEndOfTheWeekBalance,
-                                        totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                        totalIncomeExpenseList: TotalIncomeExpenseController.to.totalEndOfTheWeekBalanceList);
                                   },
                                 ),
                               ),
                             ),
-                            // child: countForCashPageViewBuilderWidget(
-                            //     // pageController: _totalWeeklyExpensePageController,
-                            //     onPageChanged: (value) {
-                            //   // List.generate(monthlyIncomepageControllerList.length,
-                            //   //     (index) => monthlyIncomepageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                            //   // List.generate(
-                            //   //     weeklyIncomePageControllerList.length,
-                            //   //     (index) => weeklyIncomePageControllerList[index]
-                            //   //         .animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut)); // _pageController2.jumpToPage(value);
-                            //   // List.generate(monthlyExpensePageControllerList.length,
-                            //   //     (index) => monthlyExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                            //   // List.generate(weeklyBudgetPageControllerList.length,
-                            //   //     (index) => weeklyBudgetPageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                            //   // List.generate(oneTimeExpensePageControllerList.length,
-                            //   //     (index) => oneTimeExpensePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                            //   // List.generate(oneTimeIncomePageControllerList.length,
-                            //   //     (index) => oneTimeIncomePageControllerList[index].animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut));
-                            //   // _pageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                            //   // _previousWeekBalancePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                            //   // _totalWeeklyIncomePageController.animateToPage(value, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                            // }),
                           ),
                         ),
                       ),
@@ -2712,13 +2594,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           child: Align(
                             alignment: const FractionalOffset(0.5, 0.5),
                             child: StreamBuilder(
-                              stream: TotalIncomeExpenseController.to.totalWeeklyBudgetList.stream,
+                              stream: TotalIncomeExpenseController.to.totalEndOfTheWeekBalanceList.stream,
                               builder: (context, snapshot) {
                                 return totalListScrollAbleWidget(
                                     textWidth: Get.width * 0.15,
-                                    itemCount: TotalIncomeExpenseController.to.totalWeeklyBudgetList.length,
+                                    itemCount: TotalIncomeExpenseController.to.totalEndOfTheWeekBalanceList.length,
                                     scrollController: scrollControllerEndOfTheWeekBalance,
-                                    totalIncomeExpenseList: TotalIncomeExpenseController.to.totalWeeklyBudgetList);
+                                    totalIncomeExpenseList: TotalIncomeExpenseController.to.totalEndOfTheWeekBalanceList);
                               },
                             ),
                           ),
@@ -3052,10 +2934,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   _mobileSimulateModeRow({BoxConstraints? constraints}) {
     final formatedFirstDay = DateFormat('MMM dd').format(TotalIncomeExpenseController.to.findFirstDateOfTheWeek(DateTime.now()));
     final _lastDayOfTheweek = DateFormat('MMM dd').format(TotalIncomeExpenseController.to.findLastDateOfTheWeek(DateTime.now()));
-    // DateTime today = DateTime.now();
-    // final _firstDayOfTheweek = today.subtract(new Duration(days: today.weekday));
-    // final formatedFirstDay = DateFormat('MMM dd').format(_firstDayOfTheweek);
-    // final _lastDayOfTheweek = DateFormat('MMM dd').format(today.subtract(new Duration(days: _firstDayOfTheweek.weekday)));
     return Row(
       children: [
         Padding(
@@ -3174,10 +3052,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-
-
-
-
   // Future<void> _selectDate({
   //   BuildContext? context,
   // }) async {
@@ -3188,6 +3062,5 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   //     currentDate.refresh();
   //   }
   // }
-
 
 }

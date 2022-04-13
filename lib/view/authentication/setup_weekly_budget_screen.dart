@@ -669,36 +669,24 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                   textStyle: incomeNameStyle,
                                   hintText: expenseName,
                                   hintStyle: incomeNameStyle,
-                                  // errorBorder: whenErrorOnlyShowRedBorderList[index].value
-                                  //     ? OutlineInputBorder(
-                                  //         borderSide: const BorderSide(color: Colors.red),
-                                  //         borderRadius: BorderRadius.circular(4.0),
-                                  //       )
-                                  //     : null,
-                                  // focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
-                                  //     ? OutlineInputBorder(
-                                  //         borderSide: const BorderSide(color: Colors.red),
-                                  //         borderRadius: BorderRadius.circular(4.0),
-                                  //       )
-                                  //     : null,
                                   errorBorder: constraints.maxWidth > 1000
                                       ? checkBoxController.weeklyBudgetCheckBoxValueList[index]
                                           ? whenErrorOnlyShowRedBorderList[index].value
                                               ? OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.red),
+                                                  borderSide: const BorderSide(color: colorsEE4242),
                                                   borderRadius: BorderRadius.circular(4.0),
                                                 )
                                               : null
                                           : null
                                       : whenErrorOnlyShowRedBorderList[index].value
                                           ? OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.red),
+                                              borderSide: const BorderSide(color: colorsEE4242),
                                               borderRadius: BorderRadius.circular(4.0),
                                             )
                                           : null,
                                   focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                       ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderSide: const BorderSide(color: colorsEE4242),
                                           borderRadius: BorderRadius.circular(4.0),
                                         )
                                       : null,
@@ -814,36 +802,24 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                                   hintText: amount,
                                   hintStyle: incomeNameStyle,
                                   prefixText: '\$',
-                                  // errorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
-                                  //     ? OutlineInputBorder(
-                                  //         borderSide: const BorderSide(color: Colors.red),
-                                  //         borderRadius: BorderRadius.circular(4.0),
-                                  //       )
-                                  //     : null,
-                                  // focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
-                                  //     ? OutlineInputBorder(
-                                  //         borderSide: const BorderSide(color: Colors.red),
-                                  //         borderRadius: BorderRadius.circular(4.0),
-                                  //       )
-                                  //     : null,
                                   errorBorder: constraints.maxWidth > 1000
                                       ? checkBoxController.weeklyBudgetCheckBoxValueList[index]
                                           ? whenErrorOnlyShowRedBorderAmountList[index].value
                                               ? OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.red),
+                                                  borderSide: const BorderSide(color: colorsEE4242),
                                                   borderRadius: BorderRadius.circular(4.0),
                                                 )
                                               : null
                                           : null
                                       : whenErrorOnlyShowRedBorderAmountList[index].value
                                           ? OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.red),
+                                              borderSide: const BorderSide(color: colorsEE4242),
                                               borderRadius: BorderRadius.circular(4.0),
                                             )
                                           : null,
                                   focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
                                       ? OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.red),
+                                          borderSide: const BorderSide(color: colorsEE4242),
                                           borderRadius: BorderRadius.circular(4.0),
                                         )
                                       : null,

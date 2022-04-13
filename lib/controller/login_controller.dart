@@ -20,7 +20,7 @@ class LoginInController extends GetxController {
         },
         error: () {},
         success: (Map<String, dynamic> data) {
-          print(data.toString());
+          print('data${data.toString()}');
           loginModel.value = LoginModel.fromJson(data);
           loginModel.value.toJson();
           if (loginModel.value.success == true) {

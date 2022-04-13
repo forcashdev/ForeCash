@@ -724,20 +724,20 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                     ? checkBoxController.monthlyIncomeCheckBoxValueList[index]
                                         ? whenErrorOnlyShowRedBorderList[index].value
                                             ? OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderSide: const BorderSide(color: colorsEE4242),
                                                 borderRadius: BorderRadius.circular(4.0),
                                               )
                                             : null
                                         : null
                                     : whenErrorOnlyShowRedBorderList[index].value
                                         ? OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderSide: const BorderSide(color: colorsEE4242),
                                             borderRadius: BorderRadius.circular(4.0),
                                           )
                                         : null,
                                 focusedErrorBorder: whenErrorOnlyShowRedBorderList[index].value
                                     ? OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderSide: const BorderSide(color: colorsEE4242),
                                         borderRadius: BorderRadius.circular(4.0),
                                       )
                                     : null,
@@ -857,20 +857,20 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                                     ? checkBoxController.monthlyIncomeCheckBoxValueList[index]
                                         ? whenErrorOnlyShowRedBorderAmountList[index].value
                                             ? OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderSide: const BorderSide(color: colorsEE4242),
                                                 borderRadius: BorderRadius.circular(4.0),
                                               )
                                             : null
                                         : null
                                     : whenErrorOnlyShowRedBorderAmountList[index].value
                                         ? OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderSide: const BorderSide(color: colorsEE4242),
                                             borderRadius: BorderRadius.circular(4.0),
                                           )
                                         : null,
                                 focusedErrorBorder: whenErrorOnlyShowRedBorderAmountList[index].value
                                     ? OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderSide: const BorderSide(color: colorsEE4242),
                                         borderRadius: BorderRadius.circular(4.0),
                                       )
                                     : null,

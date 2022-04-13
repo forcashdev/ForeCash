@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/utility/string.dart';
+import 'package:fore_cash/view/authentication/login_screen.dart';
 import 'package:fore_cash/view/authentication/splash_screen.dart';
 import 'package:get/get.dart' as getX;
 import 'package:get_storage/get_storage.dart';
@@ -151,9 +152,9 @@ class Api {
               if (errorMessageType == ErrorMessageType.snackBarOnlyError || errorMessageType == ErrorMessageType.snackBarOnResponse) {
                 getX.Get.snackbar("Error", responseData?["message"]);
                 // if (responseData?["message"] == "Not authorize to access this route")
-                // if (response.statusCode == 201) {
-                //    getX.Get.to(() => const LoginScreen());
-                // }
+                if (response.statusCode == 201) {
+                  getX.Get.to(() => const LoginScreen());
+                }
                 if (responseData?["message"] == 'could not fetch incomes') {
                   isProgressShow = false;
                   // showProgressDialog(isLoading: isProgressShow);

@@ -792,6 +792,9 @@ weeklyBudgetEditModeRow({BoxConstraints? constraints}) {
                             GetIncomeController.to.callIncome(parameter: {"income_outgoing": "2", "onetime_week_month": "2"}).whenComplete(() {
                               TotalIncomeExpenseController.to.totalWeeklyBudgetList.clear();
                               TotalIncomeExpenseController.to.totalWeeklyBudgetLogic();
+                              TotalIncomeExpenseController.to.totalPreviousWeekBalanceList.clear();
+                              TotalIncomeExpenseController.to.totalEndOfTheWeekBalanceList.clear();
+                              TotalIncomeExpenseController.to.totalPreviousWeekBalanceLogic();
                             });
                           });
                         }

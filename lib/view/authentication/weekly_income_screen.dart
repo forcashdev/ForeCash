@@ -717,20 +717,20 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                     ? checkBoxController.weeklyIncomeCheckBoxValueList[index]
                                         ? whenErrorOnlyShowRedBorderListWeekly[index].value
                                             ? OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderSide: const BorderSide(color: colorsEE4242),
                                                 borderRadius: BorderRadius.circular(4.0),
                                               )
                                             : null
                                         : null
                                     : whenErrorOnlyShowRedBorderListWeekly[index].value
                                         ? OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderSide: const BorderSide(color: colorsEE4242),
                                             borderRadius: BorderRadius.circular(4.0),
                                           )
                                         : null,
                                 focusedErrorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
                                     ? OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderSide: const BorderSide(color: colorsEE4242),
                                         borderRadius: BorderRadius.circular(4.0),
                                       )
                                     : null,
@@ -869,36 +869,24 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                 contentPadding: EdgeInsets.fromLTRB(10.0, constraints.maxWidth > 1000 ? Get.height * 0.030 : Get.height * 0.020, 10.0, 0.0),
                                 textStyle: incomeNameStyle,
                                 textEditingController: _amount,
-                                // errorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
-                                //     ? OutlineInputBorder(
-                                //         borderSide: const BorderSide(color: Colors.red),
-                                //         borderRadius: BorderRadius.circular(4.0),
-                                //       )
-                                //     : null,
-                                // focusedErrorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
-                                //     ? OutlineInputBorder(
-                                //         borderSide: const BorderSide(color: Colors.red),
-                                //         borderRadius: BorderRadius.circular(4.0),
-                                //       )
-                                //     : null,
                                 errorBorder: constraints.maxWidth > 1000
                                     ? checkBoxController.weeklyIncomeCheckBoxValueList[index]
                                         ? whenErrorOnlyShowRedBorderAmountListWeekly[index].value
                                             ? OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.red),
+                                                borderSide: const BorderSide(color: colorsEE4242),
                                                 borderRadius: BorderRadius.circular(4.0),
                                               )
                                             : null
                                         : null
                                     : whenErrorOnlyShowRedBorderAmountListWeekly[index].value
                                         ? OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.red),
+                                            borderSide: const BorderSide(color: colorsEE4242),
                                             borderRadius: BorderRadius.circular(4.0),
                                           )
                                         : null,
                                 focusedErrorBorder: whenErrorOnlyShowRedBorderAmountListWeekly[index].value
                                     ? OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.red),
+                                        borderSide: const BorderSide(color: colorsEE4242),
                                         borderRadius: BorderRadius.circular(4.0),
                                       )
                                     : null,
