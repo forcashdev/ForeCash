@@ -29,7 +29,6 @@ class GetIncomeController extends GetxController {
         url: mGetIncome,
         params: parameter,
         success: (data) {
-          print('>>>>>>>>>>>>>>>>$data');
           getIncomeModel.value = GetIncomeModel.fromJson(data);
           getTempIncomeModel.value = TempIncomeExpenseModel.fromJson(data);
           getIncomeModel.value.toJson();
@@ -65,23 +64,23 @@ class GetIncomeController extends GetxController {
   getMonthlyIncomeList() {
     final checkBoxController = Get.put(CheckBoxController());
     monthlyIncomeList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
     monthlyIncomeList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
     monthlyIncomeList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
     monthlyIncomeList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
     monthlyIncomeList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyIncomeCheckBoxValueList.add(true);
   }
@@ -89,23 +88,23 @@ class GetIncomeController extends GetxController {
   getWeeklyIncomeList() {
     final checkBoxController = Get.put(CheckBoxController());
     weeklyIncomesList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
     weeklyIncomesList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
     weeklyIncomesList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
     weeklyIncomesList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
     weeklyIncomesList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 1, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyIncomeCheckBoxValueList.add(true);
   }
@@ -113,23 +112,23 @@ class GetIncomeController extends GetxController {
   getMonthlyExpenseList() {
     final checkBoxController = Get.put(CheckBoxController());
     monthlyExpenseList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
     monthlyExpenseList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
     monthlyExpenseList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
     monthlyExpenseList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
     monthlyExpenseList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 3, every: 1),
     );
     CheckBoxController.to.monthlyExpenseCheckBoxValueList.add(true);
   }
@@ -137,23 +136,23 @@ class GetIncomeController extends GetxController {
   getWeeklyBudgetList() {
     final checkBoxController = Get.put(CheckBoxController());
     weeklyBudgetList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
     weeklyBudgetList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
     weeklyBudgetList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
     weeklyBudgetList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
     weeklyBudgetList?.add(
-      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1, amount: 0),
+      DataModel(paidOn: 1, date: DateTime.now().toString(), incomeOutgoing: 2, onetimeWeekMonth: 2, every: 1),
     );
     CheckBoxController.to.weeklyBudgetCheckBoxValueList.add(true);
   }

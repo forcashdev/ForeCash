@@ -36,7 +36,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   final checkBoxController = Get.put(CheckBoxController());
   final screenIndexController = Get.put(ScreenIndexController());
   final getIncomeController = Get.put(GetIncomeController());
-  DateTime currentDate = DateTime.now();
+  Rx<DateTime> currentDate = DateTime.now().obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -594,8 +594,12 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
-                        DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.add(GetIncomeController.to.weeklyBudgetList![index].id!);
-                        GetIncomeController.to.weeklyBudgetList?.removeAt(index);
+                        if (GetIncomeController.to.weeklyBudgetList![index].id == null) {
+                          GetIncomeController.to.weeklyBudgetList?.removeAt(index);
+                        } else {
+                          DeleteIncomeExpenseController.to.deleteWeeklyExpenseList.add(GetIncomeController.to.monthlyIncomeList![index].id!);
+                          GetIncomeController.to.weeklyBudgetList?.removeAt(index);
+                        }
                         Get.back();
                       },
                       onPressNo: () {
@@ -771,7 +775,13 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        _selectDate(context: context, index: index);
+                        selectDate(
+                            context: context,
+                            currentDate: currentDate,
+                            onChange: () {
+                              GetIncomeController.to.weeklyBudgetList?[index].date = currentDate.toString();
+                              GetIncomeController.to.weeklyBudgetList?.refresh();
+                            });
                       },
                       child: Container(
                         height: Get.height * 0.044,
@@ -874,14 +884,14 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
     );
   }
 
-  Future<void> _selectDate({BuildContext? context, int? index}) async {
-    final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
-    if (pickedDate != null && pickedDate != currentDate) {
-      setState(() {
-        currentDate = pickedDate;
-      });
-      GetIncomeController.to.weeklyBudgetList?[index!].date = currentDate.toString();
-      GetIncomeController.to.weeklyBudgetList?.refresh();
-    }
-  }
+  // Future<void> _selectDate({BuildContext? context, int? index}) async {
+  //   final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
+  //   if (pickedDate != null && pickedDate != currentDate) {
+  //     setState(() {
+  //       currentDate = pickedDate;
+  //     });
+  //     GetIncomeController.to.weeklyBudgetList?[index!].date = currentDate.toString();
+  //     GetIncomeController.to.weeklyBudgetList?.refresh();
+  //   }
+  // }
 }

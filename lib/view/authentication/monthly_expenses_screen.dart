@@ -39,7 +39,7 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
   final checkBoxController = Get.put(CheckBoxController());
   final getIncomeController = Get.put(GetIncomeController());
   final screenIndexController = Get.put(ScreenIndexController());
-  DateTime currentDate = DateTime.now();
+  Rx<DateTime> currentDate = DateTime.now().obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -275,8 +275,6 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
       itemBuilder: (context, index) {
         TextEditingController? _monthlyExpenseName;
         TextEditingController? _monthlyAmount;
-        RxBool whenErrorOnlyShowRedBorder = false.obs;
-        RxBool whenErrorOnlyShowRedBorderAmount = false.obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false.obs).obs;
         RxList<RxBool> whenErrorOnlyShowRedBorderAmountList = List.generate(GetIncomeController.to.monthlyExpenseList!.length, (index) => false.obs).obs;
         _monthlyExpenseName = TextEditingController(text: GetIncomeController.to.monthlyExpenseList?[index].name ?? '');
@@ -306,8 +304,12 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
-                        DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.add(GetIncomeController.to.monthlyExpenseList![index].id!);
-                        GetIncomeController.to.monthlyExpenseList?.removeAt(index);
+                        if (GetIncomeController.to.monthlyExpenseList![index].id == null) {
+                          GetIncomeController.to.monthlyExpenseList?.removeAt(index);
+                        } else {
+                          DeleteIncomeExpenseController.to.deleteMonthlyExpenseList.add(GetIncomeController.to.monthlyIncomeList![index].id!);
+                          GetIncomeController.to.monthlyExpenseList?.removeAt(index);
+                        }
                         Get.back();
                       },
                       onPressNo: () {
@@ -480,7 +482,13 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        _selectDate(context: context, index: index);
+                        selectDate(
+                            context: context,
+                            currentDate: currentDate,
+                            onChange: () {
+                              GetIncomeController.to.monthlyExpenseList?[index].date = currentDate.toString();
+                              GetIncomeController.to.monthlyExpenseList?.refresh();
+                            });
                       },
                       child: Container(
                         height: Get.height * 0.044,
@@ -585,18 +593,18 @@ class _MonthlyExpensesScreenState extends State<MonthlyExpensesScreen> {
     );
   }
 
-  Future<void> _selectDate({BuildContext? context, int? index}) async {
-    final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
-    if (pickedDate != null && pickedDate != currentDate) {
-      setState(() {
-        currentDate = pickedDate;
-      });
-      print('>>>>>>>>>>>>>>>>>$currentDate');
-      // CreateIncomeController.to.IncomesList[index!].dateTime = currentDate;
-      GetIncomeController.to.monthlyExpenseList?[index!].date = currentDate.toString();
-      GetIncomeController.to.monthlyExpenseList?.refresh();
-    }
-  }
+  // Future<void> _selectDate({BuildContext? context, int? index}) async {
+  //   final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
+  //   if (pickedDate != null && pickedDate != currentDate) {
+  //     setState(() {
+  //       currentDate = pickedDate;
+  //     });
+  //     print('>>>>>>>>>>>>>>>>>$currentDate');
+  //     // CreateIncomeController.to.IncomesList[index!].dateTime = currentDate;
+  //     GetIncomeController.to.monthlyExpenseList?[index!].date = currentDate.toString();
+  //     GetIncomeController.to.monthlyExpenseList?.refresh();
+  //   }
+  // }
 
   _addNewMonthlyExpenseWidget({BoxConstraints? constraints}) {
     return Padding(

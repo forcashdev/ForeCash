@@ -40,7 +40,7 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
 
   final checkBoxController = Get.put(CheckBoxController());
   final screenIndexController = Get.put(ScreenIndexController());
-  DateTime currentDate = DateTime.now();
+  Rx<DateTime> currentDate = DateTime.now().obs;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -585,16 +585,16 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
     );
   }
 
-  Future<void> _selectDate({BuildContext? context, int? index}) async {
-    final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
-    if (pickedDate != null && pickedDate != currentDate) {
-      setState(() {
-        currentDate = pickedDate;
-      });
-      GetIncomeController.to.weeklyIncomesList?[index!].date = currentDate.toString();
-      GetIncomeController.to.weeklyIncomesList?.refresh();
-    }
-  }
+  // Future<void> _selectDate({BuildContext? context, int? index}) async {
+  //   final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
+  //   if (pickedDate != null && pickedDate != currentDate) {
+  //     setState(() {
+  //       currentDate = pickedDate;
+  //     });
+  //     GetIncomeController.to.weeklyIncomesList?[index!].date = currentDate.toString();
+  //     GetIncomeController.to.weeklyIncomesList?.refresh();
+  //   }
+  // }
 
   _weeklyincomeRowList({BoxConstraints? constraints}) {
     return ListView.builder(
@@ -635,8 +635,12 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
-                        DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.add(GetIncomeController.to.weeklyIncomesList![index].id!);
-                        GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                        if (GetIncomeController.to.weeklyIncomesList![index].id == null) {
+                          GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                        } else {
+                          DeleteIncomeExpenseController.to.deleteWeeklyIncomeList.add(GetIncomeController.to.monthlyIncomeList![index].id!);
+                          GetIncomeController.to.weeklyIncomesList?.removeAt(index);
+                        }
                         Get.back();
                       },
                       onPressNo: () {
@@ -830,7 +834,13 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        _selectDate(context: context, index: index);
+                        selectDate(
+                            context: context,
+                            currentDate: currentDate,
+                            onChange: () {
+                              GetIncomeController.to.weeklyIncomesList?[index].date = currentDate.toString();
+                              GetIncomeController.to.weeklyIncomesList?.refresh();
+                            });
                       },
                       child: Container(
                         height: Get.height * 0.044,

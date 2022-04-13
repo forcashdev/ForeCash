@@ -10,55 +10,16 @@ class LoginInController extends GetxController {
   static LoginInController get to => Get.find();
 
   Rx<LoginModel> loginModel = LoginModel().obs;
-  // final formKey = GlobalKey<FormState>();
-  // TextEditingController emailController = TextEditingController();
-  // TextEditingController passwordController = TextEditingController();
-
-  validateEmail(String? value) {
-    if (value?.isEmpty ?? false) {
-      return 'Please enter email address.';
-    } else if (value?.isNotEmpty ?? false) {
-      String pattern = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-          r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-          r"{0,253}[a-zA-Z0-9])?)*$";
-      RegExp regex = RegExp(pattern);
-      if (value!.isEmpty || !regex.hasMatch(value)) {
-        return 'Enter a valid email address.';
-      }
-    }
-  }
-
-  validatePassword(String? value) {
-    if (value?.isEmpty ?? false) {
-      return 'Please enter password.';
-    }
-    /*if (value!.isNotEmpty) {
-      String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-      RegExp regExp = RegExp(pattern);
-      if (!regExp.hasMatch(value)) {
-        return 'Password must contain Upper, Lower character and number with symbol!';
-      }
-    }*/
-  }
 
   callLogin({String? email, String? password}) {
-    print(email);
-    print(password);
-    // if (formKey.currentState!.validate()) {
     Api().call(
-        // isHideLoader: false,
-        // isProgressShow: false,
         url: mLogIn,
         params: {
           rEmail: email,
           rPassword: password,
         },
-        error: () {
-          print('???????????????');
-          print(loginModel.value.success);
-        },
+        error: () {},
         success: (Map<String, dynamic> data) {
-          print("loginModel.value.success");
           print(data.toString());
           loginModel.value = LoginModel.fromJson(data);
           loginModel.value.toJson();
@@ -69,9 +30,7 @@ class LoginInController extends GetxController {
             final screenIndexController = Get.put(ScreenIndexController());
             screenIndexController.updateIndex(index: 1);
             Get.to(() => const ScreenProgressIndicator());
-            // Get.toNamed('/ProgressIndicator');
           }
-          // Get.offAll(() => const MainScreen());
         });
     // }
   }

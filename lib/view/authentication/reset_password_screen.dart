@@ -4,23 +4,26 @@ import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
+import 'package:fore_cash/controller/reset_password_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  final String? userEmail;
+  const ResetPasswordScreen({Key? key, this.userEmail}) : super(key: key);
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  RxBool isPassSame = true.obs;
   final FocusNode _confirmPasswordFocus = FocusNode();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _newPassword = TextEditingController();
     final TextEditingController _newPasswordConfirm = TextEditingController();
 
@@ -50,7 +53,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           maxWidth
-                              ? SizedBox()
+                              ? const SizedBox()
                               : IconButton(
                                   splashRadius: 0.1,
                                   onPressed: () {
@@ -87,9 +90,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           : Container(),
                       maxWidth
                           ? Align(
-                              alignment: FractionalOffset(0.5, 0.0),
+                              alignment: const FractionalOffset(0.5, 0.0),
                               child: Text(
-                                forgotPass2,
+                                resetPass,
                                 style: mobileAppBarStyle,
                               ),
                             )
@@ -145,7 +148,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 }
                               },
                             ),
-
                             SizedBox(
                               height: Get.height * 0.03,
                             ),
@@ -153,71 +155,78 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             SizedBox(
                               height: Get.height * 0.01,
                             ),
-                            commonTextFormField(
-                              textFocusNode: _confirmPasswordFocus,
-                              onFieldSubmit: (String value) {
-                                FocusScope.of(context).requestFocus(FocusNode());
-                              },
-                              inputAction: TextInputAction.next,
-                              hintText: password,
-                              textStyle: textFieldStyle,
-                              hintStyle: textFieldHintStyle,
-                              textEditingController: _newPasswordConfirm,
-                              isPassword: true,
-                              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
-                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
-                              disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
-                              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
-                              validationFunction: (value) {
-                                if (_newPassword.text.length < 6) {
-                                  return minimumCharacter;
-                                }
-                              },
-                            ),
-                            // commonTextField(
-                            //   contentPadding: const EdgeInsets.only(left: 13),
-                            //   hint: password,
-                            //   // controller: _newPasswordConfirm,
-                            //   suffixIcon: IconButton(
-                            //     splashRadius: 0.1,
-                            //     icon: isObscureNewPassCon == true
-                            //         ? const Icon(
-                            //             Icons.visibility,
-                            //             color: color777C90,
-                            //           )
-                            //         : const Icon(Icons.visibility_off, color: color777C90),
-                            //     onPressed: () {
-                            //       setState(() {
-                            //         isObscureNewPassCon = !isObscureNewPassCon;
-                            //       });
-                            //     },
-                            //   ),
-                            //   obscureText: isObscureNewPassCon,
-                            //   errorTextStyle: const TextStyle(color: color777C90),
-                            //   validator: (value) {
-                            //     // if (_password.text.length < 6) {
-                            //     //   return minimumCharacter;
-                            //     // }
-                            //   },
-                            // ),
+                            StreamBuilder(
+                                stream: isPassSame.stream,
+                                builder: (context, snapshot) {
+                                  return commonTextFormField(
+                                    textFocusNode: _confirmPasswordFocus,
+                                    onFieldSubmit: (String value) {
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                    },
+                                    inputAction: TextInputAction.next,
+                                    hintText: password,
+                                    textStyle: textFieldStyle,
+                                    hintStyle: textFieldHintStyle,
+                                    textEditingController: _newPasswordConfirm,
+                                    isPassword: true,
+                                    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                    disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
+                                    validationFunction: (value) {
+                                      if (_newPassword.text.length < 6) {
+                                        return minimumCharacter;
+                                      } else if (isPassSame.value == false) {
+                                        return 'Enter Valid Password';
+                                      }
+                                    },
+                                  );
+                                }),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
-                        ),
-                        child: commonButton(
-                          onPress: () {},
-                          text: send,
-                          height: 50,
-                        ),
-                      )
+                      maxWidth
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
+                              ),
+                              child: commonButton(
+                                onPress: () {
+                                  if (_newPassword.text == _newPasswordConfirm.text) {
+                                    ResetPasswordController.to.callResetPassword(email: widget.userEmail, newPassword: _newPasswordConfirm.text);
+                                  } else {
+                                    isPassSame = false.obs;
+                                    isPassSame.refresh();
+                                  }
+                                },
+                                text: send,
+                                height: 50,
+                              ),
+                            )
+                          : Container()
                     ],
                   ),
                 ),
+              ),
+            ),
+          ),
+          bottomNavigationBar: Visibility(
+            visible: maxWidth ? false : true,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04, vertical: 15),
+              child: commonButton(
+                onPress: () {
+                  if (_newPassword.text == _newPasswordConfirm.text) {
+                    ResetPasswordController.to.callResetPassword(email: widget.userEmail, newPassword: _newPasswordConfirm.text);
+                  } else {
+                    isPassSame = false.obs;
+                    isPassSame.refresh();
+                  }
+                },
+                text: send,
+                height: 50,
               ),
             ),
           ),

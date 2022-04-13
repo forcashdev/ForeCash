@@ -86,12 +86,14 @@ showCommonDialog(
 Future<DateTime> selectDate({
   Rx<DateTime>? currentDate,
   BuildContext? context,
+  Function? onChange,
 }) async {
   final pickedDate = await showDatePicker(context: context!, initialDate: currentDate!.value, firstDate: DateTime(2015), lastDate: DateTime(2050));
   if (pickedDate != null && pickedDate != currentDate) {
     currentDate.value = pickedDate;
     print(currentDate);
     currentDate.refresh();
+    onChange != null ? onChange() : null;
   }
 
   return currentDate.value;

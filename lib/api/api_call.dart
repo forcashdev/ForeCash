@@ -6,13 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/utility/string.dart';
-import 'package:fore_cash/view/authentication/login_screen.dart';
 import 'package:fore_cash/view/authentication/splash_screen.dart';
 import 'package:get/get.dart' as getX;
 import 'package:get_storage/get_storage.dart';
 
 //test
 const String baseUri = "https://node.staging.rentechdigital.com:3001/";
+// const String baseUri = "https://node.staging.rentechdigital.com:3001";
 
 const String somethingWrong = "Something went wrong!";
 const String responseMessage = "No response data found!";
@@ -122,10 +122,12 @@ class Api {
           ///postman response Code guj
           Map<String, dynamic>? responseData;
           responseData = jsonDecode(response.data);
+
           if (isHideLoader!) {
             //
             hideProgressDialog();
           }
+          print('statusCode${response.statusCode}');
           if (responseData?["success"] ?? false) {
             //#region alert
             if (errorMessageType == ErrorMessageType.snackBarOnlySuccess || errorMessageType == ErrorMessageType.snackBarOnResponse) {
@@ -149,8 +151,12 @@ class Api {
               if (errorMessageType == ErrorMessageType.snackBarOnlyError || errorMessageType == ErrorMessageType.snackBarOnResponse) {
                 getX.Get.snackbar("Error", responseData?["message"]);
                 // if (responseData?["message"] == "Not authorize to access this route")
-                if (response.statusCode == 201) {
-                  getX.Get.to(() => const LoginScreen());
+                // if (response.statusCode == 201) {
+                //    getX.Get.to(() => const LoginScreen());
+                // }
+                if (responseData?["message"] == 'could not fetch incomes') {
+                  isProgressShow = false;
+                  // showProgressDialog(isLoading: isProgressShow);
                 }
               } else if (errorMessageType == ErrorMessageType.dialogOnlyError || errorMessageType == ErrorMessageType.dialogOnResponse) {
                 await apiAlertDialog(message: responseData?["message"], buttonTitle: "Okay");

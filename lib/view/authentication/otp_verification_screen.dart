@@ -1,23 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
-import 'package:fore_cash/controller/forgot_password_email_controller.dart';
+import 'package:fore_cash/controller/verify_otp_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 
-class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+class Otpverification extends StatelessWidget {
+  const Otpverification({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _email = TextEditingController();
+    final TextEditingController _otp = TextEditingController();
     return SafeArea(child: LayoutBuilder(
       builder: (context, constraints) {
         var _keyboardVisible = MediaQuery.of(context).viewInsets.bottom;
@@ -30,7 +30,7 @@ class ForgotPassword extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(color: constraints.maxWidth > 1000 ? Colors.white : null, borderRadius: BorderRadius.circular(9)),
               width: constraints.maxWidth > 1000 ? 600 : null,
-              height: constraints.maxWidth > 1000 ? 450 : null,
+              height: constraints.maxWidth > 1000 ? 490 : null,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -55,7 +55,7 @@ class ForgotPassword extends StatelessWidget {
                         maxWidth
                             ? Container()
                             : Text(
-                                forgotPass2,
+                                verification,
                                 style: mobileAppBarStyle,
                               ),
                         SizedBox(
@@ -81,11 +81,14 @@ class ForgotPassword extends StatelessWidget {
                             ),
                           )
                         : Container(),
+                    SizedBox(
+                      height: maxWidth ? Get.height * 0.03 : 0.0,
+                    ),
                     maxWidth
                         ? Align(
                             alignment: const FractionalOffset(0.5, 0.0),
                             child: Text(
-                              forgotPass2,
+                              verification,
                               style: mobileAppBarStyle,
                             ),
                           )
@@ -111,14 +114,7 @@ class ForgotPassword extends StatelessWidget {
                       height: Get.height * 0.01,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
-                          right: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
-                          bottom: _keyboardVisible == 0
-                              ? maxWidth
-                                  ? Get.height * 0.17
-                                  : Get.height * 0.5
-                              : Get.height * 0.2),
+                      padding: EdgeInsets.only(left: maxWidth ? Get.width * 0.03 : Get.width * 0.04, right: maxWidth ? Get.width * 0.03 : Get.width * 0.04, bottom: maxWidth ? Get.height * 0.03 : 15),
                       child: commonTextFormField(
                         onFieldSubmit: (String value) {
                           FocusScope.of(context).requestFocus(FocusNode());
@@ -146,15 +142,52 @@ class ForgotPassword extends StatelessWidget {
                         },
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(left: maxWidth ? Get.width * 0.03 : Get.width * 0.04),
+                      child: Text(otp, style: fullNameHintStyle),
+                    ),
+                    SizedBox(
+                      height: Get.height * 0.01,
+                    ),
+                    Padding(
+                      // maxWidth ? Get.height * 0.03 : 15
+                      padding: EdgeInsets.only(
+                          left: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
+                          right: maxWidth ? Get.width * 0.03 : Get.width * 0.04,
+                          bottom: _keyboardVisible == 0
+                              ? maxWidth
+                                  ? Get.height * 0.045
+                                  : 0.0
+                              : Get.height * 0.1),
+                      child: commonTextFormField(
+                        onFieldSubmit: (String value) {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        },
+                        inputAction: TextInputAction.done,
+                        hintText: otp,
+                        textStyle: textFieldStyle,
+                        hintStyle: textFieldHintStyle,
+                        textEditingController: _otp,
+                        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
+                        validationFunction: (value) {
+                          if (_otp.text.isEmpty) {
+                            return 'Enter otp';
+                          }
+                        },
+                      ),
+                    ),
                     maxWidth
                         ? Padding(
                             padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04),
                             child: commonButton(
                               onPress: () {
-                                print('email is${_email.text}');
                                 if (_formKey.currentState!.validate()) {
-                                  ForgotPasswordController.to.callForgot(email: _email.text);
-                                  // Get.to(const ResetPasswordScreen());
+                                  VerifyOtpController.to.callForgotOtp(email: _email.text, otp: int.parse(_otp.text));
                                 }
                               },
                               text: send,
@@ -173,10 +206,8 @@ class ForgotPassword extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: maxWidth ? Get.width * 0.03 : Get.width * 0.04, vertical: 15),
               child: commonButton(
                 onPress: () {
-                  print('email is${_email.text}');
                   if (_formKey.currentState!.validate()) {
-                    ForgotPasswordController.to.callForgot(email: _email.text);
-                    // Get.to(const ResetPasswordScreen());
+                    VerifyOtpController.to.callForgotOtp(email: _email.text, otp: int.parse(_otp.text));
                   }
                 },
                 text: send,

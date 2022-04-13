@@ -39,7 +39,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   final getIncomeController = Get.put(GetIncomeController());
   final addMonthlyIncomeTextVisibility = Get.put(AddMonthlyIncomeVisibilityController());
   final formKeyValidator = GlobalKey<FormState>();
-  DateTime currentDate = DateTime.now();
+  Rx<DateTime> currentDate = DateTime.now().obs;
   List<String> deleteMonthlyIncomeList = [];
 
   @override
@@ -497,14 +497,14 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
     );
   }
 
-  Future<void> _selectDate({BuildContext? context, int? index}) async {
-    final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
-    if (pickedDate != null && pickedDate != currentDate) {
-      currentDate = pickedDate;
-      GetIncomeController.to.monthlyIncomeList?[index!].date = currentDate.toString();
-      GetIncomeController.to.monthlyIncomeList?.refresh();
-    }
-  }
+  // Future<void> _selectDate({BuildContext? context, int? index}) async {
+  //   final pickedDate = await showDatePicker(context: context!, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
+  //   if (pickedDate != null && pickedDate != currentDate) {
+  //     currentDate = pickedDate;
+  //     GetIncomeController.to.monthlyIncomeList?[index!].date = currentDate.toString();
+  //     GetIncomeController.to.monthlyIncomeList?.refresh();
+  //   }
+  // }
 
   _nameTableRowWidget({BoxConstraints? constraints}) {
     return Table(
@@ -633,7 +633,6 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                       saveButtonTextStyle: yesButtonTextStyle,
                       noButtonColor: Colors.black,
                       onPressYes: () {
-                        print(GetIncomeController.to.monthlyIncomeList![index].id!);
                         if (GetIncomeController.to.monthlyIncomeList![index].id == null) {
                           GetIncomeController.to.monthlyIncomeList?.removeAt(index);
                         } else {
@@ -812,7 +811,13 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        _selectDate(context: context, index: index);
+                        selectDate(
+                            context: context,
+                            currentDate: currentDate,
+                            onChange: () {
+                              GetIncomeController.to.monthlyIncomeList?[index].date = currentDate.value.toString();
+                              GetIncomeController.to.monthlyIncomeList?.refresh();
+                            });
                       },
                       child: Container(
                         height: Get.height * 0.044,
