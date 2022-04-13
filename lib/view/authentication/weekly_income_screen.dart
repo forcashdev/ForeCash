@@ -713,18 +713,6 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
                                   GetIncomeController.to.weeklyIncomesList?[index].name = value ?? "";
                                   // GetIncomeController.to.weeklyIncomesList?[index].name = _incomeName?.text;
                                 },
-                                // errorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
-                                //     ? OutlineInputBorder(
-                                //         borderSide: const BorderSide(color: Colors.red),
-                                //         borderRadius: BorderRadius.circular(4.0),
-                                //       )
-                                //     : null,
-                                // focusedErrorBorder: whenErrorOnlyShowRedBorderListWeekly[index].value
-                                //     ? OutlineInputBorder(
-                                //         borderSide: const BorderSide(color: Colors.red),
-                                //         borderRadius: BorderRadius.circular(4.0),
-                                //       )
-                                //     : null,
                                 errorBorder: constraints.maxWidth > 1000
                                     ? checkBoxController.weeklyIncomeCheckBoxValueList[index]
                                         ? whenErrorOnlyShowRedBorderListWeekly[index].value
