@@ -1,23 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fore_cash/utility/colors.dart';
+import 'package:fore_cash/view/authentication/allset_screen.dart';
+import 'package:fore_cash/view/authentication/login_screen.dart';
+import 'package:fore_cash/view/authentication/profile_update_screen_screen.dart';
+import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
+import 'package:fore_cash/view/authentication/splash_screen.dart';
+import 'package:fore_cash/view/authentication/update_calendar_screen.dart';
+import 'package:fore_cash/view/dashboard/dashboard_screen.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'api/app_binding/app_bindings.dart';
 import 'app_theme/app_theme.dart';
-import 'view/authentication/allset_screen.dart';
-import 'view/authentication/login_screen.dart';
-import 'view/authentication/profile_update_screen_screen.dart';
-import 'view/authentication/progress_indicator_screen.dart';
-import 'view/authentication/splash_screen.dart';
-import 'view/authentication/update_calendar_screen.dart';
-import 'view/dashboard/dashboard_screen.dart';
 
 Future<void> main() async {
   await GetStorage.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 }
 

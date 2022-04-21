@@ -6,15 +6,34 @@ import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/selected_dropdown_controller.dart';
 import 'package:fore_cash/controller/set_up_calendar_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
-class UpdateCalendarScreen extends StatelessWidget {
+class UpdateCalendarScreen extends StatefulWidget {
   const UpdateCalendarScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UpdateCalendarScreen> createState() => _UpdateCalendarScreenState();
+}
+
+class _UpdateCalendarScreenState extends State<UpdateCalendarScreen> {
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track(updateCalendarScreen);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initMixpanel();
+  }
 
   @override
   Widget build(BuildContext context) {

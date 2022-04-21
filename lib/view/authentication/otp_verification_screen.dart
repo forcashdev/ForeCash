@@ -4,14 +4,33 @@ import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/verify_otp_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
-class Otpverification extends StatelessWidget {
+class Otpverification extends StatefulWidget {
   const Otpverification({Key? key}) : super(key: key);
+
+  @override
+  State<Otpverification> createState() => _OtpverificationState();
+}
+
+class _OtpverificationState extends State<Otpverification> {
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track('$otpVerify' '$screen');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initMixpanel();
+  }
 
   @override
   Widget build(BuildContext context) {

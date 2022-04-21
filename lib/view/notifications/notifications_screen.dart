@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
@@ -13,6 +15,18 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track("$notification $screen");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initMixpanel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {

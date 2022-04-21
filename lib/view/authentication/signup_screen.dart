@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/register_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -12,6 +13,7 @@ import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/login_screen.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -32,8 +34,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _password = TextEditingController();
   final FocusNode _focusOnEmail = FocusNode();
   final FocusNode _focusOnPassword = FocusNode();
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track("$signUp $screen");
+  }
 
-  // final controller = Get.put(ObscureText());
+  @override
+  void initState() {
+    super.initState();
+    _initMixpanel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -236,9 +248,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 _formKey.currentState!.validate();
                                 if (_formKey.currentState!.validate()) {
                                   RegisterController().callRegister(name: _name.text, email: _email.text, password: _password.text);
-                                  // screenIndex = 1;
-                                  // print('>>>>>>>>>>>>>>>>>>>>>>$screenIndex');
-                                  // screenIndexController.updateIndex(index: 1);
+                                  _mixpanel.getPeople().append(emailAdd, _email.text);
+                                  _mixpanel.identify(_email.text);
                                 }
                               },
                               text: signUp,

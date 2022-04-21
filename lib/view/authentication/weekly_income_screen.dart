@@ -10,6 +10,7 @@ import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
 import 'package:fore_cash/controller/delete_income_expense_controller.dart';
@@ -24,6 +25,7 @@ import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class WeeklyIncomeScreen extends StatefulWidget {
   const WeeklyIncomeScreen({Key? key}) : super(key: key);
@@ -42,11 +44,16 @@ class _WeeklyIncomeScreenState extends State<WeeklyIncomeScreen> {
   final screenIndexController = Get.put(ScreenIndexController());
   Rx<DateTime> currentDate = DateTime.now().obs;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track("$weeklyIncome $screen");
+  }
 
   @override
   void initState() {
     super.initState();
-
+    _initMixpanel();
     // GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "week_month": "1"}).whenComplete(() {
     GetIncomeController.to.callIncome(parameter: {"income_outgoing": "1", "onetime_week_month": "2"}).whenComplete(() {
       if (GetIncomeController.to.weeklyIncomesList!.isEmpty) {

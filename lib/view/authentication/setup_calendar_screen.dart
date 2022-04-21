@@ -173,7 +173,6 @@ class SetupCalendarScreen extends StatelessWidget {
                                             controller.changeSetupCalendarDay(
                                               item: item,
                                             );
-                                            print(item);
                                           });
                                     },
                                   ),

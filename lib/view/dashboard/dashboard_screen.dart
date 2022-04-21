@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/common_widget/page_view_common_widget.dart';
 import 'package:fore_cash/controller/add_monthly_expense_showtext_controller.dart';
 import 'package:fore_cash/controller/add_monthly_income_controller.dart';
@@ -53,8 +54,8 @@ import 'package:fore_cash/view/dashboard/widgets/weekly_budget_method.dart';
 import 'package:fore_cash/view/dashboard/widgets/weekly_income_method.dart';
 import 'package:fore_cash/view/notifications/notifications_screen.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key? key}) : super(key: key);
@@ -124,9 +125,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   RxBool oneTimeIncomeExpansion = false.obs;
   RxBool oneTimeExpenseExpansion = false.obs;
   int totalCount = 0;
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track("$dashBoard $screen");
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _initMixpanel();
       calculateFutureDates();
       calculatePastDates();
       GetIncomeController.to.monthlyIncomeList?.clear();

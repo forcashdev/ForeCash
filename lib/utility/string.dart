@@ -245,6 +245,10 @@ String monthlyIncome = 'Monthly Income';
 String weeklyIncome = 'Weekly Income';
 String weeklyBudget = 'Weekly Budgets';
 String monthlyExpense = 'Monthly Expense';
+String splashScreen = 'Splash Screen';
+String verifyTransactionScreen = 'Verify Transaction Screen';
+String screen = 'Screen';
+
 String weeklyExpense = 'Weekly Expense';
 String effectiveDate = 'Effective';
 String action = 'Action';
@@ -257,70 +261,15 @@ String backButton = '< Back';
 String back = 'Back';
 String forgotPass2 = 'Forgot Password';
 String verification = 'Verify Otp';
+String otpVerify = 'Otp Verify';
 String profileSetting = 'Profile Settings';
+String profileUpdateScreen = 'Profile Update Screen';
+String updateCalendarScreen = 'Update Calendar Screen';
 String forgotPassSubTitle = 'Enter email and Verify';
 String newPassword = 'New password';
 String confirmNewPass = 'Confirm New password';
 List<String> progressIndicatorTitleList = [createAccount2, connectBank, monthlyIncome, weeklyIncome, monthlyExpense, weeklyExpense, setUpCalendar];
 String cancel = 'Cancel';
-List<String> dataDateList = [
-  "Sep, 1",
-  "Sep, 2",
-  "Jun, 15",
-  "May, 15",
-  "Mar, 6",
-  "Jul, 28",
-  "Jun, 7",
-  "Dec, 3",
-  "Nov, 20",
-  "Oct, 25",
-  "Aug, 18",
-  "Sep, 23",
-  "Aug, 29",
-  "Jul, 25",
-  "Jun, 11",
-  "Mar, 22",
-  "Feb, 12",
-  "Aug, 17",
-  "Aug, 21",
-  "Aug, 30",
-  "Jan, 25",
-  "Sep, 2",
-  "Nov, 15",
-  "Nov, 5",
-  "Nov, 12",
-  "Oct, 1",
-  "Dec, 1",
-];
-List<String> incomes = [
-  '\$1200',
-  '-',
-  '\$1000',
-  '-',
-  '\$1000',
-  '\$1800',
-  '\$2000',
-  '-',
-  '\$200',
-  '-',
-  '\$300',
-  '-',
-  '200',
-  '\$500',
-  '-',
-  '\$8000',
-  '-',
-  '-',
-  '-',
-  '\$400',
-  '\$500',
-  '-',
-  '-',
-  '\$3000',
-  '\$5444',
-  '-',
-  '-',
-];
 String dashBoard = 'DashBoard';
 String notification = 'Notification';
 //verify_transaction

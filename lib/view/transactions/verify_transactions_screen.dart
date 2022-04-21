@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/verifytransactions_controller.dart';
 import 'package:fore_cash/model/verify_transaction_model.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -8,6 +9,7 @@ import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class VerifyTransactionsScreen extends StatefulWidget {
   const VerifyTransactionsScreen({Key? key}) : super(key: key);
@@ -18,11 +20,17 @@ class VerifyTransactionsScreen extends StatefulWidget {
 
 class _VerifyTransactionsScreenState extends State<VerifyTransactionsScreen> {
   final visibilityController = Get.put(VerifyTransactionsController());
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track(verifyTransactionScreen);
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _initMixpanel();
     if (kIsWeb) {
       print("object=====>WEbView");
       // running on the web!

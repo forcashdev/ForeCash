@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "839072502281",
+    "project_id": "forecashdemo",
+    "storage_bucket": "forecashdemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839072502281:android:b73b7f36e3fbbc0f95ded8",
+        "android_client_info": {
+          "package_name": "com.app.fore_cash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839072502281-m91usj0b2im0lbqjnu9ah5avq5ov4ie7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9VWDQshE-KVlX4_JtXhD-JOg7okmJXFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839072502281-m91usj0b2im0lbqjnu9ah5avq5ov4ie7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

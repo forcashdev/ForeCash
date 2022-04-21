@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/get_income_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
@@ -8,9 +9,27 @@ import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
-class ConnectBankAccountScreen extends StatelessWidget {
+class ConnectBankAccountScreen extends StatefulWidget {
   const ConnectBankAccountScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ConnectBankAccountScreen> createState() => _ConnectBankAccountScreenState();
+}
+
+class _ConnectBankAccountScreenState extends State<ConnectBankAccountScreen> {
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track("$connectBank $screen");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initMixpanel();
+  }
 
   @override
   Widget build(BuildContext context) {

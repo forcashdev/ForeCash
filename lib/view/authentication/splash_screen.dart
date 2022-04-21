@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/images.dart';
+import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/progress_indicator_screen.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 import 'login_screen.dart';
 
@@ -18,10 +21,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track(splashScreen);
+  }
+
   @override
   void initState() {
     final screenIndexController = Get.put(ScreenIndexController());
     super.initState();
+    _initMixpanel();
     Timer(const Duration(seconds: 3), () {
       final box = GetStorage();
       final finalUserEmail = box.read('userEmail');

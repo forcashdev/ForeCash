@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_cash/common_widget/common_button.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/login_controller.dart';
 import 'package:fore_cash/controller/screen_index_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
@@ -13,6 +14,7 @@ import 'package:fore_cash/utility/string.dart';
 import 'package:fore_cash/view/authentication/forgot_password_screen.dart';
 import 'package:fore_cash/view/authentication/signup_screen.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -28,6 +30,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final screenIndexController = Get.put(ScreenIndexController());
   final FocusNode _focusNode = FocusNode();
+  late final Mixpanel _mixpanel;
+
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track(logIn);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initMixpanel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +209,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPress: () {
                                 if (_formKey.currentState!.validate()) {
                                   LoginInController().callLogin(email: _email.text, password: _password.text);
+                                  _mixpanel.getPeople().append(emailAdd, _email.text);
+                                  _mixpanel.identify(_email.text);
                                 }
                               },
                               text: logIn,

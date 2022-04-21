@@ -5,14 +5,33 @@ import 'package:fore_cash/common_widget/common_divider.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
 import 'package:fore_cash/common_widget/common_web_appbar_with_user_name.dart';
 import 'package:fore_cash/common_widget/email_validation.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/forgot_password_email_controller.dart';
 import 'package:fore_cash/utility/colors.dart';
 import 'package:fore_cash/utility/const.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
-class ForgotPassword extends StatelessWidget {
+class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
+
+  @override
+  State<ForgotPassword> createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPassword> {
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track(forgotPass2);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initMixpanel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +173,7 @@ class ForgotPassword extends StatelessWidget {
                                 print('email is${_email.text}');
                                 if (_formKey.currentState!.validate()) {
                                   ForgotPasswordController.to.callForgot(email: _email.text);
+                                  _mixpanel.getPeople().append("Email", _email.text);
                                   // Get.to(const ResetPasswordScreen());
                                 }
                               },

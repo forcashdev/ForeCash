@@ -8,6 +8,7 @@ import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
 import 'package:fore_cash/controller/delete_income_expense_controller.dart';
@@ -22,6 +23,7 @@ import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class SetupWeeklyBudgetScreen extends StatefulWidget {
   const SetupWeeklyBudgetScreen({Key? key}) : super(key: key);
@@ -38,6 +40,11 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
   final getIncomeController = Get.put(GetIncomeController());
   Rx<DateTime> currentDate = DateTime.now().obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track("$weeklyBudget $screen");
+  }
 
   @override
   void initState() {
@@ -48,6 +55,7 @@ class _SetupWeeklyBudgetScreenState extends State<SetupWeeklyBudgetScreen> {
         GetIncomeController.to.getWeeklyBudgetList();
       }
     });
+    _initMixpanel();
   }
 
   @override

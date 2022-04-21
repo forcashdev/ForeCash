@@ -10,6 +10,7 @@ import 'package:fore_cash/common_widget/common_dropdown.dart';
 import 'package:fore_cash/common_widget/common_input_formatter.dart';
 import 'package:fore_cash/common_widget/common_methods.dart';
 import 'package:fore_cash/common_widget/common_textformfield.dart';
+import 'package:fore_cash/common_widget/mix_panel.dart';
 import 'package:fore_cash/controller/checkbox_controller.dart';
 import 'package:fore_cash/controller/create_income_controller.dart';
 import 'package:fore_cash/controller/delete_income_expense_controller.dart';
@@ -24,6 +25,7 @@ import 'package:fore_cash/utility/images.dart';
 import 'package:fore_cash/utility/string.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MonthlyIncomeScreen extends StatefulWidget {
   const MonthlyIncomeScreen({Key? key}) : super(key: key);
@@ -41,6 +43,11 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
   final formKeyValidator = GlobalKey<FormState>();
   Rx<DateTime> currentDate = DateTime.now().obs;
   List<String> deleteMonthlyIncomeList = [];
+  late final Mixpanel _mixpanel;
+  Future<void> _initMixpanel() async {
+    _mixpanel = await MixpanelManager.init();
+    _mixpanel.track('$monthlyIncome' '$screen');
+  }
 
   @override
   void initState() {
@@ -52,6 +59,7 @@ class _MonthlyIncomeScreenState extends State<MonthlyIncomeScreen> {
         GetIncomeController.to.getMonthlyIncomeList();
       }
     });
+    _initMixpanel();
   }
 
   @override
